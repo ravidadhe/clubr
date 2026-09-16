@@ -991,6 +991,20 @@
           </div>
         </div>
 
+        <!-- 6.5 Interactive Emoji Reaction Bar inside Drawer -->
+        <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-bold text-xs sm:text-sm text-slate-900 headline-font flex items-center gap-1.5">
+              <span>😂</span>
+              <span id="drawerReactionTitle">इस खबर पर आपका रिएक्शन?</span>
+            </h4>
+            <span class="text-[10px] font-mono text-slate-400 font-medium">1-Tap Live React</span>
+          </div>
+          <div id="drawerReactionButtons" class="grid grid-cols-4 gap-2">
+            <!-- Populated dynamically by renderDrawerReactions -->
+          </div>
+        </div>
+
         <!-- 7. Interactive 2-Option Poll -->
         <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
           <div class="flex items-center gap-2 mb-3">
@@ -1588,6 +1602,23 @@
       trackSiteStats();
       const savedUser = localStorage.getItem('frontnews_current_user');
       const savedActivity = localStorage.getItem('frontnews_user_activity');
+      if (savedActivity) {
+        try {
+          const parsed = JSON.parse(savedActivity);
+          if (parsed && typeof parsed === 'object') {
+            userActivity = {
+              reactions: (parsed.reactions && typeof parsed.reactions === 'object') ? parsed.reactions : {},
+              saves: Array.isArray(parsed.saves) ? parsed.saves : [],
+              shares: Array.isArray(parsed.shares) ? parsed.shares : []
+            };
+          }
+        } catch (e) {}
+      }
+      if (!userActivity) userActivity = { reactions: {}, saves: [], shares: [] };
+      if (!userActivity.reactions) userActivity.reactions = {};
+      if (!userActivity.saves) userActivity.saves = [];
+      if (!userActivity.shares) userActivity.shares = [];
+
       if (savedUser) {
         try {
           currentUser = JSON.parse(savedUser);
@@ -1598,19 +1629,16 @@
             return;
           }
           registerUserInDirectory(currentUser);
-          if (savedActivity) {
-            userActivity = JSON.parse(savedActivity);
-          }
-          updateUserNavUI();
         } catch (e) {}
       }
+      updateUserNavUI();
     }
 
     function saveUserActivity() {
-      if (currentUser) {
+      try {
         localStorage.setItem('frontnews_user_activity', JSON.stringify(userActivity));
-        updateUserNavUI();
-      }
+      } catch (e) {}
+      updateUserNavUI();
     }
 
     function openGoogleAuthModal() {
@@ -1785,18 +1813,23 @@
 
     function performRealGoogleLogin() {
       if (!fbAuth) {
-        openGoogleAuthModal();
+        try { fbAuth = firebase.auth(); } catch(e) {}
+      }
+      if (!fbAuth) {
+        alert("Firebase Auth लोड नहीं हुआ है। कृपया इंटरनेट कनेक्शन जांचें।");
         return;
       }
       const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
       fbAuth.signInWithPopup(provider).then((result) => {
         const u = result.user;
-        const name = u.displayName || 'Reader';
-        const email = u.email || 'reader@gmail.com';
+        const name = u.displayName || 'CLUBR Reader';
+        const email = u.email || 'reader@clubr.online';
         const avatar = u.photoURL || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100';
 
         if (isUserBlocked(email)) {
-          alert("यह अकाउंट सुरक्षा नियमों के उल्लंघन के कारण एडमिन द्वारा ब्लॉक किया गया है।");
+          alert("❌ यह अकाउंट सुरक्षा नियमों के उल्लंघन के कारण एडमिन द्वारा ब्लॉक किया गया है।");
           fbAuth.signOut();
           return;
         }
@@ -1813,8 +1846,14 @@
           }, { merge: true }).catch(() => {});
         }
       }).catch((err) => {
-        console.warn('Firebase Google Auth popup note (using modal fallback):', err.message);
-        openGoogleAuthModal();
+        console.error('Firebase Google Auth error:', err);
+        if (err.code === 'auth/unauthorized-domain') {
+          alert("Firebase Notice: 'clubr.online' को Firebase Console > Authentication > Settings > Authorized Domains में जोड़ना आवश्यक है।");
+        } else if (err.code === 'auth/popup-blocked') {
+          alert("ब्राउज़र ने पॉपअप विंडो ब्लॉक कर दी है। कृपया URL बार में पॉपअप की अनुमति (Allow Popups) दें।");
+        } else if (err.code !== 'auth/popup-closed-by-user') {
+          alert("Google लॉगिन सूचना: " + (err.message || 'कृपया दोबारा प्रयास करें।'));
+        }
       });
     }
 
@@ -3552,7 +3591,7 @@
                 <div class="mt-3 pt-3 border-t border-slate-100/80 flex items-center justify-between gap-1" onclick="event.stopPropagation()">
                   <div class="flex items-center gap-1 sm:gap-1.5 flex-1">
                     ${['laugh', 'skull', 'fire', 'clown'].map(r => {
-                      const count = card.reactions[r] || 0;
+                      const count = (card.reactions && card.reactions[r]) || 0;
                       const active = userReaction === r;
                       const emojis = { laugh: '😂', skull: '💀', fire: '🔥', clown: '🤡' };
                       return `
@@ -3603,139 +3642,21 @@
       });
 
       grid.innerHTML = renderedItems.join('');
-      return;
-      // old mapping superseded
-      filtered.map(card => {
-        let badgeBg = 'bg-white/90 text-slate-800 border-slate-200/80';
-        if (card.category === 'paisa') badgeBg = 'bg-emerald-50/95 text-emerald-800 border-emerald-200';
-        if (card.category === 'trending' || card.category === 'masala') badgeBg = 'bg-rose-50/95 text-rose-800 border-rose-200';
-        if (card.category === 'lifestyle' || card.category === 'rona') badgeBg = 'bg-indigo-50/95 text-indigo-800 border-indigo-200';
-
-        const userReaction = userActivity.reactions[card.id];
-        const isSaved = userActivity.saves.includes(card.id);
-        const cardTitle = getCardField(card, 'title');
-        const cardPreview = getCardField(card, 'preview');
-        const cardCatLabel = getCardField(card, 'categoryLabel');
-        const cardComments = getCommentsForCard(card.id);
-
-        return `
-          <div class="masonry-item mb-5 group cursor-pointer" onclick="openModal('${card.id}')">
-            <div class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-card hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
-              
-              <!-- Card Image with Variable Aspect Ratio -->
-              <div class="relative w-full ${card.aspect || 'aspect-[4/3]'} overflow-hidden bg-slate-100">
-                <img 
-                  src="${card.image}" 
-                  alt="${cardTitle}" 
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent"></div>
-                
-                <!-- Category Badge -->
-                <div class="absolute top-3 left-3">
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold border backdrop-blur-md ${badgeBg} shadow-sm">
-                    ${cardCatLabel}
-                  </span>
-                </div>
-
-                <!-- Bookmark Button on Card Image -->
-                <button 
-                  onclick="event.stopPropagation(); toggleCardBookmark('${card.id}', this)"
-                  title="${isSaved ? (isHi ? 'सेव से हटाएं' : 'Remove from Saved') : (isHi ? 'स्टोरी सेव करें' : 'Save Story')}"
-                  class="absolute top-3 right-3 w-8 h-8 rounded-full ${isSaved ? 'bg-amber-400 text-slate-950' : 'bg-slate-900/70 hover:bg-slate-900 text-white'} backdrop-blur-md flex items-center justify-center text-xs font-bold transition-all shadow-sm active:scale-90">
-                  ${isSaved ? '★' : '☆'}
-                </button>
-              </div>
-
-              <!-- Card Content Area -->
-              <div class="p-5 flex flex-col justify-between flex-grow">
-                <div>
-                  <!-- Public Verdict Badge -->
-                  <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-zinc-700/60 mb-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                    <span>जनता की राय:</span>
-                    <span class="text-rose-600 dark:text-rose-400">${card.poll && card.poll.v1 >= card.poll.v2 ? card.poll.opt1 : (card.poll ? card.poll.opt2 : 'Fact Check')}</span>
-                  </div>
-
-                  <h3 class="font-bold text-base sm:text-lg text-slate-900 leading-snug group-hover:text-rose-600 transition-colors headline-font">
-                    ${cardTitle}
-                  </h3>
-                  <p class="text-xs text-slate-500 font-medium mt-2.5 line-clamp-2 leading-relaxed">
-                    ${cardPreview}
-                  </p>
-                </div>
-
-                <!-- Hype Mini Pill & Comments Counter -->
-                <div class="mt-4 flex items-center justify-between text-xs font-medium text-slate-400 border-t border-slate-100 pt-3">
-                  <div class="flex items-center gap-2.5 font-mono text-[11px]">
-                    <span class="flex items-center gap-1 text-rose-600">
-                      <span>Hype:</span>
-                      <strong class="font-bold">${card.afwah}</strong>
-                    </span>
-                    <span class="text-slate-300">•</span>
-                    <span class="flex items-center gap-1 text-emerald-600">
-                      <span>सच:</span>
-                      <strong class="font-bold">${card.reality}</strong>
-                    </span>
-                  </div>
-                  <div class="flex items-center gap-1 text-slate-500 hover:text-slate-900 transition-colors" title="${cardComments.length} Comments">
-                    <span class="text-xs">💬</span>
-                    <span class="font-mono text-[11px] font-bold text-slate-700">${cardComments.length}</span>
-                  </div>
-                </div>
-
-                <!-- PER-USER INTERACTIVE REACTION BUTTONS -->
-                <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 text-xs" onclick="event.stopPropagation()">
-                  
-                  <button 
-                    onclick="handleReaction('${card.id}', 'laugh', this)" 
-                    class="reaction-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-all active:scale-125 ${userReaction === 'laugh' ? 'bg-amber-100 font-black text-amber-900 ring-2 ring-amber-300' : 'hover:bg-slate-100 text-slate-600'}">
-                    <span>😂</span>
-                    <span class="count font-mono font-bold text-[11px] text-slate-700">${card.reactions.laugh}</span>
-                  </button>
-
-                  <button 
-                    onclick="handleReaction('${card.id}', 'skull', this)" 
-                    class="reaction-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-all active:scale-125 ${userReaction === 'skull' ? 'bg-slate-200 font-black text-slate-900 ring-2 ring-slate-400' : 'hover:bg-slate-100 text-slate-600'}">
-                    <span>💀</span>
-                    <span class="count font-mono font-bold text-[11px] text-slate-700">${card.reactions.skull}</span>
-                  </button>
-
-                  <button 
-                    onclick="handleReaction('${card.id}', 'fire', this)" 
-                    class="reaction-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-all active:scale-125 ${userReaction === 'fire' ? 'bg-rose-100 font-black text-rose-800 ring-2 ring-rose-300' : 'hover:bg-slate-100 text-slate-600'}">
-                    <span>🔥</span>
-                    <span class="count font-mono font-bold text-[11px] text-slate-700">${card.reactions.fire}</span>
-                  </button>
-
-                  <button 
-                    onclick="handleReaction('${card.id}', 'clown', this)" 
-                    class="reaction-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-all active:scale-125 ${userReaction === 'clown' ? 'bg-purple-100 font-black text-purple-900 ring-2 ring-purple-300' : 'hover:bg-slate-100 text-slate-600'}">
-                    <span>🤡</span>
-                    <span class="count font-mono font-bold text-[11px] text-slate-700">${card.reactions.clown}</span>
-                  </button>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-        `;
-      }).join('');
     }
 
     // ---------------------------------------------------------------------------
-    // PER-USER REACTION LOGIC
+    // PER-USER REACTION LOGIC (FEED + DRAWER)
     // ---------------------------------------------------------------------------
     function handleCardReaction(cardId, reactionKey) {
       handleReaction(cardId, reactionKey);
     }
 
-    function handleReaction(cardId, reactionKey, btnElement) {
+    function handleReaction(cardId, reactionKey) {
       const card = NEWS_DATA.find(c => c.id === cardId);
       if (!card) return;
       if (!card.reactions) card.reactions = { laugh: 0, skull: 0, fire: 0, clown: 0 };
+      if (!userActivity) userActivity = { reactions: {}, saves: [], shares: [] };
+      if (!userActivity.reactions) userActivity.reactions = {};
 
       const previousReaction = userActivity.reactions[cardId];
 
@@ -3745,7 +3666,7 @@
         delete userActivity.reactions[cardId];
       } else {
         // Remove old reaction count if any
-        if (previousReaction && card.reactions[previousReaction]) {
+        if (previousReaction && card.reactions[previousReaction] !== undefined) {
           card.reactions[previousReaction] = Math.max(0, card.reactions[previousReaction] - 1);
         }
         // Increment new reaction
@@ -3755,6 +3676,7 @@
 
       saveUserActivity();
       renderCards();
+      renderDrawerReactions(cardId);
 
       // Real-time Cloud sync to Firebase RTDB
       if (fbRtdb) {
@@ -3762,30 +3684,38 @@
       }
     }
 
-    function _legacyHandleReaction_unused(cardId, reactionKey, btnElement) {
-      if (!currentUser) {
-        openGoogleAuthModal();
-        return;
-      }
-
+    function renderDrawerReactions(cardId) {
+      const container = document.getElementById('drawerReactionButtons');
+      if (!container) return;
       const card = NEWS_DATA.find(c => c.id === cardId);
       if (!card) return;
+      if (!card.reactions) card.reactions = { laugh: 0, skull: 0, fire: 0, clown: 0 };
+      const userReaction = (userActivity && userActivity.reactions) ? userActivity.reactions[card.id] : null;
 
-      const previousReaction = userActivity.reactions[cardId];
+      const items = [
+        { key: 'laugh', emoji: '😂', label: 'Funny' },
+        { key: 'skull', emoji: '💀', label: 'Dead' },
+        { key: 'fire', emoji: '🔥', label: 'Fire' },
+        { key: 'clown', emoji: '🤡', label: 'Clown' }
+      ];
 
-      if (previousReaction === reactionKey) {
-        card.reactions[reactionKey] = Math.max(0, card.reactions[reactionKey] - 1);
-        delete userActivity.reactions[cardId];
-      } else {
-        if (previousReaction) {
-          card.reactions[previousReaction] = Math.max(0, card.reactions[previousReaction] - 1);
-        }
-        card.reactions[reactionKey] += 1;
-        userActivity.reactions[cardId] = reactionKey;
-      }
-
-      saveUserActivity();
-      renderCards();
+      container.innerHTML = items.map(item => {
+        const count = card.reactions[item.key] || 0;
+        const active = userReaction === item.key;
+        return `
+          <button 
+            onclick="handleReaction('${card.id}', '${item.key}')"
+            class="flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all active:scale-95 ${
+              active 
+                ? 'bg-rose-50 border-rose-400 text-rose-700 ring-2 ring-rose-200 font-bold shadow-xs' 
+                : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700'
+            }">
+            <span class="text-xl sm:text-2xl">${item.emoji}</span>
+            <span class="text-[10px] font-bold text-slate-500 mt-1">${item.label}</span>
+            <span class="font-mono text-xs font-black ${active ? 'text-rose-600' : 'text-slate-800'} mt-0.5">${count}</span>
+          </button>
+        `;
+      }).join('');
     }
 
     function toggleCardBookmark(cardId, btnElement) {
@@ -3944,6 +3874,9 @@
 
       // Reset & Populate Poll
       renderPoll(card);
+
+      // Render Drawer Reactions
+      renderDrawerReactions(card.id);
 
       // Populate & Render Comments for this Card
       renderComments(card.id);

@@ -222,6 +222,16 @@ async function runAutopilot() {
   const categories = Object.keys(RSS_FEEDS);
   console.log(`📡 Scanning Google News RSS across all ${categories.length} categories hourly...`);
 
+  const localDataDir = path.join(__dirname, '..', 'data');
+  if (!fs.existsSync(localDataDir)) fs.mkdirSync(localDataDir, { recursive: true });
+  const localFeedPath = path.join(localDataDir, 'autopilot_feed.json');
+  let existingFeed = [];
+  if (fs.existsSync(localFeedPath)) {
+    try { existingFeed = JSON.parse(fs.readFileSync(localFeedPath, 'utf8')); } catch(e) {}
+  }
+
+  const newCards = [];
+
   for (const cat of categories) {
     const feedUrl = RSS_FEEDS[cat];
     try {
@@ -232,10 +242,18 @@ async function runAutopilot() {
         console.log(`📰 [${cat.toUpperCase()}] Top Story: "${topStory.title.slice(0, 50)}..." (${topStory.source})`);
         const clubrCard = await transformNewsToClubrStory(topStory, cat);
         await pushToFirestore(clubrCard);
+        newCards.push(clubrCard);
       }
     } catch(err) {
       console.error(`Autopilot error in ${cat}:`, err.message);
     }
+  }
+
+  if (newCards.length > 0) {
+    existingFeed = [...newCards, ...existingFeed];
+    if (existingFeed.length > 60) existingFeed = existingFeed.slice(0, 60);
+    fs.writeFileSync(localFeedPath, JSON.stringify(existingFeed, null, 2), 'utf8');
+    console.log(`💾 Saved ${newCards.length} fresh stories to data/autopilot_feed.json (Total in local store: ${existingFeed.length})`);
   }
 
   console.log('====================================================');

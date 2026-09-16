@@ -1,0 +1,34 @@
+name: CLUBR Autopilot News Engine
+
+on:
+  schedule:
+    # Runs every 3 hours automatically (100% Free on GitHub Actions)
+    - cron: '0 */3 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub web UI
+
+jobs:
+  run-autopilot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Autopilot Engine
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY || 'AIzaSyAsE1K8xU8aTsCAAeY4vt6LcghKXySUpdY' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || '' }}
+        run: |
+          node scripts/autopilot_engine.js
+
+      - name: Commit & Push Updated News Feed (If local changes)
+        run: |
+          git config --global user.name "CLUBR Autopilot Bot"
+          git config --global user.email "bot@clubr.online"
+          git add data/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "⚡ Autopilot: Auto-published fresh news stories [skip ci]" && git push)

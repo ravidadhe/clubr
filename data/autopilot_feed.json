@@ -1,0 +1,68 @@
+[
+  {
+    "id": "autopilot-1789544125306-683",
+    "category": "political",
+    "categoryLabel": "🏛️ Politics & Desh",
+    "spiciness": "⚡ Breaking Buzz",
+    "title": "PM Modi Becomes Longest-Serving Elected Head of Government in India",
+    "preview": "News On AIR की रिपोर्ट: इस विषय पर इंटरनेट पर भारी चर्चा, जानें क्या है असली ग्राउंड रियलिटी।",
+    "fact": "सोशल मीडिया और टीवी पर खबर को सनसनीखेज और ओवर-हाइप करके फैलाया जा रहा है।",
+    "detail": "ग्राउंड रियलिटी और आधिकारिक रिपोर्ट्स के अनुसार मामले की जांच और कार्रवाई जारी है, स्थिति नियंत्रण में है।",
+    "take": "सोशल मीडिया फॉरवर्ड्स पर तुरंत भरोसा करने से पहले असली फैक्ट-चेक देखना ही समझदारी है।",
+    "afwah": "65%",
+    "reality": "35%",
+    "poll": {
+      "question": "क्या मीडिया द्वारा इस खबर को बढ़ा-चढ़ाकर दिखाया जा रहा है?",
+      "opt1": "हां, सिर्फ TRP का खेल है",
+      "opt2": "नहीं, गंभीर मुद्दा है",
+      "v1": 82,
+      "v2": 18
+    },
+    "sourceUrl": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPSF9ZY2w3UDRXRGV5SnRmQTRjdXhZWUlMUmhlZ2FaSUR2akk4eEZiZ0RQX2xfSHE2VndDMi1qV3QyaXpxX1RJU1VMUFJ3WjFNXzZ0Z1hmOFVuYzZDdXZOMV9DaVEwUUJaQ2ZxTm5ucjJ6cmZaU3ZnbkV3TTcySm9yU3ViMVpQMkp0Wi05ZkhHZVBadVJXTUxvNw?oc=5",
+    "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&auto=format&fit=crop&q=80",
+    "aspect": "aspect-[4/3]",
+    "reactions": {
+      "laugh": 78,
+      "skull": 24,
+      "fire": 165,
+      "clown": 14
+    },
+    "publishedDate": "2026-09-16",
+    "publishedAt": 1789544125306,
+    "isAutopilot": true,
+    "originalSource": "News On AIR"
+  },
+  {
+    "id": "autopilot-1789543647555-607",
+    "category": "sports",
+    "categoryLabel": "🏏 Sports & Cricket",
+    "spiciness": "⚡ Breaking Buzz",
+    "title": "Where to watch India vs. Afghanistan live stream, TV channel, start time and lineups for 2nd T20I",
+    "preview": "sports.yahoo.com की रिपोर्ट: इस विषय पर इंटरनेट पर भारी चर्चा, जानें क्या है असली ग्राउंड रियलिटी।",
+    "fact": "सोशल मीडिया और टीवी पर खबर को सनसनीखेज और ओवर-हाइप करके फैलाया जा रहा है।",
+    "detail": "ग्राउंड रियलिटी और आधिकारिक रिपोर्ट्स के अनुसार मामले की जांच और कार्रवाई जारी है, स्थिति नियंत्रण में है।",
+    "take": "सोशल मीडिया फॉरवर्ड्स पर तुरंत भरोसा करने से पहले असली फैक्ट-चेक देखना ही समझदारी है।",
+    "afwah": "65%",
+    "reality": "35%",
+    "poll": {
+      "question": "क्या मीडिया द्वारा इस खबर को बढ़ा-चढ़ाकर दिखाया जा रहा है?",
+      "opt1": "हां, सिर्फ TRP का खेल है",
+      "opt2": "नहीं, गंभीर मुद्दा है",
+      "v1": 82,
+      "v2": 18
+    },
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPMHBTbVZhOV9RR3QtRWJQdkxlMS0xVGxTcUUtTzVNUmhXZkNDRlVfSDNxbEZhbW5VWlRvZ3dWSFJoU1pIRFFNdEFqUTJSaVJES0lWWTB4V05XaTNIeGl6VFhIZFFieG5ucVkwS2FZYzRQMEdqaURrZ09ET28wN2JmSnNKUWtsXzc4?oc=5",
+    "image": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?w=800&auto=format&fit=crop&q=80",
+    "aspect": "aspect-[4/3]",
+    "reactions": {
+      "laugh": 78,
+      "skull": 24,
+      "fire": 165,
+      "clown": 14
+    },
+    "publishedDate": "2026-09-16",
+    "publishedAt": 1789543647555,
+    "isAutopilot": true,
+    "originalSource": "sports.yahoo.com"
+  }
+]

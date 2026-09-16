@@ -26,6 +26,33 @@ const CATEGORY_META = {
   regional: { label: '📍 Regional & Local', image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&auto=format&fit=crop&q=80' }
 };
 
+// Generate unique AI image URL using Pollinations (free, no API key, no copyright)
+function generateAIImageUrl(title, categoryKey, seed) {
+  // Category-specific background scenes (NO real faces/politicians)
+  const sceneMap = {
+    political: 'Indian parliament sansad bhawan building national flag podium press conference crowd editorial photorealistic',
+    business: 'Indian stock market trading screen sensex charts office corporate skyscraper rupee coins editorial photorealistic',
+    tech: 'modern smartphone AI robot laptop gadget digital screen India tech editorial photorealistic',
+    sports: 'cricket stadium india floodlights bat ball wicket pitch crowd cheering editorial photorealistic',
+    entertainment: 'bollywood cinema hall premiere film camera red carpet stage spotlight curtain editorial photorealistic',
+    regional: 'indian city metro highway infrastructure urban road development aerial view editorial photorealistic'
+  };
+
+  // Extract meaningful words from Hindi/English headline (skip common short words)
+  const stopWords = new Set(['और','का','की','के','में','से','पर','है','को','ने','एक','हैं','था','थे','थी','यह','वह','जो','कि','भी','तो','ही','पर','या','हो']);
+  const words = title
+    .replace(/[^\u0900-\u097F\w\s]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !stopWords.has(w))
+    .slice(0, 4)
+    .join(' ');
+
+  const sceneBase = sceneMap[categoryKey] || 'india news editorial scene photorealistic';
+  const fullPrompt = encodeURIComponent(`${words} ${sceneBase} no faces no text no watermark high quality`);
+  const uniqueSeed = seed || Math.floor(Math.random() * 999999);
+  return `https://image.pollinations.ai/prompt/${fullPrompt}?width=800&height=600&nologo=true&model=flux&seed=${uniqueSeed}`;
+}
+
 function fetchHttps(url) {
   return new Promise((resolve, reject) => {
     https.get(url, (res) => {
@@ -134,7 +161,7 @@ Return ONLY valid JSON with this exact structure:
           v2: 24
         },
         sourceUrl: rawItem.link,
-        image: cat.image,
+        image: generateAIImageUrl(aiData.title || rawItem.title, categoryKey, now.getTime()),
         aspect: "aspect-[4/3]",
         reactions: { laugh: 0, skull: 0, fire: 0, clown: 0 },
         publishedDate: dateStr,
@@ -168,7 +195,7 @@ Return ONLY valid JSON with this exact structure:
       v2: 18
     },
     sourceUrl: rawItem.link,
-    image: cat.image,
+    image: generateAIImageUrl(rawItem.title, categoryKey, now.getTime() + 1),
     aspect: "aspect-[4/3]",
     reactions: { laugh: 0, skull: 0, fire: 0, clown: 0 },
     publishedDate: dateStr,

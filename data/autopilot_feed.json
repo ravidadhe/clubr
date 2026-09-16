@@ -22,10 +22,10 @@
     "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
-      "laugh": 85,
-      "skull": 32,
-      "fire": 540,
-      "clown": 28
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789546000000
@@ -53,10 +53,10 @@
     "image": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[16/9]",
     "reactions": {
-      "laugh": 42,
-      "skull": 18,
-      "fire": 390,
-      "clown": 65
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789545500000
@@ -84,10 +84,10 @@
     "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
-      "laugh": 110,
-      "skull": 55,
-      "fire": 420,
-      "clown": 95
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789545000000
@@ -115,10 +115,10 @@
     "image": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[1/1]",
     "reactions": {
-      "laugh": 35,
-      "skull": 12,
-      "fire": 280,
-      "clown": 15
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789544500000
@@ -146,10 +146,10 @@
     "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
-      "laugh": 190,
-      "skull": 85,
-      "fire": 490,
-      "clown": 130
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789544000000
@@ -177,10 +177,10 @@
     "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[16/9]",
     "reactions": {
-      "laugh": 65,
-      "skull": 40,
-      "fire": 360,
-      "clown": 22
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789543500000
@@ -208,10 +208,10 @@
     "image": "https://images.unsplash.com/photo-1531415074868-036b1c57e359?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
-      "laugh": 92,
-      "skull": 28,
-      "fire": 610,
-      "clown": 45
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789543000000
@@ -239,10 +239,10 @@
     "image": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[1/1]",
     "reactions": {
-      "laugh": 240,
-      "skull": 62,
-      "fire": 380,
-      "clown": 110
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789542500000
@@ -270,10 +270,10 @@
     "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
-      "laugh": 78,
-      "skull": 95,
-      "fire": 510,
-      "clown": 34
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789542000000
@@ -301,10 +301,10 @@
     "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[16/9]",
     "reactions": {
-      "laugh": 88,
-      "skull": 42,
-      "fire": 340,
-      "clown": 26
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
     },
     "publishedDate": "2026-09-16",
     "publishedAt": 1789541500000

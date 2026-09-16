@@ -3226,7 +3226,7 @@
         if (!topEl || !NEWS_DATA.length) return;
         const story = NEWS_DATA[topTickerIndex % NEWS_DATA.length];
         topTickerIndex++;
-        topEl.innerHTML = `⚡ <span class="text-rose-400 font-bold">${story.categoryLabel || 'ताज़ा खबर'}:</span> <span class="hover:underline cursor-pointer" onclick="openModal('${story.id}')">${escapeHtml(story.title)}</span> <span class="text-slate-400 text-[10px]">(${escapeHtml(story.originalSource || 'Live')})</span>`;
+        topEl.innerHTML = `⚡ <span class="text-rose-400 font-bold">${story.categoryLabel || 'ताज़ा अपडेट'}:</span> <span class="hover:underline cursor-pointer" onclick="openModal('${story.id}')">${escapeHtml(story.title)}</span> <span class="text-rose-400 font-bold text-[10px] ml-1">● CLUBR Verified</span>`;
       }
 
       updateTicker();

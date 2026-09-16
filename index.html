@@ -225,7 +225,7 @@
         RAW & UNFILTERED
       </span>
       <p id="topTickerText" class="font-medium text-slate-200 truncate text-xs sm:text-sm">
-        🚀 Sensex 1,000 point upar, par tumhari salary aur appraisals wahi 3% pe freeze!
+        ⚡ ताज़ा ब्रेकिंग न्यूज़ लोड हो रही है...
       </p>
     </div>
     <div class="flex items-center gap-2 text-[11px] font-mono text-slate-300 flex-shrink-0 pl-3">
@@ -1526,39 +1526,17 @@
     function trackSiteStats() {
       try {
         let stats = JSON.parse(localStorage.getItem('clubr_site_stats') || '{}');
-        stats.views = (stats.views || 4820) + 1;
+        stats.views = (stats.views || 1) + 1;
         stats.lastVisit = Date.now();
         localStorage.setItem('clubr_site_stats', JSON.stringify(stats));
 
-        // Seed initial registered users for admin directory if not initialized
-        if (!localStorage.getItem('clubr_registered_users')) {
-          const defaultUsers = [
-            {
-              name: "Rahul Sharma",
-              email: "rahul.sharma@gmail.com",
-              avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80",
-              bio: "Tech & Startup enthusiast",
-              joinedAt: Date.now() - 86400000 * 5,
-              lastActive: Date.now() - 3600000 * 2
-            },
-            {
-              name: "Priya Patel",
-              email: "priya.patel@gmail.com",
-              avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80",
-              bio: "Daily Reality Check reader",
-              joinedAt: Date.now() - 86400000 * 3,
-              lastActive: Date.now() - 3600000 * 1
-            },
-            {
-              name: "Amit Verma",
-              email: "amit.verma@gmail.com",
-              avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop&q=80",
-              bio: "Unfiltered news follower",
-              joinedAt: Date.now() - 86400000 * 2,
-              lastActive: Date.now() - 3600000 * 4
-            }
-          ];
-          localStorage.setItem('clubr_registered_users', JSON.stringify(defaultUsers));
+        // Purge any dummy users from previous sessions
+        let existingUsers = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+        if (Array.isArray(existingUsers) && existingUsers.length > 0) {
+          const realUsers = existingUsers.filter(u => u.email !== 'rahul.sharma@gmail.com' && u.email !== 'priya.patel@gmail.com' && u.email !== 'amit.verma@gmail.com');
+          if (realUsers.length !== existingUsers.length) {
+            localStorage.setItem('clubr_registered_users', JSON.stringify(realUsers));
+          }
         }
       } catch (e) {}
     }
@@ -3151,6 +3129,24 @@
       }
     }
 
+    let topTickerInterval = null;
+    let topTickerIndex = 0;
+    function startDynamicTopTicker() {
+      if (!NEWS_DATA || NEWS_DATA.length === 0) return;
+      if (topTickerInterval) clearInterval(topTickerInterval);
+
+      function updateTicker() {
+        const topEl = document.getElementById('topTickerText');
+        if (!topEl || !NEWS_DATA.length) return;
+        const story = NEWS_DATA[topTickerIndex % NEWS_DATA.length];
+        topTickerIndex++;
+        topEl.innerHTML = `⚡ <span class="text-rose-400 font-bold">${story.categoryLabel || 'ताज़ा खबर'}:</span> <span class="hover:underline cursor-pointer" onclick="openModal('${story.id}')">${escapeHtml(story.title)}</span> <span class="text-slate-400 text-[10px]">(${escapeHtml(story.originalSource || 'Live')})</span>`;
+      }
+
+      updateTicker();
+      topTickerInterval = setInterval(updateTicker, 5000);
+    }
+
     function openPopupCurrentStory() {
       const card = NEWS_DATA[floatingPopupIndex];
       if (card) openModal(card.id);
@@ -3373,7 +3369,7 @@
         if (!raw) return [];
         const parsed = JSON.parse(raw);
         if (!Array.isArray(parsed)) return [];
-        return parsed.filter(a => a.isActive);
+        return parsed.filter(a => a.isActive && a.brandName !== 'Hostinger India' && a.brandName !== 'HOSTINGER INDIA' && a.brandName !== 'NextGen Mobile Tech' && a.brandName !== 'SMARTPHONE 5G');
       } catch (e) {
         return [];
       }
@@ -3642,6 +3638,7 @@
       });
 
       grid.innerHTML = renderedItems.join('');
+      startDynamicTopTicker();
     }
 
     // ---------------------------------------------------------------------------

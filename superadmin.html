@@ -1266,268 +1266,7 @@
     applyAdminTheme(getAdminTheme());
 
     const DEFAULT_PIN = 'Atoz@R127';
-
-    // Seed Data if localStorage is empty
-    const INITIAL_NEWS_SEED = [
-  {
-    "id": "card-1",
-    "category": "business",
-    "categoryLabel": "💸 Business & Paisa",
-    "spiciness": "🔥 Trending",
-    "title": "Shark Tank Pitchers को TV पर मिला Cheque, पर Bank Account में आए Zero",
-    "preview": "Camera बंद होते ही Valuations गिरीं और Due-Diligence में Deal Cancel होने की नौबत आ गई।",
-    "fact": "TV Show पर Deals साइन हो जाती हैं, लेकिन हकीकत में सिर्फ 35-40% Deals ही Founders के Bank Account तक पहुंचती हैं।",
-    "detail": "कई Brands कैमरे के सामने Publicity ले लेते हैं, बाद में 6 महीने Audit चलाकर कहते हैं 'Terms Match नहीं हुईं'।",
-    "take": "Pitching TV पर करो या Office में, जब तक पैसा Bank Account में न आ जाए तब तक Party मत दो।",
-    "afwah": "78%",
-    "reality": "22%",
-    "poll": {
-      "question": "Shark Tank Funding असली Business Boost है या सिर्फ PR Drama?",
-      "opt1": "सिर्फ TRP और Free Publicity है",
-      "opt2": "असली Startup Growth मिलती है",
-      "v1": 84,
-      "v2": 16
-    },
-    "sourceUrl": "https://www.google.com/search?q=shark+tank+india+deal+conversion+rate",
-    "image": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 420,
-      "skull": 312,
-      "fire": 680,
-      "clown": 115
-    },
-    "publishedDate": "2026-09-16",
-    "publishedAt": 1789533000000
-  },
-  {
-    "id": "card-2",
-    "category": "entertainment",
-    "categoryLabel": "🎬 Entertainment & Cinema",
-    "spiciness": "⚡ Viral Topic",
-    "title": "Influencer ने Maldives Hotel में मांगा Free Stay, Manager ने दिखाया बाहर का रास्ता",
-    "preview": "50k Followers के दम पर Luxury Villa मांगने गए थे, Hotel Management ने Barter Policy का सच बता दिया।",
-    "fact": "Social Media Influencer ने Barter Collaboration मांगी, Hotel ने Reject करके Official Rate Card थमा दिया।",
-    "detail": "Fake Followers और Paid Blue Tick के दौर में अब Hotels और Luxury Resorts बहुत सख्त Verification कर रहे हैं।",
-    "take": "Instagram Stories पर Show-off करने से पहले अपना Bank Balance और Real Value Check कर लेना बेहतर है।",
-    "afwah": "60%",
-    "reality": "40%",
-    "poll": {
-      "question": "Influencers को 5-Star Hotels में Free Stay मिलना चाहिए?",
-      "opt1": "बिल्कुल नहीं, Bill Pay करो!",
-      "opt2": "हां, Marketing भी तो होती है",
-      "v1": 91,
-      "v2": 9
-    },
-    "sourceUrl": "https://www.google.com/search?q=influencer+free+hotel+collaboration+backlash",
-    "image": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[1/1]",
-    "reactions": {
-      "laugh": 890,
-      "skull": 540,
-      "fire": 320,
-      "clown": 210
-    },
-    "publishedDate": "2026-09-16",
-    "publishedAt": 1789533000000
-  },
-  {
-    "id": "card-3",
-    "category": "regional",
-    "categoryLabel": "📍 Regional & Local",
-    "spiciness": "🌧️ Ground Reality",
-    "title": "Gurgaon में 10 Minute की बारिश: सड़कों पर Waterlogging, BMW और Swift दोनों फंसीं",
-    "preview": "Cyber City के High-Rise Towers के ठीक नीचे 4 घंटे लंबा Traffic Jam, Drainage System फिर से फेल।",
-    "fact": "Monsoon की पहली ही बारिश में Expressways और Master Roads पर भारी Waterlogging की समस्या आई।",
-    "detail": "हर साल Drainage और Infrastructure के लिए करोड़ों का Budget जारी होता है, लेकिन जमीन पर स्थिति नहीं बदलती।",
-    "take": "Remote Work Culture का सबसे बड़ा फायदा यही है कि बारिश में भारी Traffic Jam और जलभराव से बचा जा सके।",
-    "afwah": "30%",
-    "reality": "70%",
-    "poll": {
-      "question": "बारिश में Cyber Hub जाना Adventure है या सिरदर्द?",
-      "opt1": "100% सिरदर्द और परेशानी",
-      "opt2": "Adventure तो है",
-      "v1": 95,
-      "v2": 5
-    },
-    "sourceUrl": "https://www.google.com/search?q=gurugram+traffic+rain+waterlogging",
-    "image": "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[3/4]",
-    "reactions": {
-      "laugh": 730,
-      "skull": 612,
-      "fire": 190,
-      "clown": 410
-    },
-    "publishedDate": "2026-09-15",
-    "publishedAt": 1789446600000
-  },
-  {
-    "id": "card-4",
-    "category": "paisa",
-    "categoryLabel": "💸 Paisa & Startups",
-    "spiciness": "📉 Market Alert",
-    "category": "business",
-    "categoryLabel": "💸 Business & Paisa",
-    "title": "Crypto Bro ने SIP छोड़कर Meme Coin में लगाए 2 Lakh, अब ढूंढ रहे Zomato Coupon",
-    "preview": "'To The Moon' का नारा देने वाला Coin 98% गिरा, Developer ने Liquidity Pool से Exit मार दिया।",
-    "fact": "Dog-Themed Altcoin में Developers द्वारा Liquidity खींचने के बाद Heavy Crash दर्ज हुआ।",
-    "detail": "Telegram Groups और Social Media Hype में Pump & Dump किया जाता है, जिसमें Retail Investors फंस जाते हैं।",
-    "take": "Hype के पीछे भागने से बेहतर है कि सही Asset Allocation और Index Funds में Discipline बनाए रखें।",
-    "afwah": "85%",
-    "reality": "15%",
-    "poll": {
-      "question": "Meme Coins में पैसा लगाना Investment है या Gambling?",
-      "opt1": "शुद्ध Gambling Mindset!",
-      "opt2": "High Risk High Reward",
-      "v1": 78,
-      "v2": 22
-    },
-    "sourceUrl": "https://www.google.com/search?q=crypto+memecoin+rugpull+news",
-    "image": "https://images.unsplash.com/photo-1622979135225-d2ba269bc1df?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 560,
-      "skull": 720,
-      "fire": 310,
-      "clown": 512
-    },
-    "publishedDate": "2026-09-15",
-    "publishedAt": 1789446600000
-  },
-  {
-    "id": "card-5",
-    "category": "trending",
-    "categoryLabel": "🍿 Trending & Viral",
-    "spiciness": "🔥 Fact Check",
-    "category": "entertainment",
-    "categoryLabel": "🎬 Entertainment & Cinema",
-    "title": "Celeb Wellness Myths का पर्दाफाश: 'सिर्फ पानी और हवा' का दावा करने वाले पीछे से क्या खा रहे?",
-    "preview": "Interviews में Extreme Detox Diet का ज्ञान देने वाले असल जिंदगी में Normal Heavy Meal लेते हैं।",
-    "fact": "Celebrity Interviews में दी जाने वाली 500-Calorie Diets मेडिकल रूप से Unrealistic और Unhealthy हैं।",
-    "detail": "PR Teams अक्सर Unrealistic Standards और महंगे Detox Products बेचने के लिए ऐसी Diets Promote करती हैं।",
-    "take": "Social Media Trends फॉलो करने से बेहतर है कि Balanced Diet और Regular Health Routine पर ध्यान दें।",
-    "afwah": "90%",
-    "reality": "10%",
-    "poll": {
-      "question": "Celebs की Detox Diets पर कितना भरोसा करते हैं?",
-      "opt1": "0% सब Marketing Gimmick है",
-      "opt2": "थोड़ा-बहुत सच होता है",
-      "v1": 88,
-      "v2": 12
-    },
-    "sourceUrl": "https://www.google.com/search?q=celebrity+diet+myths+wellness+industry",
-    "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[1/1]",
-    "reactions": {
-      "laugh": 1050,
-      "skull": 430,
-      "fire": 620,
-      "clown": 340
-    },
-    "publishedDate": "2026-09-14",
-    "publishedAt": 1789360200000
-  },
-  {
-    "id": "card-6",
-    "category": "lifestyle",
-    "categoryLabel": "🤦‍♂️ Daily Life & Reality",
-    "spiciness": "🚆 Reality Check",
-    "category": "political",
-    "categoryLabel": "🏛️ Politics & Desh",
-    "title": "IRCTC Tatkal Booking: 10:00:01 AM पर 'Available', 10:00:03 AM पर 'Waiting List 120'",
-    "preview": "High-Speed Internet भी Servers के आगे फेल, Festive Season में Tickets मिलना चुनौती बना।",
-    "fact": "Rush Hours में Peak Travel Routes की Tatkal Tickets चंद Seconds में पूरी तरह Exhaust हो जाती हैं।",
-    "detail": "एक साथ लाखों Users और Authorized Agents का Heavy Traffic होने के कारण Payment Gateway तक पहुंचना मुश्किल हो जाता है।",
-    "take": "त्योहारों पर घर जाने की Planning Advance में कर लेना मानसिक शांति और जेब दोनों के लिए सबसे बेहतर है।",
-    "afwah": "45%",
-    "reality": "55%",
-    "poll": {
-      "question": "Tatkal में Ticket मिलना किस्मत है या Agent का कमाल?",
-      "opt1": "किस्मत और Fast Fingers",
-      "opt2": "Agent Setting का खेल",
-      "v1": 72,
-      "v2": 28
-    },
-    "sourceUrl": "https://www.google.com/search?q=irctc+tatkal+booking+speed+rush",
-    "image": "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[3/4]",
-    "reactions": {
-      "laugh": 640,
-      "skull": 810,
-      "fire": 150,
-      "clown": 490
-    },
-    "publishedDate": "2026-09-14",
-    "publishedAt": 1789360200000
-  },
-  {
-    "id": "card-7",
-    "category": "paisa",
-    "categoryLabel": "💸 Paisa & Startups",
-    "spiciness": "💼 Corporate Reality",
-    "category": "tech",
-    "categoryLabel": "⚡ Tech & Trends",
-    "title": "Tech Company का 'We Are Family' Email आने के 48 Hours बाद सैकड़ों Slack Accounts Deactivate",
-    "preview": "Townhall में Reassurance के ठीक बाद Cost-Cutting के तहत Workforce Rationalization लागू किया गया।",
-    "fact": "Quarterly Results और Investor Pressure के चलते Tech Giants द्वारा Restructuring और Layoffs जारी हैं।",
-    "detail": "AI Automation और Margin Pressure के बीच Management अक्सर Efficiency के नाम पर Teams Reorganize करता है।",
-    "take": "Corporate World में काम को Professional Commitment समझें, Emotional Attachment से ज्यादा जरूरी Financial Security है।",
-    "afwah": "65%",
-    "reality": "35%",
-    "poll": {
-      "question": "Corporate की 'Family' वाली बात पर कितना यकीन है?",
-      "opt1": "Professional Relation है, Family नहीं",
-      "opt2": "कुछ Companies का Culture अच्छा होता है",
-      "v1": 94,
-      "v2": 6
-    },
-    "sourceUrl": "https://www.google.com/search?q=tech+layoffs+corporate+culture+memo",
-    "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 820,
-      "skull": 990,
-      "fire": 450,
-      "clown": 380
-    },
-    "publishedDate": "2026-09-13",
-    "publishedAt": 1789273800000
-  },
-  {
-    "id": "card-8",
-    "category": "trending",
-    "categoryLabel": "🍿 Trending & Viral",
-    "spiciness": "🥊 Entertainment Buzz",
-    "category": "sports",
-    "categoryLabel": "🏏 Sports & Cricket",
-    "title": "YouTubers का Boxing Match: महीनों चली Online Rivalry, Ring में गले मिलकर करोड़ों कमाए",
-    "preview": "Audience Controversy देख रही थी, उधर Pay-Per-View और Brand Sponsorships से दोनों ने करोड़ों समेट लिए।",
-    "fact": "दो Creators के बीच Pre-Planned Online Feud के बाद Paid Live-Streaming Event कराया गया।",
-    "detail": "Content Creators अब Online Drama को High-Revenue Commercial Event में बदलने का Formula सीख चुके हैं।",
-    "take": "Internet पर होने वाले Drama पर अपना Time और Energy Waste न करें, Screen के पीछे सब Business Deal है।",
-    "afwah": "95%",
-    "reality": "5%",
-    "poll": {
-      "question": "Creator Matches असली Sports हैं या Scripted Entertainment?",
-      "opt1": "100% Scripted Business",
-      "opt2": "Entertainment तो मिलता है",
-      "v1": 89,
-      "v2": 11
-    },
-    "sourceUrl": "https://www.google.com/search?q=influencer+boxing+matches+scripted+revenue",
-    "image": "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[1/1]",
-    "reactions": {
-      "laugh": 1200,
-      "skull": 580,
-      "fire": 410,
-      "clown": 790
-    },
-    "publishedDate": "2026-09-13",
-    "publishedAt": 1789273800000
-  }
-];
+    const INITIAL_NEWS_SEED = [];
 
     function getAdminPin() {
       const stored = localStorage.getItem('clubr_admin_pin');
@@ -1844,43 +1583,19 @@
     // ---------------------------------------------------------------------------
     // ADS MANAGEMENT SYSTEM (IMAGE & VIDEO)
     // ---------------------------------------------------------------------------
-    const DEFAULT_ADS_SEED = [
-      {
-        id: "ad-1",
-        format: "image",
-        brandName: "Hostinger India",
-        headline: "सिर्फ ₹149/mo में बनाएं सुपरफास्ट वेबसाइट + फ्री डोमेन व SSL",
-        ctaText: "Claim 75% Off →",
-        mediaUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80",
-        targetUrl: "https://wa.me/918275411710?text=Interested%20in%20Advertising%20on%20CLUBR",
-        isActive: true,
-        createdAt: Date.now() - 86400000
-      },
-      {
-        id: "ad-2",
-        format: "video",
-        brandName: "NextGen Mobile Tech",
-        headline: "Experience 120Hz Ultra OLED Display & Instant Fast Charging",
-        ctaText: "Learn More 📱",
-        mediaUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-41315-large.mp4",
-        targetUrl: "https://clubr.online/",
-        isActive: true,
-        createdAt: Date.now() - 3600000 * 5
-      }
-    ];
+    const DEFAULT_ADS_SEED = [];
 
     function getAllSiteAds() {
       let stored = localStorage.getItem('clubr_site_ads');
-      if (!stored) {
-        localStorage.setItem('clubr_site_ads', JSON.stringify(DEFAULT_ADS_SEED));
-        return JSON.parse(JSON.stringify(DEFAULT_ADS_SEED));
-      }
+      if (!stored) return [];
       try {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-        return DEFAULT_ADS_SEED;
+        if (Array.isArray(parsed)) {
+          return parsed.filter(a => a.brandName !== 'Hostinger India' && a.brandName !== 'HOSTINGER INDIA' && a.brandName !== 'NextGen Mobile Tech' && a.brandName !== 'SMARTPHONE 5G');
+        }
+        return [];
       } catch (e) {
-        return DEFAULT_ADS_SEED;
+        return [];
       }
     }
 
@@ -2119,7 +1834,8 @@
     // DATA HELPERS (Shared with index.html)
     // ---------------------------------------------------------------------------
     function getRegisteredUsers() {
-      return JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+      const users = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+      return users.filter(u => u.email !== 'rahul.sharma@gmail.com' && u.email !== 'priya.patel@gmail.com' && u.email !== 'amit.verma@gmail.com');
     }
 
     function getBlockedEmails() {
@@ -2145,15 +1861,14 @@
 
       let stored = localStorage.getItem('clubr_all_news');
       let list = [];
-      if (!stored) {
-        list = JSON.parse(JSON.stringify(INITIAL_NEWS_SEED));
-      } else {
+      if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          list = (Array.isArray(parsed) && parsed.length > 0) ? parsed : JSON.parse(JSON.stringify(INITIAL_NEWS_SEED));
-        } catch (e) {
-          list = JSON.parse(JSON.stringify(INITIAL_NEWS_SEED));
-        }
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            // Filter out old dummy cards
+            list = parsed.filter(c => c.id && !c.id.startsWith('card-'));
+          }
+        } catch (e) {}
       }
 
       // Auto migrate legacy categories

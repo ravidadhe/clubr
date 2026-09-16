@@ -7,14 +7,14 @@ const FIREBASE_PROJECT_ID = "clubr-online";
 const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || "AIzaSyAsE1K8xU8aTsCAAeY4vt6LcghKXySUpdY";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 
-// Google News RSS Feeds (100% Free & Real-time Verified)
+// Google News Hindi RSS Feeds (100% Free & Real-time Verified)
 const RSS_FEEDS = {
-  political: 'https://news.google.com/rss/search?q=india+politics+national&hl=en-IN&gl=IN&ceid=IN:en',
-  business: 'https://news.google.com/rss/search?q=india+business+startups+economy&hl=en-IN&gl=IN&ceid=IN:en',
-  tech: 'https://news.google.com/rss/search?q=technology+ai+software+india&hl=en-IN&gl=IN&ceid=IN:en',
-  sports: 'https://news.google.com/rss/search?q=cricket+india+sports&hl=en-IN&gl=IN&ceid=IN:en',
-  entertainment: 'https://news.google.com/rss/search?q=bollywood+cinema+entertainment+india&hl=en-IN&gl=IN&ceid=IN:en',
-  regional: 'https://news.google.com/rss/search?q=delhi+mumbai+bengaluru+state+news&hl=en-IN&gl=IN&ceid=IN:en'
+  political: 'https://news.google.com/rss/search?q=%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4+%E0%A4%B0%E0%A4%BE%E0%A4%9C%E0%A4%A8%E0%A5%80%E0%A4%A4%E0%A4%BF+%E0%A4%B8%E0%A4%B0%E0%A4%95%E0%A4%BE%E0%A4%B0&hl=hi&gl=IN&ceid=IN:hi',
+  business: 'https://news.google.com/rss/search?q=%E0%A4%B6%E0%A5%87%E0%A4%AF%E0%A4%B0+%E0%A4%AC%E0%A4%BE%E0%A4%9C%E0%A4%BE%E0%A4%B0+%E0%A4%AC%E0%A4%BF%E0%A4%9C%E0%A4%A8%E0%A5%87%E0%A4%B8&hl=hi&gl=IN&ceid=IN:hi',
+  tech: 'https://news.google.com/rss/search?q=%E0%A4%9F%E0%A5%87%E0%A4%95%E0%A5%8D%E0%A4%A8%E0%A5%8B%E0%A4%B2%E0%A5%89%E0%A4%9C%E0%A5%80+%E0%A4%B8%E0%A5%8D%E0%A4%AE%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%9F%E0%A4%AB%E0%A5%8B%E0%A4%A8+AI&hl=hi&gl=IN&ceid=IN:hi',
+  sports: 'https://news.google.com/rss/search?q=%E0%A4%95%E0%A5%8D%E0%A4%B0%E0%A4%BF%E0%A4%95%E0%A5%87%E0%A4%9F+%E0%A4%96%E0%A5%87%E0%A4%B2+%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4&hl=hi&gl=IN&ceid=IN:hi',
+  entertainment: 'https://news.google.com/rss/search?q=%E0%A4%AC%E0%A4%BE%E0%A4%B2%E0%A5%80%E0%A4%B5%E0%A5%81%E0%A4%A1+%E0%A4%B8%E0%A4%BF%E0%A4%A8%E0%A5%87%E0%A4%AE%E0%A4%BE+%E0%A4%AB%E0%A4%BF%E0%A4%B2%E0%A5%8D%E0%A4%AE%E0%A5%87%E0%A4%82&hl=hi&gl=IN&ceid=IN:hi',
+  regional: 'https://news.google.com/rss/search?q=%E0%A4%A6%E0%A4%BF%E0%A4%B2%E0%A5%8D%E0%A4%B2%E0%A5%80+%E0%A4%AE%E0%A5%81%E0%A4%82%E0%A4%AC%E0%A4%88+%E0%A4%B0%E0%A4%BE%E0%A4%9C%E0%A5%8D%E0%A4%AF+%E0%A4%B8%E0%A4%AE%E0%A4%BE%E0%A4%9A%E0%A4%BE%E0%A4%B0&hl=hi&gl=IN&ceid=IN:hi'
 };
 
 const CATEGORY_META = {

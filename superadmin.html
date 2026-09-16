@@ -283,12 +283,12 @@
         
         <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-mono uppercase text-slate-400 font-bold">Impressions</span>
+            <span class="text-[11px] font-mono uppercase text-slate-400 font-bold">Today's Traffic</span>
             <span class="text-lg">👁️</span>
           </div>
           <div class="text-2xl sm:text-3xl font-black text-white font-mono" id="statTotalViews">0</div>
           <div class="text-[11px] text-emerald-400 font-mono flex items-center gap-1">
-            <span>Live Traffic</span>
+            <span>● 1-Day Live</span>
           </div>
         </div>
 
@@ -1194,6 +1194,33 @@
             if (typeof renderAdsManager === 'function') renderAdsManager();
           }
         });
+
+        // Realtime Database 1-Day Traffic listener
+        fbRtdb.ref('stats/today').on('value', (snapshot) => {
+          const val = snapshot.val();
+          const todayKey = new Date().toISOString().split('T')[0];
+          if (val && val.date === todayKey) {
+            localStorage.setItem('clubr_daily_traffic', JSON.stringify(val));
+            localStorage.setItem('clubr_site_stats', JSON.stringify(val));
+            const el = document.getElementById('statTotalViews');
+            if (el) el.innerText = Number(val.views || 0).toLocaleString();
+          } else if (val && val.date !== todayKey) {
+            const el = document.getElementById('statTotalViews');
+            if (el) el.innerText = '0';
+          }
+        });
+
+        // Realtime Database Users listener
+        fbRtdb.ref('users').on('value', (snapshot) => {
+          const val = snapshot.val();
+          if (val) {
+            const list = Object.values(val).filter(u => u.email !== 'rahul.sharma@gmail.com' && u.email !== 'priya.patel@gmail.com' && u.email !== 'amit.verma@gmail.com');
+            localStorage.setItem('clubr_registered_users', JSON.stringify(list));
+            if (typeof renderUsersTable === 'function') renderUsersTable();
+            const uEl = document.getElementById('statTotalUsers');
+            if (uEl) uEl.innerText = list.length;
+          }
+        });
       }
     }
 
@@ -1847,7 +1874,15 @@
     }
 
     function getSiteStats() {
-      return JSON.parse(localStorage.getItem('clubr_site_stats') || '{}');
+      const todayKey = new Date().toISOString().split('T')[0];
+      let daily = {};
+      try {
+        daily = JSON.parse(localStorage.getItem('clubr_daily_traffic') || localStorage.getItem('clubr_site_stats') || '{}');
+      } catch (e) {}
+      if (daily.date !== todayKey) {
+        return { views: 0, date: todayKey };
+      }
+      return daily;
     }
 
     function getAllNewsMaster() {
@@ -1914,7 +1949,9 @@
         totalComms += (comments[cardId] || []).length;
       });
 
-      document.getElementById('statTotalViews').innerText = (stats.views || 4820).toLocaleString();
+      const todayKey = new Date().toISOString().split('T')[0];
+      const todayViews = (stats && stats.date === todayKey) ? (stats.views || 0) : 0;
+      document.getElementById('statTotalViews').innerText = Number(todayViews).toLocaleString();
       document.getElementById('statTotalUsers').innerText = users.length;
       document.getElementById('statTotalComments').innerText = totalComms;
       document.getElementById('statActiveNewsCount').innerText = activeNews.length;

@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="hi" class="dark">
+<html lang="en" class="dark h-full">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>CLUBR VIBE LAB — Red Flag Meter, Chat Decoder & Gen-Z Vibe Hub</title>
+  <title>Clubr.online — Virtual 2D Digital Club</title>
   
-  <!-- SEO & Social Meta -->
-  <meta name="description" content="Decode your crush's mixed signals, calculate your Red Flags, check your Delulu score, and generate aesthetic Instagram bios on CLUBR VIBE LAB." />
-  <meta property="og:title" content="CLUBR VIBE LAB — The Ultimate Gen-Z Social Hub" />
-  <meta property="og:description" content="Decode mixed signals, check red flags, and create Spotify-Wrapped aesthetic Instagram Story cards." />
+  <meta name="description" content="Step into Clubr.online, the 2D virtual digital nightclub. Meet people at tables, chat with speech bubbles, dance at the DJ booth, and vibe to Lo-Fi beats." />
+  <meta property="og:title" content="Clubr.online — Virtual 2D Digital Club" />
+  <meta property="og:description" content="Hangout in the virtual 2D club with friends. No registration needed!" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clubr.online" />
-  <meta name="theme-color" content="#09090b" />
+  <meta name="theme-color" content="#09090c" />
   
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
@@ -29,15 +28,16 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              black: '#09090b',
-              card: '#121216',
-              border: '#27272a',
-              neonRose: '#ff2a5f',
-              neonViolet: '#8b5cf6',
-              neonCyan: '#06b6d4',
-              neonEmerald: '#10b981',
-              neonAmber: '#f59e0b',
+            club: {
+              bg: '#09090d',
+              grid: '#181824',
+              surface: '#12121c',
+              border: '#27273a',
+              cyan: '#06b6d4',
+              purple: '#a855f7',
+              emerald: '#10b981',
+              gold: '#f59e0b',
+              rose: '#f43f5e'
             }
           },
           fontFamily: {
@@ -49,1752 +49,1148 @@
     }
   </script>
 
-  <!-- Confetti CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <!-- Firebase App & Auth SDKs (CDN) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
   <style>
-    body {
-      background-color: #09090b;
-      color: #f4f4f5;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      overflow-x: hidden;
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #09090d;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .headline-font {
       font-family: 'Space Grotesk', sans-serif;
     }
-    /* Cyber Glows */
-    .glow-rose {
-      box-shadow: 0 0 35px -5px rgba(255, 42, 95, 0.35);
-    }
-    .glow-violet {
-      box-shadow: 0 0 35px -5px rgba(139, 92, 246, 0.35);
-    }
-    .glow-cyan {
-      box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.35);
-    }
-    /* Glass card */
-    .glass-panel {
-      background: rgba(18, 18, 22, 0.85);
+    /* Glassmorphism */
+    .glass-ui {
+      background: rgba(18, 18, 28, 0.75);
       backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+    /* Glowing animations */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
     }
-    ::-webkit-scrollbar-track {
-      background: #09090b;
+    .animate-pulse-glow {
+      animation: pulseGlow 3s ease-in-out infinite;
     }
-    ::-webkit-scrollbar-thumb {
-      background: #27272a;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3f3f46;
-    }
-    /* Shimmer effect */
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    .shimmer-text {
-      background: linear-gradient(90deg, #ff2a5f 0%, #a855f7 50%, #06b6d4 100%);
-      background-size: 200% auto;
-      color: transparent;
-      -webkit-background-clip: text;
-      background-clip: text;
-      animation: shimmer 4s linear infinite;
-    }
+    /* Hide scrollbars */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-rose-500 selection:text-white pb-24 md:pb-12">
+<body class="h-full w-full relative">
+
+  <!-- ========================================================================= -->
+  <!-- 2D INTERACTIVE CLUB CANVAS (FULLSCREEN) -->
+  <!-- ========================================================================= -->
+  <canvas id="clubFloorCanvas" class="absolute inset-0 w-full h-full cursor-crosshair z-0"></canvas>
 
   <!-- ========================================================================= -->
   <!-- TOP APP BAR -->
   <!-- ========================================================================= -->
-  <header class="sticky top-0 z-40 glass-panel border-b border-white/5 transition-all">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+  <header class="absolute top-0 left-0 right-0 z-30 p-3 sm:p-4 pointer-events-none">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
       
-      <!-- Brand Logo -->
-      <a href="javascript:void(0)" onclick="switchTab('redflag')" class="flex items-center gap-2.5 group">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 via-purple-600 to-cyan-400 p-[1.5px] shadow-lg shadow-rose-500/20 group-hover:scale-105 transition-transform">
-          <div class="w-full h-full bg-zinc-950 rounded-[14px] flex items-center justify-center font-extrabold text-lg text-white">
-            ⚡
-          </div>
+      <!-- Brand & Status -->
+      <div class="glass-ui rounded-2xl px-3.5 py-2 flex items-center gap-3 shadow-xl pointer-events-auto">
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+          <span class="headline-font font-black text-lg tracking-wider text-white">CLUBR</span>
         </div>
-        <div>
-          <div class="flex items-center gap-1.5">
-            <span class="headline-font font-black text-xl tracking-tight text-white">CLUBR</span>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30">VIBE LAB</span>
-          </div>
-          <p class="text-[10px] text-zinc-400 font-medium -mt-0.5">Gen-Z Social & Reality Desk</p>
+        <div class="h-4 w-[1px] bg-white/10"></div>
+        <div class="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
+          <span class="text-emerald-400">●</span>
+          <span id="onlineCountText">18 in Club</span>
         </div>
-      </a>
+      </div>
 
-      <!-- Right Actions (Sound Toggle + Streak + User) -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Center Zone Tag & Spotlight Alert -->
+      <div id="centerHeaderAlert" class="glass-ui rounded-2xl px-4 py-2 hidden sm:flex items-center gap-2 text-xs font-mono font-bold text-white shadow-xl pointer-events-auto transition-all">
+        <span id="zoneIndicatorDot" class="w-2 h-2 rounded-full bg-rose-500"></span>
+        <span id="zoneIndicatorText">Open Floor</span>
+      </div>
+
+      <!-- Right Actions (Audio Toggle, Invite Gang, Drop Drawer) -->
+      <div class="flex items-center gap-2 pointer-events-auto">
         
-        <!-- Audio FX Toggle -->
+        <!-- Audio Synthesizer Toggle -->
         <button 
-          id="soundToggleBtn" 
-          onclick="toggleSound()" 
-          class="w-9 h-9 rounded-xl bg-zinc-900/90 border border-white/10 hover:border-white/20 flex items-center justify-center text-sm transition-all active:scale-90"
-          title="Toggle Arcade Sound Effects">
-          <span id="soundIcon">🔊</span>
+          id="audioToggleBtn" 
+          onclick="toggleClubAudio()" 
+          class="glass-ui rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-white/20 active:scale-95 transition-all shadow-xl"
+          title="Lo-Fi Beats Toggle">
+          <span id="audioIcon">🔊</span>
         </button>
 
-        <!-- Live Vibe Streak -->
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold font-mono">
-          <span>🔥</span>
-          <span id="streakCount">Day 1</span>
-        </div>
+        <!-- Invite Gang Button -->
+        <button 
+          onclick="inviteGangToTable()" 
+          class="glass-ui rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold text-zinc-200 hover:text-white hover:border-white/20 active:scale-95 transition-all shadow-xl hidden sm:flex">
+          <span>📲</span>
+          <span>Invite Gang</span>
+        </button>
 
-        <!-- Google User / Login Button -->
-        <div id="authContainer">
-          <button 
-            id="loginHeaderBtn"
-            onclick="openLoginModal()" 
-            class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-bold text-xs shadow-md shadow-rose-600/20 transition-all active:scale-95 flex items-center gap-1.5">
-            <span>Sign In</span>
-          </button>
-          
-          <div id="userProfileBadge" class="hidden flex items-center gap-2 cursor-pointer" onclick="openProfileModal()">
-            <img id="userAvatarImg" src="" class="w-8 h-8 rounded-full border border-rose-500/40 object-cover" alt="User" />
-          </div>
-        </div>
+        <!-- Notice Board / Exclusive Drops Drawer Toggle -->
+        <button 
+          onclick="toggleDropDrawer()" 
+          class="glass-ui rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold bg-gradient-to-r from-rose-500/20 to-purple-500/20 text-rose-300 border-rose-500/30 hover:border-rose-500/50 active:scale-95 transition-all shadow-xl">
+          <span>🎁</span>
+          <span>Drops</span>
+        </button>
 
       </div>
 
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 overflow-x-auto no-scrollbar py-2 flex items-center gap-2 border-t border-white/5">
-      <button onclick="switchTab('redflag')" id="tabBtn-redflag" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-rose-500 text-white shadow-lg shadow-rose-500/25">
-        <span>🚩</span>
-        <span>Red Flag Meter</span>
-      </button>
-      <button onclick="switchTab('decoder')" id="tabBtn-decoder" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/5">
-        <span>💬</span>
-        <span>Chat Decoder</span>
-      </button>
-      <button onclick="switchTab('delulu')" id="tabBtn-delulu" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/5">
-        <span>🌀</span>
-        <span>Delulu Meter</span>
-      </button>
-      <button onclick="switchTab('bio')" id="tabBtn-bio" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/5">
-        <span>✨</span>
-        <span>Bio & Captions</span>
-      </button>
-      <button onclick="switchTab('crush')" id="tabBtn-crush" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/5">
-        <span>💘</span>
-        <span>Crush Vibe Match</span>
-      </button>
+    <!-- Spotlight Banner (Broadcast alert when avatar steps in center spotlight) -->
+    <div id="spotlightBanner" class="max-w-md mx-auto mt-2 hidden text-center pointer-events-auto">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/30 via-rose-500/30 to-purple-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold font-mono shadow-xl animate-bounce">
+        <span>🎙️ SPOTLIGHT MIC ACTIVE:</span>
+        <span id="spotlightUserText">Aryan is on the mic!</span>
+      </div>
     </div>
   </header>
 
   <!-- ========================================================================= -->
-  <!-- MAIN CONTAINER -->
+  <!-- FLOATING PROXIMITY TABLE CHAT (APPEARS WHEN INSIDE A TABLE ZONE) -->
   <!-- ========================================================================= -->
-  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
-
-    <!-- ======================================================================= -->
-    <!-- TAB 1: 🚩 RED FLAG & TOXIC METER -->
-    <!-- ======================================================================= -->
-    <section id="tabContent-redflag" class="tab-pane space-y-6">
+  <div id="tableChatContainer" class="absolute bottom-20 sm:bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-30 transition-all duration-300 opacity-0 pointer-events-none translate-y-4">
+    <div class="glass-ui rounded-3xl p-2.5 sm:p-3 shadow-2xl border border-white/15 space-y-2 pointer-events-auto">
       
-      <!-- Banner -->
-      <div class="text-center space-y-2 max-w-xl mx-auto">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono font-bold">
-          <span>🚨</span> CERTIFIED REALITY CHECK
-        </div>
-        <h1 class="headline-font text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          The Desi <span class="shimmer-text">Red Flag Radar</span>
-        </h1>
-        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-          क्या आपका क्रश सच्चा ग्रीन फ्लैग है या चलता-फिरता परमाणु संकट? 10 सवालों में पूरी कुंडली खोलिए।
-        </p>
+      <!-- Table Active Header -->
+      <div class="flex items-center justify-between px-2 text-[11px] font-mono">
+        <span id="tableChatHeader" class="font-bold text-zinc-300 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+          <span>Chatting at Tech & Hustle Table</span>
+        </span>
+        <span class="text-zinc-500">Speech Bubble: 6s</span>
       </div>
 
-      <!-- Mode Selector -->
-      <div id="rfModeSelector" class="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-lg mx-auto">
-        <button onclick="selectRedFlagMode('crush')" id="modeBtn-crush" class="rf-mode-btn p-3 sm:p-4 rounded-2xl glass-panel border-rose-500/50 bg-rose-500/10 text-center transition-all hover:scale-[1.02] active:scale-95 flex flex-col items-center gap-1.5">
-          <span class="text-2xl">💔</span>
-          <span class="text-xs font-extrabold text-white">Crush / Partner</span>
-          <span class="text-[10px] text-zinc-400 hidden sm:inline">Dating Toxicity</span>
-        </button>
-        <button onclick="selectRedFlagMode('bestie')" id="modeBtn-bestie" class="rf-mode-btn p-3 sm:p-4 rounded-2xl glass-panel border-white/5 hover:border-white/20 text-center transition-all hover:scale-[1.02] active:scale-95 flex flex-col items-center gap-1.5">
-          <span class="text-2xl">🐍</span>
-          <span class="text-xs font-extrabold text-zinc-300">Best Friend</span>
-          <span class="text-[10px] text-zinc-500 hidden sm:inline">Snake or Real?</span>
-        </button>
-        <button onclick="selectRedFlagMode('self')" id="modeBtn-self" class="rf-mode-btn p-3 sm:p-4 rounded-2xl glass-panel border-white/5 hover:border-white/20 text-center transition-all hover:scale-[1.02] active:scale-95 flex flex-col items-center gap-1.5">
-          <span class="text-2xl">🪞</span>
-          <span class="text-xs font-extrabold text-zinc-300">Am I The Toxic?</span>
-          <span class="text-[10px] text-zinc-500 hidden sm:inline">Self Reality Check</span>
-        </button>
-      </div>
-
-      <!-- Quiz Interactive Card Container -->
-      <div id="rfQuizCard" class="glass-panel rounded-3xl p-5 sm:p-8 max-w-2xl mx-auto relative overflow-hidden border border-white/10 shadow-2xl">
-        
-        <!-- Progress Bar & Header -->
-        <div class="flex items-center justify-between pb-4 border-b border-white/5">
-          <div class="flex items-center gap-2">
-            <span id="rfQuestionNumber" class="text-xs font-mono font-extrabold text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20">QUESTION 1 / 10</span>
-            <span id="rfModeTag" class="text-[11px] font-bold text-zinc-400">Target: Crush / Partner</span>
-          </div>
-          <div class="w-24 sm:w-36 bg-zinc-800 h-2 rounded-full overflow-hidden">
-            <div id="rfProgressBar" class="h-full bg-gradient-to-r from-rose-500 to-purple-500 transition-all duration-300 w-[10%]"></div>
-          </div>
-        </div>
-
-        <!-- Question Title -->
-        <div class="py-6">
-          <h3 id="rfQuestionText" class="headline-font text-lg sm:text-xl font-bold text-white leading-snug">
-            जब आप दोनों बाहर कैफे या डिनर पर जाते हैं, तो बिल आने पर उनका क्या रिएक्शन होता है?
-          </h3>
-        </div>
-
-        <!-- 4 Options Grid -->
-        <div id="rfOptionsContainer" class="space-y-3">
-          <!-- Dynamically inserted options -->
-        </div>
-
-      </div>
-
-      <!-- Result Card (Spotify Wrapped Style) - Initially Hidden -->
-      <div id="rfResultContainer" class="hidden max-w-xl mx-auto space-y-6">
-        
-        <!-- The Visual Story Card (Renderable & Downloadable) -->
-        <div id="rfVisualStoryCard" class="relative rounded-3xl p-6 sm:p-8 overflow-hidden bg-gradient-to-b from-[#180e1b] via-[#100d17] to-[#09090b] border-2 border-rose-500/30 shadow-2xl glow-rose">
-          
-          <!-- Background Decorative Elements -->
-          <div class="absolute top-0 right-0 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-          <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/15 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none"></div>
-
-          <!-- Card Header (Clubr Watermark & Mode) -->
-          <div class="relative z-10 flex items-center justify-between pb-6 border-b border-white/10">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">⚡</span>
-              <span class="headline-font font-black tracking-wider text-sm text-white">CLUBR VIBE REPORT</span>
-            </div>
-            <span id="resCardDate" class="text-[10px] font-mono font-bold text-zinc-400 px-2 py-0.5 rounded-full bg-white/5 border border-white/10">17 SEPT 2026</span>
-          </div>
-
-          <!-- Big Score Section -->
-          <div class="relative z-10 py-6 text-center space-y-3">
-            <div class="inline-block">
-              <span id="resVibeBadge" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 text-white font-extrabold text-xs tracking-wide uppercase shadow-lg shadow-rose-500/25">
-                🚩 CERTIFIED EMOTIONAL DAMAGE DEALER
-              </span>
-            </div>
-            
-            <div class="flex items-baseline justify-center gap-1">
-              <span id="resRedFlagScore" class="headline-font font-black text-6xl sm:text-7xl text-white tracking-tight">84%</span>
-              <span class="text-xl font-bold text-rose-400 uppercase font-mono">Red Flag</span>
-            </div>
-
-            <p id="resStatusPunchline" class="text-xs sm:text-sm text-rose-300 font-medium">
-              चलता-फिरता परमाणु संकट (Walking Nuclear Disaster)
-            </p>
-          </div>
-
-          <!-- Breakdown Meters -->
-          <div class="relative z-10 grid grid-cols-2 gap-3 py-3">
-            <div class="bg-white/5 rounded-2xl p-3 border border-white/5 text-center">
-              <div class="text-[10px] uppercase font-mono text-zinc-400 font-bold">Green Flags</div>
-              <div id="resGreenFlagScore" class="headline-font text-2xl font-black text-emerald-400 mt-0.5">16%</div>
-              <div class="text-[10px] text-zinc-500 mt-0.5">Bare Minimum effort</div>
-            </div>
-            <div class="bg-white/5 rounded-2xl p-3 border border-white/5 text-center">
-              <div class="text-[10px] uppercase font-mono text-zinc-400 font-bold">Delulu Index</div>
-              <div id="resDeluluScore" class="headline-font text-2xl font-black text-purple-400 mt-0.5">92%</div>
-              <div class="text-[10px] text-zinc-500 mt-0.5">High Overthinking</div>
-            </div>
-          </div>
-
-          <!-- Savage Verdict Box -->
-          <div class="relative z-10 my-4 p-4 rounded-2xl bg-black/40 border border-white/10 text-left space-y-2">
-            <div class="flex items-center gap-2 text-xs font-bold text-amber-400 font-mono uppercase">
-              <span>💣</span> <span>The Brutal Verdict:</span>
-            </div>
-            <p id="resSavageVerdict" class="text-xs sm:text-sm text-zinc-200 leading-relaxed">
-              भाई ये इंसान रिलेशनशिप में नहीं, सिर्फ फ्री थेरेपी और टाइमपास के लिए आया है। इनके लिए आपका मेसेज सिर्फ एक नोटिफिकेशन है। तुरंत ब्लॉक मारो और जिम जॉइन करो!
-            </p>
-          </div>
-
-          <!-- Spotify Wrapped Anthem Box -->
-          <div class="relative z-10 p-3 rounded-2xl bg-gradient-to-r from-purple-950/60 to-rose-950/60 border border-purple-500/20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-lg">
-                🎧
-              </div>
-              <div>
-                <div class="text-[10px] font-mono uppercase tracking-wider text-purple-300 font-bold">Official Vibe Anthem</div>
-                <div id="resAnthemName" class="headline-font text-xs font-bold text-white">Kahani Suno 2.0 (Heartbreak Mix)</div>
-              </div>
-            </div>
-            <span class="text-xs text-zinc-400 font-mono font-bold">CLUBR #1</span>
-          </div>
-
-          <!-- Footer Watermark -->
-          <div class="relative z-10 pt-4 text-center">
-            <span class="text-[10px] font-mono text-zinc-400 tracking-widest uppercase">
-              Tested on <b class="text-white">clubr.online</b> • Share with your gang
-            </span>
-          </div>
-
-        </div>
-
-        <!-- Action Buttons (Download Story & WhatsApp Share) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-          <button 
-            onclick="downloadStoryCardImage()" 
-            class="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-400 hover:to-purple-500 text-white font-extrabold text-sm shadow-xl shadow-rose-500/25 transition-all flex items-center justify-center gap-2 active:scale-95">
-            <span>📸 Download Story Card (HD PNG)</span>
-          </button>
-          
-          <button 
-            onclick="shareOnWhatsApp()" 
-            class="w-full py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-600/25 transition-all flex items-center justify-center gap-2 active:scale-95">
-            <span>📲 Share on WhatsApp</span>
-          </button>
-        </div>
-
-        <div class="text-center pt-2">
-          <button onclick="resetQuiz()" class="text-xs font-bold text-zinc-400 hover:text-white underline transition-colors">
-            ← Take Another Test (or Switch Mode)
-          </button>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- TAB 2: 💬 AI CHAT DECODER & SAVAGE REPLY -->
-    <!-- ======================================================================= -->
-    <section id="tabContent-decoder" class="tab-pane hidden space-y-6">
-      
-      <div class="text-center space-y-2 max-w-xl mx-auto">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-bold">
-          <span>🔍</span> AI BULLSHIT DETECTOR
-        </div>
-        <h2 class="headline-font text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          AI Chat Decoder & <span class="shimmer-text">Savage Replies</span>
-        </h2>
-        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-          क्रश का अजीब या रुखा मेसेज यहाँ पेस्ट करें। AI बताएगा इसका असली मतलब और देगा 3 तीखे रिप्लाई!
-        </p>
-      </div>
-
-      <!-- Quick Preset Chips -->
-      <div class="max-w-2xl mx-auto space-y-2">
-        <span class="text-[11px] font-mono text-zinc-500 font-bold uppercase tracking-wider">Quick Presets (Click to Test):</span>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="loadChatPreset('I need some space right now.')" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/5 text-xs text-zinc-300 transition-all active:scale-95">
-            "I need some space"
-          </button>
-          <button onclick="loadChatPreset('Sorry yaar kal 8 baje so gaya tha.')" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/5 text-xs text-zinc-300 transition-all active:scale-95">
-            "Sorry kal jaldi so gaya tha"
-          </button>
-          <button onclick="loadChatPreset('You deserve someone better than me.')" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/5 text-xs text-zinc-300 transition-all active:scale-95">
-            "You deserve better"
-          </button>
-          <button onclick="loadChatPreset('I am not ready for a relationship right now.')" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/5 text-xs text-zinc-300 transition-all active:scale-95">
-            "Not ready for relationship"
-          </button>
-          <button onclick="loadChatPreset('K')" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/5 text-xs text-zinc-300 transition-all active:scale-95">
-            "K"
-          </button>
-        </div>
-      </div>
-
-      <!-- Chat Input Box -->
-      <div class="glass-panel rounded-3xl p-5 sm:p-7 max-w-2xl mx-auto space-y-4 border border-white/10 shadow-xl">
-        <label class="block text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider">
-          Paste The Exact Message From Crush / Ex / Friend:
-        </label>
-        
-        <div class="relative">
-          <textarea 
-            id="decoderInput" 
-            rows="3" 
-            placeholder="उदा. 'Yaar main abhi career pe focus karna chahta hoon, lets just be friends...'"
-            class="w-full p-4 rounded-2xl bg-zinc-950 border border-white/10 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-zinc-500 transition-all resize-none"></textarea>
-        </div>
-
+      <!-- Chat Input Form -->
+      <form onsubmit="handleSendTableChat(event)" class="flex items-center gap-2">
+        <input 
+          type="text" 
+          id="tableChatInput" 
+          maxlength="80"
+          placeholder="Say something to the table..." 
+          class="flex-1 bg-black/60 border border-white/10 focus:border-cyan-400 focus:outline-none rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 font-medium transition-all"
+        />
         <button 
-          onclick="decodeChatMessage()" 
-          class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-cyan-500 via-purple-600 to-rose-500 hover:opacity-95 text-white font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition-all active:scale-95 flex items-center justify-center gap-2">
-          <span>⚡ Decode The Brutal Truth</span>
+          type="submit" 
+          class="px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white font-extrabold text-xs rounded-2xl transition-all active:scale-95 shrink-0 shadow-lg shadow-cyan-500/20">
+          Send 💬
         </button>
-      </div>
+      </form>
 
-      <!-- Decode Results Container -->
-      <div id="decoderResultBox" class="hidden max-w-2xl mx-auto space-y-4">
-        
-        <!-- The Naked Truth Card -->
-        <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-purple-950/40 via-zinc-900 to-zinc-900 border border-purple-500/30 space-y-3">
-          <div class="flex items-center gap-2 text-xs font-mono font-bold text-purple-400 uppercase tracking-wider">
-            <span>💣</span> THE NAKED TRUTH (असली मतलब)
-          </div>
-          <p id="decodedTruthText" class="text-base sm:text-lg font-bold text-white leading-relaxed">
-            "वो रिलेशनशिप के लिए रेडी है, बस तुम्हारे साथ नहीं! उम्मीद छोड़ो और जिम जॉइन करो।"
-          </p>
-        </div>
-
-        <!-- 3 Ready-to-Copy Replies -->
-        <div class="space-y-3">
-          <h4 class="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Choose Your Weapon (1-Click Copy):</h4>
-
-          <!-- Reply 1: Cold & Sigma -->
-          <div class="p-4 rounded-2xl glass-panel border border-white/10 flex items-center justify-between gap-4 group hover:border-cyan-500/40 transition-all">
-            <div>
-              <div class="text-[10px] font-mono text-cyan-400 font-bold uppercase">Option 1 • Cold & Sigma Mode (Unbothered)</div>
-              <p id="replyOption1" class="text-sm font-bold text-white mt-1">"Cool, space granted. Have a good life."</p>
-            </div>
-            <button onclick="copyReply('replyOption1', this)" class="shrink-0 px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-cyan-500 hover:text-black font-bold text-xs transition-all active:scale-90">
-              Copy 📋
-            </button>
-          </div>
-
-          <!-- Reply 2: Sarcastic & Funny -->
-          <div class="p-4 rounded-2xl glass-panel border border-white/10 flex items-center justify-between gap-4 group hover:border-rose-500/40 transition-all">
-            <div>
-              <div class="text-[10px] font-mono text-rose-400 font-bold uppercase">Option 2 • Sarcastic Roast Mode</div>
-              <p id="replyOption2" class="text-sm font-bold text-white mt-1">"NASA se rocket mangwaun kya itni space ke liye? 😂"</p>
-            </div>
-            <button onclick="copyReply('replyOption2', this)" class="shrink-0 px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-rose-500 hover:text-white font-bold text-xs transition-all active:scale-90">
-              Copy 📋
-            </button>
-          </div>
-
-          <!-- Reply 3: Friendzone Uno-Reverse -->
-          <div class="p-4 rounded-2xl glass-panel border border-white/10 flex items-center justify-between gap-4 group hover:border-purple-500/40 transition-all">
-            <div>
-              <div class="text-[10px] font-mono text-purple-400 font-bold uppercase">Option 3 • Friendzone Uno-Reverse</div>
-              <p id="replyOption3" class="text-sm font-bold text-white mt-1">"Glad we agree bro! Vaise bhi I only see you as a homie."</p>
-            </div>
-            <button onclick="copyReply('replyOption3', this)" class="shrink-0 px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-purple-500 hover:text-white font-bold text-xs transition-all active:scale-90">
-              Copy 📋
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- TAB 3: 🌀 THE DELULU METER -->
-    <!-- ======================================================================= -->
-    <section id="tabContent-delulu" class="tab-pane hidden space-y-6">
-      
-      <div class="text-center space-y-2 max-w-xl mx-auto">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono font-bold">
-          <span>🌀</span> FANTASY REALITY CHECK
-        </div>
-        <h2 class="headline-font text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          The <span class="shimmer-text">Delulu Calculator</span>
-        </h2>
-        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-          क्या आप प्यार में हैं या बस अपनी ही काल्पनिक बॉलीवुड मूवी के डायरेक्टर बन चुके हैं?
-        </p>
-      </div>
-
-      <!-- Delulu Quiz Box -->
-      <div id="deluluQuizBox" class="glass-panel rounded-3xl p-5 sm:p-8 max-w-2xl mx-auto space-y-6 border border-white/10 shadow-xl">
-        
-        <div class="flex items-center justify-between pb-3 border-b border-white/5">
-          <span id="deluluStepText" class="text-xs font-mono font-bold text-purple-400">TEST 1 OF 5</span>
-          <span class="text-[11px] text-zinc-500 font-mono">Overthinking Diagnostic</span>
-        </div>
-
-        <h3 id="deluluQuestionTitle" class="headline-font text-lg sm:text-xl font-bold text-white leading-snug">
-          जब क्रश ने आपकी इंस्टाग्राम स्टोरी 2 मिनट के अंदर देखी, तो आपके दिमाग में सबसे पहले क्या आया?
-        </h3>
-
-        <div id="deluluOptionsList" class="space-y-3">
-          <!-- Populated dynamically -->
-        </div>
-
-      </div>
-
-      <!-- Delulu Result Box (Hidden until done) -->
-      <div id="deluluResultCard" class="hidden max-w-xl mx-auto space-y-4">
-        <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-purple-950/50 via-zinc-900 to-zinc-950 border-2 border-purple-500/30 text-center space-y-4 shadow-2xl glow-violet">
-          
-          <div class="inline-block px-4 py-1 rounded-full bg-purple-500/20 text-purple-300 font-extrabold text-xs font-mono uppercase border border-purple-500/40">
-            🌀 DELULU STATUS VERIFIED
-          </div>
-
-          <div class="headline-font font-black text-6xl sm:text-7xl text-white">
-            <span id="deluluScoreNumber">96%</span>
-          </div>
-
-          <h3 id="deluluBadgeTitle" class="headline-font text-xl font-bold text-purple-300">
-            Certified PhD in Delusion 🎓
-          </h3>
-
-          <p id="deluluVerdictDescription" class="text-xs sm:text-sm text-zinc-300 leading-relaxed bg-black/40 p-4 rounded-2xl border border-white/5">
-            भाई, उसने सिर्फ गलती से रील पर डबल टैप किया था। उसने शादी का मंडप और बच्चों के नाम नहीं सोचे हैं! तुरंत ठंडा पानी पियो और वास्तविकता में वापस आओ।
-          </p>
-
-          <button onclick="shareDeluluOnWhatsApp()" class="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-lg flex items-center justify-center gap-2 active:scale-95">
-            <span>📲 Share My Delulu Score on WhatsApp</span>
-          </button>
-        </div>
-
-        <div class="text-center pt-2">
-          <button onclick="resetDeluluQuiz()" class="text-xs font-bold text-zinc-400 hover:text-white underline">
-            ← Retake Delulu Test
-          </button>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- TAB 4: ✨ AESTHETIC BIO & REEL CAPTION VAULT -->
-    <!-- ======================================================================= -->
-    <section id="tabContent-bio" class="tab-pane hidden space-y-6">
-      
-      <div class="text-center space-y-2 max-w-xl mx-auto">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono font-bold">
-          <span>✨</span> NON-CRINGE AESTHETICS
-        </div>
-        <h2 class="headline-font text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Aesthetic Bio & <span class="shimmer-text">Caption Vault</span>
-        </h2>
-        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-          बोरिंग बायो को अलविदा कहिए। 1-क्लिक में कॉपी करें रेयर, फनी और सेवेज इंस्टाग्राम बायो।
-        </p>
-      </div>
-
-      <!-- Categories Filter Chips -->
-      <div class="flex items-center justify-center flex-wrap gap-2 max-w-2xl mx-auto">
-        <button onclick="filterBioCategory('all')" id="bioCat-all" class="bio-filter-chip px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black transition-all">All</button>
-        <button onclick="filterBioCategory('sarcastic')" id="bioCat-sarcastic" class="bio-filter-chip px-4 py-1.5 rounded-full text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white border border-white/5 transition-all">Sarcastic & Savage</button>
-        <button onclick="filterBioCategory('gym')" id="bioCat-gym" class="bio-filter-chip px-4 py-1.5 rounded-full text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white border border-white/5 transition-all">Gym & Sigma</button>
-        <button onclick="filterBioCategory('soft')" id="bioCat-soft" class="bio-filter-chip px-4 py-1.5 rounded-full text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white border border-white/5 transition-all">Soft Aesthetic</button>
-        <button onclick="filterBioCategory('villain')" id="bioCat-villain" class="bio-filter-chip px-4 py-1.5 rounded-full text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white border border-white/5 transition-all">Villain Arc</button>
-      </div>
-
-      <!-- Bios Grid -->
-      <div id="bioGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-3xl mx-auto pt-2">
-        <!-- Injected dynamically -->
-      </div>
-
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- TAB 5: 💘 CRUSH VIBE MATCH LINK -->
-    <!-- ======================================================================= -->
-    <section id="tabContent-crush" class="tab-pane hidden space-y-6">
-      
-      <div class="text-center space-y-2 max-w-xl mx-auto">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono font-bold">
-          <span>💘</span> SECRET CRUSH LINK
-        </div>
-        <h2 class="headline-font text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Crush Vibe <span class="shimmer-text">Match Link</span>
-        </h2>
-        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-          अपना सीक्रेट क्विज़ लिंक बनाएं और क्रश या दोस्त को भेजें। पता करें आपकी वाइब्स 90% मैच करती हैं या 0%!
-        </p>
-      </div>
-
-      <!-- Step 1: Creator Form -->
-      <div id="crushCreatorBox" class="glass-panel rounded-3xl p-5 sm:p-7 max-w-xl mx-auto space-y-4 border border-white/10 shadow-xl">
-        <div>
-          <label class="block text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider mb-2">
-            Your Name / Nickname:
-          </label>
-          <input 
-            type="text" 
-            id="crushCreatorName" 
-            placeholder="उदा. Aryan, Tanya, Ritesh..." 
-            class="w-full p-3.5 rounded-2xl bg-zinc-950 border border-white/10 focus:border-rose-500 focus:outline-none text-sm text-white font-bold"
-          />
-        </div>
-
-        <div class="space-y-3 pt-2">
-          <label class="block text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">
-            Select Your 5 Preferences:
-          </label>
-          
-          <!-- Q1 -->
-          <div class="p-3 bg-zinc-950/60 rounded-2xl border border-white/5 space-y-2">
-            <span class="text-xs font-bold text-zinc-300">1. Ideal Weekend Vibe:</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="setCrushAns(0, 0, this)" class="crush-q0 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">🌙 Late Night Drive</button>
-              <button onclick="setCrushAns(0, 1, this)" class="crush-q0 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">☕ Cozy Cafe Date</button>
-            </div>
-          </div>
-
-          <!-- Q2 -->
-          <div class="p-3 bg-zinc-950/60 rounded-2xl border border-white/5 space-y-2">
-            <span class="text-xs font-bold text-zinc-300">2. Midnight Cravings:</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="setCrushAns(1, 0, this)" class="crush-q1 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">🥟 Street Momos</button>
-              <button onclick="setCrushAns(1, 1, this)" class="crush-q1 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">🍕 Cheesy Pizza</button>
-            </div>
-          </div>
-
-          <!-- Q3 -->
-          <div class="p-3 bg-zinc-950/60 rounded-2xl border border-white/5 space-y-2">
-            <span class="text-xs font-bold text-zinc-300">3. Vacation Destination:</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="setCrushAns(2, 0, this)" class="crush-q2 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">⛰️ Snowy Mountains</button>
-              <button onclick="setCrushAns(2, 1, this)" class="crush-q2 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">🏖️ Sunny Beach Goa</button>
-            </div>
-          </div>
-
-          <!-- Q4 -->
-          <div class="p-3 bg-zinc-950/60 rounded-2xl border border-white/5 space-y-2">
-            <span class="text-xs font-bold text-zinc-300">4. Communication Style:</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="setCrushAns(3, 0, this)" class="crush-q3 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">📱 Fast Texting & Reels</button>
-              <button onclick="setCrushAns(3, 1, this)" class="crush-q3 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">📞 3 AM Calls</button>
-            </div>
-          </div>
-
-          <!-- Q5 -->
-          <div class="p-3 bg-zinc-950/60 rounded-2xl border border-white/5 space-y-2">
-            <span class="text-xs font-bold text-zinc-300">5. During a Fight:</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="setCrushAns(4, 0, this)" class="crush-q4 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">🧘 Talk it out calmly</button>
-              <button onclick="setCrushAns(4, 1, this)" class="crush-q4 p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-300 hover:border-rose-500 active:scale-95">🧊 Silent & Cold mode</button>
-            </div>
-          </div>
-        </div>
-
-        <button 
-          onclick="generateCrushShareLink()" 
-          class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-400 hover:to-purple-500 text-white font-extrabold text-sm shadow-xl shadow-rose-500/25 transition-all active:scale-95">
-          <span>🔗 Generate My Secret Vibe Link</span>
-        </button>
-      </div>
-
-      <!-- Generated Link Box (Hidden until generated) -->
-      <div id="crushLinkResultBox" class="hidden glass-panel rounded-3xl p-6 max-w-xl mx-auto space-y-4 text-center border-2 border-rose-500/30">
-        <div class="text-4xl">🎉</div>
-        <h3 class="headline-font font-bold text-xl text-white">Your Secret Link is Ready!</h3>
-        <p class="text-xs text-zinc-400">
-          इस लिंक को अपने क्रश या दोस्त को Instagram DM या WhatsApp पर भेजें:
-        </p>
-
-        <div class="flex items-center gap-2 p-2 bg-black/60 rounded-2xl border border-white/10">
-          <input id="generatedCrushLinkInput" type="text" readonly class="flex-1 bg-transparent px-3 text-xs font-mono text-rose-300 focus:outline-none" />
-          <button onclick="copyCrushLink()" class="px-4 py-2 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-xl transition-all shrink-0">
-            Copy Link 📋
-          </button>
-        </div>
-
-        <button onclick="shareCrushLinkDirectWhatsApp()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
-          <span>📲 Share Directly to WhatsApp</span>
-        </button>
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- ========================================================================= -->
-  <!-- HIDDEN CANVAS FOR HIGH-RES 1080x1920 INSTAGRAM STORY EXPORT -->
-  <!-- ========================================================================= -->
-  <canvas id="storyExportCanvas" width="1080" height="1920" class="hidden"></canvas>
-
-  <!-- ========================================================================= -->
-  <!-- GOOGLE SIGN-IN MODAL (CLEAN & MODERN) -->
-  <!-- ========================================================================= -->
-  <div id="loginModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-    <div class="fixed inset-0 bg-black/80 backdrop-blur-md" onclick="closeLoginModal()"></div>
-    <div class="relative glass-panel rounded-3xl p-6 sm:p-8 max-w-sm w-full z-10 border border-white/10 shadow-2xl text-center space-y-4">
-      <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-2xl mx-auto">
-        ⚡
-      </div>
-      <h3 class="headline-font font-bold text-xl text-white">Join CLUBR VIBE LAB</h3>
-      <p class="text-xs text-zinc-400">
-        अपने रिजल्ट्स सेव करने, डेली स्ट्रीक मेन्टेन करने और सीक्रेट लिंक बनाने के लिए लॉगिन करें।
-      </p>
-
-      <button 
-        onclick="performGoogleLogin()" 
-        class="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-zinc-100 text-zinc-900 font-extrabold text-xs flex items-center justify-center gap-3 transition-all shadow-lg active:scale-95">
-        <svg class="w-4 h-4" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-        <span>Continue with Google</span>
-      </button>
-
-      <button onclick="closeLoginModal()" class="text-xs text-zinc-500 hover:text-zinc-300 font-bold">Cancel</button>
     </div>
   </div>
 
-  <!-- Profile Modal -->
-  <div id="profileModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-    <div class="fixed inset-0 bg-black/80 backdrop-blur-md" onclick="closeProfileModal()"></div>
-    <div class="relative glass-panel rounded-3xl p-6 sm:p-8 max-w-sm w-full z-10 border border-white/10 shadow-2xl text-center space-y-4">
-      <img id="profileModalAvatar" src="" class="w-16 h-16 rounded-full border-2 border-rose-500 mx-auto object-cover" />
-      <div>
-        <h4 id="profileModalName" class="headline-font font-bold text-lg text-white">User Name</h4>
-        <p id="profileModalEmail" class="text-xs text-zinc-400">user@email.com</p>
-      </div>
-      <div class="p-3 bg-zinc-950/60 rounded-2xl border border-white/5 flex items-center justify-around">
-        <div>
-          <div class="text-[10px] font-mono text-zinc-400 uppercase">Tests Taken</div>
-          <div id="userTestsCount" class="font-bold text-rose-400 text-sm">3</div>
+  <!-- ========================================================================= -->
+  <!-- BOTTOM QUICK EMOTE DOCK (FLOATS ABOVE CHAT OR BOTTOM CORNER) -->
+  <!-- ========================================================================= -->
+  <div class="absolute bottom-4 left-4 z-30 flex items-center gap-1.5 glass-ui rounded-2xl p-1.5 shadow-xl pointer-events-auto">
+    <button onclick="triggerAvatarEmote('🔥')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Fire">🔥</button>
+    <button onclick="triggerAvatarEmote('💀')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Dead/LOL">💀</button>
+    <button onclick="triggerAvatarEmote('🍻')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Cheers">🍻</button>
+    <button onclick="triggerAvatarEmote('❤️')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Love">❤️</button>
+    <button onclick="toggleAvatarDance()" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-500/30 to-rose-500/30 hover:bg-purple-500/40 flex items-center justify-center text-base transition-transform active:scale-90" title="Dance Mode">🕺</button>
+  </div>
+
+  <!-- Navigation Helper Pill (Bottom Right) -->
+  <div class="absolute bottom-4 right-4 z-30 hidden sm:flex items-center gap-2 glass-ui rounded-2xl px-3 py-2 text-[11px] text-zinc-400 font-mono shadow-xl pointer-events-none">
+    <span>Tap / Drag anywhere to walk</span>
+    <span>•</span>
+    <span>Double-click avatar to dance 🕺</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE-OVER DRAWER: TODAY'S EXCLUSIVE DROP (NOTICE BOARD) -->
+  <!-- ========================================================================= -->
+  <div id="dropDrawer" class="fixed inset-y-0 right-0 w-full max-w-sm z-50 glass-ui bg-zinc-950/95 border-l border-white/10 shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+    <div class="space-y-6">
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎁</span>
+          <h3 class="headline-font font-bold text-lg text-white">Clubr Exclusive Drops</h3>
         </div>
-        <div class="w-[1px] h-8 bg-white/10"></div>
-        <div>
-          <div class="text-[10px] font-mono text-zinc-400 uppercase">Streak</div>
-          <div class="font-bold text-amber-400 text-sm">🔥 Active</div>
+        <button onclick="toggleDropDrawer()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold transition-all">✕</button>
+      </div>
+
+      <!-- Perks & Drops List -->
+      <div class="space-y-3.5">
+        <p class="text-xs text-zinc-400 leading-relaxed">
+          Daily perks and special drops curated exclusively for verified Clubr clubbers.
+        </p>
+
+        <!-- Drop Card 1 -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-950/50 to-zinc-900 border border-purple-500/20 space-y-2 group hover:border-purple-500/40 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">VIP PERK</span>
+            <span class="text-[10px] text-zinc-500 font-mono">Today</span>
+          </div>
+          <h4 class="font-bold text-sm text-white">Free Drink Token @ Partner Nightclubs</h4>
+          <p class="text-xs text-zinc-400 leading-relaxed">Show your Clubr avatar screen at the entrance for 1 free mocktail/cocktail.</p>
+          <div class="pt-1">
+            <span class="text-xs font-mono font-bold text-rose-400 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20">CODE: CLUBR2026</span>
+          </div>
+        </div>
+
+        <!-- Drop Card 2 -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/50 to-zinc-900 border border-cyan-500/20 space-y-2 group hover:border-cyan-500/40 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">TECH HUSTLE</span>
+            <span class="text-[10px] text-zinc-500 font-mono">Active</span>
+          </div>
+          <h4 class="font-bold text-sm text-white">80% Off on Notion & Cloud Hosting</h4>
+          <p class="text-xs text-zinc-400 leading-relaxed">Exclusive for hackers and hustlers hanging out at the Tech Table.</p>
+          <a href="javascript:void(0)" onclick="showToast('Perk Claimed! Check email')" class="inline-block text-xs font-bold text-cyan-400 underline">Claim Credit Link →</a>
+        </div>
+
+        <!-- Drop Card 3 -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-950/50 to-zinc-900 border border-amber-500/20 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">DJ PLAYLIST</span>
+            <span class="text-[10px] text-zinc-500 font-mono">Curated</span>
+          </div>
+          <h4 class="font-bold text-sm text-white">Clubr Official Midnight Lo-Fi Beats</h4>
+          <p class="text-xs text-zinc-400 leading-relaxed">Curated 2-hour chillhop playlist for 3 AM late night coding and chill.</p>
         </div>
       </div>
-      <button onclick="handleLogout()" class="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-rose-400 text-xs font-bold border border-white/5">Sign Out</button>
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="pt-4 border-t border-white/10 text-center text-zinc-500 text-[11px] font-mono">
+      Sponsor a table or drop perks: <a href="mailto:vip@clubr.online" class="text-rose-400 underline">vip@clubr.online</a>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- ZERO-SIGNUP ONBOARDING & ENTRY OVERLAY -->
+  <!-- ========================================================================= -->
+  <div id="onboardingOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090d]/90 backdrop-blur-xl transition-opacity duration-500">
+    <div class="max-w-sm w-full glass-ui rounded-3xl p-6 sm:p-8 space-y-6 text-center border border-white/15 shadow-2xl relative overflow-hidden">
+      
+      <!-- Background Ambient Glow -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-purple-600/30 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-rose-500/30 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Header Icon & Logo -->
+      <div class="relative space-y-2">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500 via-purple-600 to-cyan-400 p-[1.5px] mx-auto shadow-xl shadow-rose-500/25">
+          <div class="w-full h-full bg-zinc-950 rounded-[14px] flex items-center justify-center text-2xl font-black text-white">
+            ⚡
+          </div>
+        </div>
+        <h2 class="headline-font font-black text-2xl text-white tracking-wider">CLUBR.ONLINE</h2>
+        <p class="text-xs text-zinc-400 font-medium">Virtual 2D Digital Nightclub</p>
+      </div>
+
+      <!-- Avatar Preview Sphere -->
+      <div class="relative py-2">
+        <div id="avatarLivePreview" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-2xl shadow-2xl transition-all duration-300 border-2 border-white/40" style="background: radial-gradient(circle, #06b6d4, #0891b2); box-shadow: 0 0 25px #06b6d4;">
+          <span id="avatarAccessoryIcon">🕶️</span>
+        </div>
+        <p id="avatarPreviewNick" class="text-xs font-mono font-bold text-white mt-2">@guest</p>
+      </div>
+
+      <!-- Nickname Input -->
+      <div class="space-y-1.5 text-left">
+        <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider">Your Nickname:</label>
+        <input 
+          type="text" 
+          id="nicknameInput" 
+          maxlength="14"
+          placeholder="e.g. Aryan, NeonViper, Maya" 
+          value=""
+          oninput="updateAvatarPreview()"
+          class="w-full px-4 py-3 rounded-2xl bg-zinc-950/80 border border-white/10 focus:border-rose-500 focus:outline-none text-sm font-bold text-white placeholder-zinc-600 transition-all text-center"
+        />
+      </div>
+
+      <!-- Neon Color Swatches (4 Colors) -->
+      <div class="space-y-2">
+        <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider text-left">Pick Avatar Color:</label>
+        <div class="grid grid-cols-4 gap-2.5">
+          <!-- Cyan -->
+          <button onclick="pickColor('#06b6d4', 'Cyan', this)" class="color-swatch-btn h-10 rounded-xl bg-cyan-500 flex items-center justify-center border-2 border-white transition-transform active:scale-90 shadow-lg shadow-cyan-500/40">
+            <span class="text-xs text-black font-bold">✓</span>
+          </button>
+          <!-- Purple -->
+          <button onclick="pickColor('#a855f7', 'Purple', this)" class="color-swatch-btn h-10 rounded-xl bg-purple-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-purple-500/40">
+            <span class="text-xs text-white font-bold opacity-0">✓</span>
+          </button>
+          <!-- Emerald -->
+          <button onclick="pickColor('#10b981', 'Emerald', this)" class="color-swatch-btn h-10 rounded-xl bg-emerald-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-emerald-500/40">
+            <span class="text-xs text-black font-bold opacity-0">✓</span>
+          </button>
+          <!-- Gold -->
+          <button onclick="pickColor('#f59e0b', 'Gold', this)" class="color-swatch-btn h-10 rounded-xl bg-amber-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-amber-500/40">
+            <span class="text-xs text-black font-bold opacity-0">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Drip Accessory Swatches -->
+      <div class="space-y-2">
+        <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider text-left">Drip Accessory:</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button onclick="pickAccessory('🕶️', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-rose-500 text-base active:scale-90">🕶️</button>
+          <button onclick="pickAccessory('🎧', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90">🎧</button>
+          <button onclick="pickAccessory('👑', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90">👑</button>
+          <button onclick="pickAccessory('⚡', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90">⚡</button>
+        </div>
+      </div>
+
+      <!-- Enter Club Button -->
+      <button 
+        onclick="enterClubFloor()" 
+        class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-500 via-purple-600 to-cyan-500 hover:opacity-95 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-rose-500/30 transition-all active:scale-95">
+        Enter Club Floor →
+      </button>
+
+      <p class="text-[10px] text-zinc-500 font-mono">Zero Signup Required • Session in Memory</p>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-2xl bg-white text-zinc-950 font-bold text-xs shadow-2xl flex items-center gap-2 border border-zinc-200">
+  <div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-2xl glass-ui bg-zinc-900/90 text-white font-bold text-xs shadow-2xl flex items-center gap-2 border border-white/10">
     <span id="toastIcon">✨</span>
-    <span id="toastMessage">Copied to clipboard!</span>
+    <span id="toastMessage">Welcome to Clubr!</span>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <!-- 2D CLUB FLOOR & CANVAS ENGINE SCRIPT -->
   <!-- ========================================================================= -->
   <script>
-    // Global State
-    let audioEnabled = true;
-    let currentTab = 'redflag';
-    let currentRfMode = 'crush';
-    let currentRfIndex = 0;
-    let rfScores = [];
-    let currentResultData = null;
+    // --- USER / PLAYER STATE ---
+    let player = {
+      nickname: 'Aryan',
+      color: '#06b6d4',
+      accessory: '🕶️',
+      x: 0,
+      y: 0,
+      targetX: 0,
+      targetY: 0,
+      radius: 20,
+      speed: 0.12,
+      trail: [],
+      isDancing: false,
+      danceAngle: 0,
+      currentZone: null,
+      message: null // { text, timer }
+    };
+
+    // --- SOUND & AUDIO ENGINE (WEB AUDIO API) ---
     let audioCtx = null;
-    let crushAnswers = [-1, -1, -1, -1, -1];
+    let isMuted = false;
+    let beatTimer = null;
+    let masterGain = null;
+
+    // --- ZONES CONFIGURATION ---
+    // Positions relative to canvas center
+    const ZONES = [
+      {
+        id: 'tech',
+        name: 'Tech & Hustle Table',
+        color: '#06b6d4',
+        icon: '💻',
+        relX: -0.28,
+        relY: -0.18,
+        radius: 130
+      },
+      {
+        id: 'chill',
+        name: 'Late Night Chill Table',
+        color: '#a855f7',
+        icon: '🌙',
+        relX: 0.28,
+        relY: 0.22,
+        radius: 135
+      },
+      {
+        id: 'dj',
+        name: 'Open Floor (DJ Booth)',
+        color: '#f43f5e',
+        icon: '🎧',
+        relX: 0.0,
+        relY: 0.02,
+        radius: 165
+      }
+    ];
+
+    // --- LIVELY SMART NPC CLUBBERS ---
+    const NPCS = [
+      {
+        id: 'dj_cyber',
+        nickname: 'DJ_CYBER 🎛️',
+        color: '#f43f5e',
+        accessory: '🎧',
+        x: 0,
+        y: 0,
+        relX: 0.0,
+        relY: -0.06,
+        radius: 20,
+        message: { text: "Drop the bass! Welcome to Clubr.online 🔥", timer: 8000 }
+      },
+      {
+        id: 'hustler_sam',
+        nickname: 'Sam (Tech)',
+        color: '#06b6d4',
+        accessory: '⚡',
+        x: 0,
+        y: 0,
+        relX: -0.28,
+        relY: -0.18,
+        radius: 20,
+        message: { text: "Shipping AI agents today. Anyone building? 🚀", timer: 7000 }
+      },
+      {
+        id: 'zoya_chill',
+        nickname: 'Zoya 🌙',
+        color: '#a855f7',
+        accessory: '🕶️',
+        x: 0,
+        y: 0,
+        relX: 0.28,
+        relY: 0.22,
+        radius: 20,
+        message: { text: "Vibing to Lo-Fi. Grab a seat here! ✨", timer: 6500 }
+      }
+    ];
+
+    // --- PARTICLES & EMOTES ---
+    let floatingParticles = [];
+    let lightPulses = [];
+
+    // --- CANVAS CONTEXT & SIZING ---
+    const canvas = document.getElementById('clubFloorCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+
+      // Re-position NPCs relative to canvas
+      NPCS.forEach(npc => {
+        npc.x = width / 2 + (width * npc.relX);
+        npc.y = height / 2 + (height * npc.relY);
+      });
+    }
+    window.addEventListener('resize', resizeCanvas);
 
     // =========================================================================
-    // WEB AUDIO API SOUND SYNTHESIZER (Zero external MP3s!)
+    // ONBOARDING & ENTRY
     // =========================================================================
-    function initAudio() {
-      if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) audioCtx = new AudioContext();
-      }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+    function updateAvatarPreview() {
+      const nick = document.getElementById('nicknameInput').value.trim() || 'guest';
+      document.getElementById('avatarPreviewNick').innerText = `@${nick}`;
     }
 
-    function playSound(type) {
-      if (!audioEnabled) return;
+    function pickColor(hex, name, btn) {
+      player.color = hex;
+      const preview = document.getElementById('avatarLivePreview');
+      preview.style.background = `radial-gradient(circle, ${hex}, #18182b)`;
+      preview.style.boxShadow = `0 0 25px ${hex}`;
+
+      document.querySelectorAll('.color-swatch-btn').forEach(b => {
+        b.style.borderColor = 'transparent';
+        b.querySelector('span').classList.add('opacity-0');
+      });
+      btn.style.borderColor = '#ffffff';
+      btn.querySelector('span').classList.remove('opacity-0');
+    }
+
+    function pickAccessory(icon, btn) {
+      player.accessory = icon;
+      document.getElementById('avatarAccessoryIcon').innerText = icon;
+
+      document.querySelectorAll('.accessory-btn').forEach(b => {
+        b.className = 'accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90';
+      });
+      btn.className = 'accessory-btn p-2 rounded-xl bg-zinc-900 border border-rose-500 text-base active:scale-90';
+    }
+
+    function enterClubFloor() {
+      const input = document.getElementById('nicknameInput').value.trim();
+      player.nickname = input || 'Clubber_' + Math.floor(Math.random() * 900 + 100);
+
+      // Spawn player near center entrance
+      player.x = width / 2;
+      player.y = height * 0.78;
+      player.targetX = player.x;
+      player.targetY = player.y;
+
+      const overlay = document.getElementById('onboardingOverlay');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => overlay.remove(), 500);
+
+      // Start Club Audio Loop
+      initClubAudio();
+      showToast(`Welcome to Clubr, ${player.nickname}! ⚡`);
+    }
+
+    // =========================================================================
+    // LO-FI AMBIENT SYNTHESIZER & SPATIAL AUDIO (WEB AUDIO API)
+    // =========================================================================
+    function initClubAudio() {
+      if (audioCtx) return;
       try {
-        initAudio();
-        if (!audioCtx) return;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
 
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        if (type === 'pop') {
-          // Soft playful pop
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(450, now);
-          osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
-          gain.gain.setValueAtTime(0.12, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-          osc.start(now);
-          osc.stop(now + 0.08);
-        } else if (type === 'fanfare') {
-          // Victory arpeggio (C - E - G - C)
-          const notes = [523.25, 659.25, 783.99, 1046.50];
-          notes.forEach((freq, idx) => {
-            const noteOsc = audioCtx.createOscillator();
-            const noteGain = audioCtx.createGain();
-            noteOsc.connect(noteGain);
-            noteGain.connect(audioCtx.destination);
-            noteOsc.type = 'triangle';
-            noteOsc.frequency.setValueAtTime(freq, now + (idx * 0.08));
-            noteGain.gain.setValueAtTime(0.15, now + (idx * 0.08));
-            noteGain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.08) + 0.2);
-            noteOsc.start(now + (idx * 0.08));
-            noteOsc.stop(now + (idx * 0.08) + 0.2);
-          });
-        } else if (type === 'buzzer') {
-          // Dramatic deep buzz for red flag
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(140, now);
-          osc.frequency.linearRampToValueAtTime(90, now + 0.35);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-          osc.start(now);
-          osc.stop(now + 0.35);
-        }
+        // Continuous rhythmic Lo-Fi chillhop generator
+        startLoFiBeatLoop();
       } catch (e) {
         console.log('Audio note:', e.message);
       }
     }
 
-    function toggleSound() {
-      audioEnabled = !audioEnabled;
-      const icon = document.getElementById('soundIcon');
-      icon.innerText = audioEnabled ? '🔊' : '🔇';
-      showToast(audioEnabled ? 'Sound Effects ON 🔊' : 'Sound Effects Muted 🔇');
+    function startLoFiBeatLoop() {
+      if (!audioCtx || isMuted) return;
+      let step = 0;
+      const bpm = 82;
+      const stepInterval = (60 / bpm) / 4 * 1000; // 16th note
+
+      beatTimer = setInterval(() => {
+        if (isMuted || !audioCtx) return;
+        const now = audioCtx.currentTime;
+
+        // Kick on 0 & 8
+        if (step % 8 === 0) {
+          playKick(now);
+        }
+        // Snare / Rimshot on 4 & 12
+        if (step % 8 === 4) {
+          playSnare(now);
+        }
+        // Hi-Hat on even steps
+        if (step % 2 === 0) {
+          playHiHat(now);
+        }
+        // Ambient chord pad every 16 steps
+        if (step % 16 === 0) {
+          playLoFiChord(now);
+        }
+
+        step = (step + 1) % 32;
+      }, stepInterval);
     }
 
-    // =========================================================================
-    // TAB NAVIGATION
-    // =========================================================================
-    function switchTab(tabId) {
-      playSound('pop');
-      currentTab = tabId;
+    function playKick(time) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(masterGain);
 
-      // Update Tab buttons
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        b.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/5';
-      });
-      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
-      if (activeBtn) {
-        activeBtn.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-rose-500 text-white shadow-lg shadow-rose-500/25';
+      osc.frequency.setValueAtTime(120, time);
+      osc.frequency.exponentialRampToValueAtTime(38, time + 0.12);
+      gain.gain.setValueAtTime(0.35, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+
+      osc.start(time);
+      osc.stop(time + 0.15);
+    }
+
+    function playSnare(time) {
+      // Noise burst for Lo-Fi snare
+      const bufferSize = audioCtx.sampleRate * 0.08;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
       }
 
-      // Hide all panes
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
-      const activePane = document.getElementById(`tabContent-${tabId}`);
-      if (activePane) activePane.classList.remove('hidden');
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1200;
 
-      if (tabId === 'bio') renderBios();
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.18, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+
+      noise.start(time);
+      noise.stop(time + 0.08);
+    }
+
+    function playHiHat(time) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'highpass';
+      osc.connect(gain);
+      gain.connect(masterGain);
+
+      osc.frequency.setValueAtTime(8000, time);
+      gain.gain.setValueAtTime(0.04, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+
+      osc.start(time);
+      osc.stop(time + 0.03);
+    }
+
+    function playLoFiChord(time) {
+      // Smooth mellow chord (D Minor 9 vibe: D, F, A, C, E)
+      const freqs = [146.83, 174.61, 220.00, 261.63];
+      freqs.forEach(f => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = f;
+
+        gain.gain.setValueAtTime(0.02, time);
+        gain.gain.linearRampToValueAtTime(0.06, time + 0.3);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 2.0);
+
+        osc.connect(gain);
+        gain.connect(masterGain);
+
+        osc.start(time);
+        osc.stop(time + 2.0);
+      });
+    }
+
+    function toggleClubAudio() {
+      isMuted = !isMuted;
+      const icon = document.getElementById('audioIcon');
+      icon.innerText = isMuted ? '🔇' : '🔊';
+
+      if (masterGain) {
+        masterGain.gain.setValueAtTime(isMuted ? 0 : 0.2, audioCtx.currentTime);
+      }
+      showToast(isMuted ? 'Audio Muted 🔇' : 'Lo-Fi Beats Playing 🔊');
+    }
+
+    // Spatial volume adjustment based on proximity to DJ Booth
+    function updateSpatialAudio() {
+      if (!audioCtx || !masterGain || isMuted) return;
+      const djZone = ZONES.find(z => z.id === 'dj');
+      const djX = width / 2 + (width * djZone.relX);
+      const djY = height / 2 + (height * djZone.relY);
+
+      const dist = Math.hypot(player.x - djX, player.y - djY);
+      const maxDist = Math.hypot(width, height) / 2;
+      const norm = Math.max(0, Math.min(1, 1 - (dist / maxDist)));
+
+      // Closer to DJ -> louder volume (0.35), far -> mellow background (0.08)
+      const targetVol = 0.08 + (norm * 0.27);
+      masterGain.gain.linearRampToValueAtTime(targetVol, audioCtx.currentTime + 0.1);
     }
 
     // =========================================================================
-    // RED FLAG QUESTION DATA
+    // TOUCH / MOUSE INTERACTIVE MOVEMENT
     // =========================================================================
-    const RF_QUESTIONS = {
-      crush: [
-        {
-          q: "जब आप दोनों बाहर कैफे या डिनर पर जाते हैं, तो बिल आने पर उनका क्या रिएक्शन होता है?",
-          options: [
-            { text: "तुरंत 50-50 स्प्लिट करने का ऑफर देता है", rf: 10, gf: 90 },
-            { text: "फोन में व्यस्त होने का नाटक करता है ताकि आप पे कर दें", rf: 95, gf: 5 },
-            { text: "प्यार से हमेशा खुद पे करने की कोशिश करता है", rf: 5, gf: 95 },
-            { text: "'GPay कर दूंगा' बोलता है पर कभी नहीं करता 😂", rf: 85, gf: 15 }
-          ]
-        },
-        {
-          q: "व्हाट्सएप या इंस्टाग्राम पर आपके मेसेज का रिप्लाई कितने टाइम में आता है?",
-          options: [
-            { text: "1 से 5 मिनट के अंदर (हमेशा अटेंटिव)", rf: 5, gf: 95 },
-            { text: "6 घंटे बाद केवल 'wassup' या 'hnn'", rf: 80, gf: 20 },
-            { text: "ऑनलाइन रहता है पर आपका चैट 1 दिन बाद खोलता है", rf: 95, gf: 5 },
-            { text: "जब उसका कोई काम फंसे तभी मेसेज आता है", rf: 99, gf: 1 }
-          ]
-        },
-        {
-          q: "अपने पिछले रिलेशनशिप्स (Ex) के बारे में वो क्या बातें करता है?",
-          options: [
-            { text: "'मेरी सारी एक्स पागल और टॉक्सिक थीं'", rf: 95, gf: 5 },
-            { text: "मैच्योर तरीके से बात करता है, कोई गाली-गलौज नहीं", rf: 10, gf: 90 },
-            { text: "आज भी एक्स की ही बातें करता रहता है", rf: 90, gf: 10 },
-            { text: "पास्ट पर बात नहीं करता, प्रेजेंट पर फोकस रखता है", rf: 20, gf: 80 }
-          ]
-        },
-        {
-          q: "सोशल मीडिया पर उनकी एक्टिविटी कैसी है?",
-          options: [
-            { text: "हर लड़की/लड़के की रील लाइक करता है और फॉलोअर्स 2k+", rf: 85, gf: 15 },
-            { text: "प्राइवेट अकाउंट है, शांति से रील्स शेयर करता है", rf: 15, gf: 85 },
-            { text: "आपकी स्टोरी सबसे पहले देखता है पर लाइक नहीं करता", rf: 60, gf: 40 },
-            { text: "दूसरों के साथ क्लोज फ्रेंड्स स्टोरी छुपा कर डालता है", rf: 95, gf: 5 }
-          ]
-        },
-        {
-          q: "जब आपकी किसी बात पर बहस या अनबन हो जाती है:",
-          options: [
-            { text: "2 दिन तक बात नहीं करता और 'Silent Treatment' देता है", rf: 90, gf: 10 },
-            { text: "शांति से कॉल करके बात सुलझा लेता है", rf: 5, gf: 95 },
-            { text: "उल्टा आपको ही गिल्टी फील करा देता है (Gaslighting)", rf: 98, gf: 2 },
-            { text: "तुरंत स्टोरी पर सैड शायरियां डालने लगता है", rf: 75, gf: 25 }
-          ]
-        },
-        {
-          q: "क्या वो आपको अपने दोस्तों या सर्कल से मिलवाता है?",
-          options: [
-            { text: "गर्व से सबसे मिलवाता है और तारीफ करता है", rf: 5, gf: 95 },
-            { text: "हमेशा सीक्रेट रखता है कि कोई देख न ले", rf: 90, gf: 10 },
-            { text: "दोस्तों के सामने अलग और अकेले में अलग बर्ताव करता है", rf: 95, gf: 5 },
-            { text: "सिर्फ अपने काम के दोस्तों से मिलवाता है", rf: 60, gf: 40 }
-          ]
-        },
-        {
-          q: "जब आपको लाइफ या करियर में कोई बड़ी कामयाबी मिलती है:",
-          options: [
-            { text: "दिल से खुश होता है और पार्टी सेलिब्रेट करता है", rf: 5, gf: 95 },
-            { text: "हल्के में लेता है या अपनी कामयाबी गिनवाने लगता है", rf: 85, gf: 15 },
-            { text: "असुरक्षित (Insecure) और जलन महसूस करने लगता है", rf: 95, gf: 5 },
-            { text: "कहता है 'तेरी तो किस्मत अच्छी थी'", rf: 90, gf: 10 }
-          ]
-        },
-        {
-          q: "कमिटमेंट और फ्यूचर के बारे में जब बात होती है:",
-          options: [
-            { text: "'अभी लाइफ चिल रखते हैं, फ्यूचर किसने देखा है'", rf: 75, gf: 25 },
-            { text: "साफ-साफ बताता है कि वो क्या चाहता है", rf: 10, gf: 90 },
-            { text: "टॉपिक तुरंत बदल देता है और कन्नी काट लेता है", rf: 90, gf: 10 },
-            { text: "मीठी-मीठी झूठी बातें करता है पर करता कुछ नहीं", rf: 95, gf: 5 }
-          ]
-        },
-        {
-          q: "क्या वो आपकी बाउंड्रीज (ना कहना) की कद्र करता है?",
-          options: [
-            { text: "हाँ, एक बार ना कहने पर सम्मान करता है", rf: 5, gf: 95 },
-            { text: "बार-बार जिद करता है और इमोशनल ब्लैकमेल करता है", rf: 98, gf: 2 },
-            { text: "गुस्सा होकर मुंह फुला लेता है", rf: 85, gf: 15 },
-            { text: "कहता है 'तू मुझसे प्यार ही नहीं करता/करती'", rf: 95, gf: 5 }
-          ]
-        },
-        {
-          q: "आखिरी सवाल: आपका गट-फीलिंग (मन का अहसास) क्या कहता है?",
-          options: [
-            { text: "मुझे हमेशा सुरक्षित और खुश महसूस होता है", rf: 5, gf: 95 },
-            { text: "मुझे हमेशा डर रहता है कि ये कभी भी छोड़ जाएगा", rf: 90, gf: 10 },
-            { text: "मैं अक्सर इस रिश्ते में ओवरथिंक और रोता हूँ", rf: 95, gf: 5 },
-            { text: "50-50 है, कभी अच्छा तो कभी पूरा टॉक्सिक", rf: 70, gf: 30 }
-          ]
-        }
-      ],
-      bestie: [
-        {
-          q: "जब आपका कोई सीक्रेट होता है:",
-          options: [
-            { text: "कब्र तक साथ रखेगा, किसी को हवा नहीं लगने देता", rf: 5, gf: 95 },
-            { text: "अगले दिन 2 और दोस्तों को 'किसी को मत बताना' बोलकर बता देता है", rf: 95, gf: 5 },
-            { text: "मजाक-मजाक में ग्रुप के सामने खोल देता है", rf: 90, gf: 10 },
-            { text: "सिर्फ अपनी खास दोस्त को बताता है", rf: 60, gf: 40 }
-          ]
-        },
-        {
-          q: "जब आप ग्रुप में किसी नए दोस्त से बात करते हैं:",
-          options: [
-            { text: "आराम से चिल रहता है और सब घुलमिल जाते हैं", rf: 5, gf: 95 },
-            { text: "अचानक जेलस हो जाता है और मुंह फुला लेता है", rf: 80, gf: 20 },
-            { text: "उस नए दोस्त की बुराई करना शुरू कर देता है", rf: 90, gf: 10 },
-            { text: "आपको साइडलाइन करने की कोशिश करता है", rf: 95, gf: 5 }
-          ]
-        },
-        {
-          q: "जब आप दोनों का कोई बिल या खर्चा होता है:",
-          options: [
-            { text: "हिसाब बराबर रखता है, कोई कंजूसी नहीं", rf: 10, gf: 90 },
-            { text: "हमेशा कहता है 'भाई तू दे दे, रूम पे जाके देता हूँ'", rf: 85, gf: 15 },
-            { text: "खुद खाएगा महंगा और बिल बोलेगा आधा-आधा करो", rf: 90, gf: 10 },
-            { text: "जब उसकी बारी आती है तो जेब में पर्स भूल जाता है", rf: 95, gf: 5 }
-          ]
-        },
-        {
-          q: "जब आपको कोई बड़ी जॉब या एग्जाम में सफलता मिलती है:",
-          options: [
-            { text: "पूरे शहर में ढिंढोरा पीटता है कि मेरा भाई/बहन टॉप कर गया", rf: 5, gf: 95 },
-            { text: "चेहरे पर बनावटी मुस्कान होती है और अंदर से जलता है", rf: 95, gf: 5 },
-            { text: "कहता है 'पेपर तो बहुत आसान आया था'", rf: 90, gf: 10 },
-            { text: "कहता है 'पार्टी कब दे रहा है बस ये बता'", rf: 40, gf: 60 }
-          ]
-        },
-        {
-          q: "जब आपको रात के 2 बजे कोई इमरजेंसी होती है:",
-          options: [
-            { text: "1 कॉल पर तुरंत हाजिर हो जाता है", rf: 5, gf: 95 },
-            { text: "फोन साइलेंट पर रखता है और सुबह 'सॉरी सो गया था' बोलता है", rf: 70, gf: 30 },
-            { text: "बहाने बनाता है कि 'पापा घर पर हैं नहीं आ सकता'", rf: 85, gf: 15 },
-            { text: "फोन ही नहीं उठाता", rf: 95, gf: 5 }
-          ]
-        }
-      ],
-      self: [
-        {
-          q: "जब कोई आपको मेसेज करता है, तो आप आमतौर पर क्या करते हैं?",
-          options: [
-            { text: "तुरंत देख लेता हूँ पर जानबूझकर 2 घंटे बाद रिप्लाई करता हूँ ताकि कूल लगूँ", rf: 85, gf: 15 },
-            { text: "फ्री होते ही नॉर्मल तरीके से रिप्लाई कर देता हूँ", rf: 10, gf: 90 },
-            { text: "नोटिफिकेशन में पढ़ लेता हूँ पर अनरीड छोड़ देता हूँ", rf: 90, gf: 10 },
-            { text: "कभी-कभी 3 दिन बाद 'अरे भूल गया था' बोलता हूँ", rf: 95, gf: 5 }
-          ]
-        },
-        {
-          q: "जब लड़ाई होती है और गलती सच में आपकी होती है:",
-          options: [
-            { text: "दिल से सॉरी बोलता हूँ और बात खत्म करता हूँ", rf: 5, gf: 95 },
-            { text: "उल्टा सामने वाले की 6 महीने पुरानी गलती निकाल लाता हूँ", rf: 95, gf: 5 },
-            { text: "खामोश होकर बैठ जाता हूँ ताकि सामने वाला ही झुक जाए", rf: 90, gf: 10 },
-            { text: "कहता हूँ 'मैं तो ऐसा ही हूँ, रहना है तो रहो'", rf: 98, gf: 2 }
-          ]
-        },
-        {
-          q: "सोशल मीडिया पर किसी की अच्छी फोटो देखकर आपकी पहली फीलिंग:",
-          options: [
-            { text: "खुशी होती है और प्यारा कमेंट करता हूँ", rf: 5, gf: 95 },
-            { text: "अंदर ही अंदर अपनी लाइफ से तुलना करके डिप्रेशन में आ जाता हूँ", rf: 80, gf: 20 },
-            { text: "सोचता हूँ 'इतना भी कुछ खास नहीं लग रहा/रही'", rf: 85, gf: 15 },
-            { text: "देखते ही स्क्रॉल कर देता हूँ", rf: 40, gf: 60 }
-          ]
-        },
-        {
-          q: "क्या आप किसी के एक छोटे से इशारे पर पूरी शादी के सपने देख लेते हैं?",
-          options: [
-            { text: "हाँ, पूरी तरह ओवरथिंकर और डेलुलु हूँ 😂", rf: 85, gf: 15 },
-            { text: "नहीं, प्रैक्टिकल रहकर सच देखता हूँ", rf: 15, gf: 85 },
-            { text: "पहले ही दिन बच्चों के नाम सोच लेता हूँ", rf: 95, gf: 5 },
-            { text: "थोड़ा बहुत फिल्मी हूँ पर संभल जाता हूँ", rf: 45, gf: 55 }
-          ]
-        },
-        {
-          q: "जब कोई आपसे दूर जाने लगता है:",
-          options: [
-            { text: "अनादर नहीं करता, जाने देता हूँ", rf: 10, gf: 90 },
-            { text: "10 लंबी-लंबी पैराग्राफ भेजकर भीख मांगता हूँ", rf: 85, gf: 15 },
-            { text: "तुरंत सोशल मीडिया पर सैड स्टेटस और कोड डालता हूँ", rf: 90, gf: 10 },
-            { text: "ईगो में आकर ब्लॉक मार देता हूँ", rf: 92, gf: 8 }
-          ]
-        }
-      ]
-    };
+    let isPointerDown = false;
 
-    function selectRedFlagMode(mode) {
-      playSound('pop');
-      currentRfMode = mode;
-      currentRfIndex = 0;
-      rfScores = [];
+    function handlePointerInput(e) {
+      // Ignore click if clicking on UI buttons
+      if (e.target.closest('button, input, form, #dropDrawer, #onboardingOverlay')) return;
 
-      document.querySelectorAll('.rf-mode-btn').forEach(b => {
-        b.className = 'rf-mode-btn p-3 sm:p-4 rounded-2xl glass-panel border-white/5 hover:border-white/20 text-center transition-all hover:scale-[1.02] active:scale-95 flex flex-col items-center gap-1.5';
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      player.targetX = clientX - rect.left;
+      player.targetY = clientY - rect.top;
+
+      // Spawn subtle ground ripple effect
+      lightPulses.push({
+        x: player.targetX,
+        y: player.targetY,
+        radius: 5,
+        maxRadius: 30,
+        color: player.color,
+        opacity: 0.8
       });
-      const btn = document.getElementById(`modeBtn-${mode}`);
-      if (btn) {
-        btn.className = 'rf-mode-btn p-3 sm:p-4 rounded-2xl glass-panel border-rose-500/50 bg-rose-500/10 text-center transition-all hover:scale-[1.02] active:scale-95 flex flex-col items-center gap-1.5';
+    }
+
+    window.addEventListener('mousedown', (e) => {
+      isPointerDown = true;
+      handlePointerInput(e);
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (isPointerDown) handlePointerInput(e);
+    });
+    window.addEventListener('mouseup', () => isPointerDown = false);
+
+    window.addEventListener('touchstart', (e) => {
+      isPointerDown = true;
+      handlePointerInput(e);
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (isPointerDown) handlePointerInput(e);
+    }, { passive: true });
+    window.addEventListener('touchend', () => isPointerDown = false);
+
+    // =========================================================================
+    // PROXIMITY ZONE & TABLE CHAT
+    // =========================================================================
+    function checkProximityZones() {
+      let activeZone = null;
+
+      for (const z of ZONES) {
+        const zX = width / 2 + (width * z.relX);
+        const zY = height / 2 + (height * z.relY);
+        const dist = Math.hypot(player.x - zX, player.y - zY);
+
+        if (dist < z.radius) {
+          activeZone = z;
+          break;
+        }
       }
 
-      const modeNames = { crush: 'Crush / Partner', bestie: 'Best Friend', self: 'Am I The Toxic?' };
-      document.getElementById('rfModeTag').innerText = `Target: ${modeNames[mode]}`;
+      const chatBox = document.getElementById('tableChatContainer');
+      const chatHeader = document.getElementById('tableChatHeader');
+      const zoneIndText = document.getElementById('zoneIndicatorText');
+      const zoneIndDot = document.getElementById('zoneIndicatorDot');
+      const spotBanner = document.getElementById('spotlightBanner');
 
-      renderCurrentRfQuestion();
-      document.getElementById('rfQuizCard').classList.remove('hidden');
-      document.getElementById('rfResultContainer').classList.add('hidden');
-    }
+      if (activeZone) {
+        player.currentZone = activeZone;
+        chatBox.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+        chatBox.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
 
-    function renderCurrentRfQuestion() {
-      const qList = RF_QUESTIONS[currentRfMode] || RF_QUESTIONS.crush;
-      const total = qList.length;
-      const qObj = qList[currentRfIndex];
+        chatHeader.innerHTML = `<span class="w-2 h-2 rounded-full" style="background:${activeZone.color}"></span><span>Chatting at ${activeZone.name}</span>`;
+        document.getElementById('tableChatInput').placeholder = `Say something at ${activeZone.name}...`;
 
-      document.getElementById('rfQuestionNumber').innerText = `QUESTION ${currentRfIndex + 1} / ${total}`;
-      const pct = ((currentRfIndex + 1) / total) * 100;
-      document.getElementById('rfProgressBar').style.width = `${pct}%`;
-      document.getElementById('rfQuestionText').innerText = qObj.q;
+        zoneIndText.innerText = activeZone.name;
+        zoneIndDot.style.background = activeZone.color;
 
-      const container = document.getElementById('rfOptionsContainer');
-      container.innerHTML = '';
-
-      qObj.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'w-full p-4 rounded-2xl glass-panel border border-white/10 hover:border-rose-500/50 hover:bg-rose-500/10 text-left transition-all flex items-center justify-between group active:scale-[0.98]';
-        btn.onclick = () => selectRfAnswer(opt.rf, opt.gf);
-
-        btn.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-xl bg-zinc-800 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center font-bold text-xs text-zinc-300 font-mono transition-colors shrink-0">
-              ${['A','B','C','D'][idx]}
-            </span>
-            <span class="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white leading-snug">
-              ${opt.text}
-            </span>
-          </div>
-          <span class="text-xs text-zinc-500 group-hover:text-rose-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-        `;
-        container.appendChild(btn);
-      });
-    }
-
-    function selectRfAnswer(rf, gf) {
-      playSound('pop');
-      rfScores.push({ rf, gf });
-      const qList = RF_QUESTIONS[currentRfMode] || RF_QUESTIONS.crush;
-
-      if (currentRfIndex < qList.length - 1) {
-        currentRfIndex++;
-        renderCurrentRfQuestion();
+        // Check if inside Center DJ Spotlight
+        const djCenterDist = Math.hypot(player.x - (width / 2), player.y - (height / 2 + height * 0.02));
+        if (activeZone.id === 'dj' && djCenterDist < 55) {
+          spotBanner.classList.remove('hidden');
+          document.getElementById('spotlightUserText').innerText = `${player.nickname} is on the mic! 🎙️`;
+        } else {
+          spotBanner.classList.add('hidden');
+        }
       } else {
-        calculateAndShowResult();
+        player.currentZone = null;
+        chatBox.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        chatBox.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+
+        zoneIndText.innerText = 'Open Floor';
+        zoneIndDot.style.background = '#f43f5e';
+        spotBanner.classList.add('hidden');
       }
     }
 
-    function calculateAndShowResult() {
-      const totalQuestions = rfScores.length;
-      const sumRf = rfScores.reduce((acc, curr) => acc + curr.rf, 0);
-      const avgRf = Math.min(99, Math.max(12, Math.round(sumRf / totalQuestions)));
-      const avgGf = 100 - avgRf;
-      const delulu = Math.min(99, Math.round(avgRf * 0.9 + Math.random() * 10));
+    function handleSendTableChat(e) {
+      e.preventDefault();
+      const input = document.getElementById('tableChatInput');
+      const text = input.value.trim();
+      if (!text) return;
 
-      let badge = "🚩 WALKING NUCLEAR HAZARD";
-      let status = "चलता-फिरता परमाणु संकट (Walking Disaster)";
-      let anthem = "Kahani Suno 2.0 (Heartbreak Mix)";
-      let verdict = "भाई ये इंसान रिलेशनशिप के लिए नहीं, सिर्फ फ्री थेरेपी और टाइमपास के लिए आया है। इनके लिए आपका मेसेज सिर्फ एक नोटिफिकेशन है। तुरंत ब्लॉक मारो और जिम जॉइन करो!";
-
-      if (avgRf >= 75) {
-        playSound('buzzer');
-        badge = "🚩 CERTIFIED EMOTIONAL DAMAGE DEALER";
-        status = "चलता-फिरता परमाणु संकट (100% Red Alert)";
-        anthem = "Kahani Suno 2.0 • Heartbreak Mix";
-        verdict = "चेतावनी: ये इंसान आपके जीवन की शांति और सुकून को तबाह करने का हुनर रखता है। इनके रिप्लाई का इंतजार करने से बेहतर है कि दीवार से बातें कर लो!";
-      } else if (avgRf >= 50) {
-        playSound('pop');
-        badge = "📡 CEO OF MIXED SIGNALS";
-        status = "50-50 स्थिति (कभी अमृत तो कभी जहर)";
-        anthem = "Aap Jaisa Koi • Mystery Beats";
-        verdict = "ये इंसान आपको हमेशा कन्फ्यूज रखेगा — न पूरी तरह अपनाएगा, न जाने देगा। अपनी मेंटल हेल्थ बचानी है तो दूरी बनाए रखें।";
-      } else {
-        playSound('fanfare');
-        if (typeof confetti === 'function') {
-          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        }
-        badge = "🦮 PURE GOLDEN RETRIEVER ENERGY";
-        status = "सच्चा हीरा (90%+ Green Flag Alert)";
-        anthem = "Tum Se Hi • Green Flag Anthem";
-        verdict = "बधाई हो! ये इंसान आज के कलयुग में रेयर प्रजाति का ग्रीन फ्लैग है। इसे संभाल कर रखो, नजर न लगे!";
-      }
-
-      currentResultData = {
-        rf: avgRf,
-        gf: avgGf,
-        delulu: delulu,
-        badge: badge,
-        status: status,
-        verdict: verdict,
-        anthem: anthem,
-        mode: currentRfMode
+      // Assign speech bubble to player
+      player.message = {
+        text: text,
+        timestamp: Date.now(),
+        life: 6000 // 6 seconds display
       };
 
-      document.getElementById('resVibeBadge').innerText = badge;
-      document.getElementById('resRedFlagScore').innerText = `${avgRf}%`;
-      document.getElementById('resStatusPunchline').innerText = status;
-      document.getElementById('resGreenFlagScore').innerText = `${avgGf}%`;
-      document.getElementById('resDeluluScore').innerText = `${delulu}%`;
-      document.getElementById('resSavageVerdict').innerText = verdict;
-      document.getElementById('resAnthemName').innerText = anthem;
-      document.getElementById('resCardDate').innerText = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      input.value = '';
+      showToast('Message posted over your avatar 💬');
 
-      document.getElementById('rfQuizCard').classList.add('hidden');
-      document.getElementById('rfResultContainer').classList.remove('hidden');
-      
-      // Update user streak & test counter
-      incrementUserTests();
-    }
-
-    function resetQuiz() {
-      selectRedFlagMode(currentRfMode);
+      // If in Spotlight, NPC DJ reacts!
+      if (player.currentZone && player.currentZone.id === 'dj') {
+        setTimeout(() => {
+          const dj = NPCS.find(n => n.id === 'dj_cyber');
+          if (dj) {
+            dj.message = {
+              text: `Yo @${player.nickname}! Nice vibe on the floor 🔥`,
+              timestamp: Date.now(),
+              life: 5000
+            };
+          }
+        }, 1200);
+      }
     }
 
     // =========================================================================
-    // CANVAS 9:16 INSTAGRAM STORY EXPORT (1080x1920 HD PNG)
+    // EMOTE BURSTS & DANCE MODE
     // =========================================================================
-    function downloadStoryCardImage() {
-      playSound('pop');
-      const canvas = document.getElementById('storyExportCanvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx || !currentResultData) return;
+    function triggerAvatarEmote(emoji) {
+      floatingParticles.push({
+        x: player.x,
+        y: player.y - 20,
+        emoji: emoji,
+        vx: (Math.random() - 0.5) * 2,
+        vy: -2.5 - Math.random() * 1.5,
+        opacity: 1,
+        life: 1.0
+      });
+    }
 
-      const W = 1080;
-      const H = 1920;
+    function toggleAvatarDance() {
+      player.isDancing = !player.isDancing;
+      showToast(player.isDancing ? 'Dance Mode Activated! 🕺' : 'Dance Mode Off');
+    }
 
-      // 1. Dark Gradient Background
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-      bgGrad.addColorStop(0, '#1a0d1f');
-      bgGrad.addColorStop(0.4, '#100c18');
-      bgGrad.addColorStop(1, '#09090b');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, W, H);
+    // =========================================================================
+    // DRAWING ENGINE (60 FPS CANVAS LOOP)
+    // =========================================================================
+    function drawGridFloor() {
+      // 1. Dark Background
+      ctx.fillStyle = '#09090d';
+      ctx.fillRect(0, 0, width, height);
 
-      // Decorative Neon Blobs
-      const rad1 = ctx.createRadialGradient(900, 200, 10, 900, 200, 600);
-      rad1.addColorStop(0, 'rgba(255, 42, 95, 0.25)');
+      // 2. Subtle Neon Grid Lines
+      const gridSize = 48;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+      ctx.lineWidth = 1;
+
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += gridSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+      }
+      for (let y = 0; y <= height; y += gridSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+      }
+      ctx.stroke();
+
+      // Ambient Corner Light Glows
+      const rad1 = ctx.createRadialGradient(width * 0.1, height * 0.1, 10, width * 0.1, height * 0.1, 400);
+      rad1.addColorStop(0, 'rgba(6, 182, 212, 0.06)');
       rad1.addColorStop(1, 'transparent');
       ctx.fillStyle = rad1;
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(0, 0, width, height);
 
-      const rad2 = ctx.createRadialGradient(150, 1700, 10, 150, 1700, 700);
-      rad2.addColorStop(0, 'rgba(139, 92, 246, 0.22)');
+      const rad2 = ctx.createRadialGradient(width * 0.85, height * 0.85, 10, width * 0.85, height * 0.85, 450);
+      rad2.addColorStop(0, 'rgba(168, 85, 247, 0.07)');
       rad2.addColorStop(1, 'transparent');
       ctx.fillStyle = rad2;
-      ctx.fillRect(0, 0, W, H);
-
-      // Card Border Frame
-      ctx.strokeStyle = 'rgba(255, 42, 95, 0.3)';
-      ctx.lineWidth = 6;
-      roundRect(ctx, 60, 60, W - 120, H - 120, 48);
-      ctx.stroke();
-
-      // Top Header: Watermark & Brand
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 42px "Space Grotesk", sans-serif';
-      ctx.fillText('⚡ CLUBR VIBE LAB', 120, 160);
-
-      ctx.fillStyle = '#a1a1aa';
-      ctx.font = 'bold 30px "Space Grotesk", sans-serif';
-      ctx.fillText('CERTIFIED REALITY REPORT', 120, 210);
-
-      // Date Tag on Right
-      ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      roundRect(ctx, W - 360, 130, 240, 60, 20);
-      ctx.fill();
-      ctx.fillStyle = '#f4f4f5';
-      ctx.font = 'bold 26px "Space Grotesk", sans-serif';
-      ctx.fillText(new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), W - 330, 172);
-
-      // Divider
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(120, 260);
-      ctx.lineTo(W - 120, 260);
-      ctx.stroke();
-
-      // Badge Banner
-      const badgeY = 360;
-      const gradBadge = ctx.createLinearGradient(120, 0, W - 120, 0);
-      gradBadge.addColorStop(0, '#ff2a5f');
-      gradBadge.addColorStop(1, '#9333ea');
-      ctx.fillStyle = gradBadge;
-      roundRect(ctx, 120, badgeY, W - 240, 90, 30);
-      ctx.fill();
-
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 34px "Space Grotesk", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(currentResultData.badge, W / 2, badgeY + 58);
-
-      // Main Giant Score
-      ctx.font = 'bold 190px "Space Grotesk", sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(`${currentResultData.rf}%`, W / 2, 650);
-
-      ctx.font = 'bold 44px "Space Grotesk", sans-serif';
-      ctx.fillStyle = '#ff2a5f';
-      ctx.fillText('RED FLAG INDEX 🚩', W / 2, 730);
-
-      ctx.font = '34px "Plus Jakarta Sans", sans-serif';
-      ctx.fillStyle = '#fda4af';
-      ctx.fillText(currentResultData.status, W / 2, 790);
-
-      // Dual Meter Panels (Green Flag + Delulu)
-      const panelY = 880;
-      ctx.textAlign = 'left';
-
-      // Left Panel: Green Flag
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-      ctx.lineWidth = 2;
-      roundRect(ctx, 120, panelY, 390, 190, 32);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#a1a1aa';
-      ctx.font = 'bold 28px "Space Grotesk", sans-serif';
-      ctx.fillText('GREEN FLAGS 🟢', 160, panelY + 60);
-
-      ctx.fillStyle = '#34d399';
-      ctx.font = 'bold 70px "Space Grotesk", sans-serif';
-      ctx.fillText(`${currentResultData.gf}%`, 160, panelY + 140);
-
-      // Right Panel: Delulu Index
-      roundRect(ctx, 570, panelY, 390, 190, 32);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#a1a1aa';
-      ctx.font = 'bold 28px "Space Grotesk", sans-serif';
-      ctx.fillText('DELULU INDEX 🌀', 610, panelY + 60);
-
-      ctx.fillStyle = '#c084fc';
-      ctx.font = 'bold 70px "Space Grotesk", sans-serif';
-      ctx.fillText(`${currentResultData.delulu}%`, 610, panelY + 140);
-
-      // The Brutal Verdict Box
-      const verdictY = 1130;
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-      roundRect(ctx, 120, verdictY, W - 240, 340, 36);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#fbbf24';
-      ctx.font = 'bold 32px "Space Grotesk", sans-serif';
-      ctx.fillText('💣 THE BRUTAL VERDICT:', 160, verdictY + 70);
-
-      ctx.fillStyle = '#e4e4e7';
-      ctx.font = '32px "Plus Jakarta Sans", sans-serif';
-      wrapText(ctx, currentResultData.verdict, 160, verdictY + 135, W - 320, 48);
-
-      // Soundtrack Box
-      const anthemY = 1530;
-      const gradAnthem = ctx.createLinearGradient(120, 0, W - 120, 0);
-      gradAnthem.addColorStop(0, 'rgba(88, 28, 135, 0.7)');
-      gradAnthem.addColorStop(1, 'rgba(159, 18, 57, 0.7)');
-      ctx.fillStyle = gradAnthem;
-      roundRect(ctx, 120, anthemY, W - 240, 140, 30);
-      ctx.fill();
-
-      ctx.fillStyle = '#d8b4fe';
-      ctx.font = 'bold 26px "Space Grotesk", sans-serif';
-      ctx.fillText('🎧 OFFICIAL SOUNDTRACK ANTHEM', 170, anthemY + 55);
-
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 36px "Space Grotesk", sans-serif';
-      ctx.fillText(currentResultData.anthem, 170, anthemY + 105);
-
-      // Bottom Footer Watermark
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#a1a1aa';
-      ctx.font = 'bold 32px "Space Grotesk", sans-serif';
-      ctx.fillText('Tested on clubr.online • Test your gang now ⚡', W / 2, 1780);
-
-      // Trigger Instant Download
-      const link = document.createElement('a');
-      link.download = `clubr-red-flag-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-
-      showToast('Story Card Saved! Post it on Instagram 📸');
+      ctx.fillRect(0, 0, width, height);
     }
 
-    function roundRect(ctx, x, y, width, height, radius) {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-    }
+    function drawZones() {
+      const now = Date.now();
 
-    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-      const words = text.split(' ');
-      let line = '';
-      let curY = y;
-      for (let n = 0; n < words.length; n++) {
-        const testLine = line + words[n] + ' ';
-        const metrics = ctx.measureText(testLine);
-        const testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
-          ctx.fillText(line, x, curY);
-          line = words[n] + ' ';
-          curY += lineHeight;
+      ZONES.forEach(z => {
+        const zX = width / 2 + (width * z.relX);
+        const zY = height / 2 + (height * z.relY);
+
+        // Zone Outer Glow
+        const glow = ctx.createRadialGradient(zX, zY, z.radius * 0.4, zX, zY, z.radius);
+        glow.addColorStop(0, `${z.color}18`);
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(zX, zY, z.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Zone Border Ring
+        ctx.strokeStyle = `${z.color}55`;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(zX, zY, z.radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Center Table / DJ Platform
+        if (z.id === 'dj') {
+          // Open Floor DJ Stage
+          ctx.fillStyle = '#141420';
+          ctx.strokeStyle = '#f43f5e88';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(zX, zY, 55, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          // DJ Deck Icon & Pulsing Center Spotlight
+          ctx.font = '28px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('🎛️', zX, zY);
+
+          // Spotlight rotating ring
+          ctx.strokeStyle = '#fbbf24aa';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([8, 8]);
+          ctx.beginPath();
+          ctx.arc(zX, zY, 52 + Math.sin(now * 0.005) * 4, now * 0.002, now * 0.002 + Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
         } else {
-          line = testLine;
-        }
-      }
-      ctx.fillText(line, x, curY);
-    }
+          // Regular Table Circle
+          ctx.fillStyle = '#10101a';
+          ctx.strokeStyle = `${z.color}88`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(zX, zY, 42, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
 
-    function shareOnWhatsApp() {
-      playSound('pop');
-      if (!currentResultData) return;
-      const text = `Maine apne Crush ka Red Flag Test kiya aur ${currentResultData.rf}% Red Flag nikla! 😂\nBadge: ${currentResultData.badge}\n\nApna aur dosto ka check karo: https://clubr.online`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    // =========================================================================
-    // CHAT DECODER LOGIC
-    // =========================================================================
-    const CHAT_DICTIONARY = [
-      {
-        triggers: ['space', 'break', 'distance'],
-        truth: "भाई वो रिलेशनशिप के लिए रेडी है, बस तुम्हारे साथ नहीं! उम्मीद छोड़ो और आगे बढ़ो।",
-        r1: "Cool, space granted. Have a good life.",
-        r2: "NASA se rocket mangwaun kya itni space ke liye? 😂",
-        r3: "Glad we agree bro! Vaise bhi I only see you as a homie."
-      },
-      {
-        triggers: ['so gaya', 'so gayi', 'asleep', 'sleep', '8 baje'],
-        truth: "वो सोए नहीं थे, वो किसी और के साथ Instagram DM या कॉल पर व्यस्त थे!",
-        r1: "Nice. Must be hard sleeping while texting 5 other people.",
-        r2: "Itna jaldi to Kumbhkaran bhi nahi sota tha bro 😂",
-        r3: "All good! I was busy with someone interesting anyway."
-      },
-      {
-        triggers: ['deserve', 'better', 'achhe ho'],
-        truth: "यह सीधा-सीधा ब्रेकअप का सभ्य बहाना है ताकि वो खुद विलेन न बनें।",
-        r1: "I know I deserve better. Thanks for confirming.",
-        r2: "Finally kuch to sach bola tumne 👏",
-        r3: "Agreed 100%. Wishing you the best though!"
-      },
-      {
-        triggers: ['k', 'ok', 'hnn', 'hmm'],
-        truth: "सामने वाले को आपसे बात करने में 0% इंटरेस्ट है। अपनी सेल्फ-रिस्पेक्ट बचाओ और मेसेज मत करो।",
-        r1: "K",
-        r2: "Itne lambe essay mat likha karo, aankhein dukh jaati hain 😂",
-        r3: "(Left on Seen - Zero reply)"
-      },
-      {
-        triggers: ['busy', 'time nahi', 'free nahi'],
-        truth: "कोई इतना बिजी नहीं होता। बात प्रायोरिटी की है, और आप उनकी लिस्ट में 50वें नंबर पर हैं।",
-        r1: "No problem. Stay busy forever.",
-        r2: "Modi ji bhi time nikal lete hain vaise 😂",
-        r3: "Understood! I'm removing you from my schedule too."
-      }
-    ];
-
-    function loadChatPreset(text) {
-      playSound('pop');
-      document.getElementById('decoderInput').value = text;
-      decodeChatMessage();
-    }
-
-    function decodeChatMessage() {
-      playSound('pop');
-      const input = (document.getElementById('decoderInput').value || '').trim();
-      if (!input) {
-        showToast('Please enter a message first!');
-        return;
-      }
-
-      const lower = input.toLowerCase();
-      let matched = CHAT_DICTIONARY.find(d => d.triggers.some(t => lower.includes(t)));
-
-      if (!matched) {
-        matched = {
-          truth: "सामने वाला आपको मिक्स्ड सिग्नल्स देकर बैकअप ऑप्शन की तरह लटकाना चाहता है। सच्चाई को स्वीकारें!",
-          r1: "Understood. Moving forward on my own terms.",
-          r2: "Itna drama to Star Plus serials me bhi nahi hota 😂",
-          r3: "Haha chill, I'm already talking to someone cooler."
-        };
-      }
-
-      document.getElementById('decodedTruthText').innerText = `"${matched.truth}"`;
-      document.getElementById('replyOption1').innerText = `"${matched.r1}"`;
-      document.getElementById('replyOption2').innerText = `"${matched.r2}"`;
-      document.getElementById('replyOption3').innerText = `"${matched.r3}"`;
-
-      document.getElementById('decoderResultBox').classList.remove('hidden');
-      playSound('fanfare');
-    }
-
-    function copyReply(elementId, btn) {
-      playSound('pop');
-      const text = document.getElementById(elementId).innerText.replace(/^"|"$/g, '');
-      navigator.clipboard.writeText(text).then(() => {
-        const old = btn.innerText;
-        btn.innerText = 'Copied! 🔥';
-        btn.classList.add('bg-emerald-500', 'text-black');
-        setTimeout(() => {
-          btn.innerText = old;
-          btn.classList.remove('bg-emerald-500', 'text-black');
-        }, 1500);
-      });
-      showToast('Savage Reply Copied to Clipboard! 🔥');
-    }
-
-    // =========================================================================
-    // DELULU METER LOGIC
-    // =========================================================================
-    const DELULU_QUESTIONS = [
-      {
-        q: "जब क्रश ने आपकी इंस्टाग्राम स्टोरी 2 मिनट के अंदर देखी, तो आपने क्या सोचा?",
-        opts: [
-          { text: "उसने जानबूझकर देखी, वो मेरे प्यार में पागल है!", score: 98 },
-          { text: "इत्तफाक होगा, वो इंस्टाग्राम चला रहा/रही होगी", score: 20 },
-          { text: "मैंने तुरंत अपनी अगली स्टोरी का प्लान बना लिया", score: 85 }
-        ]
-      },
-      {
-        q: "क्या आप अपने क्रश के 3 महीने पुराने चैट मेसेज बार-बार दोबारा पढ़ते हैं?",
-        opts: [
-          { text: "रोज रात को पढ़कर मुस्कुराता/मुस्कुराती हूँ 😂", score: 95 },
-          { text: "कभी-कभी जब याद आती है", score: 50 },
-          { text: "नहीं, मैं पुरानी चैट्स डिलीट कर देता हूँ", score: 10 }
-        ]
-      },
-      {
-        q: "क्या आपने अपने क्रश के साथ फ्यूचर, शादी या बच्चों के नाम सोच लिए हैं?",
-        opts: [
-          { text: "हाँ, बच्चों के नाम और घर का इंटीरियर भी तय है 💀", score: 99 },
-          { text: "हल्का-फुल्का डे-ड्रीमिंग की है बस", score: 45 },
-          { text: "पागल हो क्या, अभी ढंग से बात भी नहीं हुई", score: 10 }
-        ]
-      },
-      {
-        q: "जब वो 8 घंटे बाद 'सॉरी सो गया था' लिखता/लिखती है, तो आप क्या मानते हैं?",
-        opts: [
-          { text: "सच में थक गया होगा मेरा बाबू 🥺", score: 98 },
-          { text: "बकवास कर रहा है, किसी और से चैट कर रहा था", score: 25 },
-          { text: "मुझे कोई फर्क नहीं पड़ता", score: 15 }
-        ]
-      },
-      {
-        q: "क्या आपने कभी गूगल पर दोनों की राशि (Zodiac Sign) की लव मैचिंग चेक की है?",
-        opts: [
-          { text: "हाँ, 10 वेबसाइट्स पर कुंडली मिलाई है 😂", score: 95 },
-          { text: "मजाक में एक बार देख लिया था", score: 40 },
-          { text: "बिल्कुल नहीं, ये सब बकवास है", score: 5 }
-        ]
-      }
-    ];
-
-    let currentDeluluIndex = 0;
-    let deluluScores = [];
-
-    function renderDeluluQuestion() {
-      const total = DELULU_QUESTIONS.length;
-      const qObj = DELULU_QUESTIONS[currentDeluluIndex];
-
-      document.getElementById('deluluStepText').innerText = `TEST ${currentDeluluIndex + 1} OF ${total}`;
-      document.getElementById('deluluQuestionTitle').innerText = qObj.q;
-
-      const container = document.getElementById('deluluOptionsList');
-      container.innerHTML = '';
-
-      qObj.opts.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'w-full p-4 rounded-2xl glass-panel border border-white/10 hover:border-purple-500/50 hover:bg-purple-500/10 text-left transition-all flex items-center justify-between group active:scale-[0.98]';
-        btn.onclick = () => selectDeluluAns(opt.score);
-
-        btn.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-xl bg-zinc-800 group-hover:bg-purple-500 group-hover:text-white flex items-center justify-center font-bold text-xs text-zinc-300 font-mono transition-colors shrink-0">
-              ${idx + 1}
-            </span>
-            <span class="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white leading-snug">
-              ${opt.text}
-            </span>
-          </div>
-          <span class="text-xs text-zinc-500 group-hover:text-purple-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-        `;
-        container.appendChild(btn);
-      });
-    }
-
-    function selectDeluluAns(score) {
-      playSound('pop');
-      deluluScores.push(score);
-
-      if (currentDeluluIndex < DELULU_QUESTIONS.length - 1) {
-        currentDeluluIndex++;
-        renderDeluluQuestion();
-      } else {
-        const avg = Math.round(deluluScores.reduce((a,b)=>a+b, 0) / deluluScores.length);
-        document.getElementById('deluluScoreNumber').innerText = `${avg}%`;
-        
-        let badge = "Mild Daydreamer (A Little Filmy)";
-        let desc = "आप थोड़े बहुत फिल्मी हैं, लेकिन जमीन पर पैर टिके हुए हैं। संभल जाओगे!";
-        if (avg >= 75) {
-          badge = "Certified PhD in Delusion 🎓";
-          desc = "भाई उसने सिर्फ गलती से रील पर लाइक किया था, उसने शादी का कार्ड नहीं छपवाया है! तुरंत ठंडा पानी पियो और रियलिटी में आओ।";
-        } else if (avg <= 30) {
-          badge = "Ultra Realist (Zero Romantic Hope)";
-          desc = "आप इतने ज्यादा प्रैक्टिकल हैं कि प्यार की हवा भी नहीं लगने देते। थोड़ा मुस्कुरा भी लिया करो!";
+          // Center Icon
+          ctx.font = '22px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(z.icon, zX, zY);
         }
 
-        document.getElementById('deluluBadgeTitle').innerText = badge;
-        document.getElementById('deluluVerdictDescription').innerText = desc;
-
-        document.getElementById('deluluQuizBox').classList.add('hidden');
-        document.getElementById('deluluResultCard').classList.remove('hidden');
-        playSound('buzzer');
-      }
-    }
-
-    function resetDeluluQuiz() {
-      currentDeluluIndex = 0;
-      deluluScores = [];
-      document.getElementById('deluluQuizBox').classList.remove('hidden');
-      document.getElementById('deluluResultCard').classList.add('hidden');
-      renderDeluluQuestion();
-    }
-
-    function shareDeluluOnWhatsApp() {
-      playSound('pop');
-      const score = document.getElementById('deluluScoreNumber').innerText;
-      const text = `Mera Delulu Score ${score} nikla hai 😂 (Certified Overthinker). Check yours on: https://clubr.online`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    // =========================================================================
-    // AESTHETIC BIO & CAPTION VAULT
-    // =========================================================================
-    const BIOS_DATA = [
-      { cat: 'sarcastic', text: "Fluent in sarcasm and leaving people on read. 💅" },
-      { cat: 'sarcastic', text: "I'm not arguing, I'm just explaining why I'm right." },
-      { cat: 'sarcastic', text: "99% angel, but oh that 1%... 😈" },
-      { cat: 'sarcastic', text: "My therapist said I need boundaries, so I blocked you." },
-      { cat: 'gym', text: "Lifting heavy so my feelings don't crush me. 🏋️‍♂️" },
-      { cat: 'gym', text: "Discipline over motivation. Everyday. ⚡" },
-      { cat: 'gym', text: "Turning heartbreaks into PRs. 🩸" },
-      { cat: 'soft', text: "Romanticizing iced coffee, late night drives & peace. ☕✨" },
-      { cat: 'soft', text: "Existing in my own quiet frequency. 🌿" },
-      { cat: 'soft', text: "Soft heart, sharp boundaries. 🌙" },
-      { cat: 'villain', text: "In my villain arc. No explanations, no apologies. 🖤" },
-      { cat: 'villain', text: "They said I changed. I said I leveled up. 👑" },
-      { cat: 'villain', text: "Too busy building an empire to entertain clowns. 🎪" },
-      { cat: 'sarcastic', text: "Don't check my vibe, you can't afford the subscription." },
-      { cat: 'soft', text: "Collected moments, not attachments. ☁️" },
-      { cat: 'gym', text: "Focus on yourself and watch your circle evolve." }
-    ];
-
-    function filterBioCategory(cat) {
-      playSound('pop');
-      document.querySelectorAll('.bio-filter-chip').forEach(b => {
-        b.className = 'bio-filter-chip px-4 py-1.5 rounded-full text-xs font-bold bg-zinc-900 text-zinc-400 hover:text-white border border-white/5 transition-all';
-      });
-      const activeBtn = document.getElementById(`bioCat-${cat}`);
-      if (activeBtn) {
-        activeBtn.className = 'bio-filter-chip px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black transition-all';
-      }
-      renderBios(cat);
-    }
-
-    function renderBios(cat = 'all') {
-      const grid = document.getElementById('bioGrid');
-      grid.innerHTML = '';
-      const list = cat === 'all' ? BIOS_DATA : BIOS_DATA.filter(b => b.cat === cat);
-
-      list.forEach(b => {
-        const div = document.createElement('div');
-        div.className = 'p-4 rounded-2xl glass-panel border border-white/10 flex items-center justify-between gap-3 group hover:border-amber-500/40 transition-all';
-        div.innerHTML = `
-          <p class="text-xs sm:text-sm font-semibold text-zinc-200 leading-snug">${b.text}</p>
-          <button onclick="copyDirectText('${b.text.replace(/'/g, "\\'")}', this)" class="shrink-0 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-amber-400 hover:text-black font-bold text-xs transition-all active:scale-90">
-            Copy
-          </button>
-        `;
-        grid.appendChild(div);
+        // Zone Name Label
+        ctx.font = 'bold 12px "Space Grotesk", sans-serif';
+        ctx.fillStyle = '#d4d4d8';
+        ctx.textAlign = 'center';
+        ctx.fillText(z.name.toUpperCase(), zX, zY + z.radius - 20);
       });
     }
 
-    function copyDirectText(text, btn) {
-      playSound('pop');
-      navigator.clipboard.writeText(text).then(() => {
-        const old = btn.innerText;
-        btn.innerText = 'Copied!';
-        btn.classList.add('bg-emerald-500', 'text-black');
-        setTimeout(() => {
-          btn.innerText = old;
-          btn.classList.remove('bg-emerald-500', 'text-black');
-        }, 1500);
-      });
-      showToast('Bio Copied! Paste on Instagram ✨');
-    }
+    function drawLightPulses() {
+      for (let i = lightPulses.length - 1; i >= 0; i--) {
+        const p = lightPulses[i];
+        p.radius += 1.2;
+        p.opacity -= 0.035;
 
-    // =========================================================================
-    // CRUSH VIBE MATCH LINK
-    // =========================================================================
-    function setCrushAns(qIdx, optIdx, btn) {
-      playSound('pop');
-      crushAnswers[qIdx] = optIdx;
-      document.querySelectorAll(`.crush-q${qIdx}`).forEach(b => {
-        b.className = `crush-q${qIdx} p-2 text-xs rounded-xl bg-zinc-900 border border-white/5 text-zinc-400`;
-      });
-      btn.className = `crush-q${qIdx} p-2 text-xs rounded-xl bg-rose-500/20 border border-rose-500 text-white font-bold`;
-    }
+        if (p.opacity <= 0) {
+          lightPulses.splice(i, 1);
+          continue;
+        }
 
-    function generateCrushShareLink() {
-      playSound('pop');
-      const name = (document.getElementById('crushCreatorName').value || '').trim();
-      if (!name) {
-        showToast('Please enter your name first!');
-        return;
-      }
-      if (crushAnswers.includes(-1)) {
-        showToast('Please answer all 5 questions!');
-        return;
-      }
-
-      const encoded = btoa(JSON.stringify({ name: name, ans: crushAnswers }));
-      const link = `https://clubr.online/?vibe=${encoded}`;
-
-      document.getElementById('generatedCrushLinkInput').value = link;
-      document.getElementById('crushCreatorBox').classList.add('hidden');
-      document.getElementById('crushLinkResultBox').classList.remove('hidden');
-      playSound('fanfare');
-      if (typeof confetti === 'function') confetti({ particleCount: 80, spread: 60 });
-    }
-
-    function copyCrushLink() {
-      playSound('pop');
-      const input = document.getElementById('generatedCrushLinkInput');
-      input.select();
-      navigator.clipboard.writeText(input.value);
-      showToast('Link Copied! Send to Crush on Instagram DM 💌');
-    }
-
-    function shareCrushLinkDirectWhatsApp() {
-      playSound('pop');
-      const link = document.getElementById('generatedCrushLinkInput').value;
-      const name = document.getElementById('crushCreatorName').value || 'Maine';
-      const text = `${name} ne aapke liye ek Secret Vibe Match Quiz banaya hai! 😉\nDekhte hain hamari vibe kitni match hoti hai: ${link}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    // Check if user arrived via a friend's vibe link
-    function checkIncomingVibeLink() {
-      const params = new URLSearchParams(window.location.search);
-      const vibeCode = params.get('vibe');
-      if (vibeCode) {
-        try {
-          const decoded = JSON.parse(atob(vibeCode));
-          if (decoded && decoded.name) {
-            setTimeout(() => {
-              alert(`👋 ${decoded.name} ने आपके लिए यह Vibe Match क्विज भेजा है! चलिए देखते हैं आपकी वाइब्स कितनी मैच होती हैं।`);
-              switchTab('crush');
-            }, 600);
-          }
-        } catch(e) {}
+        ctx.strokeStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
       }
     }
 
-    // =========================================================================
-    // USER STATS, STREAK & MODALS
-    // =========================================================================
-    function incrementUserTests() {
-      let tests = Number(localStorage.getItem('clubr_user_tests') || '0') + 1;
-      localStorage.setItem('clubr_user_tests', tests);
-      const el = document.getElementById('userTestsCount');
-      if (el) el.innerText = tests;
+    function drawStardustTrails() {
+      if (player.trail.length < 2) return;
+
+      for (let i = 0; i < player.trail.length; i++) {
+        const pt = player.trail[i];
+        const alpha = (i / player.trail.length) * 0.4;
+        const size = (i / player.trail.length) * (player.radius * 0.6);
+
+        ctx.fillStyle = player.color;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
     }
 
-    function loadUserStreak() {
-      const today = new Date().toISOString().split('T')[0];
-      const last = localStorage.getItem('clubr_last_active');
-      let streak = Number(localStorage.getItem('clubr_streak_days') || '1');
+    function drawAvatarEntity(entity, isUser = false) {
+      const now = Date.now();
 
-      if (last && last !== today) {
-        const lastDate = new Date(last);
-        const diffDays = Math.round((new Date(today) - lastDate) / (1000 * 60 * 60 * 24));
-        if (diffDays === 1) {
-          streak++;
-        } else if (diffDays > 1) {
-          streak = 1;
+      // Dance bop animation
+      let offsetY = 0;
+      if (isUser && player.isDancing) {
+        offsetY = Math.sin(now * 0.015) * 6;
+      }
+
+      const drawX = entity.x;
+      const drawY = entity.y + offsetY;
+
+      // Outer Neon Glow
+      const glow = ctx.createRadialGradient(drawX, drawY, entity.radius * 0.2, drawX, drawY, entity.radius * 2);
+      glow.addColorStop(0, `${entity.color}66`);
+      glow.addColorStop(1, 'transparent');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(drawX, drawY, entity.radius * 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Avatar Body Sphere
+      const bodyGrad = ctx.createRadialGradient(drawX - 4, drawY - 4, 3, drawX, drawY, entity.radius);
+      bodyGrad.addColorStop(0, '#ffffff');
+      bodyGrad.addColorStop(0.4, entity.color);
+      bodyGrad.addColorStop(1, '#090912');
+
+      ctx.fillStyle = bodyGrad;
+      ctx.beginPath();
+      ctx.arc(drawX, drawY, entity.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Avatar Rim Outline
+      ctx.strokeStyle = '#ffffffaa';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Accessory Emoji
+      if (entity.accessory) {
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(entity.accessory, drawX, drawY);
+      }
+
+      // Nickname Pill Label
+      const nick = entity.nickname;
+      ctx.font = 'bold 11px "Space Grotesk", sans-serif';
+      const textWidth = ctx.measureText(nick).width;
+
+      ctx.fillStyle = 'rgba(9, 9, 14, 0.85)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+
+      const pillX = drawX - textWidth / 2 - 8;
+      const pillY = drawY - entity.radius - 24;
+      ctx.beginPath();
+      ctx.roundRect(pillX, pillY, textWidth + 16, 18, 9);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(nick, drawX, pillY + 9);
+
+      // Speech Bubble (If Active Message)
+      if (entity.message) {
+        const elapsed = now - entity.message.timestamp;
+        if (elapsed < entity.message.life) {
+          const fadeAlpha = elapsed > entity.message.life - 1000 ? (entity.message.life - elapsed) / 1000 : 1;
+          drawSpeechBubble(drawX, pillY - 8, entity.message.text, entity.color, fadeAlpha);
+        } else {
+          entity.message = null;
         }
       }
-      localStorage.setItem('clubr_streak_days', streak);
-      localStorage.setItem('clubr_last_active', today);
-      document.getElementById('streakCount').innerText = `Day ${streak}`;
+    }
+
+    function drawSpeechBubble(x, y, text, color, alpha) {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      ctx.font = '500 12px "Plus Jakarta Sans", sans-serif';
+      const metrics = ctx.measureText(text);
+      const bubbleW = Math.min(220, metrics.width + 24);
+      const bubbleH = 34;
+      const bubbleX = x - bubbleW / 2;
+      const bubbleY = y - bubbleH - 6;
+
+      // Bubble Background
+      ctx.fillStyle = 'rgba(15, 15, 22, 0.95)';
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+
+      ctx.beginPath();
+      ctx.roundRect(bubbleX, bubbleY, bubbleW, bubbleH, 14);
+      ctx.fill();
+      ctx.stroke();
+
+      // Tail Pointer
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(x - 5, bubbleY + bubbleH);
+      ctx.lineTo(x + 5, bubbleY + bubbleH);
+      ctx.lineTo(x, bubbleY + bubbleH + 6);
+      ctx.fill();
+
+      // Text inside bubble
+      ctx.fillStyle = '#f4f4f5';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, x, bubbleY + bubbleH / 2);
+
+      ctx.restore();
+    }
+
+    function drawFloatingEmotes() {
+      for (let i = floatingParticles.length - 1; i >= 0; i--) {
+        const p = floatingParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.opacity -= 0.015;
+
+        if (p.opacity <= 0) {
+          floatingParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = p.opacity;
+        ctx.font = '22px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.emoji, p.x, p.y);
+        ctx.restore();
+      }
+    }
+
+    // MAIN ANIMATION RENDER LOOP (60 FPS)
+    function animate() {
+      // 1. Interpolate Player Position (Smooth gliding)
+      const dx = player.targetX - player.x;
+      const dy = player.targetY - player.y;
+      player.x += dx * player.speed;
+      player.y += dy * player.speed;
+
+      // Record Stardust Trail if moving
+      if (Math.hypot(dx, dy) > 1) {
+        player.trail.push({ x: player.x, y: player.y });
+        if (player.trail.length > 10) player.trail.shift();
+      } else if (player.trail.length > 0) {
+        player.trail.shift();
+      }
+
+      // Check proximity zones & update spatial audio
+      checkProximityZones();
+      updateSpatialAudio();
+
+      // Render Floor, Zones & Visuals
+      drawGridFloor();
+      drawZones();
+      drawLightPulses();
+      drawStardustTrails();
+
+      // Render NPCs
+      NPCS.forEach(npc => drawAvatarEntity(npc, false));
+
+      // Render User Player Avatar
+      drawAvatarEntity(player, true);
+
+      // Render Floating Emote Particles
+      drawFloatingEmotes();
+
+      requestAnimationFrame(animate);
+    }
+
+    // =========================================================================
+    // SIDE FEATURES & HELPERS
+    // =========================================================================
+    function toggleDropDrawer() {
+      const drawer = document.getElementById('dropDrawer');
+      drawer.classList.toggle('translate-x-full');
+    }
+
+    function inviteGangToTable() {
+      const zone = player.currentZone ? player.currentZone.name : 'Open Floor';
+      const shareUrl = `https://clubr.online`;
+      const text = `Yo! I'm hanging out at the "${zone}" on Clubr.online! Walk in and let's vibe: ${shareUrl}`;
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareUrl);
+      }
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function showToast(msg) {
@@ -1804,87 +1200,26 @@
       setTimeout(() => toast.classList.add('hidden'), 2500);
     }
 
-    function openLoginModal() {
-      playSound('pop');
-      document.getElementById('loginModal').classList.remove('hidden');
-    }
-
-    function closeLoginModal() {
-      document.getElementById('loginModal').classList.add('hidden');
-    }
-
-    function openProfileModal() {
-      playSound('pop');
-      document.getElementById('profileModal').classList.remove('hidden');
-    }
-
-    function closeProfileModal() {
-      document.getElementById('profileModal').classList.add('hidden');
-    }
-
-    function performGoogleLogin() {
-      playSound('pop');
-      try {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithPopup(provider).then((res) => {
-          const u = res.user;
-          setupUserSession(u.displayName, u.email, u.photoURL);
-          closeLoginModal();
-          showToast(`Welcome ${u.displayName}! ⚡`);
-        }).catch((err) => {
-          console.log('Google Auth:', err.message);
-          // Fallback guest login if popup blocked
-          setupUserSession('Clubr Vibe User', 'user@clubr.online', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80');
-          closeLoginModal();
-        });
-      } catch(e) {
-        setupUserSession('Clubr Vibe User', 'user@clubr.online', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80');
-        closeLoginModal();
-      }
-    }
-
-    function setupUserSession(name, email, avatar) {
-      localStorage.setItem('clubr_vibe_user', JSON.stringify({ name, email, avatar }));
-      document.getElementById('loginHeaderBtn').classList.add('hidden');
-      const badge = document.getElementById('userProfileBadge');
-      badge.classList.remove('hidden');
-      document.getElementById('userAvatarImg').src = avatar;
-      document.getElementById('profileModalAvatar').src = avatar;
-      document.getElementById('profileModalName').innerText = name;
-      document.getElementById('profileModalEmail').innerText = email;
-    }
-
-    function handleLogout() {
-      localStorage.removeItem('clubr_vibe_user');
-      location.reload();
-    }
-
-    // =========================================================================
-    // INITIALIZATION
-    // =========================================================================
+    // Initialize Canvas on Page Load
     window.addEventListener('DOMContentLoaded', () => {
-      // Firebase Config
-      try {
-        firebase.initializeApp({
-          apiKey: "AIzaSyAsE1K8xU8aTsCAAeY4vt6LcghKXySUpdY",
-          authDomain: "clubr-online.firebaseapp.com",
-          databaseURL: "https://clubr-online-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "clubr-online"
-        });
-      } catch(e) {}
+      resizeCanvas();
+      animate();
 
-      loadUserStreak();
-      selectRedFlagMode('crush');
-      renderDeluluQuestion();
-      renderBios();
-      checkIncomingVibeLink();
-
-      // Check saved user
-      const savedUser = localStorage.getItem('clubr_vibe_user');
-      if (savedUser) {
-        const u = JSON.parse(savedUser);
-        setupUserSession(u.name, u.email, u.avatar);
-      }
+      // Periodically trigger ambient NPC speech bubbles
+      setInterval(() => {
+        const randomNpc = NPCS[Math.floor(Math.random() * NPCS.length)];
+        const ambientQuotes = [
+          "This bassline is hypnotic! 🎧",
+          "Table talk is deep tonight ✨",
+          "Check out the drops in the top drawer 🎁",
+          "Grab a drink and step into the DJ light 🕺"
+        ];
+        randomNpc.message = {
+          text: ambientQuotes[Math.floor(Math.random() * ambientQuotes.length)],
+          timestamp: Date.now(),
+          life: 5500
+        };
+      }, 14000);
     });
   </script>
 </body>

@@ -1,16 +1,16 @@
 {
-  "name": "CLUBR VIBE LAB — Red Flag Meter & Chat Decoder",
-  "short_name": "CLUBR VIBE",
-  "description": "Decode your crush's mixed signals, calculate your Red Flags, and check your Delulu score on CLUBR VIBE LAB.",
+  "name": "Clubr.online — Virtual 2D Digital Club",
+  "short_name": "Clubr",
+  "description": "Step into Clubr.online, the virtual 2D digital club. Hangout at tables, chat with speech bubbles, and vibe to Lo-Fi beats.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#09090b",
-  "theme_color": "#09090b",
+  "background_color": "#09090d",
+  "theme_color": "#09090d",
   "categories": [
     "social",
-    "lifestyle",
+    "games",
     "entertainment"
   ],
   "icons": [

@@ -1,7 +1,7 @@
 {
-  "name": "CLUBR ONLINE - वायरल खबरें और ग्राउंड रियलिटी",
-  "short_name": "CLUBR",
-  "description": "Boring media headlines dismantled in 60 seconds with Ground Reality & Fact Checks.",
+  "name": "CLUBR VIBE LAB — Red Flag Meter & Chat Decoder",
+  "short_name": "CLUBR VIBE",
+  "description": "Decode your crush's mixed signals, calculate your Red Flags, and check your Delulu score on CLUBR VIBE LAB.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,8 +9,8 @@
   "background_color": "#09090b",
   "theme_color": "#09090b",
   "categories": [
-    "news",
-    "magazines",
+    "social",
+    "lifestyle",
     "entertainment"
   ],
   "icons": [

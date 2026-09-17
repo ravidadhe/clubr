@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Clubr.online — Virtual 2D Digital Club</title>
+  <title>Clubr.online — Cyber-Lounge & 2D Virtual Club</title>
   
-  <meta name="description" content="Step into Clubr.online, the 2D virtual digital nightclub. Meet people at tables, chat with speech bubbles, dance at the DJ booth, and vibe to Lo-Fi beats." />
-  <meta property="og:title" content="Clubr.online — Virtual 2D Digital Club" />
-  <meta property="og:description" content="Hangout in the virtual 2D club with friends. No registration needed!" />
+  <meta name="description" content="Step into Clubr Cyber-Lounge! The ultimate 2D virtual digital club with animated LED dance floor, DJ soundboard, Truth or Dare cards, neon bar mixer, and anonymous confession wall." />
+  <meta property="og:title" content="Clubr.online — Cyber-Lounge & 2D Virtual Club" />
+  <meta property="og:description" content="Hangout in the virtual 2D club with friends! DJ soundboard, party cards, neon bar & anonymous gossip wall. No signup required." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clubr.online" />
-  <meta name="theme-color" content="#09090c" />
+  <meta name="theme-color" content="#07070b" />
   
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
@@ -18,7 +18,7 @@
   <!-- Google Fonts: Space Grotesk & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,16 +28,16 @@
       theme: {
         extend: {
           colors: {
-            club: {
-              bg: '#09090d',
-              grid: '#181824',
-              surface: '#12121c',
-              border: '#27273a',
-              cyan: '#06b6d4',
-              purple: '#a855f7',
-              emerald: '#10b981',
-              gold: '#f59e0b',
-              rose: '#f43f5e'
+            cyber: {
+              bg: '#07070b',
+              surface: '#0f0f18',
+              card: '#151522',
+              border: '#252538',
+              pink: '#ff2a85',
+              cyan: '#00f0ff',
+              purple: '#9d4edd',
+              amber: '#ffb703',
+              green: '#06d6a0'
             }
           },
           fontFamily: {
@@ -62,36 +62,62 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #09090d;
+      background-color: #07070b;
       font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #f3f4f6;
     }
     .headline-font {
       font-family: 'Space Grotesk', sans-serif;
     }
-    /* Glassmorphism */
-    .glass-ui {
-      background: rgba(18, 18, 28, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    
+    /* Cyber Glassmorphism */
+    .cyber-glass {
+      background: rgba(15, 15, 24, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
-    /* Glowing animations */
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.8; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.02); }
+    .cyber-glass-glow {
+      background: rgba(21, 21, 34, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
     }
-    .animate-pulse-glow {
-      animation: pulseGlow 3s ease-in-out infinite;
+
+    /* Sound pad button press effect */
+    .sound-pad {
+      transition: all 0.1s ease;
     }
-    /* Hide scrollbars */
+    .sound-pad:active {
+      transform: scale(0.92);
+      filter: brightness(1.4);
+    }
+
+    /* Card flip perspective */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+
+    /* Scrollbar */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Glowing animations */
+    @keyframes neonPulse {
+      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 8px currentColor); }
+      50% { opacity: 1; filter: drop-shadow(0 0 16px currentColor); }
+    }
+    .animate-neon-pulse {
+      animation: neonPulse 2.5s ease-in-out infinite;
+    }
   </style>
 </head>
-<body class="h-full w-full relative">
+<body class="h-full w-full relative overflow-hidden">
 
   <!-- ========================================================================= -->
-  <!-- 2D INTERACTIVE CLUB CANVAS (FULLSCREEN) -->
+  <!-- 2D INTERACTIVE CYBER-LOUNGE CANVAS (FULLSCREEN 60 FPS) -->
   <!-- ========================================================================= -->
   <canvas id="clubFloorCanvas" class="absolute inset-0 w-full h-full cursor-crosshair z-0"></canvas>
 
@@ -101,49 +127,50 @@
   <header class="absolute top-0 left-0 right-0 z-30 p-3 sm:p-4 pointer-events-none">
     <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
       
-      <!-- Brand & Status -->
-      <div class="glass-ui rounded-2xl px-3.5 py-2 flex items-center gap-3 shadow-xl pointer-events-auto">
+      <!-- Brand & Live Club Status -->
+      <div class="cyber-glass rounded-2xl px-3.5 py-2 flex items-center gap-3 pointer-events-auto border border-white/10 shadow-2xl">
         <div class="flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
-          <span class="headline-font font-black text-lg tracking-wider text-white">CLUBR</span>
+          <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></div>
+          <span class="headline-font font-black text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400">CLUBR</span>
+          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-400 border border-pink-500/30 uppercase tracking-wider hidden sm:inline">Cyber Lounge</span>
         </div>
-        <div class="h-4 w-[1px] bg-white/10"></div>
-        <div class="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
+        <div class="h-4 w-[1px] bg-white/15"></div>
+        <div class="flex items-center gap-1.5 text-xs text-zinc-300 font-medium">
           <span class="text-emerald-400">●</span>
-          <span id="onlineCountText">18 in Club</span>
+          <span id="onlineCountText">24 in Lounge</span>
         </div>
       </div>
 
-      <!-- Center Zone Tag & Spotlight Alert -->
-      <div id="centerHeaderAlert" class="glass-ui rounded-2xl px-4 py-2 hidden sm:flex items-center gap-2 text-xs font-mono font-bold text-white shadow-xl pointer-events-auto transition-all">
-        <span id="zoneIndicatorDot" class="w-2 h-2 rounded-full bg-rose-500"></span>
-        <span id="zoneIndicatorText">Open Floor</span>
+      <!-- Center Zone Banner Indicator -->
+      <div id="centerZoneTag" class="cyber-glass rounded-2xl px-4 py-2 hidden sm:flex items-center gap-2 text-xs font-mono font-bold text-white pointer-events-auto shadow-2xl transition-all">
+        <span id="zoneIndicatorDot" class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+        <span id="zoneIndicatorText">Center Dance Floor</span>
       </div>
 
-      <!-- Right Actions (Audio Toggle, Invite Gang, Drop Drawer) -->
+      <!-- Right Action Hub: Audio Beats, Invite Gang, Drops -->
       <div class="flex items-center gap-2 pointer-events-auto">
         
-        <!-- Audio Synthesizer Toggle -->
+        <!-- Audio Synthesizer Beat Toggle -->
         <button 
           id="audioToggleBtn" 
           onclick="toggleClubAudio()" 
-          class="glass-ui rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-white/20 active:scale-95 transition-all shadow-xl"
-          title="Lo-Fi Beats Toggle">
+          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-cyan-400/50 active:scale-95 transition-all shadow-xl"
+          title="Toggle Lounge Beats">
           <span id="audioIcon">🔊</span>
         </button>
 
-        <!-- Invite Gang Button -->
+        <!-- WhatsApp Invite Gang -->
         <button 
           onclick="inviteGangToTable()" 
-          class="glass-ui rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold text-zinc-200 hover:text-white hover:border-white/20 active:scale-95 transition-all shadow-xl hidden sm:flex">
+          class="cyber-glass rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold text-zinc-200 hover:text-white hover:border-white/30 active:scale-95 transition-all shadow-xl hidden md:flex">
           <span>📲</span>
           <span>Invite Gang</span>
         </button>
 
-        <!-- Notice Board / Exclusive Drops Drawer Toggle -->
+        <!-- Exclusive Drops Notice Board -->
         <button 
           onclick="toggleDropDrawer()" 
-          class="glass-ui rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold bg-gradient-to-r from-rose-500/20 to-purple-500/20 text-rose-300 border-rose-500/30 hover:border-rose-500/50 active:scale-95 transition-all shadow-xl">
+          class="cyber-glass rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 text-pink-300 border border-pink-500/40 hover:border-pink-500 active:scale-95 transition-all shadow-xl">
           <span>🎁</span>
           <span>Drops</span>
         </button>
@@ -152,73 +179,379 @@
 
     </div>
 
-    <!-- Spotlight Banner (Broadcast alert when avatar steps in center spotlight) -->
+    <!-- Center Spotlight On-Air Broadcast Banner -->
     <div id="spotlightBanner" class="max-w-md mx-auto mt-2 hidden text-center pointer-events-auto">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/30 via-rose-500/30 to-purple-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold font-mono shadow-xl animate-bounce">
-        <span>🎙️ SPOTLIGHT MIC ACTIVE:</span>
-        <span id="spotlightUserText">Aryan is on the mic!</span>
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/30 via-pink-500/30 to-purple-500/30 border border-amber-400/50 text-amber-300 text-xs font-bold font-mono shadow-xl animate-bounce">
+        <span>🎙️ ON THE MIC:</span>
+        <span id="spotlightUserText">You are in the DJ Spotlight!</span>
       </div>
     </div>
   </header>
 
   <!-- ========================================================================= -->
-  <!-- FLOATING PROXIMITY TABLE CHAT (APPEARS WHEN INSIDE A TABLE ZONE) -->
+  <!-- FLOATING PROXIMITY TABLE CHAT INPUT -->
   <!-- ========================================================================= -->
-  <div id="tableChatContainer" class="absolute bottom-20 sm:bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-lg z-30 transition-all duration-300 opacity-0 pointer-events-none translate-y-4">
-    <div class="glass-ui rounded-3xl p-2.5 sm:p-3 shadow-2xl border border-white/15 space-y-2 pointer-events-auto">
-      
-      <!-- Table Active Header -->
+  <div id="tableChatContainer" class="absolute bottom-24 sm:bottom-20 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-30 transition-all duration-300 opacity-0 pointer-events-none translate-y-4">
+    <div class="cyber-glass rounded-3xl p-3 shadow-2xl border border-white/20 space-y-2 pointer-events-auto">
       <div class="flex items-center justify-between px-2 text-[11px] font-mono">
         <span id="tableChatHeader" class="font-bold text-zinc-300 flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-          <span>Chatting at Tech & Hustle Table</span>
+          <span>Chatting at Table</span>
         </span>
-        <span class="text-zinc-500">Speech Bubble: 6s</span>
+        <span class="text-zinc-400">Bubble: 6s</span>
       </div>
-
-      <!-- Chat Input Form -->
       <form onsubmit="handleSendTableChat(event)" class="flex items-center gap-2">
         <input 
           type="text" 
           id="tableChatInput" 
           maxlength="80"
-          placeholder="Say something to the table..." 
-          class="flex-1 bg-black/60 border border-white/10 focus:border-cyan-400 focus:outline-none rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 font-medium transition-all"
+          placeholder="Say something to the room..." 
+          class="flex-1 bg-black/60 border border-white/15 focus:border-cyan-400 focus:outline-none rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 font-medium transition-all"
         />
         <button 
           type="submit" 
-          class="px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white font-extrabold text-xs rounded-2xl transition-all active:scale-95 shrink-0 shadow-lg shadow-cyan-500/20">
+          class="px-4 py-2.5 bg-gradient-to-r from-cyan-500 via-purple-600 to-pink-500 hover:opacity-90 text-white font-extrabold text-xs rounded-2xl transition-all active:scale-95 shrink-0 shadow-lg shadow-cyan-500/20">
           Send 💬
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- BOTTOM CYBER ACTION DOCK (THE 4 MAIN STATIONS + EMOTES) -->
+  <!-- ========================================================================= -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 max-w-xl w-[94%] sm:w-auto flex items-center justify-between sm:justify-center gap-1.5 sm:gap-2 cyber-glass rounded-3xl p-2 shadow-2xl border border-white/15 pointer-events-auto">
+    
+    <!-- Station 1: DJ Soundboard -->
+    <button 
+      onclick="openStationModal('djSoundboardModal')" 
+      class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-pink-500/20 to-purple-600/10 hover:from-pink-500/30 hover:to-purple-600/20 border border-pink-500/30 hover:border-pink-500 text-white transition-all active:scale-95 group"
+      title="DJ Soundboard (Airhorn, Vinyl Scratch, Laser, 808 Bass)">
+      <span class="text-lg group-hover:scale-110 transition-transform">🎛️</span>
+      <span class="text-[9px] font-mono font-bold text-pink-300 mt-0.5">DJ SFX</span>
+    </button>
+
+    <!-- Station 2: Party Deck (Truth or Dare) -->
+    <button 
+      onclick="openStationModal('partyDeckModal')" 
+      class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-purple-500/20 to-indigo-600/10 hover:from-purple-500/30 hover:to-indigo-600/20 border border-purple-500/30 hover:border-purple-500 text-white transition-all active:scale-95 group"
+      title="Party Card Deck (Truth or Dare / Never Have I Ever)">
+      <span class="text-lg group-hover:scale-110 transition-transform">🎲</span>
+      <span class="text-[9px] font-mono font-bold text-purple-300 mt-0.5">Cards</span>
+    </button>
+
+    <!-- Station 3: The Neon Bar -->
+    <button 
+      onclick="openStationModal('neonBarModal')" 
+      class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-cyan-500/20 to-blue-600/10 hover:from-cyan-500/30 hover:to-blue-600/20 border border-cyan-500/30 hover:border-cyan-500 text-white transition-all active:scale-95 group"
+      title="The Neon Bar (Order Virtual Cocktails & Fortunes)">
+      <span class="text-lg group-hover:scale-110 transition-transform">🍸</span>
+      <span class="text-[9px] font-mono font-bold text-cyan-300 mt-0.5">Bar</span>
+    </button>
+
+    <!-- Station 4: Anonymous Confession Wall -->
+    <button 
+      onclick="openStationModal('confessionWallModal')" 
+      class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-amber-500/20 to-rose-600/10 hover:from-amber-500/30 hover:to-rose-600/20 border border-amber-500/30 hover:border-amber-500 text-white transition-all active:scale-95 group"
+      title="Anonymous Confession Wall (Spill The Tea ☕)">
+      <span class="text-lg group-hover:scale-110 transition-transform">💌</span>
+      <span class="text-[9px] font-mono font-bold text-amber-300 mt-0.5">Gossip</span>
+    </button>
+
+    <div class="h-8 w-[1px] bg-white/15 mx-0.5 hidden sm:block"></div>
+
+    <!-- Quick Emote Bursts -->
+    <div class="flex items-center gap-1">
+      <button onclick="triggerAvatarEmote('🔥')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Fire">🔥</button>
+      <button onclick="triggerAvatarEmote('💀')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Dead">💀</button>
+      <button onclick="triggerAvatarEmote('🍻')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Cheers">🍻</button>
+      <button onclick="toggleAvatarDance()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-pink-500/30 to-purple-600/30 hover:bg-pink-500/50 border border-pink-500/30 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Dance Mode">🕺</button>
+    </div>
+
+  </div>
+
+  <!-- Movement Guide Pill -->
+  <div class="absolute bottom-4 left-4 z-20 hidden lg:flex items-center gap-2 cyber-glass rounded-2xl px-3 py-1.5 text-[11px] text-zinc-400 font-mono pointer-events-none">
+    <span>Tap / Drag anywhere to walk</span>
+    <span>•</span>
+    <span>Walk to stations to trigger</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: 🎧 INTERACTIVE DJ SOUNDBOARD -->
+  <!-- ========================================================================= -->
+  <div id="djSoundboardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-pink-500/30 shadow-2xl relative space-y-4">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-lg">🎛️</div>
+          <div>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">DJ Soundboard Console</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">Synthesized Web Audio • Zero Latency</p>
+          </div>
+        </div>
+        <button onclick="closeStationModal('djSoundboardModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Interactive 4 Sound Pads -->
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        
+        <!-- Pad 1: Airhorn -->
+        <button 
+          onclick="playAirhorn()" 
+          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-pink-600/20 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+          <span class="text-3xl group-hover:scale-110 transition-transform">📢</span>
+          <span class="headline-font font-black text-sm text-amber-300">AIRHORN</span>
+          <span class="text-[10px] font-mono text-zinc-400">Triple Blast</span>
+        </button>
+
+        <!-- Pad 2: Vinyl Scratch -->
+        <button 
+          onclick="playVinylScratch()" 
+          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 hover:border-cyan-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+          <span class="text-3xl group-hover:scale-110 transition-transform">💿</span>
+          <span class="headline-font font-black text-sm text-cyan-300">SCRATCH</span>
+          <span class="text-[10px] font-mono text-zinc-400">Turntable Rewind</span>
+        </button>
+
+        <!-- Pad 3: Laser Drop -->
+        <button 
+          onclick="playLaserDrop()" 
+          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-600/20 border border-purple-500/40 hover:border-purple-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+          <span class="text-3xl group-hover:scale-110 transition-transform">💥</span>
+          <span class="headline-font font-black text-sm text-purple-300">LASER DROP</span>
+          <span class="text-[10px] font-mono text-zinc-400">Electro Zap</span>
+        </button>
+
+        <!-- Pad 4: 808 Sub-Bass -->
+        <button 
+          onclick="playSubBassDrop()" 
+          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-rose-500/20 to-red-700/20 border border-rose-500/40 hover:border-rose-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+          <span class="text-3xl group-hover:scale-110 transition-transform">🔊</span>
+          <span class="headline-font font-black text-sm text-rose-300">808 BASS BOOM</span>
+          <span class="text-[10px] font-mono text-zinc-400">Floor Shaker</span>
+        </button>
+
+      </div>
+
+      <!-- Beat Style Switcher -->
+      <div class="pt-2 flex items-center justify-between p-3 rounded-2xl bg-black/40 border border-white/10">
+        <span class="text-xs font-mono text-zinc-300">Music Rhythm:</span>
+        <div class="flex items-center gap-2">
+          <button id="beatModeLofiBtn" onclick="setBeatMode('lofi')" class="px-3 py-1 text-xs font-bold rounded-xl bg-cyan-500 text-black">Lo-Fi Chill</button>
+          <button id="beatModeCyberBtn" onclick="setBeatMode('cyber')" class="px-3 py-1 text-xs font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20">Cyberwave ⚡</button>
+        </div>
+      </div>
 
     </div>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- BOTTOM QUICK EMOTE DOCK (FLOATS ABOVE CHAT OR BOTTOM CORNER) -->
+  <!-- MODAL 2: 🎲 CHILL LOUNGE PARTY CARD DECK (TRUTH / DARE / NHIE) -->
   <!-- ========================================================================= -->
-  <div class="absolute bottom-4 left-4 z-30 flex items-center gap-1.5 glass-ui rounded-2xl p-1.5 shadow-xl pointer-events-auto">
-    <button onclick="triggerAvatarEmote('🔥')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Fire">🔥</button>
-    <button onclick="triggerAvatarEmote('💀')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Dead/LOL">💀</button>
-    <button onclick="triggerAvatarEmote('🍻')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Cheers">🍻</button>
-    <button onclick="triggerAvatarEmote('❤️')" class="w-9 h-9 rounded-xl hover:bg-white/10 flex items-center justify-center text-base transition-transform active:scale-90" title="Love">❤️</button>
-    <button onclick="toggleAvatarDance()" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-500/30 to-rose-500/30 hover:bg-purple-500/40 flex items-center justify-center text-base transition-transform active:scale-90" title="Dance Mode">🕺</button>
+  <div id="partyDeckModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-purple-500/30 shadow-2xl relative space-y-4">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-lg">🎲</div>
+          <div>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">Lounge Party Deck</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">Truth • Dare • Never Have I Ever</p>
+          </div>
+        </div>
+        <button onclick="closeStationModal('partyDeckModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Mode Filters -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <button onclick="setPartyDeckCategory('all', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-purple-500 text-white text-xs font-bold shrink-0">✨ All Mix</button>
+        <button onclick="setPartyDeckCategory('truth', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold shrink-0">🌶️ Spicy Truth</button>
+        <button onclick="setPartyDeckCategory('dare', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold shrink-0">🎭 Wild Dare</button>
+        <button onclick="setPartyDeckCategory('nhie', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold shrink-0">🙈 Never Ever</button>
+      </div>
+
+      <!-- The 3D-like Glowing Party Card -->
+      <div id="partyCardBox" class="p-6 rounded-3xl bg-gradient-to-br from-purple-950/70 via-zinc-900 to-black border-2 border-purple-500/40 shadow-xl min-h-[170px] flex flex-col justify-between transition-all duration-300">
+        <div class="flex items-center justify-between">
+          <span id="partyCardTag" class="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-500/30 text-purple-300 border border-purple-500/40">🌶️ SPICY TRUTH</span>
+          <span class="text-xs font-mono text-zinc-500">Clubr Deck #42</span>
+        </div>
+        <p id="partyCardText" class="text-sm sm:text-base font-bold text-white text-center my-4 leading-relaxed">
+          "Apne ex ko raat ke 2 baje message karne ka guilty pleasure sach-sach batao."
+        </p>
+        <div class="text-center text-[10px] text-zinc-400 font-mono">
+          Spoken by the Chill Table
+        </div>
+      </div>
+
+      <!-- Card Actions -->
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button 
+          onclick="drawNewPartyCard()" 
+          class="py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 font-black text-xs uppercase tracking-wider text-white shadow-lg active:scale-95 transition-all">
+          🎴 Draw Next Card
+        </button>
+        <button 
+          onclick="broadcastCardToChat()" 
+          class="py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 font-bold text-xs text-white active:scale-95 transition-all">
+          💬 Speak at Table
+        </button>
+      </div>
+
+    </div>
   </div>
 
-  <!-- Navigation Helper Pill (Bottom Right) -->
-  <div class="absolute bottom-4 right-4 z-30 hidden sm:flex items-center gap-2 glass-ui rounded-2xl px-3 py-2 text-[11px] text-zinc-400 font-mono shadow-xl pointer-events-none">
-    <span>Tap / Drag anywhere to walk</span>
-    <span>•</span>
-    <span>Double-click avatar to dance 🕺</span>
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: 🍸 THE NEON BAR & DRINK MIXER -->
+  <!-- ========================================================================= -->
+  <div id="neonBarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-cyan-500/30 shadow-2xl relative space-y-4">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-lg">🍸</div>
+          <div>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">The Cyber Bar Counter</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">Bartender: BAR_BOT 🤖 • Order & Vibe</p>
+          </div>
+        </div>
+        <button onclick="closeStationModal('neonBarModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Drink Menu Selection List -->
+      <div class="space-y-2 max-h-60 overflow-y-auto pr-1 no-scrollbar">
+        
+        <!-- Drink 1 -->
+        <div onclick="orderDrink('Cyber Margarita', '🍸', '100% chance of texting your crush tonight.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🍸</span>
+            <div>
+              <div class="font-bold text-xs sm:text-sm text-white">Cyber Margarita</div>
+              <div class="text-[11px] text-zinc-400">Sweet neon citrus kick</div>
+            </div>
+          </div>
+          <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
+        </div>
+
+        <!-- Drink 2 -->
+        <div onclick="orderDrink('Electric Blue Lagoon', '🧪', 'Warning: Unlocks uncontrollable dance moves.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🧪</span>
+            <div>
+              <div class="font-bold text-xs sm:text-sm text-white">Electric Blue Lagoon</div>
+              <div class="text-[11px] text-zinc-400">Glowing blue curacao & fizz</div>
+            </div>
+          </div>
+          <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
+        </div>
+
+        <!-- Drink 3 -->
+        <div onclick="orderDrink('Desi Patiala Peg', '🥃', 'Boosts confidence by 500%. Zero filter mode.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🥃</span>
+            <div>
+              <div class="font-bold text-xs sm:text-sm text-white">Desi Patiala Peg</div>
+              <div class="text-[11px] text-zinc-400">Heavy club single-malt vibe</div>
+            </div>
+          </div>
+          <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
+        </div>
+
+        <!-- Drink 4 -->
+        <div onclick="orderDrink('Overclocked Red Bull', '⚡', 'Heart rate: 180 BPM. Zero sleep gang.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">⚡</span>
+            <div>
+              <div class="font-bold text-xs sm:text-sm text-white">Overclocked Red Bull</div>
+              <div class="text-[11px] text-zinc-400">Pure caffeine & cyber sparks</div>
+            </div>
+          </div>
+          <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
+        </div>
+
+        <!-- Drink 5 -->
+        <div onclick="orderDrink('Virgin Mojito Chill', '🍹', 'Pinnacle of calmness. Absolutely zero drama.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🍹</span>
+            <div>
+              <div class="font-bold text-xs sm:text-sm text-white">Virgin Mojito Chill</div>
+              <div class="text-[11px] text-zinc-400">Fresh mint leaves & lime</div>
+            </div>
+          </div>
+          <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
+        </div>
+
+      </div>
+
+      <!-- Last Ordered Drink Status Card -->
+      <div id="barCurrentDrinkBox" class="p-3 rounded-2xl bg-black/50 border border-cyan-500/20 flex items-center gap-3">
+        <span id="currentDrinkIcon" class="text-2xl">🍸</span>
+        <div class="flex-1">
+          <div id="currentDrinkName" class="text-xs font-bold text-white">Holding: Cyber Margarita</div>
+          <div id="currentDrinkVerdict" class="text-[11px] text-cyan-300">"100% chance of texting your crush tonight."</div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- SLIDE-OVER DRAWER: TODAY'S EXCLUSIVE DROP (NOTICE BOARD) -->
+  <!-- MODAL 4: 💌 ANONYMOUS CONFESSION WALL ("SPILL THE TEA ☕") -->
   <!-- ========================================================================= -->
-  <div id="dropDrawer" class="fixed inset-y-0 right-0 w-full max-w-sm z-50 glass-ui bg-zinc-950/95 border-l border-white/10 shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+  <div id="confessionWallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-glass rounded-3xl w-full max-w-lg p-5 sm:p-6 border border-amber-500/30 shadow-2xl relative space-y-4 max-h-[90vh] flex flex-col">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-lg">💌</div>
+          <div>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">Spill The Tea ☕ (Confessions)</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">100% Anonymous Wall • Zero Names Attached</p>
+          </div>
+        </div>
+        <button onclick="closeStationModal('confessionWallModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Add New Confession Input -->
+      <form onsubmit="handlePostConfession(event)" class="space-y-2">
+        <div class="relative">
+          <textarea 
+            id="confessionTextInput" 
+            maxlength="120" 
+            rows="2"
+            placeholder="Write your anonymous gossip or confession (e.g. 'I still stalk my ex...')" 
+            class="w-full bg-black/60 border border-white/15 focus:border-amber-400 focus:outline-none rounded-2xl p-3 text-xs text-white placeholder-zinc-500 resize-none font-medium transition-all"
+            required></textarea>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-mono text-zinc-500">Max 120 chars • Anonymous</span>
+          <button 
+            type="submit" 
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:opacity-90 font-bold text-xs text-white shadow-md active:scale-95 transition-all">
+            Stick to Wall 📌
+          </button>
+        </div>
+      </form>
+
+      <!-- Scrollable Sticky Notes Board -->
+      <div id="confessionsList" class="flex-1 overflow-y-auto space-y-2.5 pr-1 no-scrollbar">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- NOTICE BOARD / EXCLUSIVE DROPS DRAWER -->
+  <!-- ========================================================================= -->
+  <div id="dropDrawer" class="fixed inset-y-0 right-0 w-full max-w-sm z-50 cyber-glass bg-zinc-950/95 border-l border-white/10 shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300">
     <div class="space-y-6">
-      <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-4 border-b border-white/10">
         <div class="flex items-center gap-2">
           <span class="text-xl">🎁</span>
@@ -227,81 +560,77 @@
         <button onclick="toggleDropDrawer()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold transition-all">✕</button>
       </div>
 
-      <!-- Perks & Drops List -->
-      <div class="space-y-3.5">
+      <div class="space-y-3.5 overflow-y-auto max-h-[70vh] no-scrollbar">
         <p class="text-xs text-zinc-400 leading-relaxed">
-          Daily perks and special drops curated exclusively for verified Clubr clubbers.
+          Daily perks and drops curated exclusively for verified Clubr clubbers.
         </p>
 
         <!-- Drop Card 1 -->
-        <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-950/50 to-zinc-900 border border-purple-500/20 space-y-2 group hover:border-purple-500/40 transition-all">
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-950/50 to-zinc-900 border border-purple-500/30 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">VIP PERK</span>
             <span class="text-[10px] text-zinc-500 font-mono">Today</span>
           </div>
-          <h4 class="font-bold text-sm text-white">Free Drink Token @ Partner Nightclubs</h4>
-          <p class="text-xs text-zinc-400 leading-relaxed">Show your Clubr avatar screen at the entrance for 1 free mocktail/cocktail.</p>
+          <h4 class="font-bold text-sm text-white">1 Free Drink @ Partner Lounges</h4>
+          <p class="text-xs text-zinc-400 leading-relaxed">Show your Clubr screen at the entrance for 1 free mocktail/cocktail.</p>
           <div class="pt-1">
-            <span class="text-xs font-mono font-bold text-rose-400 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20">CODE: CLUBR2026</span>
+            <span class="text-xs font-mono font-bold text-pink-400 bg-pink-500/10 px-2 py-1 rounded-lg border border-pink-500/20">CODE: CLUBR2026</span>
           </div>
         </div>
 
         <!-- Drop Card 2 -->
-        <div class="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/50 to-zinc-900 border border-cyan-500/20 space-y-2 group hover:border-cyan-500/40 transition-all">
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/50 to-zinc-900 border border-cyan-500/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">TECH HUSTLE</span>
-            <span class="text-[10px] text-zinc-500 font-mono">Active</span>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">STARTUP PERK</span>
+            <span class="text-[10px] text-zinc-500 font-mono">Hustlers</span>
           </div>
-          <h4 class="font-bold text-sm text-white">80% Off on Notion & Cloud Hosting</h4>
-          <p class="text-xs text-zinc-400 leading-relaxed">Exclusive for hackers and hustlers hanging out at the Tech Table.</p>
-          <a href="javascript:void(0)" onclick="showToast('Perk Claimed! Check email')" class="inline-block text-xs font-bold text-cyan-400 underline">Claim Credit Link →</a>
+          <h4 class="font-bold text-sm text-white">$100 Cloud Credits for Builders</h4>
+          <p class="text-xs text-zinc-400 leading-relaxed">Claim exclusive cloud hosting credits for anyone building agents or apps.</p>
+          <div class="pt-1">
+            <span class="text-xs font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2 py-1 rounded-lg border border-cyan-500/20">CODE: AGENTIC99</span>
+          </div>
         </div>
 
-        <!-- Drop Card 3 -->
-        <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-950/50 to-zinc-900 border border-amber-500/20 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">DJ PLAYLIST</span>
-            <span class="text-[10px] text-zinc-500 font-mono">Curated</span>
-          </div>
-          <h4 class="font-bold text-sm text-white">Clubr Official Midnight Lo-Fi Beats</h4>
-          <p class="text-xs text-zinc-400 leading-relaxed">Curated 2-hour chillhop playlist for 3 AM late night coding and chill.</p>
-        </div>
       </div>
     </div>
 
-    <!-- Drawer Footer -->
-    <div class="pt-4 border-t border-white/10 text-center text-zinc-500 text-[11px] font-mono">
-      Sponsor a table or drop perks: <a href="mailto:vip@clubr.online" class="text-rose-400 underline">vip@clubr.online</a>
+    <!-- WhatsApp Share Button Inside Drawer -->
+    <div class="pt-4 border-t border-white/10">
+      <button 
+        onclick="inviteGangToTable()" 
+        class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:opacity-95 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
+        <span>📲</span>
+        <span>Invite Friends on WhatsApp</span>
+      </button>
     </div>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- ZERO-SIGNUP ONBOARDING & ENTRY OVERLAY -->
+  <!-- ONBOARDING & ENTRY OVERLAY (ZERO SIGNUP) -->
   <!-- ========================================================================= -->
-  <div id="onboardingOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090d]/90 backdrop-blur-xl transition-opacity duration-500">
-    <div class="max-w-sm w-full glass-ui rounded-3xl p-6 sm:p-8 space-y-6 text-center border border-white/15 shadow-2xl relative overflow-hidden">
+  <div id="onboardingOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07070b]/90 backdrop-blur-xl transition-all duration-500">
+    <div class="cyber-glass-glow rounded-3xl max-w-md w-full p-6 sm:p-8 text-center space-y-5 relative">
       
-      <!-- Background Ambient Glow -->
-      <div class="absolute -top-24 -left-24 w-48 h-48 bg-purple-600/30 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-rose-500/30 rounded-full blur-3xl pointer-events-none"></div>
-
-      <!-- Header Icon & Logo -->
-      <div class="relative space-y-2">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500 via-purple-600 to-cyan-400 p-[1.5px] mx-auto shadow-xl shadow-rose-500/25">
-          <div class="w-full h-full bg-zinc-950 rounded-[14px] flex items-center justify-center text-2xl font-black text-white">
-            ⚡
-          </div>
+      <!-- Club Logo -->
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-500/30 text-pink-400 text-xs font-mono font-bold">
+          <span class="w-2 h-2 rounded-full bg-pink-500 animate-ping"></span>
+          <span>CYBER-LOUNGE LIVE</span>
         </div>
-        <h2 class="headline-font font-black text-2xl text-white tracking-wider">CLUBR.ONLINE</h2>
-        <p class="text-xs text-zinc-400 font-medium">Virtual 2D Digital Nightclub</p>
+        <h2 class="headline-font font-black text-3xl sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400 tracking-wider">
+          CLUBR
+        </h2>
+        <p class="text-xs text-zinc-400">
+          The 2D digital club. Dance, talk, play Truth or Dare, and spill secrets.
+        </p>
       </div>
 
-      <!-- Avatar Preview Sphere -->
-      <div class="relative py-2">
-        <div id="avatarLivePreview" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-2xl shadow-2xl transition-all duration-300 border-2 border-white/40" style="background: radial-gradient(circle, #06b6d4, #0891b2); box-shadow: 0 0 25px #06b6d4;">
+      <!-- Live Avatar Preview -->
+      <div class="relative py-1">
+        <div id="avatarLivePreview" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-2xl shadow-2xl transition-all duration-300 border-2 border-white/50" style="background: radial-gradient(circle, #00f0ff, #0a0a18); box-shadow: 0 0 25px #00f0ff;">
           <span id="avatarAccessoryIcon">🕶️</span>
         </div>
-        <p id="avatarPreviewNick" class="text-xs font-mono font-bold text-white mt-2">@guest</p>
+        <p id="avatarPreviewNick" class="text-xs font-mono font-bold text-white mt-2">@Aryan</p>
       </div>
 
       <!-- Nickname Input -->
@@ -312,9 +641,9 @@
           id="nicknameInput" 
           maxlength="14"
           placeholder="e.g. Aryan, NeonViper, Maya" 
-          value=""
+          value="Aryan"
           oninput="updateAvatarPreview()"
-          class="w-full px-4 py-3 rounded-2xl bg-zinc-950/80 border border-white/10 focus:border-rose-500 focus:outline-none text-sm font-bold text-white placeholder-zinc-600 transition-all text-center"
+          class="w-full px-4 py-3 rounded-2xl bg-zinc-950/80 border border-white/15 focus:border-cyan-400 focus:outline-none text-sm font-bold text-white placeholder-zinc-600 transition-all text-center"
         />
       </div>
 
@@ -323,19 +652,19 @@
         <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider text-left">Pick Avatar Color:</label>
         <div class="grid grid-cols-4 gap-2.5">
           <!-- Cyan -->
-          <button onclick="pickColor('#06b6d4', 'Cyan', this)" class="color-swatch-btn h-10 rounded-xl bg-cyan-500 flex items-center justify-center border-2 border-white transition-transform active:scale-90 shadow-lg shadow-cyan-500/40">
+          <button onclick="pickColor('#00f0ff', 'Cyan', this)" class="color-swatch-btn h-10 rounded-xl bg-cyan-400 flex items-center justify-center border-2 border-white transition-transform active:scale-90 shadow-lg shadow-cyan-500/40">
             <span class="text-xs text-black font-bold">✓</span>
           </button>
           <!-- Purple -->
-          <button onclick="pickColor('#a855f7', 'Purple', this)" class="color-swatch-btn h-10 rounded-xl bg-purple-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-purple-500/40">
+          <button onclick="pickColor('#9d4edd', 'Purple', this)" class="color-swatch-btn h-10 rounded-xl bg-purple-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-purple-500/40">
             <span class="text-xs text-white font-bold opacity-0">✓</span>
           </button>
           <!-- Emerald -->
-          <button onclick="pickColor('#10b981', 'Emerald', this)" class="color-swatch-btn h-10 rounded-xl bg-emerald-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-emerald-500/40">
+          <button onclick="pickColor('#06d6a0', 'Emerald', this)" class="color-swatch-btn h-10 rounded-xl bg-emerald-400 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-emerald-500/40">
             <span class="text-xs text-black font-bold opacity-0">✓</span>
           </button>
           <!-- Gold -->
-          <button onclick="pickColor('#f59e0b', 'Gold', this)" class="color-swatch-btn h-10 rounded-xl bg-amber-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-amber-500/40">
+          <button onclick="pickColor('#ffb703', 'Gold', this)" class="color-swatch-btn h-10 rounded-xl bg-amber-400 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-amber-500/40">
             <span class="text-xs text-black font-bold opacity-0">✓</span>
           </button>
         </div>
@@ -345,135 +674,167 @@
       <div class="space-y-2">
         <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider text-left">Drip Accessory:</label>
         <div class="grid grid-cols-4 gap-2">
-          <button onclick="pickAccessory('🕶️', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-rose-500 text-base active:scale-90">🕶️</button>
-          <button onclick="pickAccessory('🎧', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90">🎧</button>
-          <button onclick="pickAccessory('👑', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90">👑</button>
-          <button onclick="pickAccessory('⚡', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90">⚡</button>
+          <button onclick="pickAccessory('🕶️', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-cyan-400 text-base active:scale-90">🕶️</button>
+          <button onclick="pickAccessory('🎧', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">🎧</button>
+          <button onclick="pickAccessory('👑', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">👑</button>
+          <button onclick="pickAccessory('⚡', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">⚡</button>
         </div>
       </div>
 
       <!-- Enter Club Button -->
       <button 
         onclick="enterClubFloor()" 
-        class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-500 via-purple-600 to-cyan-500 hover:opacity-95 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-rose-500/30 transition-all active:scale-95">
-        Enter Club Floor →
+        class="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 hover:opacity-95 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-pink-500/30 transition-all active:scale-95">
+        Enter Cyber-Lounge →
       </button>
 
-      <p class="text-[10px] text-zinc-500 font-mono">Zero Signup Required • Session in Memory</p>
+      <p class="text-[10px] text-zinc-500 font-mono">Zero Signup Required • Instant Session</p>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-2xl glass-ui bg-zinc-900/90 text-white font-bold text-xs shadow-2xl flex items-center gap-2 border border-white/10">
+  <div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-2xl cyber-glass text-white font-bold text-xs shadow-2xl flex items-center gap-2 border border-white/15">
     <span id="toastIcon">✨</span>
-    <span id="toastMessage">Welcome to Clubr!</span>
+    <span id="toastMessage">Welcome to Clubr Cyber-Lounge!</span>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- 2D CLUB FLOOR & CANVAS ENGINE SCRIPT -->
+  <!-- JAVASCRIPT ENGINE (CANVAS 60 FPS + WEB AUDIO + STATIONS) -->
   <!-- ========================================================================= -->
   <script>
-    // --- USER / PLAYER STATE ---
+    // --- PLAYER STATE ---
     let player = {
       nickname: 'Aryan',
-      color: '#06b6d4',
+      color: '#00f0ff',
       accessory: '🕶️',
+      drink: '🍸',
       x: 0,
       y: 0,
       targetX: 0,
       targetY: 0,
-      radius: 20,
+      radius: 22,
       speed: 0.12,
       trail: [],
       isDancing: false,
-      danceAngle: 0,
       currentZone: null,
-      message: null // { text, timer }
+      message: null
     };
 
-    // --- SOUND & AUDIO ENGINE (WEB AUDIO API) ---
+    // --- SOUND ENGINE (WEB AUDIO API) ---
     let audioCtx = null;
+    let masterGain = null;
     let isMuted = false;
     let beatTimer = null;
-    let masterGain = null;
+    let beatMode = 'lofi'; // 'lofi' or 'cyber'
+    let currentBeatStep = 0;
 
-    // --- ZONES CONFIGURATION ---
-    // Positions relative to canvas center
+    // --- CYBER STATIONS & ZONES ---
     const ZONES = [
       {
-        id: 'tech',
-        name: 'Tech & Hustle Table',
-        color: '#06b6d4',
-        icon: '💻',
-        relX: -0.28,
-        relY: -0.18,
-        radius: 130
+        id: 'dj',
+        name: 'Open Floor & DJ Stage',
+        color: '#ff2a85',
+        icon: '🎛️',
+        relX: 0.0,
+        relY: 0.02,
+        radius: 175,
+        action: () => openStationModal('djSoundboardModal')
+      },
+      {
+        id: 'bar',
+        name: 'The Cyber Bar',
+        color: '#00f0ff',
+        icon: '🍸',
+        relX: -0.32,
+        relY: -0.22,
+        radius: 130,
+        action: () => openStationModal('neonBarModal')
       },
       {
         id: 'chill',
-        name: 'Late Night Chill Table',
-        color: '#a855f7',
-        icon: '🌙',
-        relX: 0.28,
+        name: 'Velvet Chill Lounge',
+        color: '#9d4edd',
+        icon: '🎲',
+        relX: 0.32,
         relY: 0.22,
-        radius: 135
+        radius: 135,
+        action: () => openStationModal('partyDeckModal')
       },
       {
-        id: 'dj',
-        name: 'Open Floor (DJ Booth)',
-        color: '#f43f5e',
-        icon: '🎧',
-        relX: 0.0,
-        relY: 0.02,
-        radius: 165
+        id: 'wall',
+        name: 'Spill The Tea Wall',
+        color: '#ffb703',
+        icon: '💌',
+        relX: -0.34,
+        relY: 0.26,
+        radius: 110,
+        action: () => openStationModal('confessionWallModal')
       }
     ];
 
-    // --- LIVELY SMART NPC CLUBBERS ---
+    // --- LIVELY SMART NPC RESIDENTS ---
     const NPCS = [
       {
         id: 'dj_cyber',
         nickname: 'DJ_CYBER 🎛️',
-        color: '#f43f5e',
+        color: '#ff2a85',
         accessory: '🎧',
+        drink: '⚡',
+        relX: 0.0,
+        relY: -0.10,
         x: 0,
         y: 0,
-        relX: 0.0,
-        relY: -0.06,
-        radius: 20,
-        message: { text: "Drop the bass! Welcome to Clubr.online 🔥", timer: 8000 }
+        radius: 22,
+        message: { text: "Drop the bass! Vibe with Clubr ⚡", timer: 9000 }
       },
       {
-        id: 'hustler_sam',
-        nickname: 'Sam (Tech)',
-        color: '#06b6d4',
-        accessory: '⚡',
+        id: 'bar_bot',
+        nickname: 'BAR_BOT 🤖',
+        color: '#00f0ff',
+        accessory: '🍸',
+        drink: '🍹',
+        relX: -0.32,
+        relY: -0.26,
         x: 0,
         y: 0,
-        relX: -0.28,
-        relY: -0.18,
-        radius: 20,
-        message: { text: "Shipping AI agents today. Anyone building? 🚀", timer: 7000 }
+        radius: 22,
+        message: { text: "Cocktails are cold, neon is hot! 🍸", timer: 7000 }
       },
       {
         id: 'zoya_chill',
         nickname: 'Zoya 🌙',
-        color: '#a855f7',
+        color: '#9d4edd',
         accessory: '🕶️',
+        drink: '🍸',
+        relX: 0.32,
+        relY: 0.22,
         x: 0,
         y: 0,
-        relX: 0.28,
-        relY: 0.22,
-        radius: 20,
-        message: { text: "Vibing to Lo-Fi. Grab a seat here! ✨", timer: 6500 }
+        radius: 22,
+        message: { text: "Drawing cards at the velvet table ✨", timer: 7500 }
+      },
+      {
+        id: 'kabir_dancer',
+        nickname: 'Kabir 🕺',
+        color: '#06d6a0',
+        accessory: '👑',
+        drink: '🧪',
+        relX: 0.08,
+        relY: 0.08,
+        x: 0,
+        y: 0,
+        radius: 22,
+        message: { text: "This beat is straight fire! 🔥", timer: 8000 }
       }
     ];
 
-    // --- PARTICLES & EMOTES ---
+    // --- PARTICLES & VISUALS ---
     let floatingParticles = [];
-    let lightPulses = [];
+    let lightRipples = [];
+    let laserAngle1 = 0;
+    let laserAngle2 = Math.PI;
 
-    // --- CANVAS CONTEXT & SIZING ---
+    // --- CANVAS CONTEXT ---
     const canvas = document.getElementById('clubFloorCanvas');
     const ctx = canvas.getContext('2d');
     let width = 0;
@@ -487,7 +848,7 @@
       canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
 
-      // Re-position NPCs relative to canvas
+      // Recompute NPC screen positions
       NPCS.forEach(npc => {
         npc.x = width / 2 + (width * npc.relX);
         npc.y = height / 2 + (height * npc.relY);
@@ -496,17 +857,17 @@
     window.addEventListener('resize', resizeCanvas);
 
     // =========================================================================
-    // ONBOARDING & ENTRY
+    // ONBOARDING & AVATAR SELECTION
     // =========================================================================
     function updateAvatarPreview() {
-      const nick = document.getElementById('nicknameInput').value.trim() || 'guest';
+      const nick = document.getElementById('nicknameInput').value.trim() || 'Aryan';
       document.getElementById('avatarPreviewNick').innerText = `@${nick}`;
     }
 
     function pickColor(hex, name, btn) {
       player.color = hex;
       const preview = document.getElementById('avatarLivePreview');
-      preview.style.background = `radial-gradient(circle, ${hex}, #18182b)`;
+      preview.style.background = `radial-gradient(circle, ${hex}, #0f0f1c)`;
       preview.style.boxShadow = `0 0 25px ${hex}`;
 
       document.querySelectorAll('.color-swatch-btn').forEach(b => {
@@ -522,16 +883,16 @@
       document.getElementById('avatarAccessoryIcon').innerText = icon;
 
       document.querySelectorAll('.accessory-btn').forEach(b => {
-        b.className = 'accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/20 text-base active:scale-90';
+        b.className = 'accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90';
       });
-      btn.className = 'accessory-btn p-2 rounded-xl bg-zinc-900 border border-rose-500 text-base active:scale-90';
+      btn.className = 'accessory-btn p-2 rounded-xl bg-zinc-900 border border-cyan-400 text-base active:scale-90';
     }
 
     function enterClubFloor() {
       const input = document.getElementById('nicknameInput').value.trim();
       player.nickname = input || 'Clubber_' + Math.floor(Math.random() * 900 + 100);
 
-      // Spawn player near center entrance
+      // Spawn player in entry zone
       player.x = width / 2;
       player.y = height * 0.78;
       player.targetX = player.x;
@@ -541,13 +902,13 @@
       overlay.classList.add('opacity-0', 'pointer-events-none');
       setTimeout(() => overlay.remove(), 500);
 
-      // Start Club Audio Loop
+      // Start Synthesizer beats
       initClubAudio();
-      showToast(`Welcome to Clubr, ${player.nickname}! ⚡`);
+      showToast(`Welcome to Clubr Cyber-Lounge, ${player.nickname}! ⚡`);
     }
 
     // =========================================================================
-    // LO-FI AMBIENT SYNTHESIZER & SPATIAL AUDIO (WEB AUDIO API)
+    // WEB AUDIO SYNTHESIZER ENGINE (ZERO EXTERNAL MP3 DEPENDENCIES)
     // =========================================================================
     function initClubAudio() {
       if (audioCtx) return;
@@ -558,76 +919,94 @@
         masterGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
         masterGain.connect(audioCtx.destination);
 
-        // Continuous rhythmic Lo-Fi chillhop generator
-        startLoFiBeatLoop();
+        startBeatLoop();
       } catch (e) {
-        console.log('Audio note:', e.message);
+        console.log('Audio note:', e);
       }
     }
 
-    function startLoFiBeatLoop() {
+    function startBeatLoop() {
+      if (beatTimer) clearInterval(beatTimer);
       if (!audioCtx || isMuted) return;
-      let step = 0;
-      const bpm = 82;
-      const stepInterval = (60 / bpm) / 4 * 1000; // 16th note
+
+      const bpm = beatMode === 'cyber' ? 124 : 84;
+      const stepInterval = (60 / bpm) / 4 * 1000;
 
       beatTimer = setInterval(() => {
         if (isMuted || !audioCtx) return;
         const now = audioCtx.currentTime;
 
-        // Kick on 0 & 8
-        if (step % 8 === 0) {
-          playKick(now);
-        }
-        // Snare / Rimshot on 4 & 12
-        if (step % 8 === 4) {
-          playSnare(now);
-        }
-        // Hi-Hat on even steps
-        if (step % 2 === 0) {
-          playHiHat(now);
-        }
-        // Ambient chord pad every 16 steps
-        if (step % 16 === 0) {
-          playLoFiChord(now);
+        if (beatMode === 'lofi') {
+          // Lo-Fi chill beat
+          if (currentBeatStep % 8 === 0) synthKick(now, 100, 36, 0.28);
+          if (currentBeatStep % 8 === 4) synthSnare(now);
+          if (currentBeatStep % 2 === 0) synthHiHat(now);
+          if (currentBeatStep % 16 === 0) synthChords(now);
+        } else {
+          // Cyberwave upbeat 4-on-the-floor
+          if (currentBeatStep % 4 === 0) synthKick(now, 130, 42, 0.35);
+          if (currentBeatStep % 8 === 4) synthSnare(now);
+          if (currentBeatStep % 2 === 1) synthHiHat(now);
+          if (currentBeatStep % 16 === 0) synthCyberBassline(now);
         }
 
-        step = (step + 1) % 32;
+        currentBeatStep = (currentBeatStep + 1) % 32;
       }, stepInterval);
     }
 
-    function playKick(time) {
+    function setBeatMode(mode) {
+      beatMode = mode;
+      document.getElementById('beatModeLofiBtn').className = mode === 'lofi' 
+        ? 'px-3 py-1 text-xs font-bold rounded-xl bg-cyan-500 text-black' 
+        : 'px-3 py-1 text-xs font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20';
+      document.getElementById('beatModeCyberBtn').className = mode === 'cyber' 
+        ? 'px-3 py-1 text-xs font-bold rounded-xl bg-pink-500 text-white' 
+        : 'px-3 py-1 text-xs font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20';
+      
+      startBeatLoop();
+      showToast(mode === 'lofi' ? 'Beat: Chill Lo-Fi Lounge 🌙' : 'Beat: High Voltage Cyberwave ⚡');
+    }
+
+    function toggleClubAudio() {
+      isMuted = !isMuted;
+      document.getElementById('audioIcon').innerText = isMuted ? '🔇' : '🔊';
+      if (masterGain && audioCtx) {
+        masterGain.gain.setValueAtTime(isMuted ? 0 : 0.2, audioCtx.currentTime);
+      }
+      if (!isMuted && !beatTimer) startBeatLoop();
+      showToast(isMuted ? 'Lounge Audio Muted 🔇' : 'Lounge Beats Playing 🔊');
+    }
+
+    // Audio Synthesizers
+    function synthKick(time, startFreq, endFreq, vol) {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.connect(gain);
       gain.connect(masterGain);
 
-      osc.frequency.setValueAtTime(120, time);
-      osc.frequency.exponentialRampToValueAtTime(38, time + 0.12);
-      gain.gain.setValueAtTime(0.35, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+      osc.frequency.setValueAtTime(startFreq, time);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, time + 0.12);
+      gain.gain.setValueAtTime(vol, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.14);
 
       osc.start(time);
-      osc.stop(time + 0.15);
+      osc.stop(time + 0.14);
     }
 
-    function playSnare(time) {
-      // Noise burst for Lo-Fi snare
+    function synthSnare(time) {
       const bufferSize = audioCtx.sampleRate * 0.08;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
 
       const noise = audioCtx.createBufferSource();
       noise.buffer = buffer;
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.value = 1200;
+      filter.frequency.value = 1400;
 
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.18, time);
+      gain.gain.setValueAtTime(0.2, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
 
       noise.connect(filter);
@@ -638,24 +1017,23 @@
       noise.stop(time + 0.08);
     }
 
-    function playHiHat(time) {
+    function synthHiHat(time) {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'highpass';
       osc.connect(gain);
       gain.connect(masterGain);
 
-      osc.frequency.setValueAtTime(8000, time);
+      osc.frequency.setValueAtTime(9000, time);
       gain.gain.setValueAtTime(0.04, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
 
       osc.start(time);
-      osc.stop(time + 0.03);
+      osc.stop(time + 0.035);
     }
 
-    function playLoFiChord(time) {
-      // Smooth mellow chord (D Minor 9 vibe: D, F, A, C, E)
-      const freqs = [146.83, 174.61, 220.00, 261.63];
+    function synthChords(time) {
+      const freqs = [164.81, 196.00, 246.94, 293.66]; // E minor 7
       freqs.forEach(f => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -663,42 +1041,381 @@
         osc.frequency.value = f;
 
         gain.gain.setValueAtTime(0.02, time);
-        gain.gain.linearRampToValueAtTime(0.06, time + 0.3);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 2.0);
+        gain.gain.linearRampToValueAtTime(0.05, time + 0.25);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 2.2);
 
         osc.connect(gain);
         gain.connect(masterGain);
-
         osc.start(time);
-        osc.stop(time + 2.0);
+        osc.stop(time + 2.2);
       });
     }
 
-    function toggleClubAudio() {
-      isMuted = !isMuted;
-      const icon = document.getElementById('audioIcon');
-      icon.innerText = isMuted ? '🔇' : '🔊';
+    function synthCyberBassline(time) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(65.41, time); // C2
+      
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(450, time);
+      filter.frequency.exponentialRampToValueAtTime(100, time + 0.3);
 
-      if (masterGain) {
-        masterGain.gain.setValueAtTime(isMuted ? 0 : 0.2, audioCtx.currentTime);
-      }
-      showToast(isMuted ? 'Audio Muted 🔇' : 'Lo-Fi Beats Playing 🔊');
+      gain.gain.setValueAtTime(0.15, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+      osc.start(time);
+      osc.stop(time + 0.35);
     }
 
-    // Spatial volume adjustment based on proximity to DJ Booth
+    // Spatial volume based on proximity to DJ stage
     function updateSpatialAudio() {
       if (!audioCtx || !masterGain || isMuted) return;
-      const djZone = ZONES.find(z => z.id === 'dj');
-      const djX = width / 2 + (width * djZone.relX);
-      const djY = height / 2 + (height * djZone.relY);
-
+      const djX = width / 2;
+      const djY = height / 2;
       const dist = Math.hypot(player.x - djX, player.y - djY);
       const maxDist = Math.hypot(width, height) / 2;
       const norm = Math.max(0, Math.min(1, 1 - (dist / maxDist)));
-
-      // Closer to DJ -> louder volume (0.35), far -> mellow background (0.08)
-      const targetVol = 0.08 + (norm * 0.27);
+      const targetVol = 0.08 + (norm * 0.28);
       masterGain.gain.linearRampToValueAtTime(targetVol, audioCtx.currentTime + 0.1);
+    }
+
+    // =========================================================================
+    // DJ SOUNDBOARD SFX SYNTHESIZERS (AIRHORN, SCRATCH, LASER, 808 BASS)
+    // =========================================================================
+    function playAirhorn() {
+      initClubAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      // Triple stutter blast
+      const blasts = [0, 0.12, 0.24];
+      blasts.forEach((offset, idx) => {
+        const blastTime = now + offset;
+        const dur = idx === 2 ? 0.45 : 0.09;
+
+        [466.16, 470, 587.33].forEach(freq => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, blastTime);
+          osc.frequency.linearRampToValueAtTime(freq * 0.96, blastTime + dur);
+
+          gain.gain.setValueAtTime(0.22, blastTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, blastTime + dur);
+
+          osc.connect(gain);
+          gain.connect(masterGain);
+          osc.start(blastTime);
+          osc.stop(blastTime + dur);
+        });
+      });
+
+      triggerFloorShockwave(player.x, player.y, '#ffb703');
+      showToast('AIRHORN BLAST! 📢📢📢');
+    }
+
+    function playVinylScratch() {
+      initClubAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(300, now);
+      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.22);
+
+      gain.gain.setValueAtTime(0.28, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(now);
+      osc.stop(now + 0.22);
+
+      triggerFloorShockwave(player.x, player.y, '#00f0ff');
+      showToast('VINYL SCRATCH! 🎛️💿');
+    }
+
+    function playLaserDrop() {
+      initClubAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(2200, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.28);
+
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(now);
+      osc.stop(now + 0.28);
+
+      triggerFloorShockwave(player.x, player.y, '#9d4edd');
+      showToast('LASER DROP! 💥✨');
+    }
+
+    function playSubBassDrop() {
+      initClubAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(120, now);
+      osc.frequency.exponentialRampToValueAtTime(32, now + 0.65);
+
+      gain.gain.setValueAtTime(0.45, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(now);
+      osc.stop(now + 0.7);
+
+      triggerFloorShockwave(player.x, player.y, '#ff2a85');
+      showToast('808 SUB-BASS BOOM! 🔊💥');
+    }
+
+    function triggerFloorShockwave(x, y, color) {
+      lightRipples.push({
+        x: x,
+        y: y,
+        radius: 10,
+        maxRadius: 180,
+        color: color,
+        opacity: 0.9
+      });
+    }
+
+    // =========================================================================
+    // PARTY CARD DECK LOGIC (TRUTH / DARE / NHIE)
+    // =========================================================================
+    const PARTY_CARDS = [
+      // Truths
+      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Apne ex ko raat ke 2 baje text karne ka guilty pleasure sach-sach batao.' },
+      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Sabse embarrassing cheez jo tumne internet pe 3 AM search ki hai?' },
+      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Kya tumne kabhi dost ke phone me unki secret chat chupke se padhi hai?' },
+      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Kiski profile tum fake account se daily stalk karte ho?' },
+      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Aakhri baar kis baat par tumne apne best friend se jhooth bola tha?' },
+      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Current crush ka naam ya pehla letter bina sharmaye batao!' },
+      // Dares
+      { cat: 'dare', tag: '🎭 WILD DARE', text: 'WhatsApp group me voice note bhejo pretending you got arrested by police.' },
+      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Apne 3rd WhatsApp chat ko "I know your secret 👀" bhej kar 5 min wait karo.' },
+      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Ek minute ke liye camera on karke bina music ke awkward dance karo.' },
+      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Instagram story pe sirf ek blank black photo post karo caption: "It\'s over 💔".' },
+      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Kisi random contact ko call karke "Pizza deliver kyu nahi hua?" pucho.' },
+      // Never Have I Ever
+      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever stalked someone for more than 2 hours continuously.' },
+      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever pretended to be sick just to avoid a boring party.' },
+      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever sent a risky screenshot to the SAME person it was about.' },
+      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever laughed at a completely serious funeral or meeting.' },
+      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever swiped right on someone strictly for their pet.' }
+    ];
+
+    let currentDeckCategory = 'all';
+    let currentCardIndex = 0;
+
+    function setPartyDeckCategory(cat, btn) {
+      currentDeckCategory = cat;
+      document.querySelectorAll('.deck-filter-btn').forEach(b => {
+        b.className = 'deck-filter-btn px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold shrink-0';
+      });
+      btn.className = 'deck-filter-btn px-3 py-1.5 rounded-xl bg-purple-500 text-white text-xs font-bold shrink-0';
+      drawNewPartyCard();
+    }
+
+    function drawNewPartyCard() {
+      const pool = currentDeckCategory === 'all' 
+        ? PARTY_CARDS 
+        : PARTY_CARDS.filter(c => c.cat === currentDeckCategory);
+      
+      const card = pool[Math.floor(Math.random() * pool.length)];
+      const cardBox = document.getElementById('partyCardBox');
+      
+      // Card flip visual bump
+      cardBox.style.transform = 'scale(0.96)';
+      setTimeout(() => {
+        document.getElementById('partyCardTag').innerText = card.tag;
+        document.getElementById('partyCardText').innerText = `"${card.text}"`;
+        cardBox.style.transform = 'scale(1)';
+      }, 150);
+    }
+
+    function broadcastCardToChat() {
+      const cardText = document.getElementById('partyCardText').innerText.replace(/"/g, '');
+      player.message = {
+        text: `🎲 Prompt: ${cardText}`,
+        timestamp: Date.now(),
+        life: 8000
+      };
+      closeStationModal('partyDeckModal');
+      showToast('Party card spoken over your avatar! 💬');
+    }
+
+    // =========================================================================
+    // THE NEON BAR LOGIC
+    // =========================================================================
+    function orderDrink(name, icon, verdict) {
+      initClubAudio();
+      // Synthesize shaker sound
+      if (audioCtx) {
+        const now = audioCtx.currentTime;
+        [0, 0.08, 0.16, 0.24].forEach(offset => {
+          synthHiHat(now + offset);
+        });
+      }
+
+      player.drink = icon;
+      document.getElementById('currentDrinkIcon').innerText = icon;
+      document.getElementById('currentDrinkName').innerText = `Holding: ${name}`;
+      document.getElementById('currentDrinkVerdict').innerText = `"${verdict}"`;
+
+      player.message = {
+        text: `Cheers! Sipping on ${name} ${icon}`,
+        timestamp: Date.now(),
+        life: 6000
+      };
+
+      triggerFloorShockwave(player.x, player.y, '#00f0ff');
+      showToast(`BAR_BOT served: ${name} ${icon}`);
+
+      // Bartender NPC reacts
+      setTimeout(() => {
+        const barBot = NPCS.find(n => n.id === 'bar_bot');
+        if (barBot) {
+          barBot.message = {
+            text: `@${player.nickname}, enjoy the ${name}! ${verdict}`,
+            timestamp: Date.now(),
+            life: 6000
+          };
+        }
+      }, 1000);
+    }
+
+    // =========================================================================
+    // ANONYMOUS CONFESSION WALL ("SPILL THE TEA ☕")
+    // =========================================================================
+    let confessions = [
+      {
+        id: 'c1',
+        text: "I told my parents I was studying in the library, but I was actually at a rave in Goa.",
+        color: 'from-pink-950/60 to-zinc-900 border-pink-500/30 text-pink-300',
+        reactions: { fire: 14, skull: 3, flag: 2 }
+      },
+      {
+        id: 'c2',
+        text: "My startup pitch got rejected 22 times so I built an AI agent to reply to their investor emails with sarcasm.",
+        color: 'from-cyan-950/60 to-zinc-900 border-cyan-500/30 text-cyan-300',
+        reactions: { fire: 28, skull: 11, flag: 0 }
+      },
+      {
+        id: 'c3',
+        text: "I still know my high school ex's Netflix password and watch anime on their guest profile.",
+        color: 'from-amber-950/60 to-zinc-900 border-amber-500/30 text-amber-300',
+        reactions: { fire: 9, skull: 24, flag: 8 }
+      }
+    ];
+
+    function loadConfessions() {
+      const saved = localStorage.getItem('clubr_confessions');
+      if (saved) {
+        try { confessions = JSON.parse(saved); } catch (e) {}
+      }
+      renderConfessionsList();
+    }
+
+    function renderConfessionsList() {
+      const container = document.getElementById('confessionsList');
+      container.innerHTML = confessions.map(c => `
+        <div class="p-3.5 rounded-2xl bg-gradient-to-r ${c.color} border space-y-2">
+          <p class="text-xs sm:text-sm font-medium text-white leading-relaxed">"${c.text}"</p>
+          <div class="flex items-center justify-between pt-1 border-t border-white/5 text-[11px] font-mono">
+            <span class="text-zinc-500">Anonymous Note</span>
+            <div class="flex items-center gap-2">
+              <button onclick="reactToConfession('${c.id}', 'fire')" class="flex items-center gap-1 hover:scale-110 active:scale-95 transition-transform">
+                <span>🔥</span><span>${c.reactions.fire || 0}</span>
+              </button>
+              <button onclick="reactToConfession('${c.id}', 'skull')" class="flex items-center gap-1 hover:scale-110 active:scale-95 transition-transform">
+                <span>💀</span><span>${c.reactions.skull || 0}</span>
+              </button>
+              <button onclick="reactToConfession('${c.id}', 'flag')" class="flex items-center gap-1 hover:scale-110 active:scale-95 transition-transform">
+                <span>🚩</span><span>${c.reactions.flag || 0}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handlePostConfession(e) {
+      e.preventDefault();
+      const input = document.getElementById('confessionTextInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const colors = [
+        'from-pink-950/60 to-zinc-900 border-pink-500/30 text-pink-300',
+        'from-cyan-950/60 to-zinc-900 border-cyan-500/30 text-cyan-300',
+        'from-purple-950/60 to-zinc-900 border-purple-500/30 text-purple-300',
+        'from-amber-950/60 to-zinc-900 border-amber-500/30 text-amber-300'
+      ];
+
+      const newConfession = {
+        id: 'c_' + Date.now(),
+        text: text,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        reactions: { fire: 1, skull: 0, flag: 0 }
+      };
+
+      confessions.unshift(newConfession);
+      localStorage.setItem('clubr_confessions', JSON.stringify(confessions.slice(0, 20)));
+      renderConfessionsList();
+      input.value = '';
+
+      showToast('Confession pinned to wall anonymously! 💌');
+    }
+
+    function reactToConfession(id, type) {
+      const target = confessions.find(c => c.id === id);
+      if (target) {
+        target.reactions[type] = (target.reactions[type] || 0) + 1;
+        localStorage.setItem('clubr_confessions', JSON.stringify(confessions));
+        renderConfessionsList();
+      }
+    }
+
+    // =========================================================================
+    // MODAL HELPERS (OPEN / CLOSE STATIONS)
+    // =========================================================================
+    function openStationModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+      }, 10);
+    }
+
+    function closeStationModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+      modal.classList.add('opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 200);
     }
 
     // =========================================================================
@@ -707,8 +1424,7 @@
     let isPointerDown = false;
 
     function handlePointerInput(e) {
-      // Ignore click if clicking on UI buttons
-      if (e.target.closest('button, input, form, #dropDrawer, #onboardingOverlay')) return;
+      if (e.target.closest('button, input, textarea, form, #dropDrawer, #onboardingOverlay, [id$="Modal"]')) return;
 
       const rect = canvas.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -717,37 +1433,26 @@
       player.targetX = clientX - rect.left;
       player.targetY = clientY - rect.top;
 
-      // Spawn subtle ground ripple effect
-      lightPulses.push({
+      lightRipples.push({
         x: player.targetX,
         y: player.targetY,
-        radius: 5,
-        maxRadius: 30,
+        radius: 4,
+        maxRadius: 28,
         color: player.color,
         opacity: 0.8
       });
     }
 
-    window.addEventListener('mousedown', (e) => {
-      isPointerDown = true;
-      handlePointerInput(e);
-    });
-    window.addEventListener('mousemove', (e) => {
-      if (isPointerDown) handlePointerInput(e);
-    });
+    window.addEventListener('mousedown', (e) => { isPointerDown = true; handlePointerInput(e); });
+    window.addEventListener('mousemove', (e) => { if (isPointerDown) handlePointerInput(e); });
     window.addEventListener('mouseup', () => isPointerDown = false);
 
-    window.addEventListener('touchstart', (e) => {
-      isPointerDown = true;
-      handlePointerInput(e);
-    }, { passive: true });
-    window.addEventListener('touchmove', (e) => {
-      if (isPointerDown) handlePointerInput(e);
-    }, { passive: true });
+    window.addEventListener('touchstart', (e) => { isPointerDown = true; handlePointerInput(e); }, { passive: true });
+    window.addEventListener('touchmove', (e) => { if (isPointerDown) handlePointerInput(e); }, { passive: true });
     window.addEventListener('touchend', () => isPointerDown = false);
 
     // =========================================================================
-    // PROXIMITY ZONE & TABLE CHAT
+    // PROXIMITY DETECTION & TABLE CHAT
     // =========================================================================
     function checkProximityZones() {
       let activeZone = null;
@@ -780,11 +1485,11 @@
         zoneIndText.innerText = activeZone.name;
         zoneIndDot.style.background = activeZone.color;
 
-        // Check if inside Center DJ Spotlight
-        const djCenterDist = Math.hypot(player.x - (width / 2), player.y - (height / 2 + height * 0.02));
-        if (activeZone.id === 'dj' && djCenterDist < 55) {
+        // Check if on DJ Center Stage
+        const djDist = Math.hypot(player.x - (width / 2), player.y - (height / 2 + height * 0.02));
+        if (activeZone.id === 'dj' && djDist < 60) {
           spotBanner.classList.remove('hidden');
-          document.getElementById('spotlightUserText').innerText = `${player.nickname} is on the mic! 🎙️`;
+          document.getElementById('spotlightUserText').innerText = `${player.nickname} is rocking the DJ Stage! 🎙️`;
         } else {
           spotBanner.classList.add('hidden');
         }
@@ -793,8 +1498,8 @@
         chatBox.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
         chatBox.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
 
-        zoneIndText.innerText = 'Open Floor';
-        zoneIndDot.style.background = '#f43f5e';
+        zoneIndText.innerText = 'Center Dance Floor';
+        zoneIndDot.style.background = '#ff2a85';
         spotBanner.classList.add('hidden');
       }
     }
@@ -805,23 +1510,22 @@
       const text = input.value.trim();
       if (!text) return;
 
-      // Assign speech bubble to player
       player.message = {
         text: text,
         timestamp: Date.now(),
-        life: 6000 // 6 seconds display
+        life: 6000
       };
 
       input.value = '';
       showToast('Message posted over your avatar 💬');
 
-      // If in Spotlight, NPC DJ reacts!
+      // DJ reaction if on stage
       if (player.currentZone && player.currentZone.id === 'dj') {
         setTimeout(() => {
           const dj = NPCS.find(n => n.id === 'dj_cyber');
           if (dj) {
             dj.message = {
-              text: `Yo @${player.nickname}! Nice vibe on the floor 🔥`,
+              text: `Yo @${player.nickname}! Big energy on the floor 🔥`,
               timestamp: Date.now(),
               life: 5000
             };
@@ -831,38 +1535,57 @@
     }
 
     // =========================================================================
-    // EMOTE BURSTS & DANCE MODE
+    // EMOTES & DANCE MODE
     // =========================================================================
     function triggerAvatarEmote(emoji) {
       floatingParticles.push({
         x: player.x,
-        y: player.y - 20,
+        y: player.y - 25,
         emoji: emoji,
         vx: (Math.random() - 0.5) * 2,
-        vy: -2.5 - Math.random() * 1.5,
-        opacity: 1,
-        life: 1.0
+        vy: -2.8 - Math.random() * 1.5,
+        opacity: 1
       });
     }
 
     function toggleAvatarDance() {
       player.isDancing = !player.isDancing;
-      showToast(player.isDancing ? 'Dance Mode Activated! 🕺' : 'Dance Mode Off');
+      showToast(player.isDancing ? 'Dance Mode Activated! 🕺⚡' : 'Dance Mode Paused');
     }
 
     // =========================================================================
-    // DRAWING ENGINE (60 FPS CANVAS LOOP)
+    // CANVAS RENDERING ENGINE (CYBER-LOUNGE ENVIRONMENT)
     // =========================================================================
-    function drawGridFloor() {
-      // 1. Dark Background
-      ctx.fillStyle = '#09090d';
+    function drawCyberFloor() {
+      const now = Date.now();
+
+      // 1. Deep Space Cyber Metallic Background
+      ctx.fillStyle = '#07070b';
       ctx.fillRect(0, 0, width, height);
 
-      // 2. Subtle Neon Grid Lines
-      const gridSize = 48;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
-      ctx.lineWidth = 1;
+      // 2. Ambient Corner Lighting (Cyan, Purple, Pink)
+      const radCyan = ctx.createRadialGradient(width * 0.1, height * 0.1, 20, width * 0.1, height * 0.1, 500);
+      radCyan.addColorStop(0, 'rgba(0, 240, 255, 0.08)');
+      radCyan.addColorStop(1, 'transparent');
+      ctx.fillStyle = radCyan;
+      ctx.fillRect(0, 0, width, height);
 
+      const radPink = ctx.createRadialGradient(width * 0.9, height * 0.15, 20, width * 0.9, height * 0.15, 450);
+      radPink.addColorStop(0, 'rgba(255, 42, 133, 0.07)');
+      radPink.addColorStop(1, 'transparent');
+      ctx.fillStyle = radPink;
+      ctx.fillRect(0, 0, width, height);
+
+      const radPurple = ctx.createRadialGradient(width * 0.85, height * 0.85, 20, width * 0.85, height * 0.85, 500);
+      radPurple.addColorStop(0, 'rgba(157, 78, 221, 0.08)');
+      radPurple.addColorStop(1, 'transparent');
+      ctx.fillStyle = radPurple;
+      ctx.fillRect(0, 0, width, height);
+
+      // 3. Cyber Floor Grid
+      const gridSize = 50;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.lineWidth = 1;
       ctx.beginPath();
       for (let x = 0; x <= width; x += gridSize) {
         ctx.moveTo(x, 0);
@@ -874,129 +1597,229 @@
       }
       ctx.stroke();
 
-      // Ambient Corner Light Glows
-      const rad1 = ctx.createRadialGradient(width * 0.1, height * 0.1, 10, width * 0.1, height * 0.1, 400);
-      rad1.addColorStop(0, 'rgba(6, 182, 212, 0.06)');
-      rad1.addColorStop(1, 'transparent');
-      ctx.fillStyle = rad1;
-      ctx.fillRect(0, 0, width, height);
+      // 4. ANIMATED LED DANCE FLOOR (Center DJ Area)
+      const centerX = width / 2;
+      const centerY = height / 2 + (height * 0.02);
+      const tileCols = 6;
+      const tileRows = 5;
+      const tileSize = 36;
+      const startTileX = centerX - (tileCols * tileSize) / 2;
+      const startTileY = centerY - (tileRows * tileSize) / 2 + 10;
 
-      const rad2 = ctx.createRadialGradient(width * 0.85, height * 0.85, 10, width * 0.85, height * 0.85, 450);
-      rad2.addColorStop(0, 'rgba(168, 85, 247, 0.07)');
-      rad2.addColorStop(1, 'transparent');
-      ctx.fillStyle = rad2;
-      ctx.fillRect(0, 0, width, height);
+      const neonPalette = ['#00f0ff', '#ff2a85', '#9d4edd', '#ffb703', '#06d6a0'];
+
+      for (let c = 0; c < tileCols; c++) {
+        for (let r = 0; r < tileRows; r++) {
+          const tx = startTileX + c * tileSize;
+          const ty = startTileY + r * tileSize;
+
+          // Pulse index tied to beat step & position
+          const beatShift = (c * 2 + r * 3 + currentBeatStep) % neonPalette.length;
+          const tileColor = neonPalette[beatShift];
+
+          ctx.fillStyle = 'rgba(18, 18, 30, 0.9)';
+          ctx.fillRect(tx + 2, ty + 2, tileSize - 4, tileSize - 4);
+
+          ctx.strokeStyle = `${tileColor}55`;
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(tx + 2, ty + 2, tileSize - 4, tileSize - 4);
+
+          // Subtle center neon core
+          ctx.fillStyle = `${tileColor}33`;
+          ctx.beginPath();
+          ctx.arc(tx + tileSize / 2, ty + tileSize / 2, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 5. DUAL SWEEPING LASER BEAMS (From DJ Booth)
+      laserAngle1 += 0.015;
+      laserAngle2 -= 0.012;
+
+      drawLaserSweep(centerX, centerY - 70, laserAngle1, 'rgba(0, 240, 255, 0.15)');
+      drawLaserSweep(centerX, centerY - 70, laserAngle2, 'rgba(255, 42, 133, 0.15)');
     }
 
-    function drawZones() {
+    function drawLaserSweep(originX, originY, angle, color) {
+      const laserLen = Math.max(width, height) * 0.6;
+      const targetX = originX + Math.cos(angle) * laserLen;
+      const targetY = originY + Math.abs(Math.sin(angle)) * laserLen;
+
+      ctx.save();
+      const grad = ctx.createLinearGradient(originX, originY, targetX, targetY);
+      grad.addColorStop(0, color);
+      grad.addColorStop(1, 'transparent');
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(originX, originY);
+      ctx.lineTo(targetX, targetY);
+      ctx.stroke();
+
+      // Cone ambient sweep
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(originX, originY);
+      ctx.lineTo(targetX - 35, targetY);
+      ctx.lineTo(targetX + 35, targetY);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawStationZones() {
       const now = Date.now();
 
       ZONES.forEach(z => {
         const zX = width / 2 + (width * z.relX);
         const zY = height / 2 + (height * z.relY);
 
-        // Zone Outer Glow
-        const glow = ctx.createRadialGradient(zX, zY, z.radius * 0.4, zX, zY, z.radius);
-        glow.addColorStop(0, `${z.color}18`);
+        // Ambient Station Glow
+        const glow = ctx.createRadialGradient(zX, zY, z.radius * 0.3, zX, zY, z.radius);
+        glow.addColorStop(0, `${z.color}15`);
         glow.addColorStop(1, 'transparent');
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(zX, zY, z.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Zone Border Ring
-        ctx.strokeStyle = `${z.color}55`;
-        ctx.lineWidth = 2.5;
+        // Perimeter Ring
+        ctx.strokeStyle = `${z.color}44`;
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(zX, zY, z.radius, 0, Math.PI * 2);
         ctx.stroke();
 
-        // Center Table / DJ Platform
+        // Station specific structures
         if (z.id === 'dj') {
-          // Open Floor DJ Stage
-          ctx.fillStyle = '#141420';
-          ctx.strokeStyle = '#f43f5e88';
+          // Elevated DJ Platform
+          ctx.fillStyle = '#10101c';
+          ctx.strokeStyle = '#ff2a8599';
           ctx.lineWidth = 3;
           ctx.beginPath();
-          ctx.arc(zX, zY, 55, 0, Math.PI * 2);
+          ctx.roundRect(zX - 55, zY - 95, 110, 48, 12);
           ctx.fill();
           ctx.stroke();
 
-          // DJ Deck Icon & Pulsing Center Spotlight
-          ctx.font = '28px sans-serif';
+          // DJ Turntables
+          ctx.fillStyle = '#1f1f33';
+          ctx.beginPath();
+          ctx.arc(zX - 25, zY - 72, 14, 0, Math.PI * 2);
+          ctx.arc(zX + 25, zY - 72, 14, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Rotating Vinyl lines
+          ctx.strokeStyle = '#00f0ff';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(zX - 25, zY - 72, 10, now * 0.005, now * 0.005 + Math.PI * 1.5);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#ff2a85';
+          ctx.beginPath();
+          ctx.arc(zX + 25, zY - 72, 10, -now * 0.005, -now * 0.005 + Math.PI * 1.5);
+          ctx.stroke();
+
+          // Equalizer Visualizer Bars
+          for (let b = 0; b < 5; b++) {
+            const barH = 6 + Math.abs(Math.sin(now * 0.008 + b)) * 14;
+            ctx.fillStyle = b % 2 === 0 ? '#00f0ff' : '#ff2a85';
+            ctx.fillRect(zX - 12 + b * 5, zY - 60 - barH / 2, 3, barH);
+          }
+
+        } else if (z.id === 'bar') {
+          // The Neon Bar Counter & Stools
+          ctx.fillStyle = '#131322';
+          ctx.strokeStyle = '#00f0ffaa';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.roundRect(zX - 60, zY - 20, 120, 40, 10);
+          ctx.fill();
+          ctx.stroke();
+
+          // Bar Bottles
+          ctx.font = '18px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText('🎛️', zX, zY);
+          ctx.fillText('🍸 🍾 🍹', zX, zY);
 
-          // Spotlight rotating ring
-          ctx.strokeStyle = '#fbbf24aa';
-          ctx.lineWidth = 1.5;
-          ctx.setLineDash([8, 8]);
+          // Bar Stools
+          [-40, 0, 40].forEach(sx => {
+            ctx.fillStyle = '#222238';
+            ctx.beginPath();
+            ctx.arc(zX + sx, zY + 36, 9, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#00f0ff55';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          });
+
+        } else if (z.id === 'chill') {
+          // Velvet Lounge Booth & Table
+          ctx.fillStyle = '#181226';
+          ctx.strokeStyle = '#9d4eddaa';
+          ctx.lineWidth = 2.5;
           ctx.beginPath();
-          ctx.arc(zX, zY, 52 + Math.sin(now * 0.005) * 4, now * 0.002, now * 0.002 + Math.PI * 2);
-          ctx.stroke();
-          ctx.setLineDash([]);
-        } else {
-          // Regular Table Circle
-          ctx.fillStyle = '#10101a';
-          ctx.strokeStyle = `${z.color}88`;
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(zX, zY, 42, 0, Math.PI * 2);
+          ctx.arc(zX, zY, 44, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
 
-          // Center Icon
           ctx.font = '22px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(z.icon, zX, zY);
+          ctx.fillText('🎲', zX, zY);
+
+          // Velvet sofa curve
+          ctx.strokeStyle = '#9d4edd66';
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.arc(zX, zY, 58, Math.PI * 0.7, Math.PI * 2.3);
+          ctx.stroke();
+
+        } else if (z.id === 'wall') {
+          // Confession Wall Brick Plaque
+          ctx.fillStyle = '#151522';
+          ctx.strokeStyle = '#ffb703aa';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.roundRect(zX - 50, zY - 25, 100, 50, 8);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.font = '20px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('💌 📌', zX, zY);
         }
 
-        // Zone Name Label
-        ctx.font = 'bold 12px "Space Grotesk", sans-serif';
-        ctx.fillStyle = '#d4d4d8';
+        // Zone Name Pill Label
+        ctx.font = 'bold 11px "Space Grotesk", sans-serif';
+        ctx.fillStyle = '#e4e4e7';
         ctx.textAlign = 'center';
-        ctx.fillText(z.name.toUpperCase(), zX, zY + z.radius - 20);
+        ctx.fillText(z.name.toUpperCase(), zX, zY + z.radius - 16);
       });
     }
 
-    function drawLightPulses() {
-      for (let i = lightPulses.length - 1; i >= 0; i--) {
-        const p = lightPulses[i];
-        p.radius += 1.2;
-        p.opacity -= 0.035;
+    function drawLightRipples() {
+      for (let i = lightRipples.length - 1; i >= 0; i--) {
+        const r = lightRipples[i];
+        r.radius += 2.5;
+        r.opacity -= 0.025;
 
-        if (p.opacity <= 0) {
-          lightPulses.splice(i, 1);
+        if (r.opacity <= 0) {
+          lightRipples.splice(i, 1);
           continue;
         }
 
-        ctx.strokeStyle = p.color;
-        ctx.globalAlpha = p.opacity;
+        ctx.strokeStyle = r.color;
+        ctx.globalAlpha = r.opacity;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
         ctx.stroke();
         ctx.globalAlpha = 1;
       }
-    }
-
-    function drawStardustTrails() {
-      if (player.trail.length < 2) return;
-
-      for (let i = 0; i < player.trail.length; i++) {
-        const pt = player.trail[i];
-        const alpha = (i / player.trail.length) * 0.4;
-        const size = (i / player.trail.length) * (player.radius * 0.6);
-
-        ctx.fillStyle = player.color;
-        ctx.globalAlpha = alpha;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
     }
 
     function drawAvatarEntity(entity, isUser = false) {
@@ -1005,43 +1828,49 @@
       // Dance bop animation
       let offsetY = 0;
       if (isUser && player.isDancing) {
-        offsetY = Math.sin(now * 0.015) * 6;
+        offsetY = Math.sin(now * 0.018) * 7;
       }
 
       const drawX = entity.x;
       const drawY = entity.y + offsetY;
 
-      // Outer Neon Glow
-      const glow = ctx.createRadialGradient(drawX, drawY, entity.radius * 0.2, drawX, drawY, entity.radius * 2);
-      glow.addColorStop(0, `${entity.color}66`);
-      glow.addColorStop(1, 'transparent');
-      ctx.fillStyle = glow;
+      // Outer Neon Aura
+      const aura = ctx.createRadialGradient(drawX, drawY, entity.radius * 0.2, drawX, drawY, entity.radius * 2.2);
+      aura.addColorStop(0, `${entity.color}66`);
+      aura.addColorStop(1, 'transparent');
+      ctx.fillStyle = aura;
       ctx.beginPath();
-      ctx.arc(drawX, drawY, entity.radius * 2, 0, Math.PI * 2);
+      ctx.arc(drawX, drawY, entity.radius * 2.2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Avatar Body Sphere
-      const bodyGrad = ctx.createRadialGradient(drawX - 4, drawY - 4, 3, drawX, drawY, entity.radius);
+      // Avatar Sphere
+      const bodyGrad = ctx.createRadialGradient(drawX - 5, drawY - 5, 2, drawX, drawY, entity.radius);
       bodyGrad.addColorStop(0, '#ffffff');
-      bodyGrad.addColorStop(0.4, entity.color);
-      bodyGrad.addColorStop(1, '#090912');
+      bodyGrad.addColorStop(0.35, entity.color);
+      bodyGrad.addColorStop(1, '#070712');
 
       ctx.fillStyle = bodyGrad;
       ctx.beginPath();
       ctx.arc(drawX, drawY, entity.radius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Avatar Rim Outline
-      ctx.strokeStyle = '#ffffffaa';
+      // Avatar White Rim
+      ctx.strokeStyle = '#ffffffbb';
       ctx.lineWidth = 2;
       ctx.stroke();
 
       // Accessory Emoji
       if (entity.accessory) {
-        ctx.font = '14px sans-serif';
+        ctx.font = '15px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(entity.accessory, drawX, drawY);
+      }
+
+      // Holding Drink Badge
+      if (entity.drink) {
+        ctx.font = '14px sans-serif';
+        ctx.fillText(entity.drink, drawX + entity.radius - 2, drawY - entity.radius + 6);
       }
 
       // Nickname Pill Label
@@ -1049,8 +1878,8 @@
       ctx.font = 'bold 11px "Space Grotesk", sans-serif';
       const textWidth = ctx.measureText(nick).width;
 
-      ctx.fillStyle = 'rgba(9, 9, 14, 0.85)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.fillStyle = 'rgba(7, 7, 12, 0.88)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
       ctx.lineWidth = 1;
 
       const pillX = drawX - textWidth / 2 - 8;
@@ -1065,7 +1894,7 @@
       ctx.textBaseline = 'middle';
       ctx.fillText(nick, drawX, pillY + 9);
 
-      // Speech Bubble (If Active Message)
+      // Floating Speech Bubble
       if (entity.message) {
         const elapsed = now - entity.message.timestamp;
         if (elapsed < entity.message.life) {
@@ -1083,22 +1912,21 @@
 
       ctx.font = '500 12px "Plus Jakarta Sans", sans-serif';
       const metrics = ctx.measureText(text);
-      const bubbleW = Math.min(220, metrics.width + 24);
+      const bubbleW = Math.min(230, metrics.width + 24);
       const bubbleH = 34;
       const bubbleX = x - bubbleW / 2;
       const bubbleY = y - bubbleH - 6;
 
-      // Bubble Background
-      ctx.fillStyle = 'rgba(15, 15, 22, 0.95)';
+      ctx.fillStyle = 'rgba(10, 10, 18, 0.95)';
       ctx.strokeStyle = color;
       ctx.lineWidth = 1.5;
 
       ctx.beginPath();
-      ctx.roundRect(bubbleX, bubbleY, bubbleW, bubbleH, 14);
+      ctx.roundRect(bubbleX, bubbleY, bubbleW, bubbleH, 12);
       ctx.fill();
       ctx.stroke();
 
-      // Tail Pointer
+      // Tail
       ctx.fillStyle = color;
       ctx.beginPath();
       ctx.moveTo(x - 5, bubbleY + bubbleH);
@@ -1106,8 +1934,8 @@
       ctx.lineTo(x, bubbleY + bubbleH + 6);
       ctx.fill();
 
-      // Text inside bubble
-      ctx.fillStyle = '#f4f4f5';
+      // Text
+      ctx.fillStyle = '#f3f4f6';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(text, x, bubbleY + bubbleH / 2);
@@ -1136,46 +1964,59 @@
       }
     }
 
-    // MAIN ANIMATION RENDER LOOP (60 FPS)
+    function drawStardustTrails() {
+      if (player.trail.length < 2) return;
+      for (let i = 0; i < player.trail.length; i++) {
+        const pt = player.trail[i];
+        const alpha = (i / player.trail.length) * 0.45;
+        const size = (i / player.trail.length) * (player.radius * 0.6);
+
+        ctx.fillStyle = player.color;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // MAIN 60 FPS ANIMATION LOOP
     function animate() {
-      // 1. Interpolate Player Position (Smooth gliding)
+      // 1. Move player towards target
       const dx = player.targetX - player.x;
       const dy = player.targetY - player.y;
       player.x += dx * player.speed;
       player.y += dy * player.speed;
 
-      // Record Stardust Trail if moving
       if (Math.hypot(dx, dy) > 1) {
         player.trail.push({ x: player.x, y: player.y });
-        if (player.trail.length > 10) player.trail.shift();
+        if (player.trail.length > 12) player.trail.shift();
       } else if (player.trail.length > 0) {
         player.trail.shift();
       }
 
-      // Check proximity zones & update spatial audio
+      // Check proximity & spatial audio
       checkProximityZones();
       updateSpatialAudio();
 
-      // Render Floor, Zones & Visuals
-      drawGridFloor();
-      drawZones();
-      drawLightPulses();
+      // Render Cyber-Lounge
+      drawCyberFloor();
+      drawStationZones();
+      drawLightRipples();
       drawStardustTrails();
 
-      // Render NPCs
+      // Render NPCs & Player
       NPCS.forEach(npc => drawAvatarEntity(npc, false));
-
-      // Render User Player Avatar
       drawAvatarEntity(player, true);
 
-      // Render Floating Emote Particles
+      // Render Floating Emotes
       drawFloatingEmotes();
 
       requestAnimationFrame(animate);
     }
 
     // =========================================================================
-    // SIDE FEATURES & HELPERS
+    // SIDE HELPERS & EXTRAS
     // =========================================================================
     function toggleDropDrawer() {
       const drawer = document.getElementById('dropDrawer');
@@ -1183,9 +2024,9 @@
     }
 
     function inviteGangToTable() {
-      const zone = player.currentZone ? player.currentZone.name : 'Open Floor';
+      const zone = player.currentZone ? player.currentZone.name : 'Cyber-Lounge Floor';
       const shareUrl = `https://clubr.online`;
-      const text = `Yo! I'm hanging out at the "${zone}" on Clubr.online! Walk in and let's vibe: ${shareUrl}`;
+      const text = `Yo! I'm chilling at "${zone}" on Clubr Cyber-Lounge! Jump in and let's vibe: ${shareUrl}`;
 
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareUrl);
@@ -1197,29 +2038,36 @@
       const toast = document.getElementById('toastNotification');
       document.getElementById('toastMessage').innerText = msg;
       toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2500);
+      setTimeout(() => toast.classList.add('hidden'), 2600);
     }
 
-    // Initialize Canvas on Page Load
+    // Double-click canvas to trigger dance mode
+    canvas.addEventListener('dblclick', () => {
+      toggleAvatarDance();
+    });
+
+    // Start Everything on Load
     window.addEventListener('DOMContentLoaded', () => {
       resizeCanvas();
+      loadConfessions();
       animate();
 
-      // Periodically trigger ambient NPC speech bubbles
+      // Periodic smart NPC banter
       setInterval(() => {
         const randomNpc = NPCS[Math.floor(Math.random() * NPCS.length)];
-        const ambientQuotes = [
-          "This bassline is hypnotic! 🎧",
-          "Table talk is deep tonight ✨",
-          "Check out the drops in the top drawer 🎁",
-          "Grab a drink and step into the DJ light 🕺"
+        const quotes = [
+          "Tap 🎛️ to drop an Airhorn blast!",
+          "Cocktails are tasting electric tonight 🍸",
+          "Someone just posted juicy tea on the wall 👀",
+          "Draw a Spicy Truth card at the lounge 🎲",
+          "Bassline hitting just right 🔊"
         ];
         randomNpc.message = {
-          text: ambientQuotes[Math.floor(Math.random() * ambientQuotes.length)],
+          text: quotes[Math.floor(Math.random() * quotes.length)],
           timestamp: Date.now(),
-          life: 5500
+          life: 6000
         };
-      }, 14000);
+      }, 12000);
     });
   </script>
 </body>

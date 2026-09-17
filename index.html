@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Club.online — Personalised Interest & Opportunity Platform</title>
+  <title>Club.online — Scheduled Upgrade & Maintenance</title>
   
-  <meta name="description" content="Club.online is a personalised platform where ambitious youth discover verified opportunities, freelance gigs, paid internships, free tools, and communities tailored to their interests." />
-  <meta property="og:title" content="Club.online — Personalised Interest & Opportunity Platform" />
-  <meta property="og:description" content="Discover verified opportunities, gigs, and free tools tailored to your interests across Tech, Freelancing, Design, Finance, and Gaming." />
+  <meta name="description" content="Club.online is currently undergoing a scheduled system upgrade. We are building a personalised interest and opportunity platform for ambitious youth. Back online shortly!" />
+  <meta property="og:title" content="Club.online — Scheduled Upgrade & Maintenance" />
+  <meta property="og:description" content="We are currently upgrading our platform. Back online shortly with verified opportunities, gigs, and free tools!" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clubr.online" />
   <meta name="theme-color" content="#07080e" />
@@ -32,15 +32,11 @@
               bg: '#07080e',
               surface: '#0f111a',
               card: '#151724',
-              cardHover: '#1c1f30',
               border: '#262a3d',
-              borderLight: '#353a54',
-              tech: '#00f0ff',
-              hustle: '#10b981',
-              creative: '#ff2a85',
-              finance: '#f59e0b',
-              gaming: '#a855f7',
-              students: '#6366f1'
+              cyan: '#00f0ff',
+              emerald: '#10b981',
+              pink: '#ff2a85',
+              purple: '#9d4edd'
             }
           },
           fontFamily: {
@@ -61,7 +57,7 @@
       margin: 0;
       padding: 0;
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       background-color: #07080e;
       font-family: 'Plus Jakarta Sans', sans-serif;
       color: #f3f4f6;
@@ -70,1150 +66,157 @@
       font-family: 'Space Grotesk', sans-serif;
     }
     
-    /* Clean Modern Glassmorphism */
-    .club-glass {
-      background: rgba(15, 17, 26, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .club-glass-hover {
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .club-glass-hover:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    /* Glowing Ambient Background */
+    .glow-sphere {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      opacity: 0.25;
     }
 
-    /* Scrollbar */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Glassmorphism Card */
+    .glass-card {
+      background: rgba(15, 17, 26, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#07080e] text-zinc-100">
+<body class="h-full w-full relative flex items-center justify-center p-4 overflow-hidden bg-[#07080e]">
 
-  <!-- ========================================================================= -->
-  <!-- TOP NAVIGATION BAR -->
-  <!-- ========================================================================= -->
-  <header class="sticky top-0 z-40 w-full club-glass border-b border-white/5 bg-[#07080e]/90">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-      
-      <!-- Brand Logo -->
-      <div class="flex items-center gap-3 cursor-pointer" onclick="switchMainTab('feed')">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
-          <span class="headline-font font-black text-lg">C</span>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="headline-font font-black text-lg tracking-wider text-white">CLUB<span class="text-cyan-400">.ONLINE</span></span>
-            <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-zinc-400 border border-white/10">BETA</span>
-          </div>
-          <p class="text-[10px] text-zinc-400 -mt-0.5 hidden sm:block">Personalised Opportunity Platform</p>
-        </div>
+  <!-- Glowing Background Orbs -->
+  <div class="glow-sphere w-96 h-96 bg-cyan-500 top-1/4 -left-20 animate-pulse"></div>
+  <div class="glow-sphere w-96 h-96 bg-purple-600 bottom-1/4 -right-20 animate-pulse" style="animation-duration: 4s;"></div>
+
+  <!-- Center Maintenance Card -->
+  <div class="glass-card rounded-3xl max-w-lg w-full p-8 sm:p-10 text-center space-y-6 relative z-10 border border-white/10">
+    
+    <!-- Brand Logo -->
+    <div class="inline-flex items-center gap-3">
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-xl shadow-cyan-500/20">
+        <span class="headline-font font-black text-2xl">C</span>
       </div>
-
-      <!-- Navigation Tabs (My Feed, Explore Sectors, My Vault) -->
-      <nav class="flex items-center gap-1 bg-white/5 p-1 rounded-2xl border border-white/10">
-        <button 
-          id="navTabFeed" 
-          onclick="switchMainTab('feed')" 
-          class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-cyan-400 text-black shadow-md">
-          <span>🎯</span>
-          <span class="hidden xs:inline">My Feed</span>
-        </button>
-        <button 
-          id="navTabClubs" 
-          onclick="switchMainTab('clubs')" 
-          class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all flex items-center gap-1.5">
-          <span>🏛️</span>
-          <span class="hidden xs:inline">Explore Clubs</span>
-        </button>
-        <button 
-          id="navTabVault" 
-          onclick="switchMainTab('vault')" 
-          class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all flex items-center gap-1.5">
-          <span>📌</span>
-          <span class="hidden xs:inline">My Vault</span>
-          <span id="vaultBadgeCount" class="w-4 h-4 rounded-full bg-pink-500 text-white text-[10px] flex items-center justify-center font-mono">0</span>
-        </button>
-      </nav>
-
-      <!-- Right Action: Preferences & Share -->
-      <div class="flex items-center gap-2">
-        <button 
-          onclick="openOnboardingModal()" 
-          class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-zinc-300 flex items-center gap-1.5 transition-all"
-          title="Edit My Interests & Clubs">
-          <span>⚙️</span>
-          <span class="hidden md:inline">Edit Clubs</span>
-        </button>
-        <button 
-          onclick="shareClubWhatsapp()" 
-          class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-sm hover:bg-emerald-500/30 active:scale-95 transition-all"
-          title="Share on WhatsApp">
-          <span>📲</span>
-        </button>
+      <div class="text-left">
+        <div class="headline-font font-black text-2xl tracking-wider text-white">
+          CLUB<span class="text-cyan-400">.ONLINE</span>
+        </div>
+        <p class="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">v2.0 Platform Upgrade</p>
       </div>
-
     </div>
-  </header>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN APP CONTAINER -->
-  <!-- ========================================================================= -->
-  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-
-    <!-- ========================================================================= -->
-    <!-- VIEW 1: MY FEED (PERSONALISED OPPORTUNITY STREAM) -->
-    <!-- ========================================================================= -->
-    <section id="viewMyFeed" class="space-y-6">
-
-      <!-- Hero Greeting & Joined Clubs Bar -->
-      <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-cyan-950/40 via-zinc-900 to-purple-950/40 border border-white/10 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div class="space-y-1 z-10">
-          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span>AUTOPILOT VERIFIED FEED</span>
-          </div>
-          <h1 class="headline-font font-black text-2xl sm:text-3xl text-white">
-            Your Personal Club Feed
-          </h1>
-          <p class="text-xs sm:text-sm text-zinc-400 max-w-xl">
-            Only showing curated gigs, tool drops, bounties, and internships matching your selected sector clubs.
-          </p>
-        </div>
-
-        <!-- Quick Stats & Manage Clubs -->
-        <div class="flex items-center gap-3 z-10">
-          <div class="text-left bg-black/40 border border-white/10 px-3.5 py-2 rounded-2xl">
-            <div class="text-[10px] font-mono text-zinc-400 uppercase">Active Clubs</div>
-            <div id="heroActiveClubsCount" class="headline-font font-black text-lg text-cyan-300">4 Clubs</div>
-          </div>
-          <button 
-            onclick="openOnboardingModal()" 
-            class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all">
-            + Customize
-          </button>
-        </div>
+    <!-- Status Badge -->
+    <div>
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        <span>SCHEDULED UPGRADE & MAINTENANCE</span>
       </div>
-
-      <!-- SECTOR FILTER PILLS & SEARCH BAR -->
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        
-        <!-- Sector Pills Horizontal Scroll -->
-        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs font-bold">
-          <button onclick="filterFeedBySector('all', this)" class="sector-pill px-3.5 py-2 rounded-xl bg-white text-black shrink-0 transition-all">
-            ✨ All Drops
-          </button>
-          <button onclick="filterFeedBySector('tech', this)" class="sector-pill px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 shrink-0 transition-all">
-            🚀 Tech & AI
-          </button>
-          <button onclick="filterFeedBySector('hustle', this)" class="sector-pill px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 shrink-0 transition-all">
-            💼 Hustle & Jobs
-          </button>
-          <button onclick="filterFeedBySector('creative', this)" class="sector-pill px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 shrink-0 transition-all">
-            🎨 Creative & Video
-          </button>
-          <button onclick="filterFeedBySector('finance', this)" class="sector-pill px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 shrink-0 transition-all">
-            📈 Finance & D2C
-          </button>
-          <button onclick="filterFeedBySector('gaming', this)" class="sector-pill px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 shrink-0 transition-all">
-            🎮 Gaming & 3D
-          </button>
-          <button onclick="filterFeedBySector('students', this)" class="sector-pill px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 shrink-0 transition-all">
-            📚 Students & Bounties
-          </button>
-        </div>
-
-        <!-- Keyword Search Input -->
-        <div class="relative min-w-[200px] sm:w-64">
-          <input 
-            type="text" 
-            id="feedSearchInput"
-            oninput="handleSearchFeed(this.value)"
-            placeholder="Search remote, figma, gig..." 
-            class="w-full bg-zinc-900 border border-white/10 focus:border-cyan-400 focus:outline-none rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 transition-all"
-          />
-          <span class="absolute right-3 top-2.5 text-xs text-zinc-500">🔍</span>
-        </div>
-
-      </div>
-
-      <!-- FEED CARDS GRID -->
-      <div id="feedCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Rendered via JavaScript -->
-      </div>
-
-      <!-- Empty State (When no clubs selected or zero search results) -->
-      <div id="feedEmptyState" class="hidden p-12 text-center club-glass rounded-3xl space-y-3">
-        <span class="text-4xl">🔍</span>
-        <h3 class="headline-font font-bold text-lg text-white">No drops match your current filters</h3>
-        <p class="text-xs text-zinc-400 max-w-sm mx-auto">
-          Try switching to "All Drops" or join more sector clubs to discover fresh opportunities.
-        </p>
-        <button onclick="openOnboardingModal()" class="px-4 py-2 rounded-xl bg-cyan-400 text-black font-bold text-xs">
-          Manage My Clubs 🏛️
-        </button>
-      </div>
-
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- VIEW 2: EXPLORE SECTORS & CLUBS DIRECTORY -->
-    <!-- ========================================================================= -->
-    <section id="viewExploreClubs" class="space-y-6 hidden">
-      
-      <div>
-        <h2 class="headline-font font-black text-2xl text-white">Explore All Sector Clubs</h2>
-        <p class="text-xs sm:text-sm text-zinc-400">
-          Browse 6 dedicated sectors and 14+ clubs. Join clubs to add their curated drops to your feed.
-        </p>
-      </div>
-
-      <!-- Sectors Container -->
-      <div id="sectorsDirectoryList" class="space-y-8">
-        <!-- Rendered via JavaScript with 6 Sectors and their Clubs -->
-      </div>
-
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- VIEW 3: MY VAULT (SAVED OPPORTUNITIES & TRACKER) -->
-    <!-- ========================================================================= -->
-    <section id="viewMyVault" class="space-y-6 hidden">
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="headline-font font-black text-2xl text-white">My Opportunity Vault</h2>
-          <p class="text-xs sm:text-sm text-zinc-400">
-            Keep track of gigs you saved, tools you claimed, and applications in progress.
-          </p>
-        </div>
-        <div id="vaultCountHeader" class="text-xs font-mono font-bold px-3 py-1.5 rounded-xl bg-white/10 text-cyan-300">
-          0 Items Saved
-        </div>
-      </div>
-
-      <!-- Saved Cards Grid -->
-      <div id="vaultCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Rendered via JavaScript -->
-      </div>
-
-      <div id="vaultEmptyState" class="p-12 text-center club-glass rounded-3xl space-y-3">
-        <span class="text-4xl">📌</span>
-        <h3 class="headline-font font-bold text-lg text-white">Your Vault is Empty</h3>
-        <p class="text-xs text-zinc-400 max-w-sm mx-auto">
-          Click the "📌 Save" button on any opportunity in your feed to pin it here for easy access.
-        </p>
-        <button onclick="switchMainTab('feed')" class="px-4 py-2 rounded-xl bg-cyan-400 text-black font-bold text-xs">
-          Browse Drops Feed →
-        </button>
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: OPPORTUNITY DETAIL SHEET -->
-  <!-- ========================================================================= -->
-  <div id="opportunityDetailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
-    <div class="club-glass rounded-3xl w-full max-w-lg p-6 border border-white/15 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar">
-      
-      <div class="flex items-center justify-between pb-3 border-b border-white/10">
-        <div class="flex items-center gap-2">
-          <span id="detailTypeBadge" class="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300">GIG</span>
-          <span id="detailClubBadge" class="text-[10px] font-mono text-zinc-400">🤖 AI Club</span>
-        </div>
-        <button onclick="closeOpportunityDetail()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
-      </div>
-
-      <div class="space-y-1">
-        <h3 id="detailTitle" class="headline-font font-black text-xl text-white">Opportunity Title</h3>
-        <div class="flex items-center gap-2 text-xs text-zinc-400">
-          <span id="detailCompany">Company</span>
-          <span>•</span>
-          <span id="detailLocation" class="text-emerald-400">Remote</span>
-        </div>
-      </div>
-
-      <div class="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-2">
-        <div class="text-[11px] font-mono uppercase text-zinc-400">Compensation / Reward:</div>
-        <div id="detailReward" class="headline-font font-black text-lg text-emerald-400">₹15,000 / month</div>
-      </div>
-
-      <div class="space-y-2">
-        <div class="text-xs font-bold text-zinc-300">Scene Kya Hai (Overview):</div>
-        <p id="detailDescription" class="text-xs text-zinc-400 leading-relaxed">
-          Full detailed description of the opportunity.
-        </p>
-      </div>
-
-      <div class="space-y-2">
-        <div class="text-xs font-bold text-zinc-300">Key Requirements / Eligibility:</div>
-        <ul id="detailRequirements" class="text-xs text-zinc-400 space-y-1 list-disc pl-4">
-          <li>Requirement 1</li>
-        </ul>
-      </div>
-
-      <div class="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-xs">
-        <div class="flex items-center gap-2">
-          <span class="text-emerald-400">🛡️</span>
-          <span id="detailVerification" class="text-zinc-300 text-[11px]">Verified via Official Channel</span>
-        </div>
-        <span id="detailDeadline" class="font-mono text-zinc-400 text-[11px]">Apply soon</span>
-      </div>
-
-      <!-- Actions -->
-      <div class="grid grid-cols-2 gap-2 pt-2">
-        <button 
-          id="detailSaveBtn"
-          onclick="toggleSaveFromDetail()" 
-          class="py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/10 active:scale-95 transition-all flex items-center justify-center gap-1.5">
-          <span>📌</span><span>Save to Vault</span>
-        </button>
-        <a 
-          id="detailApplyLink" 
-          href="#" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="py-3 px-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 font-black text-xs uppercase tracking-wider text-white shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-1.5">
-          <span>Apply Official ↗</span>
-        </a>
-      </div>
-
     </div>
-  </div>
 
-  <!-- ========================================================================= -->
-  <!-- ONBOARDING & INTEREST CUSTOMIZER MODAL -->
-  <!-- ========================================================================= -->
-  <div id="onboardingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300">
-    <div class="club-glass rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-cyan-500/30 shadow-2xl relative space-y-6 max-h-[92vh] overflow-y-auto no-scrollbar">
-      
-      <!-- Modal Header -->
-      <div class="space-y-1.5 text-center">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
-          <span>🎯 ZERO SPAM • 100% RELEVANT</span>
-        </div>
-        <h2 class="headline-font font-black text-2xl sm:text-3xl text-white">
-          Choose Your Sector Clubs
-        </h2>
-        <p class="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto">
-          Pick the clubs you care about. Club.online filters the internet and brings verified opportunities to your feed.
-        </p>
+    <!-- Main Message -->
+    <div class="space-y-2.5">
+      <h1 class="headline-font font-black text-2xl sm:text-3xl text-white leading-snug">
+        We're Upgrading for the Next Evolution.
+      </h1>
+      <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-md mx-auto">
+        Club.online is currently undergoing scheduled maintenance. We are fine-tuning our personalised interest and opportunity ecosystem across <span class="text-cyan-300 font-semibold">Tech</span>, <span class="text-emerald-400 font-semibold">Freelancing</span>, <span class="text-pink-400 font-semibold">Creative Media</span>, and <span class="text-purple-400 font-semibold">Gaming</span>.
+      </p>
+    </div>
+
+    <!-- Status Ticker Box -->
+    <div class="p-4 rounded-2xl bg-black/40 border border-white/10 text-left space-y-2">
+      <div class="flex items-center justify-between text-[11px] font-mono">
+        <span class="text-zinc-400">System Status:</span>
+        <span class="text-emerald-400 font-bold flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          Under Development
+        </span>
       </div>
-
-      <!-- 1. QUICK STARTER PACKS (1-TAP ONBOARDING) -->
-      <div class="space-y-2">
-        <span class="text-[11px] font-mono uppercase font-bold text-zinc-400 block">⚡ Quick 1-Tap Starter Packs:</span>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <button onclick="applyStarterPack('freelancer')" class="p-3 rounded-2xl bg-white/5 hover:bg-emerald-500/10 border border-white/10 hover:border-emerald-500/40 text-left active:scale-95 transition-all group">
-            <span class="text-lg block mb-1">💼</span>
-            <div class="font-bold text-xs text-white group-hover:text-emerald-400">Freelancer Pack</div>
-            <div class="text-[10px] text-zinc-400">AI + Gigs + Video Editing</div>
-          </button>
-          <button onclick="applyStarterPack('tech')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-500/40 text-left active:scale-95 transition-all group">
-            <span class="text-lg block mb-1">🚀</span>
-            <div class="font-bold text-xs text-white group-hover:text-cyan-400">Tech Builder Pack</div>
-            <div class="text-[10px] text-zinc-400">AI + Dev + Hackathons</div>
-          </button>
-          <button onclick="applyStarterPack('creator')" class="p-3 rounded-2xl bg-white/5 hover:bg-pink-500/10 border border-white/10 hover:border-pink-500/40 text-left active:scale-95 transition-all group">
-            <span class="text-lg block mb-1">🎨</span>
-            <div class="font-bold text-xs text-white group-hover:text-pink-400">Creator & Gaming</div>
-            <div class="text-[10px] text-zinc-400">Editing + Creators + Esports</div>
-          </button>
-        </div>
+      <div class="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 w-3/4 rounded-full animate-pulse"></div>
       </div>
-
-      <!-- 2. SECTOR-WISE CLUBS PICKER -->
-      <div class="space-y-4">
-        <span class="text-[11px] font-mono uppercase font-bold text-zinc-400 block">🏛️ Or Select Specific Sector Clubs:</span>
-        <div id="onboardingSectorsAccordion" class="space-y-3">
-          <!-- Rendered dynamically -->
-        </div>
+      <div class="flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-0.5">
+        <span>Architecture & Planning</span>
+        <span class="text-zinc-400">Coming Back Online Soon</span>
       </div>
+    </div>
 
-      <!-- Bottom Save Action -->
-      <div class="pt-2 border-t border-white/10 flex items-center justify-between">
-        <span id="onboardingSelectedCount" class="text-xs font-mono text-zinc-400 font-bold">4 clubs selected</span>
+    <!-- Notify / Contact Action -->
+    <div class="space-y-3 pt-2">
+      <p class="text-xs font-medium text-zinc-400">
+        Want to be notified first or have a question for the team?
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center gap-2">
+        <input 
+          type="email" 
+          id="notifyEmailInput" 
+          placeholder="Enter your email for early access..." 
+          class="w-full bg-zinc-900 border border-white/10 focus:border-cyan-400 focus:outline-none rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-500 transition-all text-center sm:text-left"
+        />
         <button 
-          onclick="saveOnboardingPreferences()" 
-          class="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 hover:opacity-95 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-cyan-500/20 active:scale-95 transition-all">
-          Save & Open Feed →
+          onclick="handleNotifySubmit()" 
+          class="w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-purple-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all shrink-0">
+          Notify Me
         </button>
       </div>
 
+      <!-- WhatsApp Direct Connect Link -->
+      <div class="pt-2">
+        <button 
+          onclick="contactTeamWhatsApp()" 
+          class="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors">
+          <span>📲 Connect with the Team on WhatsApp →</span>
+        </button>
+      </div>
     </div>
+
+    <!-- Footer Copyright -->
+    <div class="pt-4 border-t border-white/5 text-[11px] font-mono text-zinc-600">
+      © 2026 Club.online • All Rights Reserved
+    </div>
+
   </div>
 
   <!-- Toast Notification -->
-  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 hidden px-4 py-3 rounded-2xl club-glass text-white font-bold text-xs shadow-2xl flex items-center gap-2 border border-white/15">
-    <span id="toastIcon">✨</span>
-    <span id="toastMessage">Saved to Vault!</span>
+  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-3 rounded-2xl glass-card text-white font-bold text-xs shadow-2xl flex items-center gap-2 border border-white/15">
+    <span>✨</span>
+    <span id="toastMessage">You are on the VIP early access list!</span>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- JAVASCRIPT: DATA ARCHITECTURE & APP ENGINE -->
-  <!-- ========================================================================= -->
   <script>
-    // =========================================================================
-    // 1. SECTOR & CLUB TAXONOMY
-    // =========================================================================
-    const SECTORS = [
-      {
-        id: 'tech',
-        name: 'Technology & AI',
-        icon: '🚀',
-        color: '#00f0ff',
-        bgGradient: 'from-cyan-950/40 to-zinc-900 border-cyan-500/30',
-        clubs: [
-          { id: 'ai_automations', name: 'AI & Automations Club', icon: '🤖', desc: 'ChatGPT, Cursor, AI agents, Prompt engineering & AI internships' },
-          { id: 'web_dev', name: 'Web & App Dev Club', icon: '💻', desc: 'React, Next.js, Flutter, Open-source bounties & Junior developer jobs' },
-          { id: 'cyber_cloud', name: 'Cybersecurity & Cloud Club', icon: '🛡️', desc: 'Bug bounties, Ethical hacking & AWS/DevOps certifications' }
-        ]
-      },
-      {
-        id: 'hustle',
-        name: 'Hustle & Careers',
-        icon: '💼',
-        color: '#10b981',
-        bgGradient: 'from-emerald-950/40 to-zinc-900 border-emerald-500/30',
-        clubs: [
-          { id: 'freelance_gigs', name: 'Freelancing & Gigs Club', icon: '⚡', desc: 'Upwork, Fiverr, Direct client outreach & ₹10k–₹50k projects' },
-          { id: 'remote_jobs', name: 'Remote Jobs & Internships Club', icon: '🏢', desc: 'Paid college internships & WFH entry-level tech/marketing roles' },
-          { id: 'founders_startups', name: 'Founders & Startups Club', icon: '🚀', desc: 'Pitch decks, Govt grants, Startup co-founders & Bootstrapping' }
-        ]
-      },
-      {
-        id: 'creative',
-        name: 'Creative & Media',
-        icon: '🎨',
-        color: '#ff2a85',
-        bgGradient: 'from-pink-950/40 to-zinc-900 border-pink-500/30',
-        clubs: [
-          { id: 'video_editing', name: 'Video Editing & Reels Club', icon: '🎬', desc: 'Premiere Pro, After Effects, Thumbnail design & YouTuber editor gigs' },
-          { id: 'ui_ux_design', name: 'UI/UX & Product Design Club', icon: '🎨', desc: 'Figma, Design systems, Portfolio reviews & Freelance UI jobs' },
-          { id: 'content_creators', name: 'Content Creators & Media Club', icon: '📸', desc: 'Brand sponsorships, Podcasting gear & Growth frameworks' }
-        ]
-      },
-      {
-        id: 'finance',
-        name: 'Finance & Business',
-        icon: '📈',
-        color: '#f59e0b',
-        bgGradient: 'from-amber-950/40 to-zinc-900 border-amber-500/30',
-        clubs: [
-          { id: 'ecom_d2c', name: 'E-Commerce & Dropshipping Club', icon: '📦', desc: 'Shopify, Amazon FBA, D2C Indian brands & Wholesale supplier lists' },
-          { id: 'finance_investing', name: 'Personal Finance & Investing Club', icon: '📊', desc: 'Stock market, Mutual funds, Early investing & Tax-saving hacks' }
-        ]
-      },
-      {
-        id: 'gaming',
-        name: 'Gaming & Esports',
-        icon: '🎮',
-        color: '#a855f7',
-        bgGradient: 'from-purple-950/40 to-zinc-900 border-purple-500/30',
-        clubs: [
-          { id: 'esports_tournaments', name: 'Esports & Tournaments Club', icon: '🏆', desc: 'BGMI, Valorant tournaments, Team recruitments & Cash prize pools' },
-          { id: 'gamedev_3d', name: 'Game Dev & 3D Modeling Club', icon: '🕹️', desc: 'Unity, Unreal Engine, Blender 3D assets & Indie game grants' }
-        ]
-      },
-      {
-        id: 'students',
-        name: 'Students & Upskilling',
-        icon: '📚',
-        color: '#6366f1',
-        bgGradient: 'from-indigo-950/40 to-zinc-900 border-indigo-500/30',
-        clubs: [
-          { id: 'college_internships', name: 'College Internships & Fellowships', icon: '🎓', desc: 'Govt fellowships, Campus ambassador perks & Research grants' },
-          { id: 'hackathons_bounties', name: 'Hackathons & Bounties Club', icon: '💡', desc: 'Online hackathons, Kaggle data competitions & Bug bounties' }
-        ]
-      }
-    ];
-
-    // =========================================================================
-    // 2. CURATED VERIFIED OPPORTUNITIES (THE "DROPS")
-    // =========================================================================
-    const DROPS_DATA = [
-      // Tech & AI Drops
-      {
-        id: 'drop-1',
-        sectorId: 'tech',
-        clubId: 'ai_automations',
-        type: 'gig',
-        typeLabel: '💼 PAID GIG',
-        reward: '₹20,000 / project',
-        title: 'Build an AI Customer Support Agent for a D2C Fashion Brand',
-        company: 'Threads & Co (via LinkedIn)',
-        location: 'Remote · Flexible Hours',
-        summary: 'Fashion brand needs an n8n or LangChain automation to answer customer order tracking and sizing queries on WhatsApp.',
-        requirements: ['Experience with OpenAI API or Claude API', 'Familiarity with webhook automations (n8n or Make.com)', 'Delivery within 10 days'],
-        verification: 'Verified via Founder LinkedIn Post',
-        deadline: 'Apply by Sunday',
-        sourceUrl: 'https://linkedin.com'
-      },
-      {
-        id: 'drop-2',
-        sectorId: 'tech',
-        clubId: 'ai_automations',
-        type: 'tool',
-        typeLabel: '🎁 FREE PRO PERK',
-        reward: '100% Free · Worth $20/mo',
-        title: 'Cursor AI Alternative: 30-Day Unlimited Student Pro License',
-        company: 'DevFlow AI',
-        location: 'Software Tool Drop',
-        summary: 'Exclusive partner drop: Get 1 full month of unlimited Claude 3.5 Sonnet code completions and codebase indexing for verified Club.online users.',
-        requirements: ['Zero credit card required', 'Works directly in VS Code', 'Valid till month end'],
-        verification: 'Official Partner Promo Code',
-        deadline: 'Claim today',
-        sourceUrl: 'https://cursor.com'
-      },
-      {
-        id: 'drop-3',
-        sectorId: 'tech',
-        clubId: 'web_dev',
-        type: 'internship',
-        typeLabel: '🏢 PAID INTERNSHIP',
-        reward: '₹25,000 / month',
-        title: 'Frontend Developer Intern (Next.js 14 + Tailwind CSS)',
-        company: 'HyperScale Labs (Bengaluru / Remote)',
-        location: 'Remote · 3 Months',
-        summary: 'Fast-growing fintech startup looking for a frontend intern passionate about crafting slick micro-interactions and high-converting landing pages.',
-        requirements: ['Proficiency in React / Next.js', 'Clean component architecture', 'Active GitHub portfolio'],
-        verification: 'Verified Official Careers Portal',
-        deadline: '3 days left',
-        sourceUrl: 'https://wellfound.com'
-      },
-
-      // Hustle & Career Drops
-      {
-        id: 'drop-4',
-        sectorId: 'hustle',
-        clubId: 'freelance_gigs',
-        type: 'gig',
-        typeLabel: '💼 FREELANCE GIG',
-        reward: '₹12,000 fixed',
-        title: 'Design 15 YouTube Thumbnails for Tech & Finance Channel',
-        company: 'FinTalks India (450K Subs)',
-        location: 'Remote Freelance',
-        summary: 'YouTuber looking for a dependable designer who understands high-CTR visual hooks, typography, and expression masking.',
-        requirements: ['Photoshop or Figma fluency', 'Must provide sample thumbnail concept', 'Turnaround time: 24 hrs/video'],
-        verification: 'Direct Creator Posting',
-        deadline: 'Apply by Friday',
-        sourceUrl: 'https://twitter.com'
-      },
-      {
-        id: 'drop-5',
-        sectorId: 'hustle',
-        clubId: 'remote_jobs',
-        type: 'internship',
-        typeLabel: '🏢 REMOTE ROLE',
-        reward: '₹18,000 / month',
-        title: 'Junior Social Media & Memes Associate',
-        company: 'GenZ Media Agency',
-        location: 'Remote (Pan-India)',
-        summary: 'Help manage viral Instagram and Twitter accounts for top consumer brands. Crafting tapri banter, topical memes, and reels.',
-        requirements: ['Deep understanding of Indian Gen-Z internet culture', 'Basic Canva/CapCut editing skills', 'College students can apply'],
-        verification: 'Verified via Agency HR',
-        deadline: '4 days left',
-        sourceUrl: 'https://internshala.com'
-      },
-
-      // Creative & Video Drops
-      {
-        id: 'drop-6',
-        sectorId: 'creative',
-        clubId: 'video_editing',
-        type: 'gig',
-        typeLabel: '🎬 EDITING GIG',
-        reward: '₹3,000 per Reel (10 Reels pack)',
-        title: 'Short-Form Reel Editor for Personal Brand Podcast',
-        company: 'Startup Founder Show',
-        location: 'Remote',
-        summary: 'Convert 1-hour raw video podcast into 10 high-retention 60-second reels with Alex Hormozi style captions, B-rolls, and sound effects.',
-        requirements: ['Premiere Pro or DaVinci Resolve', 'Strong pacing and sound design', 'Share portfolio drive link'],
-        verification: 'Verified WhatsApp Creator Group',
-        deadline: '2 days left',
-        sourceUrl: 'https://youtube.com'
-      },
-      {
-        id: 'drop-7',
-        sectorId: 'creative',
-        clubId: 'video_editing',
-        type: 'tool',
-        typeLabel: '🎁 CREATOR ASSET PACK',
-        reward: 'Free 40GB Download',
-        title: 'Cinematic Sound Effects & Motion Graphics Asset Bundle',
-        company: 'CreatorVault',
-        location: 'Download Perk',
-        summary: 'Royalty-free whooshes, risers, ambient club sounds, 4K dust overlays, and paper rip animations for YouTube and Reels editors.',
-        requirements: ['Instant Google Drive download link', 'Commercial use permitted', 'Disclosed partner pack'],
-        verification: 'Disclosed Community Pack',
-        deadline: 'Available now',
-        sourceUrl: 'https://drive.google.com'
-      },
-
-      // Finance & Business Drops
-      {
-        id: 'drop-8',
-        sectorId: 'finance',
-        clubId: 'ecom_d2c',
-        type: 'resource',
-        typeLabel: '📦 D2C SUPPLIER LIST',
-        reward: 'Free Verified Sheet',
-        title: 'Vetted Indian D2C Wholesale Manufacturers List (2026 Edition)',
-        company: 'EcomFounders Club',
-        location: 'Resource Vault',
-        summary: 'Direct contacts of 80+ verified Indian packaging, apparel, and cosmetics OEM suppliers with low minimum order quantities (MOQs).',
-        requirements: ['Curated for student entrepreneurs', 'Zero middlemen charges', 'Updated this month'],
-        verification: 'Community Verified',
-        deadline: 'Instant access',
-        sourceUrl: 'https://docs.google.com'
-      },
-
-      // Gaming & Esports Drops
-      {
-        id: 'drop-9',
-        sectorId: 'gaming',
-        clubId: 'esports_tournaments',
-        type: 'bounty',
-        typeLabel: '🏆 TOURNAMENT POOL',
-        reward: '₹1,00,000 Prize Pool',
-        title: 'All-India College Valorant & BGMI Cyber Cup',
-        company: 'GamerzArena India',
-        location: 'Online Esports Tournament',
-        summary: 'Open qualifiers for college squads. Zero registration fee. Top 8 teams stream live with casting and cash rewards.',
-        requirements: ['Team of 4 or 5 players', 'Must have valid college IDs', 'Discord check-in required'],
-        verification: 'Official Esports Federation Partner',
-        deadline: 'Registrations close in 5 days',
-        sourceUrl: 'https://discord.com'
-      },
-
-      // Students & Upskilling Drops
-      {
-        id: 'drop-10',
-        sectorId: 'students',
-        clubId: 'hackathons_bounties',
-        type: 'bounty',
-        typeLabel: '💡 HACKATHON BOUNTY',
-        reward: '₹2,50,000 Total Grants',
-        title: 'Build with AI Hackathon 2026 (Open Innovation)',
-        company: 'Google Developers Student Clubs Partner',
-        location: 'Online Hackathon',
-        summary: 'Build practical AI tools solving real Indian problems (education, agriculture, local business). Mentorship from senior engineers.',
-        requirements: ['Solo or team of up to 4 members', 'Open to all college students & freshers', 'Submit working demo video'],
-        verification: 'Official Devpost / Hackathon Page',
-        deadline: 'Starts this Saturday',
-        sourceUrl: 'https://devpost.com'
-      }
-    ];
-
-    // =========================================================================
-    // 3. USER STATE & LOCAL PERSISTENCE
-    // =========================================================================
-    let userJoinedClubs = ['ai_automations', 'freelance_gigs', 'video_editing', 'web_dev'];
-    let userSavedDrops = [];
-    let currentMainTab = 'feed';
-    let currentFeedSectorFilter = 'all';
-    let currentSearchQuery = '';
-    let selectedDropDetail = null;
-
-    function initAppState() {
-      // Load saved clubs from localStorage
-      const savedClubs = localStorage.getItem('club_user_joined_clubs');
-      if (savedClubs) {
-        try { userJoinedClubs = JSON.parse(savedClubs); } catch (e) {}
-      }
-
-      // Load saved vault drops
-      const savedVault = localStorage.getItem('club_user_saved_drops');
-      if (savedVault) {
-        try { userSavedDrops = JSON.parse(savedVault); } catch (e) {}
-      }
-
-      // Update UI Counters
-      updateVaultBadgeCount();
-      updateHeroActiveClubsCount();
-
-      // Render Active View
-      renderFeedCards();
-      renderSectorsDirectory();
-      renderVaultCards();
-
-      // If first time user, open onboarding modal
-      if (!localStorage.getItem('club_onboarding_completed')) {
-        setTimeout(() => openOnboardingModal(), 600);
-      }
-    }
-
-    // =========================================================================
-    // 4. TAB SWITCHING (MY FEED / EXPLORE CLUBS / MY VAULT)
-    // =========================================================================
-    function switchMainTab(tab) {
-      currentMainTab = tab;
-      
-      const feedSec = document.getElementById('viewMyFeed');
-      const clubsSec = document.getElementById('viewExploreClubs');
-      const vaultSec = document.getElementById('viewMyVault');
-
-      const btnFeed = document.getElementById('navTabFeed');
-      const btnClubs = document.getElementById('navTabClubs');
-      const btnVault = document.getElementById('navTabVault');
-
-      [feedSec, clubsSec, vaultSec].forEach(s => s.classList.add('hidden'));
-      [btnFeed, btnClubs, btnVault].forEach(b => {
-        b.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all flex items-center gap-1.5';
-      });
-
-      if (tab === 'feed') {
-        feedSec.classList.remove('hidden');
-        btnFeed.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-cyan-400 text-black shadow-md';
-        renderFeedCards();
-      } else if (tab === 'clubs') {
-        clubsSec.classList.remove('hidden');
-        btnClubs.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-cyan-400 text-black shadow-md';
-        renderSectorsDirectory();
-      } else if (tab === 'vault') {
-        vaultSec.classList.remove('hidden');
-        btnVault.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-cyan-400 text-black shadow-md';
-        renderVaultCards();
-      }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // =========================================================================
-    // 5. RENDER PERSONAL FEED CARDS
-    // =========================================================================
-    function renderFeedCards() {
-      const container = document.getElementById('feedCardsGrid');
-      const emptyState = document.getElementById('feedEmptyState');
-
-      // Filter drops by:
-      // 1. User joined clubs
-      // 2. Sector filter pill (if not 'all')
-      // 3. Search query
-      const filtered = DROPS_DATA.filter(drop => {
-        const matchesClub = userJoinedClubs.includes(drop.clubId);
-        const matchesSector = currentFeedSectorFilter === 'all' || drop.sectorId === currentFeedSectorFilter;
-        const matchesSearch = !currentSearchQuery || 
-          drop.title.toLowerCase().includes(currentSearchQuery) ||
-          drop.summary.toLowerCase().includes(currentSearchQuery) ||
-          drop.company.toLowerCase().includes(currentSearchQuery);
-
-        return matchesClub && matchesSector && matchesSearch;
-      });
-
-      if (filtered.length === 0) {
-        container.innerHTML = '';
-        emptyState.classList.remove('hidden');
+    function handleNotifySubmit() {
+      const input = document.getElementById('notifyEmailInput');
+      const val = input.value.trim();
+      if (!val || !val.includes('@')) {
+        showToast('Please enter a valid email address!');
         return;
       }
 
-      emptyState.classList.add('hidden');
+      // Save locally
+      try {
+        const saved = JSON.parse(localStorage.getItem('club_waitlist_emails') || '[]');
+        saved.push({ email: val, time: new Date().toISOString() });
+        localStorage.setItem('club_waitlist_emails', JSON.stringify(saved));
+      } catch (e) {}
 
-      container.innerHTML = filtered.map(drop => {
-        const sector = SECTORS.find(s => s.id === drop.sectorId);
-        const club = sector ? sector.clubs.find(c => c.id === drop.clubId) : null;
-        const isSaved = userSavedDrops.includes(drop.id);
-
-        let typeBadgeColor = 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
-        if (drop.type === 'gig') typeBadgeColor = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-        if (drop.type === 'tool') typeBadgeColor = 'bg-pink-500/20 text-pink-300 border-pink-500/30';
-        if (drop.type === 'bounty') typeBadgeColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-
-        return `
-          <div class="p-5 rounded-3xl club-glass club-glass-hover flex flex-col justify-between space-y-4 border border-white/10 relative group">
-            
-            <!-- Top Tags: Sector/Club & Reward -->
-            <div class="flex items-center justify-between gap-2 text-[11px] font-mono">
-              <div class="flex items-center gap-1.5">
-                <span class="text-sm">${club ? club.icon : '✨'}</span>
-                <span class="font-bold text-zinc-300">${club ? club.name : 'Curated'}</span>
-              </div>
-              <span class="px-2.5 py-0.5 rounded-full border ${typeBadgeColor} font-bold">
-                ${drop.typeLabel}
-              </span>
-            </div>
-
-            <!-- Title & Compensation -->
-            <div class="space-y-1.5 cursor-pointer" onclick="openOpportunityDetail('${drop.id}')">
-              <h3 class="headline-font font-bold text-base sm:text-lg text-white group-hover:text-cyan-300 transition-colors leading-snug">
-                ${drop.title}
-              </h3>
-              <div class="flex items-center gap-2 text-xs">
-                <span class="text-zinc-400 font-medium">${drop.company}</span>
-                <span class="text-zinc-600">•</span>
-                <span class="font-bold text-emerald-400 font-mono">${drop.reward}</span>
-              </div>
-              <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed pt-1">
-                ${drop.summary}
-              </p>
-            </div>
-
-            <!-- Bottom Verification & Action Buttons -->
-            <div class="pt-3 border-t border-white/5 flex items-center justify-between gap-2">
-              <div class="flex items-center gap-1.5 text-[11px] font-mono text-zinc-500">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>${drop.deadline}</span>
-              </div>
-
-              <div class="flex items-center gap-1.5">
-                <!-- Save Button -->
-                <button 
-                  onclick="toggleSaveDrop('${drop.id}', event)" 
-                  class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs border border-white/10 transition-all ${isSaved ? 'text-pink-400 border-pink-500/40 bg-pink-500/10' : 'text-zinc-400'}"
-                  title="${isSaved ? 'Saved in Vault' : 'Save to Vault'}">
-                  ${isSaved ? '📌 Saved' : '📌'}
-                </button>
-
-                <!-- Direct Apply Button -->
-                <a 
-                  href="${drop.sourceUrl}" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onclick="event.stopPropagation()"
-                  class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-cyan-400 hover:text-black text-white font-bold text-xs transition-all flex items-center gap-1">
-                  <span>Apply ↗</span>
-                </a>
-              </div>
-            </div>
-
-          </div>
-        `;
-      }).join('');
+      input.value = '';
+      showToast('You are on the VIP early access list! 🚀');
     }
 
-    function filterFeedBySector(sectorId, btn) {
-      currentFeedSectorFilter = sectorId;
-      document.querySelectorAll('.sector-pill').forEach(b => {
-        b.className = 'sector-pill px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 shrink-0 transition-all';
-      });
-      btn.className = 'sector-pill px-3.5 py-2 rounded-xl bg-white text-black shrink-0 transition-all font-bold';
-      renderFeedCards();
+    function contactTeamWhatsApp() {
+      const text = `Hey! I was visiting Club.online and would love to stay updated on the upcoming launch!`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    function handleSearchFeed(val) {
-      currentSearchQuery = val.trim().toLowerCase();
-      renderFeedCards();
-    }
-
-    // =========================================================================
-    // 6. RENDER SECTORS & CLUBS DIRECTORY
-    // =========================================================================
-    function renderSectorsDirectory() {
-      const container = document.getElementById('sectorsDirectoryList');
-
-      container.innerHTML = SECTORS.map(sector => {
-        return `
-          <div class="space-y-4">
-            
-            <!-- Sector Header -->
-            <div class="flex items-center gap-2.5 pb-2 border-b border-white/10">
-              <span class="text-2xl">${sector.icon}</span>
-              <div>
-                <h3 class="headline-font font-black text-lg sm:text-xl text-white">${sector.name} Sector</h3>
-                <p class="text-xs text-zinc-400">Curated opportunities and communities</p>
-              </div>
-            </div>
-
-            <!-- Sector Clubs Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-              ${sector.clubs.map(club => {
-                const isJoined = userJoinedClubs.includes(club.id);
-                // Count drops in this club
-                const dropsCount = DROPS_DATA.filter(d => d.clubId === club.id).length;
-
-                return `
-                  <div class="p-4 rounded-3xl club-glass flex flex-col justify-between space-y-3 border border-white/10 relative">
-                    <div class="space-y-1.5">
-                      <div class="flex items-center justify-between">
-                        <span class="text-2xl">${club.icon}</span>
-                        <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/5 text-zinc-400">
-                          ${dropsCount} Active Drops
-                        </span>
-                      </div>
-                      <h4 class="font-bold text-sm text-white">${club.name}</h4>
-                      <p class="text-xs text-zinc-400 leading-relaxed">${club.desc}</p>
-                    </div>
-
-                    <div class="pt-2 border-t border-white/5 flex items-center justify-between">
-                      <span class="text-[11px] font-mono text-zinc-500">Verified Sector Club</span>
-                      <button 
-                        onclick="toggleClubMembership('${club.id}')" 
-                        class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${isJoined ? 'bg-zinc-800 text-zinc-400 border border-white/10 hover:bg-rose-500/20 hover:text-rose-300' : 'bg-cyan-400 text-black hover:bg-cyan-300'}">
-                        ${isJoined ? 'Joined ✓' : '+ Join Club'}
-                      </button>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-          </div>
-        `;
-      }).join('');
-    }
-
-    function toggleClubMembership(clubId) {
-      if (userJoinedClubs.includes(clubId)) {
-        // Prevent leaving all clubs
-        if (userJoinedClubs.length <= 1) {
-          showToast('You must keep at least 1 club active!');
-          return;
-        }
-        userJoinedClubs = userJoinedClubs.filter(id => id !== clubId);
-        showToast('Left Club');
-      } else {
-        userJoinedClubs.push(clubId);
-        showToast('Joined Club! Added to Feed ✨');
-      }
-
-      localStorage.setItem('club_user_joined_clubs', JSON.stringify(userJoinedClubs));
-      updateHeroActiveClubsCount();
-      renderSectorsDirectory();
-      renderFeedCards();
-    }
-
-    // =========================================================================
-    // 7. RENDER MY VAULT (SAVED OPPORTUNITIES)
-    // =========================================================================
-    function renderVaultCards() {
-      const container = document.getElementById('vaultCardsGrid');
-      const emptyState = document.getElementById('vaultEmptyState');
-      const headerCount = document.getElementById('vaultCountHeader');
-
-      const savedList = DROPS_DATA.filter(d => userSavedDrops.includes(d.id));
-      headerCount.innerText = `${savedList.length} Items Saved`;
-
-      if (savedList.length === 0) {
-        container.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-
-      container.innerHTML = savedList.map(drop => {
-        return `
-          <div class="p-5 rounded-3xl club-glass flex flex-col justify-between space-y-3 border border-white/10">
-            <div class="space-y-1 cursor-pointer" onclick="openOpportunityDetail('${drop.id}')">
-              <div class="flex items-center justify-between text-xs">
-                <span class="font-bold text-cyan-300">${drop.typeLabel}</span>
-                <span class="text-emerald-400 font-mono font-bold">${drop.reward}</span>
-              </div>
-              <h3 class="font-bold text-base text-white hover:text-cyan-300 transition-colors">${drop.title}</h3>
-              <p class="text-xs text-zinc-400 line-clamp-2">${drop.summary}</p>
-            </div>
-
-            <div class="pt-2 border-t border-white/5 flex items-center justify-between gap-2">
-              <span class="text-[11px] font-mono text-zinc-500">${drop.deadline}</span>
-              <div class="flex items-center gap-1.5">
-                <button onclick="toggleSaveDrop('${drop.id}', event)" class="p-1.5 text-xs text-rose-400 hover:text-rose-300" title="Remove from vault">
-                  Remove ✕
-                </button>
-                <a href="${drop.sourceUrl}" target="_blank" class="px-3 py-1.5 rounded-xl bg-cyan-400 text-black font-bold text-xs">
-                  Apply ↗
-                </a>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function toggleSaveDrop(dropId, e) {
-      if (e) e.stopPropagation();
-
-      if (userSavedDrops.includes(dropId)) {
-        userSavedDrops = userSavedDrops.filter(id => id !== dropId);
-        showToast('Removed from Vault');
-      } else {
-        userSavedDrops.push(dropId);
-        showToast('Pinned to Vault! 📌');
-      }
-
-      localStorage.setItem('club_user_saved_drops', JSON.stringify(userSavedDrops));
-      updateVaultBadgeCount();
-      renderFeedCards();
-      renderVaultCards();
-    }
-
-    function updateVaultBadgeCount() {
-      document.getElementById('vaultBadgeCount').innerText = userSavedDrops.length;
-    }
-
-    function updateHeroActiveClubsCount() {
-      document.getElementById('heroActiveClubsCount').innerText = `${userJoinedClubs.length} Clubs`;
-    }
-
-    // =========================================================================
-    // 8. OPPORTUNITY DETAIL MODAL
-    // =========================================================================
-    function openOpportunityDetail(dropId) {
-      const drop = DROPS_DATA.find(d => d.id === dropId);
-      if (!drop) return;
-      selectedDropDetail = drop;
-
-      document.getElementById('detailTypeBadge').innerText = drop.typeLabel;
-      document.getElementById('detailTitle').innerText = drop.title;
-      document.getElementById('detailCompany').innerText = drop.company;
-      document.getElementById('detailLocation').innerText = drop.location;
-      document.getElementById('detailReward').innerText = drop.reward;
-      document.getElementById('detailDescription').innerText = drop.summary;
-      document.getElementById('detailVerification').innerText = drop.verification;
-      document.getElementById('detailDeadline').innerText = drop.deadline;
-      document.getElementById('detailApplyLink').href = drop.sourceUrl;
-
-      // Requirements list
-      const reqList = document.getElementById('detailRequirements');
-      reqList.innerHTML = drop.requirements.map(r => `<li>${r}</li>`).join('');
-
-      // Save button state
-      const saveBtn = document.getElementById('detailSaveBtn');
-      const isSaved = userSavedDrops.includes(drop.id);
-      saveBtn.innerHTML = isSaved ? '<span>📌</span><span>Saved in Vault ✓</span>' : '<span>📌</span><span>Save to Vault</span>';
-
-      const modal = document.getElementById('opportunityDetailModal');
-      modal.classList.remove('hidden');
-      setTimeout(() => modal.classList.remove('opacity-0'), 10);
-    }
-
-    function closeOpportunityDetail() {
-      const modal = document.getElementById('opportunityDetailModal');
-      modal.classList.add('opacity-0');
-      setTimeout(() => modal.classList.add('hidden'), 200);
-    }
-
-    function toggleSaveFromDetail() {
-      if (!selectedDropDetail) return;
-      toggleSaveDrop(selectedDropDetail.id);
-      const isSaved = userSavedDrops.includes(selectedDropDetail.id);
-      document.getElementById('detailSaveBtn').innerHTML = isSaved ? '<span>📌</span><span>Saved in Vault ✓</span>' : '<span>📌</span><span>Save to Vault</span>';
-    }
-
-    // =========================================================================
-    // 9. ONBOARDING MODAL (SECTOR ACCORDION & STARTER PACKS)
-    // =========================================================================
-    let tempSelectedClubs = [...userJoinedClubs];
-
-    function openOnboardingModal() {
-      tempSelectedClubs = [...userJoinedClubs];
-      renderOnboardingAccordion();
-      updateOnboardingSelectedCount();
-
-      const modal = document.getElementById('onboardingModal');
-      modal.classList.remove('hidden');
-      setTimeout(() => modal.classList.remove('opacity-0'), 10);
-    }
-
-    function closeOnboardingModal() {
-      const modal = document.getElementById('onboardingModal');
-      modal.classList.add('opacity-0');
-      setTimeout(() => modal.classList.add('hidden'), 200);
-    }
-
-    function renderOnboardingAccordion() {
-      const container = document.getElementById('onboardingSectorsAccordion');
-
-      container.innerHTML = SECTORS.map(sector => {
-        return `
-          <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
-            <div class="flex items-center gap-2 font-bold text-xs text-zinc-200">
-              <span>${sector.icon}</span>
-              <span>${sector.name} Sector</span>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              ${sector.clubs.map(club => {
-                const isChecked = tempSelectedClubs.includes(club.id);
-                return `
-                  <label class="p-2.5 rounded-xl border flex items-center justify-between gap-2 cursor-pointer transition-all ${isChecked ? 'bg-cyan-500/10 border-cyan-400/50 text-white' : 'bg-black/40 border-white/5 text-zinc-400'}">
-                    <div class="flex items-center gap-2 min-w-0">
-                      <span class="text-base">${club.icon}</span>
-                      <span class="text-xs font-bold truncate">${club.name}</span>
-                    </div>
-                    <input 
-                      type="checkbox" 
-                      value="${club.id}" 
-                      ${isChecked ? 'checked' : ''}
-                      onchange="toggleTempClub('${club.id}')"
-                      class="w-4 h-4 rounded text-cyan-400 bg-zinc-900 border-zinc-700"
-                    />
-                  </label>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function toggleTempClub(clubId) {
-      if (tempSelectedClubs.includes(clubId)) {
-        if (tempSelectedClubs.length <= 1) {
-          showToast('Keep at least 1 club!');
-          renderOnboardingAccordion();
-          return;
-        }
-        tempSelectedClubs = tempSelectedClubs.filter(id => id !== clubId);
-      } else {
-        tempSelectedClubs.push(clubId);
-      }
-      renderOnboardingAccordion();
-      updateOnboardingSelectedCount();
-    }
-
-    function applyStarterPack(pack) {
-      if (pack === 'freelancer') {
-        tempSelectedClubs = ['ai_automations', 'freelance_gigs', 'video_editing'];
-      } else if (pack === 'tech') {
-        tempSelectedClubs = ['ai_automations', 'web_dev', 'hackathons_bounties'];
-      } else if (pack === 'creator') {
-        tempSelectedClubs = ['video_editing', 'content_creators', 'esports_tournaments'];
-      }
-      renderOnboardingAccordion();
-      updateOnboardingSelectedCount();
-      showToast('Starter pack selected!');
-    }
-
-    function updateOnboardingSelectedCount() {
-      document.getElementById('onboardingSelectedCount').innerText = `${tempSelectedClubs.length} clubs selected`;
-    }
-
-    function saveOnboardingPreferences() {
-      userJoinedClubs = [...tempSelectedClubs];
-      localStorage.setItem('club_user_joined_clubs', JSON.stringify(userJoinedClubs));
-      localStorage.setItem('club_onboarding_completed', 'true');
-
-      updateHeroActiveClubsCount();
-      renderFeedCards();
-      renderSectorsDirectory();
-      closeOnboardingModal();
-      showToast('Feed updated for your clubs! 🎯');
-    }
-
-    // =========================================================================
-    // 10. UTILITIES & NOTIFICATIONS
-    // =========================================================================
     function showToast(msg) {
       const toast = document.getElementById('toastNotification');
       document.getElementById('toastMessage').innerText = msg;
       toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2500);
+      setTimeout(() => toast.classList.add('hidden'), 3000);
     }
-
-    function shareClubWhatsapp() {
-      const shareUrl = `https://clubr.online`;
-      const text = `Bhai check out Club.online! It filters the internet and brings curated gigs, paid internships, free AI tools, and bounties matching your exact interests: ${shareUrl}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    // Initialize on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      initAppState();
-    });
   </script>
 </body>
 </html>

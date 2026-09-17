@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Clubr 3D — Real 3D Cyberpunk Nightclub</title>
   
-  <meta name="description" content="Step into Clubr 3D! A real 3D virtual nightclub powered by Three.js with customizable Anime male and female avatars, LED dance floor, DJ soundboard, neon bar, and party games." />
+  <meta name="description" content="Step into Clubr 3D! The ultimate real 3D virtual nightclub with radiant neon lighting, customizable Anime male and female characters, 4 viral dance moves, DJ soundboard, and photo booth." />
   <meta property="og:title" content="Clubr 3D — Real 3D Cyberpunk Nightclub" />
-  <meta property="og:description" content="Real 3D digital club with anime avatars, 3D dance floor, DJ soundboard & party games. No signup needed!" />
+  <meta property="og:description" content="Real 3D digital club with anime avatars, vibrant lighting, DJ soundboard, selfie booth & party games. No signup needed!" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clubr.online" />
   <meta name="theme-color" content="#07070c" />
@@ -30,9 +30,9 @@
           colors: {
             cyber: {
               bg: '#07070c',
-              surface: '#0f0f18',
-              card: '#161624',
-              border: '#28283e',
+              surface: '#0e0e18',
+              card: '#151524',
+              border: '#2a2a42',
               pink: '#ff2a85',
               cyan: '#00f0ff',
               purple: '#9d4edd',
@@ -75,18 +75,18 @@
     
     /* Cyber Glassmorphism UI */
     .cyber-glass {
-      background: rgba(14, 14, 24, 0.82);
+      background: rgba(14, 14, 26, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
     .cyber-glass-glow {
-      background: rgba(20, 20, 34, 0.9);
+      background: rgba(18, 18, 34, 0.92);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(0, 240, 255, 0.3);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.05);
     }
 
     /* Virtual Joystick for Mobile */
@@ -97,9 +97,9 @@
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 2px dashed rgba(0, 240, 255, 0.3);
-      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px dashed rgba(0, 240, 255, 0.4);
+      backdrop-filter: blur(10px);
       touch-action: none;
       z-index: 35;
     }
@@ -111,7 +111,7 @@
       height: 50px;
       border-radius: 50%;
       background: radial-gradient(circle, #00f0ff, #0984e3);
-      box-shadow: 0 0 15px #00f0ff;
+      box-shadow: 0 0 20px #00f0ff;
       touch-action: none;
       pointer-events: none;
       transition: transform 0.05s ease-out;
@@ -144,33 +144,57 @@
   <header class="absolute top-0 left-0 right-0 z-30 p-3 sm:p-4 pointer-events-none">
     <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
       
-      <!-- Brand & 3D Club Status -->
+      <!-- Brand & Status -->
       <div class="cyber-glass rounded-2xl px-3.5 py-2 flex items-center gap-3 pointer-events-auto border border-white/10 shadow-2xl">
         <div class="flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></div>
           <span class="headline-font font-black text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400">CLUBR 3D</span>
-          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">Three.js</span>
+          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">Ultra Lights</span>
         </div>
         <div class="h-4 w-[1px] bg-white/15"></div>
         <div class="flex items-center gap-1.5 text-xs text-zinc-300 font-medium">
           <span class="text-emerald-400">●</span>
-          <span id="onlineCountText">28 in 3D Club</span>
+          <span id="onlineCountText">34 in 3D Club</span>
         </div>
       </div>
 
       <!-- Center Zone Banner -->
       <div id="centerZoneTag" class="cyber-glass rounded-2xl px-4 py-2 hidden sm:flex items-center gap-2 text-xs font-mono font-bold text-white pointer-events-auto shadow-2xl transition-all">
         <span id="zoneIndicatorDot" class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-        <span id="zoneIndicatorText">3D LED Dance Floor</span>
+        <span id="zoneIndicatorText">3D Radiant LED Dance Floor</span>
       </div>
 
-      <!-- Right Action Hub: Audio, Switch View, Invite, Drops -->
+      <!-- Right Action Hub: Camera, Wardrobe, Confetti, Audio, Drops -->
       <div class="flex items-center gap-2 pointer-events-auto">
         
-        <!-- Camera View Preset Toggle (Third Person / Top Stage) -->
+        <!-- Photo Booth / 3D Selfie Mode -->
+        <button 
+          onclick="toggleSelfieMode()" 
+          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-pink-500 active:scale-95 transition-all shadow-xl"
+          title="3D Club Selfie / Photo Mode">
+          <span>📸</span>
+        </button>
+
+        <!-- Confetti Cannon Blast -->
+        <button 
+          onclick="triggerClubConfettiBlast()" 
+          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-amber-400 active:scale-95 transition-all shadow-xl"
+          title="Blast 3D Neon Confetti">
+          <span>🎆</span>
+        </button>
+
+        <!-- In-Club Drip Wardrobe Modal -->
+        <button 
+          onclick="openStationModal('wardrobeModal')" 
+          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-purple-400 active:scale-95 transition-all shadow-xl"
+          title="Change Anime Outfit & Drip">
+          <span>👕</span>
+        </button>
+
+        <!-- Camera Angle Toggle -->
         <button 
           onclick="toggleCameraView()" 
-          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-cyan-400/50 active:scale-95 transition-all shadow-xl"
+          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-cyan-400 active:scale-95 transition-all shadow-xl"
           title="Switch 3D Camera Angle">
           <span>🎥</span>
         </button>
@@ -179,25 +203,17 @@
         <button 
           id="audioToggleBtn" 
           onclick="toggleClubAudio()" 
-          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-cyan-400/50 active:scale-95 transition-all shadow-xl"
+          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-cyan-400 active:scale-95 transition-all shadow-xl"
           title="Toggle Club Beats">
           <span id="audioIcon">🔊</span>
         </button>
 
-        <!-- WhatsApp Invite Gang -->
-        <button 
-          onclick="inviteGangToTable()" 
-          class="cyber-glass rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold text-zinc-200 hover:text-white hover:border-white/30 active:scale-95 transition-all shadow-xl hidden md:flex">
-          <span>📲</span>
-          <span>Invite Gang</span>
-        </button>
-
-        <!-- Exclusive Drops Notice Board -->
+        <!-- Drops Drawer -->
         <button 
           onclick="toggleDropDrawer()" 
           class="cyber-glass rounded-2xl px-3.5 h-10 flex items-center gap-1.5 text-xs font-bold bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 text-pink-300 border border-pink-500/40 hover:border-pink-500 active:scale-95 transition-all shadow-xl">
           <span>🎁</span>
-          <span>Drops</span>
+          <span class="hidden sm:inline">Drops</span>
         </button>
 
       </div>
@@ -207,8 +223,8 @@
     <!-- Center DJ Stage On-Air Banner -->
     <div id="spotlightBanner" class="max-w-md mx-auto mt-2 hidden text-center pointer-events-auto">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/30 via-pink-500/30 to-purple-500/30 border border-amber-400/50 text-amber-300 text-xs font-bold font-mono shadow-xl animate-bounce">
-        <span>🎙️ DJ STAGE ACTIVE:</span>
-        <span id="spotlightUserText">You are on the 3D DJ Stage!</span>
+        <span>🎙️ ON AIR:</span>
+        <span id="spotlightUserText">You are rocking the 3D DJ Stage!</span>
       </div>
     </div>
   </header>
@@ -228,9 +244,9 @@
       <div class="flex items-center justify-between px-2 text-[11px] font-mono">
         <span id="tableChatHeader" class="font-bold text-zinc-300 flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-          <span>Chatting in 3D Room</span>
+          <span>Chatting in 3D Club</span>
         </span>
-        <span class="text-zinc-400">Bubble: 6s</span>
+        <span class="text-zinc-400">3D Bubble</span>
       </div>
       <form onsubmit="handleSendTableChat(event)" class="flex items-center gap-2">
         <input 
@@ -250,7 +266,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- BOTTOM CYBER ACTION DOCK (4 MAIN STATIONS + EMOTES) -->
+  <!-- BOTTOM CYBER ACTION DOCK (4 STATIONS + DANCE SELECTOR + EMOTES) -->
   <!-- ========================================================================= -->
   <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 max-w-xl w-[94%] sm:w-auto flex items-center justify-between sm:justify-center gap-1.5 sm:gap-2 cyber-glass rounded-3xl p-2 shadow-2xl border border-white/15 pointer-events-auto">
     
@@ -267,7 +283,7 @@
     <button 
       onclick="openStationModal('partyDeckModal')" 
       class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-purple-500/20 to-indigo-600/10 hover:from-purple-500/30 hover:to-indigo-600/20 border border-purple-500/30 hover:border-purple-500 text-white transition-all active:scale-95 group"
-      title="Party Card Deck (Truth or Dare / Never Have I Ever)">
+      title="Party Card Deck">
       <span class="text-lg group-hover:scale-110 transition-transform">🎲</span>
       <span class="text-[9px] font-mono font-bold text-purple-300 mt-0.5">Cards</span>
     </button>
@@ -276,7 +292,7 @@
     <button 
       onclick="openStationModal('neonBarModal')" 
       class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-cyan-500/20 to-blue-600/10 hover:from-cyan-500/30 hover:to-blue-600/20 border border-cyan-500/30 hover:border-cyan-500 text-white transition-all active:scale-95 group"
-      title="Order 3D Cocktails at Bar">
+      title="Order 3D Cocktails">
       <span class="text-lg group-hover:scale-110 transition-transform">🍸</span>
       <span class="text-[9px] font-mono font-bold text-cyan-300 mt-0.5">Bar</span>
     </button>
@@ -285,30 +301,192 @@
     <button 
       onclick="openStationModal('confessionWallModal')" 
       class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-amber-500/20 to-rose-600/10 hover:from-amber-500/30 hover:to-rose-600/20 border border-amber-500/30 hover:border-amber-500 text-white transition-all active:scale-95 group"
-      title="Anonymous Confession Wall (Spill The Tea ☕)">
+      title="Anonymous Confession Wall">
       <span class="text-lg group-hover:scale-110 transition-transform">💌</span>
       <span class="text-[9px] font-mono font-bold text-amber-300 mt-0.5">Gossip</span>
     </button>
 
     <div class="h-8 w-[1px] bg-white/15 mx-0.5 hidden sm:block"></div>
 
-    <!-- Quick Emotes & 3D Dance Mode -->
+    <!-- 4-Dance Move Trigger Button -->
+    <button 
+      onclick="openStationModal('danceSelectorModal')" 
+      class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-pink-500/30 to-purple-600/30 hover:bg-pink-500/50 border border-pink-500/40 text-white transition-all active:scale-95 group"
+      title="Pick 3D Dance Move">
+      <span class="text-lg group-hover:scale-110 transition-transform">🕺</span>
+      <span class="text-[9px] font-mono font-bold text-pink-300 mt-0.5">Dance</span>
+    </button>
+
+    <!-- Quick Emotes -->
     <div class="flex items-center gap-1">
       <button onclick="triggerAvatarEmote('🔥')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Fire">🔥</button>
       <button onclick="triggerAvatarEmote('💀')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Dead">💀</button>
       <button onclick="triggerAvatarEmote('🍻')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Cheers">🍻</button>
-      <button onclick="toggleAvatarDance()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-pink-500/30 to-purple-600/30 hover:bg-pink-500/50 border border-pink-500/30 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="3D Dance Mode">🕺</button>
     </div>
 
   </div>
 
-  <!-- Desktop Controls Reminder -->
+  <!-- Desktop Controls Pill -->
   <div class="absolute bottom-4 left-4 z-20 hidden lg:flex items-center gap-2 cyber-glass rounded-2xl px-3 py-1.5 text-[11px] text-zinc-400 font-mono pointer-events-none">
-    <span>WASD / Arrow Keys to walk</span>
+    <span>WASD to walk</span>
     <span>•</span>
-    <span>Mouse drag to orbit 360°</span>
+    <span>Drag to orbit camera 360°</span>
     <span>•</span>
     <span>Click floor to move</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: 🕺 4 VIRAL 3D DANCE MOVES SELECTOR -->
+  <!-- ========================================================================= -->
+  <div id="danceSelectorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-glass rounded-3xl w-full max-w-sm p-5 border border-pink-500/30 shadow-2xl relative space-y-4">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-lg">🕺</div>
+          <div>
+            <h3 class="headline-font font-bold text-base text-white">3D Dance Moves</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">Pick your vibe on the floor</p>
+          </div>
+        </div>
+        <button onclick="closeStationModal('danceSelectorModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <!-- 4 Dance Move Options -->
+      <div class="grid grid-cols-2 gap-2.5">
+        
+        <button onclick="selectDanceStyle('hype')" class="p-3.5 rounded-2xl bg-gradient-to-br from-pink-500/20 to-purple-600/20 border border-pink-500/40 hover:border-pink-400 flex flex-col items-center gap-1.5 active:scale-95 transition-all">
+          <span class="text-2xl">⚡</span>
+          <span class="font-bold text-xs text-white">Hype Rave</span>
+          <span class="text-[10px] text-pink-300 font-mono">Fist pump & jumps</span>
+        </button>
+
+        <button onclick="selectDanceStyle('wave')" class="p-3.5 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 hover:border-cyan-400 flex flex-col items-center gap-1.5 active:scale-95 transition-all">
+          <span class="text-2xl">🌊</span>
+          <span class="font-bold text-xs text-white">K-Pop Wave</span>
+          <span class="text-[10px] text-cyan-300 font-mono">Body wave flow</span>
+        </button>
+
+        <button onclick="selectDanceStyle('shuffle')" class="p-3.5 rounded-2xl bg-gradient-to-br from-purple-500/20 to-indigo-600/20 border border-purple-500/40 hover:border-purple-400 flex flex-col items-center gap-1.5 active:scale-95 transition-all">
+          <span class="text-2xl">👟</span>
+          <span class="font-bold text-xs text-white">Cyber Shuffle</span>
+          <span class="text-[10px] text-purple-300 font-mono">Slide footwork</span>
+        </button>
+
+        <button onclick="selectDanceStyle('spin')" class="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/20 to-rose-600/20 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center gap-1.5 active:scale-95 transition-all">
+          <span class="text-2xl">🌀</span>
+          <span class="font-bold text-xs text-white">Spin & Pose</span>
+          <span class="text-[10px] text-amber-300 font-mono">360° idol pirouette</span>
+        </button>
+
+      </div>
+
+      <!-- Stop Dance Button -->
+      <button 
+        onclick="stopDancing()" 
+        class="w-full py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-zinc-300 font-bold text-xs transition-all active:scale-95">
+        Pause Dancing ⏸️
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: 👕 IN-CLUB DRIP WARDROBE (CHANGE OUTFIT / GENDER / COLOR LIVE) -->
+  <!-- ========================================================================= -->
+  <div id="wardrobeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-purple-500/30 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-lg">👕</div>
+          <div>
+            <h3 class="headline-font font-bold text-base text-white">In-Club Drip Wardrobe</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">Change look live without leaving</p>
+          </div>
+        </div>
+        <button onclick="closeStationModal('wardrobeModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Switch Gender -->
+      <div class="space-y-1.5 text-left">
+        <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">Character Model:</label>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="switchLiveGender('boy')" class="p-3 rounded-2xl bg-cyan-500/20 border border-cyan-400 flex items-center gap-3 text-left active:scale-95">
+            <span class="text-2xl">👦</span>
+            <div>
+              <div class="font-bold text-xs text-white">Anime Guy</div>
+              <div class="text-[10px] text-zinc-400">Cyberpunk Streetwear</div>
+            </div>
+          </button>
+          <button onclick="switchLiveGender('girl')" class="p-3 rounded-2xl bg-pink-500/20 border border-pink-400 flex items-center gap-3 text-left active:scale-95">
+            <span class="text-2xl">👧</span>
+            <div>
+              <div class="font-bold text-xs text-white">Anime Girl</div>
+              <div class="text-[10px] text-zinc-400">Cyber Idol Pleated</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Switch Neon Colors -->
+      <div class="space-y-1.5 text-left">
+        <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">Neon Hair & Aura Color:</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button onclick="switchLiveColor('#00f0ff')" class="h-9 rounded-xl bg-cyan-400 active:scale-90 border-2 border-white shadow-lg shadow-cyan-500/30"></button>
+          <button onclick="switchLiveColor('#ff2a85')" class="h-9 rounded-xl bg-pink-500 active:scale-90 border-2 border-white/20 shadow-lg shadow-pink-500/30"></button>
+          <button onclick="switchLiveColor('#9d4edd')" class="h-9 rounded-xl bg-purple-500 active:scale-90 border-2 border-white/20 shadow-lg shadow-purple-500/30"></button>
+          <button onclick="switchLiveColor('#ffb703')" class="h-9 rounded-xl bg-amber-400 active:scale-90 border-2 border-white/20 shadow-lg shadow-amber-500/30"></button>
+        </div>
+      </div>
+
+      <!-- Switch Accessories -->
+      <div class="space-y-1.5 text-left">
+        <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">Drip Accessories:</label>
+        <div class="grid grid-cols-5 gap-2">
+          <button onclick="switchLiveAccessory('🕶️')" class="p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-cyan-400 text-lg active:scale-90" title="Shades">🕶️</button>
+          <button onclick="switchLiveAccessory('🎧')" class="p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-cyan-400 text-lg active:scale-90" title="Headphones">🎧</button>
+          <button onclick="switchLiveAccessory('🐱')" class="p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-cyan-400 text-lg active:scale-90" title="Neko Ears">🐱</button>
+          <button onclick="switchLiveAccessory('👑')" class="p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-cyan-400 text-lg active:scale-90" title="Crown">👑</button>
+          <button onclick="switchLiveAccessory('⚡')" class="p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-cyan-400 text-lg active:scale-90" title="Aura">⚡</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: 📸 3D PHOTO BOOTH / SELFIE VIEWER -->
+  <!-- ========================================================================= -->
+  <div id="selfieBoothModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-glass-glow rounded-3xl w-full max-w-md p-6 border border-pink-500/40 shadow-2xl relative space-y-4 text-center">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📸</span>
+          <h3 class="headline-font font-bold text-lg text-white">Clubr 3D VIP Snapshot</h3>
+        </div>
+        <button onclick="closeStationModal('selfieBoothModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+      </div>
+
+      <div class="relative rounded-2xl overflow-hidden border-2 border-pink-500/40 bg-black/60 p-2">
+        <img id="selfieSnapshotImg" class="w-full h-auto rounded-xl object-cover shadow-2xl" alt="3D Snapshot" />
+        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono font-bold bg-black/80 px-3 py-1.5 rounded-xl border border-white/15 text-white">
+          <span id="selfieWatermarkNick">@Aryan</span>
+          <span class="text-pink-400">CLUBR.ONLINE 3D VIP</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <a id="selfieDownloadLink" download="Clubr3D_VIP_Snapshot.png" class="py-3 px-4 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 font-black text-xs uppercase tracking-wider text-white shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-1.5">
+          <span>💾</span><span>Download PNG</span>
+        </a>
+        <button onclick="shareSelfieWhatsApp()" class="py-3 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 font-bold text-xs text-white active:scale-95 transition-all flex items-center justify-center gap-1.5">
+          <span>📲</span><span>WhatsApp</span>
+        </button>
+      </div>
+
+    </div>
   </div>
 
   <!-- ========================================================================= -->
@@ -331,33 +509,25 @@
       <!-- 4 Sound Pads -->
       <div class="grid grid-cols-2 gap-3 pt-1">
         
-        <button 
-          onclick="playAirhorn()" 
-          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-pink-600/20 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+        <button onclick="playAirhorn()" class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-pink-600/20 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">📢</span>
           <span class="headline-font font-black text-sm text-amber-300">AIRHORN</span>
           <span class="text-[10px] font-mono text-zinc-400">Triple Horn Blast</span>
         </button>
 
-        <button 
-          onclick="playVinylScratch()" 
-          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 hover:border-cyan-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+        <button onclick="playVinylScratch()" class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 hover:border-cyan-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">💿</span>
           <span class="headline-font font-black text-sm text-cyan-300">SCRATCH</span>
           <span class="text-[10px] font-mono text-zinc-400">Turntable Spin</span>
         </button>
 
-        <button 
-          onclick="playLaserDrop()" 
-          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-600/20 border border-purple-500/40 hover:border-purple-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+        <button onclick="playLaserDrop()" class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-600/20 border border-purple-500/40 hover:border-purple-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">💥</span>
           <span class="headline-font font-black text-sm text-purple-300">LASER DROP</span>
           <span class="text-[10px] font-mono text-zinc-400">3D Electro Zap</span>
         </button>
 
-        <button 
-          onclick="playSubBassDrop()" 
-          class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-rose-500/20 to-red-700/20 border border-rose-500/40 hover:border-rose-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
+        <button onclick="playSubBassDrop()" class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-rose-500/20 to-red-700/20 border border-rose-500/40 hover:border-rose-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">🔊</span>
           <span class="headline-font font-black text-sm text-rose-300">808 BASS BOOM</span>
           <span class="text-[10px] font-mono text-zinc-400">3D Floor Shaker</span>
@@ -365,12 +535,13 @@
 
       </div>
 
-      <!-- Beat Mode Switcher -->
-      <div class="pt-2 flex items-center justify-between p-3 rounded-2xl bg-black/40 border border-white/10">
-        <span class="text-xs font-mono text-zinc-300">Club Rhythm:</span>
-        <div class="flex items-center gap-2">
-          <button id="beatModeLofiBtn" onclick="setBeatMode('lofi')" class="px-3 py-1 text-xs font-bold rounded-xl bg-cyan-500 text-black">Lo-Fi Chill</button>
-          <button id="beatModeCyberBtn" onclick="setBeatMode('cyber')" class="px-3 py-1 text-xs font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20">Cyberwave ⚡</button>
+      <!-- 3-Track Live Jukebox Switcher -->
+      <div class="pt-2 p-3 rounded-2xl bg-black/40 border border-white/10 space-y-2">
+        <span class="text-xs font-mono text-zinc-300 block">Jukebox Live Beat:</span>
+        <div class="grid grid-cols-3 gap-1.5">
+          <button id="beatModeLofiBtn" onclick="setBeatMode('lofi')" class="px-2 py-1.5 text-[11px] font-bold rounded-xl bg-cyan-500 text-black">Lo-Fi 🌙</button>
+          <button id="beatModeCyberBtn" onclick="setBeatMode('cyber')" class="px-2 py-1.5 text-[11px] font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20">Cyberwave ⚡</button>
+          <button id="beatModeDesiBtn" onclick="setBeatMode('desi')" class="px-2 py-1.5 text-[11px] font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20">Desi Bass 🥁</button>
         </div>
       </div>
 
@@ -378,7 +549,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 2: 🎲 LOUNGE PARTY CARD DECK (TRUTH / DARE / NHIE) -->
+  <!-- MODAL 2: 🎲 LOUNGE PARTY CARD DECK -->
   <!-- ========================================================================= -->
   <div id="partyDeckModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
     <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-purple-500/30 shadow-2xl relative space-y-4">
@@ -394,7 +565,6 @@
         <button onclick="closeStationModal('partyDeckModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
       </div>
 
-      <!-- Mode Filters -->
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
         <button onclick="setPartyDeckCategory('all', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-purple-500 text-white text-xs font-bold shrink-0">✨ All Mix</button>
         <button onclick="setPartyDeckCategory('truth', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold shrink-0">🌶️ Spicy Truth</button>
@@ -402,7 +572,6 @@
         <button onclick="setPartyDeckCategory('nhie', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold shrink-0">🙈 Never Ever</button>
       </div>
 
-      <!-- The Party Card -->
       <div id="partyCardBox" class="p-6 rounded-3xl bg-gradient-to-br from-purple-950/70 via-zinc-900 to-black border-2 border-purple-500/40 shadow-xl min-h-[170px] flex flex-col justify-between transition-all duration-300">
         <div class="flex items-center justify-between">
           <span id="partyCardTag" class="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-500/30 text-purple-300 border border-purple-500/40">🌶️ SPICY TRUTH</span>
@@ -416,16 +585,11 @@
         </div>
       </div>
 
-      <!-- Actions -->
       <div class="grid grid-cols-2 gap-2 pt-1">
-        <button 
-          onclick="drawNewPartyCard()" 
-          class="py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 font-black text-xs uppercase tracking-wider text-white shadow-lg active:scale-95 transition-all">
+        <button onclick="drawNewPartyCard()" class="py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 font-black text-xs uppercase tracking-wider text-white shadow-lg active:scale-95 transition-all">
           🎴 Draw Next Card
         </button>
-        <button 
-          onclick="broadcastCardToChat()" 
-          class="py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 font-bold text-xs text-white active:scale-95 transition-all">
+        <button onclick="broadcastCardToChat()" class="py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 font-bold text-xs text-white active:scale-95 transition-all">
           💬 Speak in 3D Chat
         </button>
       </div>
@@ -450,9 +614,7 @@
         <button onclick="closeStationModal('neonBarModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
       </div>
 
-      <!-- Drink Menu Selection List -->
       <div class="space-y-2 max-h-60 overflow-y-auto pr-1 no-scrollbar">
-        
         <div onclick="orderDrink('Cyber Margarita', '🍸', '100% chance of texting your crush tonight.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
           <div class="flex items-center gap-3">
             <span class="text-2xl">🍸</span>
@@ -507,7 +669,6 @@
           </div>
           <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
         </div>
-
       </div>
 
       <div id="barCurrentDrinkBox" class="p-3 rounded-2xl bg-black/50 border border-cyan-500/20 flex items-center gap-3">
@@ -522,7 +683,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 4: 💌 ANONYMOUS CONFESSION WALL ("SPILL THE TEA ☕") -->
+  <!-- MODAL 4: 💌 ANONYMOUS CONFESSION WALL -->
   <!-- ========================================================================= -->
   <div id="confessionWallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
     <div class="cyber-glass rounded-3xl w-full max-w-lg p-5 sm:p-6 border border-amber-500/30 shadow-2xl relative space-y-4 max-h-[90vh] flex flex-col">
@@ -538,7 +699,6 @@
         <button onclick="closeStationModal('confessionWallModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
       </div>
 
-      <!-- Post Confession Form -->
       <form onsubmit="handlePostConfession(event)" class="space-y-2">
         <div class="relative">
           <textarea 
@@ -551,17 +711,13 @@
         </div>
         <div class="flex items-center justify-between">
           <span class="text-[10px] font-mono text-zinc-500">Max 120 chars • Anonymous</span>
-          <button 
-            type="submit" 
-            class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:opacity-90 font-bold text-xs text-white shadow-md active:scale-95 transition-all">
+          <button type="submit" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:opacity-90 font-bold text-xs text-white shadow-md active:scale-95 transition-all">
             Pin to 3D Wall 📌
           </button>
         </div>
       </form>
 
-      <div id="confessionsList" class="flex-1 overflow-y-auto space-y-2.5 pr-1 no-scrollbar">
-        <!-- Rendered dynamically -->
-      </div>
+      <div id="confessionsList" class="flex-1 overflow-y-auto space-y-2.5 pr-1 no-scrollbar"></div>
 
     </div>
   </div>
@@ -621,30 +777,29 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- ONBOARDING: ANIME CHARACTER CUSTOMIZER (ZERO SIGNUP) -->
+  <!-- ONBOARDING: ANIME CHARACTER CUSTOMIZER -->
   <!-- ========================================================================= -->
   <div id="onboardingOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07070c]/90 backdrop-blur-xl transition-all duration-500">
     <div class="cyber-glass-glow rounded-3xl max-w-md w-full p-6 sm:p-7 text-center space-y-4 relative max-h-[95vh] overflow-y-auto no-scrollbar">
       
-      <!-- Title -->
       <div class="space-y-1">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-          <span>REAL 3D ANIME CLUB</span>
+          <span>ULTRA 3D ANIME CLUB</span>
         </div>
         <h2 class="headline-font font-black text-3xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400 tracking-wider">
           CLUBR 3D
         </h2>
         <p class="text-xs text-zinc-400">
-          Create your 3D Anime avatar and step into the real 3D nightclub.
+          Customize your 3D Anime Avatar with glowing outfits, dance moves & party games.
         </p>
       </div>
 
-      <!-- Live 3D Avatar Stylized Preview Badge -->
-      <div class="py-2">
-        <div id="avatarLivePreview" class="w-20 h-20 rounded-3xl mx-auto flex flex-col items-center justify-center text-3xl shadow-2xl transition-all duration-300 border-2 border-white/40 relative" style="background: radial-gradient(circle, #00f0ff, #090918); box-shadow: 0 0 30px #00f0ff;">
+      <!-- Live 3D Avatar Preview Card -->
+      <div class="py-1">
+        <div id="avatarLivePreview" class="w-20 h-20 rounded-3xl mx-auto flex flex-col items-center justify-center text-3xl shadow-2xl transition-all duration-300 border-2 border-white/40 relative" style="background: radial-gradient(circle, #00f0ff, #090918); box-shadow: 0 0 35px #00f0ff;">
           <span id="avatarGenderIcon">👦</span>
-          <span id="avatarAccessoryIcon" class="absolute -top-2 -right-2 text-sm bg-black/60 p-1 rounded-full border border-white/20">🕶️</span>
+          <span id="avatarAccessoryIcon" class="absolute -top-2 -right-2 text-sm bg-black/70 p-1 rounded-full border border-white/20">🕶️</span>
         </div>
         <div class="flex items-center justify-center gap-2 mt-2">
           <span id="avatarPreviewNick" class="text-xs font-mono font-bold text-white">@Aryan</span>
@@ -652,11 +807,10 @@
         </div>
       </div>
 
-      <!-- 1. GENDER SELECTION (ANIME BOY VS ANIME GIRL) -->
+      <!-- 1. GENDER SELECTION -->
       <div class="space-y-1.5 text-left">
         <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">1. Choose Anime Character:</label>
         <div class="grid grid-cols-2 gap-3">
-          <!-- Anime Boy -->
           <button 
             id="genderBoyBtn" 
             onclick="selectGender('boy')" 
@@ -664,10 +818,9 @@
             <span class="text-2xl">👦</span>
             <div>
               <div class="font-bold text-xs text-white">Anime Guy</div>
-              <div class="text-[10px] text-zinc-400">Cyber Streetwear</div>
+              <div class="text-[10px] text-zinc-400">Spiky Hair • Streetwear</div>
             </div>
           </button>
-          <!-- Anime Girl -->
           <button 
             id="genderGirlBtn" 
             onclick="selectGender('girl')" 
@@ -675,7 +828,7 @@
             <span class="text-2xl">👧</span>
             <div>
               <div class="font-bold text-xs text-white">Anime Girl</div>
-              <div class="text-[10px] text-zinc-400">Cyber Idol Drip</div>
+              <div class="text-[10px] text-zinc-400">Twintails • Pleated Skirt</div>
             </div>
           </button>
         </div>
@@ -695,7 +848,7 @@
         />
       </div>
 
-      <!-- 3. NEON COLOR THEME (4 HIGH-VIBE NEON COLORS) -->
+      <!-- 3. NEON COLOR THEME -->
       <div class="space-y-1.5 text-left">
         <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">3. Anime Neon Aura:</label>
         <div class="grid grid-cols-4 gap-2">
@@ -714,18 +867,19 @@
         </div>
       </div>
 
-      <!-- 4. DRIP ACCESSORY -->
+      <!-- 4. ACCESSORIES -->
       <div class="space-y-1.5 text-left">
         <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">4. Drip Accessory:</label>
-        <div class="grid grid-cols-4 gap-2">
+        <div class="grid grid-cols-5 gap-2">
           <button onclick="pickAccessory('🕶️', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-cyan-400 text-base active:scale-90">🕶️</button>
           <button onclick="pickAccessory('🎧', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">🎧</button>
+          <button onclick="pickAccessory('🐱', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">🐱</button>
           <button onclick="pickAccessory('👑', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">👑</button>
           <button onclick="pickAccessory('⚡', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">⚡</button>
         </div>
       </div>
 
-      <!-- Enter 3D Club Button -->
+      <!-- Enter Button -->
       <button 
         onclick="enterClub3D()" 
         class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 hover:opacity-95 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-pink-500/30 transition-all active:scale-95">
@@ -743,27 +897,26 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- THREE.JS 3D NIGHTCLUB & ANIME ENGINE SCRIPT -->
+  <!-- THREE.JS ENGINE & UPGRADED LIGHTING & ANIME CHARACTERS SCRIPT -->
   <!-- ========================================================================= -->
   <script>
     // --- PLAYER STATE ---
     let player = {
       nickname: 'Aryan',
-      gender: 'boy', // 'boy' or 'girl'
+      gender: 'boy',
       color: '#00f0ff',
       accessory: '🕶️',
       drink: '🍸',
       mesh: null,
       limbs: {},
       isDancing: false,
+      danceStyle: 'hype', // 'hype', 'wave', 'shuffle', 'spin'
       isMoving: false,
       speed: 0.28,
       position: new THREE.Vector3(0, 0, 16),
       targetPosition: new THREE.Vector3(0, 0, 16),
       heading: 0,
-      animTime: 0,
-      currentZone: null,
-      message: null
+      currentZone: null
     };
 
     // --- SOUND ENGINE (WEB AUDIO API) ---
@@ -771,20 +924,19 @@
     let masterGain = null;
     let isMuted = false;
     let beatTimer = null;
-    let beatMode = 'lofi';
+    let beatMode = 'lofi'; // 'lofi', 'cyber', or 'desi'
     let currentBeatStep = 0;
 
     // --- THREE.JS SCENE SETUP ---
     let scene, camera, renderer, clock;
-    let cameraMode = 'thirdPerson'; // 'thirdPerson' or 'stageView'
+    let cameraMode = 'thirdPerson'; // 'thirdPerson', 'stageView', 'selfie'
     let danceFloorTiles = [];
-    let laserCones = [];
-    let discoBall;
-    let speechBubbleCanvas, speechBubbleTexture;
+    let movingHeadLights = [];
+    let discoBall, discoBallPointLight;
     let shockwaveRings = [];
-    let floating3DEmotes = [];
+    let confettiParticles = [];
 
-    // --- 3D ZONES CONFIGURATION ---
+    // --- 3D ZONES ---
     const ZONES_3D = [
       {
         id: 'dj',
@@ -833,7 +985,7 @@
         mesh: null,
         limbs: {},
         isDancing: true,
-        message: { text: "Drop the bass! Welcome to Clubr 3D ⚡", life: 8000 }
+        danceStyle: 'hype'
       },
       {
         id: 'bar_bot',
@@ -846,20 +998,20 @@
         mesh: null,
         limbs: {},
         isDancing: false,
-        message: { text: "Cold cocktails & neon vibes! 🍸", life: 7000 }
+        danceStyle: 'wave'
       },
       {
         id: 'zoya_chill',
         nickname: 'Zoya 🌙',
         gender: 'girl',
         color: '#9d4edd',
-        accessory: '🕶️',
+        accessory: '🐱',
         position: new THREE.Vector3(18, 0, 8),
         heading: Math.PI,
         mesh: null,
         limbs: {},
         isDancing: false,
-        message: { text: "Chilling at the velvet table ✨", life: 7500 }
+        danceStyle: 'wave'
       },
       {
         id: 'kabir_dancer',
@@ -872,15 +1024,14 @@
         mesh: null,
         limbs: {},
         isDancing: true,
-        message: { text: "This 3D dance floor is unreal! 🔥", life: 8000 }
+        danceStyle: 'shuffle'
       }
     ];
 
-    // Keyboard state
-    const keys = { w: false, a: false, s: false, d: false, Up: false, Down: false, Left: false, Right: false };
+    const keys = { w: false, a: false, s: false, d: false };
 
     // =========================================================================
-    // INITIALIZATION & THREE.JS SCENE BUILDER
+    // INITIALIZATION & VIBRANT 3D LIGHTING UPGRADE
     // =========================================================================
     function initThreeScene() {
       const container = document.getElementById('threeCanvasContainer');
@@ -888,23 +1039,25 @@
 
       // 1. Scene
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x07070c);
-      scene.fog = new THREE.FogExp2(0x07070c, 0.022);
+      scene.background = new THREE.Color(0x0a0a14);
+      scene.fog = new THREE.FogExp2(0x0a0a14, 0.018);
 
       // 2. Camera
-      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 120);
       camera.position.set(0, 10, 28);
 
-      // 3. Renderer
-      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      // 3. Renderer with High Performance & Tone Mapping
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", preserveDrawingBuffer: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.35;
       container.appendChild(renderer.domElement);
 
-      // 4. Build 3D Nightclub Interior
-      build3DNightclub();
+      // 4. Build 3D Nightclub Interior with VIBRANT LIGHTING
+      build3DVibrantNightclub();
 
       // 5. Build NPC Anime Avatars
       npcs.forEach(npc => {
@@ -914,13 +1067,10 @@
         scene.add(npc.mesh);
       });
 
-      // 6. Raycaster for click-to-walk on 3D floor
+      // 6. Floor interactions & Mobile Joystick
       initFloorInteraction();
-
-      // 7. Virtual Joystick for Mobile
       initMobileJoystick();
 
-      // Window resize handler
       window.addEventListener('resize', onWindowResize);
     }
 
@@ -931,58 +1081,106 @@
     }
 
     // =========================================================================
-    // 3D NIGHTCLUB ARCHITECTURE (STAGE, DISCO BALL, BAR, LOUNGE, LIGHTS)
+    // VIBRANT 3D NIGHTCLUB LIGHTING & ROOM ARCHITECTURE
     // =========================================================================
-    function build3DNightclub() {
-      // 1. Ambient & Directional Lights
-      const ambient = new THREE.AmbientLight(0x221c35, 1.2);
+    function build3DVibrantNightclub() {
+      // 1. VIBRANT AMBIENT & DIRECTIONAL LIGHTING ("LIGHT BADHAO")
+      const ambient = new THREE.AmbientLight(0x5a4282, 2.4); // Bright radiant violet base
       scene.add(ambient);
 
-      // Main Dance Floor Spotlight
-      const danceSpot = new THREE.SpotLight(0xff2a85, 3.5);
-      danceSpot.position.set(0, 16, 0);
-      danceSpot.angle = Math.PI / 4;
-      danceSpot.penumbra = 0.5;
-      danceSpot.castShadow = true;
-      scene.add(danceSpot);
+      const topKeyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+      topKeyLight.position.set(0, 25, 10);
+      topKeyLight.castShadow = true;
+      scene.add(topKeyLight);
 
-      // Stage Spotlight
-      const stageSpot = new THREE.SpotLight(0x00f0ff, 4.0);
-      stageSpot.position.set(0, 16, -10);
-      stageSpot.target.position.set(0, 2, -7);
-      stageSpot.angle = Math.PI / 5;
-      stageSpot.penumbra = 0.4;
-      scene.add(stageSpot);
-      scene.add(stageSpot.target);
+      // Center Stage High-Power Spotlights
+      const pinkSpot = new THREE.SpotLight(0xff2a85, 7.0);
+      pinkSpot.position.set(-6, 17, 0);
+      pinkSpot.angle = Math.PI / 3.5;
+      pinkSpot.penumbra = 0.4;
+      scene.add(pinkSpot);
 
-      // Lounge Warm Violet Light
-      const loungeLight = new THREE.PointLight(0x9d4edd, 2.5, 25);
-      loungeLight.position.set(18, 6, 8);
+      const cyanSpot = new THREE.SpotLight(0x00f0ff, 7.0);
+      cyanSpot.position.set(6, 17, 0);
+      cyanSpot.angle = Math.PI / 3.5;
+      cyanSpot.penumbra = 0.4;
+      scene.add(cyanSpot);
+
+      // DJ Booth Spotlight
+      const djSpot = new THREE.SpotLight(0xffb703, 6.0);
+      djSpot.position.set(0, 16, -11);
+      djSpot.target.position.set(0, 2, -7);
+      djSpot.angle = Math.PI / 4;
+      djSpot.penumbra = 0.4;
+      scene.add(djSpot);
+      scene.add(djSpot.target);
+
+      // Warm Lounge Point Light
+      const loungeLight = new THREE.PointLight(0x9d4edd, 4.0, 30);
+      loungeLight.position.set(18, 5, 8);
       scene.add(loungeLight);
 
-      // Bar Cyan Glow
-      const barLight = new THREE.PointLight(0x00f0ff, 2.5, 25);
-      barLight.position.set(-18, 6, -8);
+      // Bright Bar Cyan Point Light
+      const barLight = new THREE.PointLight(0x00f0ff, 4.5, 30);
+      barLight.position.set(-18, 5, -8);
       scene.add(barLight);
 
-      // 2. Reflective Main Floor (Dark Metallic Slab)
+      // 2. CEILING TRUSS & 4 MOVING-HEAD SWEEPING LIGHTS
+      const trussGeo = new THREE.BoxGeometry(40, 0.4, 0.4);
+      const trussMat = new THREE.MeshStandardMaterial({ color: 0x222233, metalness: 0.8 });
+      const truss = new THREE.Mesh(trussGeo, trussMat);
+      truss.position.set(0, 15, 0);
+      scene.add(truss);
+
+      [-14, -5, 5, 14].forEach((mx, idx) => {
+        const spot = new THREE.SpotLight(idx % 2 === 0 ? 0x00f0ff : 0xff2a85, 5.0, 35, Math.PI / 6, 0.5);
+        spot.position.set(mx, 15, 0);
+        spot.target.position.set(mx, 0, 4);
+        scene.add(spot);
+        scene.add(spot.target);
+        movingHeadLights.push({ light: spot, target: spot.target, baseX: mx, speed: 0.03 + idx * 0.01 });
+      });
+
+      // 3. GLOWING NEON PERIMETER WALL STRIPS
+      // Back Wall Neon Tube
+      const backNeonGeo = new THREE.CylinderGeometry(0.12, 0.12, 56);
+      const backNeonMat = new THREE.MeshBasicMaterial({ color: 0xff2a85 });
+      const backNeon = new THREE.Mesh(backNeonGeo, backNeonMat);
+      backNeon.rotation.z = Math.PI / 2;
+      backNeon.position.set(0, 2.5, -28);
+      scene.add(backNeon);
+
+      // Left Wall Neon Tube
+      const leftNeonMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const leftNeon = new THREE.Mesh(backNeonGeo, leftNeonMat);
+      leftNeon.rotation.x = Math.PI / 2;
+      leftNeon.position.set(-28, 2.5, 0);
+      scene.add(leftNeon);
+
+      // Right Wall Neon Tube
+      const rightNeonMat = new THREE.MeshBasicMaterial({ color: 0x9d4edd });
+      const rightNeon = new THREE.Mesh(backNeonGeo, rightNeonMat);
+      rightNeon.rotation.x = Math.PI / 2;
+      rightNeon.position.set(28, 2.5, 0);
+      scene.add(rightNeon);
+
+      // 4. MAIN REFLECTIVE FLOOR
       const floorGeo = new THREE.PlaneGeometry(60, 60);
       const floorMat = new THREE.MeshStandardMaterial({
-        color: 0x090912,
-        roughness: 0.25,
-        metalness: 0.8
+        color: 0x0d0d18,
+        roughness: 0.2,
+        metalness: 0.85
       });
       const floor = new THREE.Mesh(floorGeo, floorMat);
       floor.rotation.x = -Math.PI / 2;
       floor.receiveShadow = true;
       scene.add(floor);
 
-      // 3. Grid Lines on Floor
-      const gridHelper = new THREE.GridHelper(60, 30, 0xff2a85, 0x1f1f33);
-      gridHelper.position.y = 0.01;
+      const gridHelper = new THREE.GridHelper(60, 30, 0x00f0ff, 0x222238);
+      gridHelper.position.y = 0.02;
       scene.add(gridHelper);
 
-      // 4. ANIMATED 3D LED DANCE FLOOR (8x6 Tiles in Center)
+      // 5. ANIMATED 3D LED DANCE FLOOR (8x6 Glowing Glass Tiles)
       const tileCols = 8;
       const tileRows = 6;
       const tileSize = 2.4;
@@ -991,43 +1189,56 @@
 
       for (let c = 0; c < tileCols; c++) {
         for (let r = 0; r < tileRows; r++) {
-          const tileGeo = new THREE.BoxGeometry(tileSize - 0.2, 0.15, tileSize - 0.2);
+          const tileGeo = new THREE.BoxGeometry(tileSize - 0.2, 0.18, tileSize - 0.2);
           const tileMat = new THREE.MeshStandardMaterial({
-            color: 0x111122,
+            color: 0x16162a,
             emissive: 0x00f0ff,
-            emissiveIntensity: 0.4,
-            roughness: 0.2,
-            metalness: 0.5
+            emissiveIntensity: 0.65,
+            roughness: 0.15,
+            metalness: 0.6
           });
           const tileMesh = new THREE.Mesh(tileGeo, tileMat);
-          tileMesh.position.set(startX + c * tileSize, 0.08, startZ + r * tileSize);
+          tileMesh.position.set(startX + c * tileSize, 0.09, startZ + r * tileSize);
           scene.add(tileMesh);
           danceFloorTiles.push({ mesh: tileMesh, col: c, row: r });
         }
       }
 
-      // 5. 3D DJ STAGE (Raised Platform & Turntable Booth)
+      // 6. ROTATING DISCO BALL WITH INTERNAL SPARKLE LIGHT
+      const ballGeo = new THREE.SphereGeometry(1.6, 22, 22);
+      const ballMat = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        metalness: 0.98,
+        roughness: 0.05,
+        flatShading: true
+      });
+      discoBall = new THREE.Mesh(ballGeo, ballMat);
+      discoBall.position.set(0, 12, 0);
+      scene.add(discoBall);
+
+      discoBallPointLight = new THREE.PointLight(0xffffff, 2.5, 25);
+      discoBallPointLight.position.set(0, 12, 0);
+      scene.add(discoBallPointLight);
+
+      // 7. 3D DJ STAGE & CONSOLE
       const stageBaseGeo = new THREE.BoxGeometry(14, 1.2, 7);
-      const stageBaseMat = new THREE.MeshStandardMaterial({ color: 0x12121f, roughness: 0.4, metalness: 0.7 });
+      const stageBaseMat = new THREE.MeshStandardMaterial({ color: 0x141424, roughness: 0.3, metalness: 0.7 });
       const stageBase = new THREE.Mesh(stageBaseGeo, stageBaseMat);
       stageBase.position.set(0, 0.6, -8);
       scene.add(stageBase);
 
-      // Stage Neon Trim
-      const stageTrimGeo = new THREE.BoxGeometry(14.2, 0.1, 7.2);
+      const stageTrimGeo = new THREE.BoxGeometry(14.2, 0.12, 7.2);
       const stageTrimMat = new THREE.MeshBasicMaterial({ color: 0xff2a85 });
       const stageTrim = new THREE.Mesh(stageTrimGeo, stageTrimMat);
       stageTrim.position.set(0, 1.2, -8);
       scene.add(stageTrim);
 
-      // DJ Console Table
       const djDeskGeo = new THREE.BoxGeometry(6, 1.4, 2);
-      const djDeskMat = new THREE.MeshStandardMaterial({ color: 0x0a0a14, roughness: 0.3, metalness: 0.8 });
+      const djDeskMat = new THREE.MeshStandardMaterial({ color: 0x0c0c16, roughness: 0.2, metalness: 0.8 });
       const djDesk = new THREE.Mesh(djDeskGeo, djDeskMat);
       djDesk.position.set(0, 1.9, -7);
       scene.add(djDesk);
 
-      // Turntables on Table
       [-1.5, 1.5].forEach(xOff => {
         const deckGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 24);
         const deckMat = new THREE.MeshStandardMaterial({ color: 0x181828, metalness: 0.9 });
@@ -1042,18 +1253,17 @@
         scene.add(vinyl);
       });
 
-      // Massive 3D Speaker Stacks on sides of DJ Booth
+      // Speaker Stacks with glowing cones
       [-8, 8].forEach(sx => {
         const spkGeo = new THREE.BoxGeometry(2.2, 6, 2.5);
-        const spkMat = new THREE.MeshStandardMaterial({ color: 0x14141f, roughness: 0.8 });
+        const spkMat = new THREE.MeshStandardMaterial({ color: 0x141422, roughness: 0.7 });
         const spk = new THREE.Mesh(spkGeo, spkMat);
         spk.position.set(sx, 3, -8);
         scene.add(spk);
 
-        // Subwoofer cones
         [1.5, 3.2, 4.8].forEach(sy => {
           const coneGeo = new THREE.CylinderGeometry(0.7, 0.4, 0.3, 16);
-          const coneMat = new THREE.MeshStandardMaterial({ color: 0xff2a85, roughness: 0.5 });
+          const coneMat = new THREE.MeshStandardMaterial({ color: 0xff2a85, emissive: 0xff2a85, emissiveIntensity: 0.4 });
           const cone = new THREE.Mesh(coneGeo, coneMat);
           cone.rotation.x = Math.PI / 2;
           cone.position.set(sx, sy, -6.6);
@@ -1061,69 +1271,22 @@
         });
       });
 
-      // 6. ROTATING 3D DISCO BALL (Hanging in Center)
-      const ballGeo = new THREE.SphereGeometry(1.6, 20, 20);
-      const ballMat = new THREE.MeshStandardMaterial({
-        color: 0xcccccc,
-        metalness: 0.95,
-        roughness: 0.1,
-        flatShading: true
-      });
-      discoBall = new THREE.Mesh(ballGeo, ballMat);
-      discoBall.position.set(0, 12, 0);
-      scene.add(discoBall);
-
-      // Hanging Cable
-      const cableGeo = new THREE.CylinderGeometry(0.04, 0.04, 8);
-      const cableMat = new THREE.MeshBasicMaterial({ color: 0x333344 });
-      const cable = new THREE.Mesh(cableGeo, cableMat);
-      cable.position.set(0, 16, 0);
-      scene.add(cable);
-
-      // 7. VOLUMETRIC 3D LASER CONES (Cyan & Magenta Sweeping Beams)
-      const laserGeo = new THREE.ConeGeometry(3.5, 35, 16, 1, true);
-      const laserMat1 = new THREE.MeshBasicMaterial({
-        color: 0x00f0ff,
-        transparent: true,
-        opacity: 0.22,
-        side: THREE.DoubleSide
-      });
-      const laserMat2 = new THREE.MeshBasicMaterial({
-        color: 0xff2a85,
-        transparent: true,
-        opacity: 0.22,
-        side: THREE.DoubleSide
-      });
-
-      const laser1 = new THREE.Mesh(laserGeo, laserMat1);
-      laser1.position.set(-4, 11, -8);
-      laser1.rotation.x = Math.PI * 0.7;
-      scene.add(laser1);
-      laserCones.push({ mesh: laser1, speed: 0.02, baseAngle: 0 });
-
-      const laser2 = new THREE.Mesh(laserGeo, laserMat2);
-      laser2.position.set(4, 11, -8);
-      laser2.rotation.x = Math.PI * 0.7;
-      scene.add(laser2);
-      laserCones.push({ mesh: laser2, speed: -0.016, baseAngle: Math.PI });
-
-      // 8. 3D THE CYBER BAR (Left Section)
+      // 8. 3D THE CYBER BAR
       const barCounterGeo = new THREE.BoxGeometry(3, 1.8, 12);
-      const barCounterMat = new THREE.MeshStandardMaterial({ color: 0x161626, roughness: 0.3, metalness: 0.6 });
+      const barCounterMat = new THREE.MeshStandardMaterial({ color: 0x151528, roughness: 0.25, metalness: 0.7 });
       const barCounter = new THREE.Mesh(barCounterGeo, barCounterMat);
       barCounter.position.set(-18, 0.9, -8);
       scene.add(barCounter);
 
-      // Bar Neon Lip
       const barLipGeo = new THREE.BoxGeometry(0.1, 0.1, 12.2);
       const barLipMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
       const barLip = new THREE.Mesh(barLipGeo, barLipMat);
       barLip.position.set(-16.4, 1.8, -8);
       scene.add(barLip);
 
-      // Glowing Bottles on Shelf behind bar
+      // Back-shelf with glowing bottles
       const shelfGeo = new THREE.BoxGeometry(1.5, 0.1, 10);
-      const shelfMat = new THREE.MeshStandardMaterial({ color: 0x0a0a14 });
+      const shelfMat = new THREE.MeshStandardMaterial({ color: 0x0c0c18 });
       const shelf = new THREE.Mesh(shelfGeo, shelfMat);
       shelf.position.set(-22, 2.5, -8);
       scene.add(shelf);
@@ -1131,19 +1294,20 @@
       const bottleColors = [0x00f0ff, 0xff2a85, 0x9d4edd, 0x06d6a0, 0xffb703];
       for (let i = -4; i <= 4; i += 1) {
         const botGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.8, 12);
+        const bCol = bottleColors[Math.abs(i) % bottleColors.length];
         const botMat = new THREE.MeshStandardMaterial({
-          color: bottleColors[Math.abs(i) % bottleColors.length],
-          emissive: bottleColors[Math.abs(i) % bottleColors.length],
-          emissiveIntensity: 0.5,
+          color: bCol,
+          emissive: bCol,
+          emissiveIntensity: 0.8,
           transparent: true,
-          opacity: 0.85
+          opacity: 0.9
         });
         const bot = new THREE.Mesh(botGeo, botMat);
         bot.position.set(-22, 2.95, -8 + i * 1.0);
         scene.add(bot);
       }
 
-      // 3D Bar Stools
+      // Bar Stools
       [-12, -9, -6, -3].forEach(sz => {
         const stoolBaseGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.1, 16);
         const stoolMat = new THREE.MeshStandardMaterial({ color: 0x333344, metalness: 0.8 });
@@ -1157,41 +1321,38 @@
         scene.add(pole);
 
         const seatGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.2, 16);
-        const seatMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x00f0ff, emissiveIntensity: 0.2 });
+        const seatMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x00f0ff, emissiveIntensity: 0.4 });
         const seat = new THREE.Mesh(seatGeo, seatMat);
         seat.position.set(-15.2, 1.1, sz);
         scene.add(seat);
       });
 
-      // 9. 3D VELVET CHILL LOUNGE (Right Section)
-      // Curved Velvet Sofa
+      // 9. 3D VELVET CHILL LOUNGE
       const sofaGeo = new THREE.CylinderGeometry(7, 7, 1.2, 24, 1, true, 0, Math.PI);
-      const sofaMat = new THREE.MeshStandardMaterial({ color: 0x3b185f, roughness: 0.7, side: THREE.DoubleSide });
+      const sofaMat = new THREE.MeshStandardMaterial({ color: 0x481c70, roughness: 0.6, side: THREE.DoubleSide });
       const sofa = new THREE.Mesh(sofaGeo, sofaMat);
       sofa.rotation.y = -Math.PI / 2;
       sofa.position.set(18, 0.6, 8);
       scene.add(sofa);
 
-      // Round Glowing Table
       const tableGeo = new THREE.CylinderGeometry(2.4, 2.4, 0.8, 24);
       const tableMat = new THREE.MeshStandardMaterial({
-        color: 0x161026,
+        color: 0x181228,
         emissive: 0x9d4edd,
-        emissiveIntensity: 0.3,
+        emissiveIntensity: 0.5,
         roughness: 0.2
       });
       const table = new THREE.Mesh(tableGeo, tableMat);
       table.position.set(18, 0.4, 8);
       scene.add(table);
 
-      // 10. 3D ANONYMOUS CONFESSION GRAFFITI WALL (Left Back)
+      // 10. 3D CONFESSION WALL
       const wallGeo = new THREE.BoxGeometry(0.8, 6, 12);
-      const wallMat = new THREE.MeshStandardMaterial({ color: 0x12121c, roughness: 0.9 });
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0x141424, roughness: 0.8 });
       const wall = new THREE.Mesh(wallGeo, wallMat);
       wall.position.set(-24, 3, 14);
       scene.add(wall);
 
-      // Neon Sign on Wall: "SPILL THE TEA"
       const signGeo = new THREE.BoxGeometry(0.1, 1.0, 6);
       const signMat = new THREE.MeshBasicMaterial({ color: 0xffb703 });
       const sign = new THREE.Mesh(signGeo, signMat);
@@ -1200,222 +1361,281 @@
     }
 
     // =========================================================================
-    // PROCEDURAL 3D ANIME CHARACTER CREATOR (MALE & FEMALE)
+    // HIGH-DETAIL 3D ANIME CHARACTER GENERATOR (MALE & FEMALE UPGRADE)
     // =========================================================================
     function createAnimeCharacterMesh(gender, themeColor, accessory, nickname, isPlayer = false) {
       const charGroup = new THREE.Group();
       const limbs = {};
 
-      const skinColor = 0xffe0bd;
+      const skinColor = 0xffe2c5;
       const themeHex = new THREE.Color(themeColor);
 
-      // 1. Torso & Clothes
-      const torsoGeo = new THREE.BoxGeometry(0.9, 1.2, 0.55);
+      // 1. Torso: High-Fashion Cyberpunk Bomber / Cropped Jacket
+      const torsoGeo = new THREE.BoxGeometry(0.92, 1.25, 0.58);
       const outfitMat = new THREE.MeshStandardMaterial({
-        color: gender === 'boy' ? 0x181828 : 0x241432,
+        color: gender === 'boy' ? 0x161626 : 0x221230,
         emissive: themeHex,
-        emissiveIntensity: 0.25,
-        roughness: 0.4
+        emissiveIntensity: 0.35,
+        roughness: 0.35,
+        metalness: 0.2
       });
       const torso = new THREE.Mesh(torsoGeo, outfitMat);
-      torso.position.y = 1.9;
+      torso.position.y = 1.95;
       torso.castShadow = true;
       charGroup.add(torso);
       limbs.torso = torso;
 
-      // Glowing Neon Collar Trim
-      const collarGeo = new THREE.BoxGeometry(0.94, 0.12, 0.58);
+      // Glowing Neon High-Neck Collar
+      const collarGeo = new THREE.BoxGeometry(0.96, 0.16, 0.62);
       const collarMat = new THREE.MeshBasicMaterial({ color: themeHex });
       const collar = new THREE.Mesh(collarGeo, collarMat);
-      collar.position.y = 0.55;
+      collar.position.y = 0.58;
       torso.add(collar);
 
-      // If Anime Girl: Add stylish cyber skirt
+      // Cyber zipper glow stripe
+      const zipGeo = new THREE.BoxGeometry(0.06, 0.9, 0.6);
+      const zip = new THREE.Mesh(zipGeo, collarMat);
+      zip.position.set(0, -0.05, 0.01);
+      torso.add(zip);
+
+      // If Anime Girl: Pleated Cyber Skirt with holographic glow
       if (gender === 'girl') {
-        const skirtGeo = new THREE.ConeGeometry(0.7, 0.55, 16, 1, true);
-        const skirtMat = new THREE.MeshStandardMaterial({ color: themeHex, roughness: 0.3 });
+        const skirtGeo = new THREE.ConeGeometry(0.75, 0.6, 18, 1, true);
+        const skirtMat = new THREE.MeshStandardMaterial({ color: themeHex, roughness: 0.25, metalness: 0.4 });
         const skirt = new THREE.Mesh(skirtGeo, skirtMat);
-        skirt.position.y = -0.65;
+        skirt.position.y = -0.68;
         torso.add(skirt);
+        limbs.skirt = skirt;
       }
 
-      // 2. Head with Anime Face Canvas Texture
-      const headGeo = new THREE.SphereGeometry(0.52, 20, 20);
-      headGeo.scale(1, 1.1, 1);
-      
-      // Generate Canvas Texture for Anime Face (Big expressive anime eyes & blush)
+      // 2. Head with High-Res 512x512 Canvas Anime Face
+      const headGeo = new THREE.SphereGeometry(0.55, 24, 24);
+      headGeo.scale(1, 1.15, 1.05);
+
       const faceCanvas = document.createElement('canvas');
-      faceCanvas.width = 256;
-      faceCanvas.height = 256;
+      faceCanvas.width = 512;
+      faceCanvas.height = 512;
       const fctx = faceCanvas.getContext('2d');
-      
-      // Skin base
-      fctx.fillStyle = '#ffe0bd';
-      fctx.fillRect(0, 0, 256, 256);
 
-      // Anime Eyes (Large, expressive anime iris with light reflection sparkle)
-      const eyeY = 135;
-      const leftEyeX = 85;
-      const rightEyeX = 171;
-      const eyeR = 26;
+      // Soft skin gradient
+      fctx.fillStyle = '#ffe2c5';
+      fctx.fillRect(0, 0, 512, 512);
 
-      [leftEyeX, rightEyeX].forEach(ex => {
-        // Eye White
-        fctx.fillStyle = '#ffffff';
-        fctx.beginPath();
-        fctx.ellipse(ex, eyeY, eyeR * 0.9, eyeR * 1.3, 0, 0, Math.PI * 2);
-        fctx.fill();
-
-        // Iris
-        fctx.fillStyle = themeColor;
-        fctx.beginPath();
-        fctx.ellipse(ex, eyeY, eyeR * 0.7, eyeR * 1.0, 0, 0, Math.PI * 2);
-        fctx.fill();
-
-        // Pupil
-        fctx.fillStyle = '#0a0a14';
-        fctx.beginPath();
-        fctx.arc(ex, eyeY, eyeR * 0.45, 0, Math.PI * 2);
-        fctx.fill();
-
-        // Anime Sparkle Highlight (Top left)
-        fctx.fillStyle = '#ffffff';
-        fctx.beginPath();
-        fctx.arc(ex - 6, eyeY - 8, 7, 0, Math.PI * 2);
-        fctx.fill();
-        fctx.beginPath();
-        fctx.arc(ex + 6, eyeY + 6, 3.5, 0, Math.PI * 2);
-        fctx.fill();
-
-        // Upper Eyelash line
-        fctx.strokeStyle = '#181822';
-        fctx.lineWidth = 4.5;
-        fctx.beginPath();
-        fctx.arc(ex, eyeY - 8, eyeR, Math.PI * 1.1, Math.PI * 1.9);
-        fctx.stroke();
-      });
-
-      // Cute Blush on cheeks
-      fctx.fillStyle = 'rgba(255, 100, 140, 0.45)';
+      // Sculpted Chin & Blush
+      fctx.fillStyle = 'rgba(255, 90, 140, 0.45)';
       fctx.beginPath();
-      fctx.ellipse(leftEyeX - 10, eyeY + 28, 16, 8, 0, 0, Math.PI * 2);
-      fctx.ellipse(rightEyeX + 10, eyeY + 28, 16, 8, 0, 0, Math.PI * 2);
+      fctx.ellipse(140, 310, 35, 18, 0, 0, Math.PI * 2);
+      fctx.ellipse(372, 310, 35, 18, 0, 0, Math.PI * 2);
       fctx.fill();
 
-      // Confident anime smile
-      fctx.strokeStyle = '#2b1b22';
-      fctx.lineWidth = 3;
+      // Big Sparkling Anime Eyes
+      const eyeY = 260;
+      const leftEyeX = 165;
+      const rightEyeX = 347;
+      const eyeW = 55;
+      const eyeH = 75;
+
+      [leftEyeX, rightEyeX].forEach(ex => {
+        // Eye Sclera (White)
+        fctx.fillStyle = '#ffffff';
+        fctx.beginPath();
+        fctx.ellipse(ex, eyeY, eyeW, eyeH, 0, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Iris Gradient (Dark on top, glowing neon on bottom)
+        const irisGrad = fctx.createLinearGradient(ex, eyeY - eyeH, ex, eyeY + eyeH);
+        irisGrad.addColorStop(0, '#0c0c16');
+        irisGrad.addColorStop(0.55, themeColor);
+        irisGrad.addColorStop(1, '#ffffff');
+
+        fctx.fillStyle = irisGrad;
+        fctx.beginPath();
+        fctx.ellipse(ex, eyeY, eyeW * 0.78, eyeH * 0.88, 0, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Dark pupil
+        fctx.fillStyle = '#06060c';
+        fctx.beginPath();
+        fctx.arc(ex, eyeY + 4, 18, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Highlight glints
+        fctx.fillStyle = '#ffffff';
+        fctx.beginPath();
+        fctx.arc(ex - 14, eyeY - 18, 14, 0, Math.PI * 2);
+        fctx.fill();
+        fctx.beginPath();
+        fctx.arc(ex + 14, eyeY + 14, 7, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Stylized upper eyelash line
+        fctx.strokeStyle = '#12121c';
+        fctx.lineWidth = 9;
+        fctx.beginPath();
+        fctx.arc(ex, eyeY - 12, eyeW * 1.05, Math.PI * 1.15, Math.PI * 1.85);
+        fctx.stroke();
+
+        // Winged eyeliner
+        fctx.fillStyle = '#12121c';
+        fctx.beginPath();
+        fctx.arc(ex + (ex === rightEyeX ? 48 : -48), eyeY - 26, 7, 0, Math.PI * 2);
+        fctx.fill();
+      });
+
+      // Cute anime nose dot & confident smile
+      fctx.fillStyle = 'rgba(210, 140, 120, 0.7)';
       fctx.beginPath();
-      fctx.arc(128, eyeY + 34, 14, 0.1 * Math.PI, 0.9 * Math.PI);
+      fctx.arc(256, 335, 3.5, 0, Math.PI * 2);
+      fctx.fill();
+
+      fctx.strokeStyle = '#2d1b24';
+      fctx.lineWidth = 5;
+      fctx.beginPath();
+      fctx.arc(256, 360, 24, 0.15 * Math.PI, 0.85 * Math.PI);
       fctx.stroke();
 
       const faceTexture = new THREE.CanvasTexture(faceCanvas);
-      const headMat = new THREE.MeshStandardMaterial({
-        map: faceTexture,
-        roughness: 0.4
-      });
+      const headMat = new THREE.MeshStandardMaterial({ map: faceTexture, roughness: 0.35 });
       const head = new THREE.Mesh(headGeo, headMat);
-      head.position.y = 3.0;
+      head.position.y = 3.1;
       charGroup.add(head);
       limbs.head = head;
 
-      // 3. Stylish Anime Hair Geometry
+      // 3. LAYERED ANIME HAIR (DETAILED BOY & GIRL MESHES)
       const hairMat = new THREE.MeshStandardMaterial({
         color: themeHex,
-        roughness: 0.35,
-        metalness: 0.2
+        emissive: themeHex,
+        emissiveIntensity: 0.25,
+        roughness: 0.3,
+        metalness: 0.25
       });
 
       if (gender === 'boy') {
-        // Spiky Anime Boy Hair
-        const hairBaseGeo = new THREE.SphereGeometry(0.55, 16, 16);
-        const hairBase = new THREE.Mesh(hairBaseGeo, hairMat);
-        hairBase.position.set(0, 0.12, -0.05);
-        head.add(hairBase);
+        // Anime Guy: Multi-Spike Layered Hair
+        const hairCapGeo = new THREE.SphereGeometry(0.58, 20, 20);
+        const hairCap = new THREE.Mesh(hairCapGeo, hairMat);
+        hairCap.position.set(0, 0.12, -0.06);
+        head.add(hairCap);
 
-        // Sweeping spikes
-        for (let s = 0; s < 7; s++) {
-          const spikeGeo = new THREE.ConeGeometry(0.22, 0.75, 8);
+        // Front Fringe Bangs
+        [-0.25, 0, 0.25].forEach(bx => {
+          const fringeGeo = new THREE.ConeGeometry(0.18, 0.6, 8);
+          const fringe = new THREE.Mesh(fringeGeo, hairMat);
+          fringe.rotation.x = 2.4;
+          fringe.rotation.z = bx * 0.8;
+          fringe.position.set(bx, 0.32, 0.42);
+          head.add(fringe);
+        });
+
+        // Top Spikes
+        for (let s = 0; s < 9; s++) {
+          const spikeGeo = new THREE.ConeGeometry(0.24, 0.85, 8);
           const spike = new THREE.Mesh(spikeGeo, hairMat);
-          const ang = (s / 7) * Math.PI - Math.PI / 2;
-          spike.position.set(Math.sin(ang) * 0.42, 0.45, -Math.cos(ang) * 0.25);
-          spike.rotation.x = -0.4;
-          spike.rotation.z = -ang * 0.6;
+          const ang = (s / 9) * Math.PI - Math.PI / 2;
+          spike.position.set(Math.sin(ang) * 0.45, 0.52, -Math.cos(ang) * 0.25);
+          spike.rotation.x = -0.45;
+          spike.rotation.z = -ang * 0.65;
           head.add(spike);
         }
       } else {
-        // Anime Girl Hair: Bangs + Bouncing Twintails
-        const hairBaseGeo = new THREE.SphereGeometry(0.56, 16, 16);
-        const hairBase = new THREE.Mesh(hairBaseGeo, hairMat);
-        hairBase.position.set(0, 0.12, -0.05);
-        head.add(hairBase);
+        // Anime Girl: Fringe Bangs + Bouncing Twin Pigtails
+        const hairCapGeo = new THREE.SphereGeometry(0.58, 20, 20);
+        const hairCap = new THREE.Mesh(hairCapGeo, hairMat);
+        hairCap.position.set(0, 0.12, -0.06);
+        head.add(hairCap);
 
-        // Front bangs
-        const bangsGeo = new THREE.BoxGeometry(0.85, 0.35, 0.3);
+        // Cute Fringe Bangs
+        const bangsGeo = new THREE.BoxGeometry(0.9, 0.38, 0.3);
         const bangs = new THREE.Mesh(bangsGeo, hairMat);
-        bangs.position.set(0, 0.35, 0.4);
+        bangs.position.set(0, 0.36, 0.44);
         head.add(bangs);
 
-        // Twintails on sides
-        [-0.55, 0.55].forEach(tx => {
-          const tailGeo = new THREE.ConeGeometry(0.2, 1.3, 12);
+        // Long Twin Pigtails
+        [-0.58, 0.58].forEach(tx => {
+          const pigtailGroup = new THREE.Group();
+          pigtailGroup.position.set(tx, 0.15, -0.15);
+
+          // Ribbon tie
+          const tieGeo = new THREE.SphereGeometry(0.15, 12, 12);
+          const tieMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+          const tie = new THREE.Mesh(tieGeo, tieMat);
+          pigtailGroup.add(tie);
+
+          // Main Long Tail
+          const tailGeo = new THREE.ConeGeometry(0.22, 1.6, 14);
           const tail = new THREE.Mesh(tailGeo, hairMat);
-          tail.position.set(tx, 0.1, -0.15);
-          tail.rotation.z = tx > 0 ? -0.3 : 0.3;
-          head.add(tail);
-          if (tx > 0) limbs.rightTwintail = tail;
-          else limbs.leftTwintail = tail;
+          tail.position.y = -0.8;
+          tail.rotation.z = tx > 0 ? -0.2 : 0.2;
+          pigtailGroup.add(tail);
+
+          head.add(pigtailGroup);
+          if (tx > 0) limbs.rightTwintail = pigtailGroup;
+          else limbs.leftTwintail = pigtailGroup;
         });
       }
 
-      // 4. Accessory Over Head (Shades, Headset, Crown, Aura)
+      // 4. ACCESSORIES (SHADES, HEADPHONES, NEKO EARS, CROWN, AURA)
       if (accessory === '🕶️') {
-        const shadesGeo = new THREE.BoxGeometry(0.85, 0.2, 0.2);
-        const shadesMat = new THREE.MeshStandardMaterial({ color: 0x050508, roughness: 0.1, metalness: 0.9 });
+        const shadesGeo = new THREE.BoxGeometry(0.88, 0.22, 0.2);
+        const shadesMat = new THREE.MeshStandardMaterial({ color: 0x05050a, roughness: 0.1, metalness: 0.95 });
         const shades = new THREE.Mesh(shadesGeo, shadesMat);
-        shades.position.set(0, 0.05, 0.48);
+        shades.position.set(0, 0.06, 0.52);
         head.add(shades);
       } else if (accessory === '🎧') {
-        // Headphones with glowing ear cups
-        const bandGeo = new THREE.TorusGeometry(0.55, 0.07, 8, 20, Math.PI);
+        const bandGeo = new THREE.TorusGeometry(0.56, 0.08, 8, 22, Math.PI);
         const bandMat = new THREE.MeshStandardMaterial({ color: 0x1f1f2e });
         const band = new THREE.Mesh(bandGeo, bandMat);
         band.rotation.x = -Math.PI / 2;
-        band.position.y = 0.1;
+        band.position.y = 0.12;
         head.add(band);
 
-        [-0.54, 0.54].forEach(hx => {
-          const cupGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.15, 16);
+        [-0.56, 0.56].forEach(hx => {
+          const cupGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.16, 16);
           const cupMat = new THREE.MeshBasicMaterial({ color: themeHex });
           const cup = new THREE.Mesh(cupGeo, cupMat);
           cup.rotation.z = Math.PI / 2;
-          cup.position.set(hx, 0.05, 0);
+          cup.position.set(hx, 0.06, 0);
           head.add(cup);
         });
+      } else if (accessory === '🐱') {
+        // Neko Cat Ears!
+        [-0.32, 0.32].forEach(ex => {
+          const earGeo = new THREE.ConeGeometry(0.2, 0.45, 6);
+          const earMat = new THREE.MeshStandardMaterial({ color: themeHex, emissive: themeHex, emissiveIntensity: 0.5 });
+          const ear = new THREE.Mesh(earGeo, earMat);
+          ear.position.set(ex, 0.65, 0.1);
+          ear.rotation.z = ex > 0 ? -0.3 : 0.3;
+          head.add(ear);
+        });
       } else if (accessory === '👑') {
-        const crownGeo = new THREE.CylinderGeometry(0.35, 0.25, 0.25, 5);
-        const crownMat = new THREE.MeshStandardMaterial({ color: 0xffb703, metalness: 0.9, roughness: 0.2 });
+        const crownGeo = new THREE.CylinderGeometry(0.38, 0.26, 0.28, 5);
+        const crownMat = new THREE.MeshStandardMaterial({ color: 0xffb703, metalness: 0.95, roughness: 0.2 });
         const crown = new THREE.Mesh(crownGeo, crownMat);
-        crown.position.set(0, 0.65, 0);
+        crown.position.set(0, 0.68, 0);
         head.add(crown);
       }
 
-      // 5. Arms & Hands (Left & Right)
-      const armGeo = new THREE.BoxGeometry(0.26, 0.95, 0.26);
-      const armMat = new THREE.MeshStandardMaterial({ color: 0x181828, roughness: 0.5 });
+      // 5. ARMS & HANDS WITH SLEEVE DETAILS
+      const armGeo = new THREE.BoxGeometry(0.28, 0.98, 0.28);
+      const armMat = new THREE.MeshStandardMaterial({ color: 0x18182a, roughness: 0.45 });
       const handMat = new THREE.MeshStandardMaterial({ color: skinColor });
 
-      [-0.65, 0.65].forEach(ax => {
+      [-0.68, 0.68].forEach(ax => {
         const armGroup = new THREE.Group();
-        armGroup.position.set(ax, 2.3, 0);
+        armGroup.position.set(ax, 2.35, 0);
 
         const arm = new THREE.Mesh(armGeo, armMat);
-        arm.position.y = -0.45;
+        arm.position.y = -0.48;
         armGroup.add(arm);
 
-        const handGeo = new THREE.SphereGeometry(0.15, 12, 12);
+        const cuffGeo = new THREE.BoxGeometry(0.3, 0.12, 0.3);
+        const cuff = new THREE.Mesh(cuffGeo, new THREE.MeshBasicMaterial({ color: themeHex }));
+        cuff.position.y = -0.92;
+        armGroup.add(cuff);
+
+        const handGeo = new THREE.SphereGeometry(0.16, 12, 12);
         const hand = new THREE.Mesh(handGeo, handMat);
-        hand.position.y = -0.95;
+        hand.position.y = -1.05;
         armGroup.add(hand);
 
         charGroup.add(armGroup);
@@ -1424,29 +1644,42 @@
       });
 
       // 6. Holding Drink Glass in Right Hand
-      const glassGeo = new THREE.CylinderGeometry(0.14, 0.08, 0.35, 12);
-      const glassMat = new THREE.MeshStandardMaterial({ color: themeHex, emissive: themeHex, emissiveIntensity: 0.6, transparent: true, opacity: 0.85 });
+      const glassGeo = new THREE.CylinderGeometry(0.15, 0.09, 0.38, 12);
+      const glassMat = new THREE.MeshStandardMaterial({
+        color: themeHex,
+        emissive: themeHex,
+        emissiveIntensity: 0.8,
+        transparent: true,
+        opacity: 0.9
+      });
       const glass = new THREE.Mesh(glassGeo, glassMat);
-      glass.position.set(0, -0.95, 0.2);
+      glass.position.set(0, -1.05, 0.22);
       limbs.rightArm.add(glass);
       limbs.drinkGlass = glass;
 
-      // 7. Legs & Cyber Shoes (Left & Right)
-      const legGeo = new THREE.BoxGeometry(0.32, 1.1, 0.32);
-      const legMat = new THREE.MeshStandardMaterial({ color: 0x0e0e18, roughness: 0.6 });
-      const shoeMat = new THREE.MeshStandardMaterial({ color: themeHex, metalness: 0.5 });
+      // 7. LEGS & CYBER PLATFORM SNEAKERS
+      const legGeo = new THREE.BoxGeometry(0.34, 1.15, 0.34);
+      const legMat = new THREE.MeshStandardMaterial({ color: 0x0e0e18, roughness: 0.5 });
+      const shoeMat = new THREE.MeshStandardMaterial({ color: themeHex, metalness: 0.6, roughness: 0.3 });
 
-      [-0.26, 0.26].forEach(lx => {
+      [-0.28, 0.28].forEach(lx => {
         const legGroup = new THREE.Group();
-        legGroup.position.set(lx, 1.3, 0);
+        legGroup.position.set(lx, 1.35, 0);
 
         const leg = new THREE.Mesh(legGeo, legMat);
-        leg.position.y = -0.55;
+        leg.position.y = -0.58;
         legGroup.add(leg);
 
-        const shoeGeo = new THREE.BoxGeometry(0.34, 0.22, 0.5);
+        // Glowing thigh strap for boy / garter for girl
+        const strapGeo = new THREE.BoxGeometry(0.36, 0.1, 0.36);
+        const strap = new THREE.Mesh(strapGeo, new THREE.MeshBasicMaterial({ color: themeHex }));
+        strap.position.y = -0.3;
+        legGroup.add(strap);
+
+        // Chunky Platform Sneakers
+        const shoeGeo = new THREE.BoxGeometry(0.36, 0.25, 0.55);
         const shoe = new THREE.Mesh(shoeGeo, shoeMat);
-        shoe.position.set(0, -1.05, 0.08);
+        shoe.position.set(0, -1.1, 0.1);
         legGroup.add(shoe);
 
         charGroup.add(legGroup);
@@ -1454,9 +1687,9 @@
         else limbs.rightLeg = legGroup;
       });
 
-      // 8. 3D Floating Name Tag & Speech Billboard
+      // 8. 3D Name Billboard
       const nameBillboard = create3DNameBillboard(nickname, themeColor);
-      nameBillboard.position.y = 4.1;
+      nameBillboard.position.y = 4.25;
       charGroup.add(nameBillboard);
       limbs.billboard = nameBillboard;
 
@@ -1473,8 +1706,7 @@
       bCanvas.height = 64;
       const bctx = bCanvas.getContext('2d');
 
-      // Rounded pill
-      bctx.fillStyle = 'rgba(7, 7, 14, 0.85)';
+      bctx.fillStyle = 'rgba(7, 7, 16, 0.88)';
       bctx.strokeStyle = themeColor;
       bctx.lineWidth = 4;
       bctx.beginPath();
@@ -1482,7 +1714,6 @@
       bctx.fill();
       bctx.stroke();
 
-      // Text
       bctx.fillStyle = '#ffffff';
       bctx.font = 'bold 26px "Space Grotesk", sans-serif';
       bctx.textAlign = 'center';
@@ -1492,12 +1723,123 @@
       const bTexture = new THREE.CanvasTexture(bCanvas);
       const bMat = new THREE.SpriteMaterial({ map: bTexture, transparent: true });
       const sprite = new THREE.Sprite(bMat);
-      sprite.scale.set(3.0, 0.75, 1);
+      sprite.scale.set(3.2, 0.8, 1);
       return sprite;
     }
 
     // =========================================================================
-    // KEYBOARD & MOBILE JOYSTICK INPUTS
+    // IN-CLUB LIVE WARDROBE SYSTEM
+    // =========================================================================
+    function rebuildPlayer3DMesh() {
+      if (player.mesh) {
+        scene.remove(player.mesh);
+      }
+      player.mesh = createAnimeCharacterMesh(player.gender, player.color, player.accessory, player.nickname, true);
+      player.mesh.position.copy(player.position);
+      player.mesh.rotation.y = player.heading;
+      scene.add(player.mesh);
+    }
+
+    function switchLiveGender(g) {
+      player.gender = g;
+      rebuildPlayer3DMesh();
+      showToast(g === 'boy' ? 'Avatar: Anime Guy 👦' : 'Avatar: Anime Girl 👧');
+    }
+
+    function switchLiveColor(hex) {
+      player.color = hex;
+      rebuildPlayer3DMesh();
+      showToast('Neon Aura Updated! ✨');
+    }
+
+    function switchLiveAccessory(icon) {
+      player.accessory = icon;
+      rebuildPlayer3DMesh();
+      showToast(`Drip Equipped: ${icon}`);
+    }
+
+    // =========================================================================
+    // 4 VIRAL 3D DANCE MOVES
+    // =========================================================================
+    function selectDanceStyle(style) {
+      player.isDancing = true;
+      player.danceStyle = style;
+      closeStationModal('danceSelectorModal');
+
+      const names = {
+        hype: '⚡ Hype Rave Jump!',
+        wave: '🌊 K-Pop Body Wave!',
+        shuffle: '👟 Cyber Shuffle Step!',
+        spin: '🌀 Spin & Idol Pose!'
+      };
+      showToast(names[style] || 'Dancing to the beat! 🕺');
+    }
+
+    function stopDancing() {
+      player.isDancing = false;
+      closeStationModal('danceSelectorModal');
+      showToast('Dance Paused ⏸️');
+    }
+
+    // =========================================================================
+    // 📸 3D PHOTO BOOTH / SELFIE MODE
+    // =========================================================================
+    function toggleSelfieMode() {
+      // Position camera right in front of character for a gorgeous selfie
+      camera.position.set(player.position.x, player.position.y + 3.1, player.position.z + 4.5);
+      camera.lookAt(player.position.x, player.position.y + 3.0, player.position.z);
+      renderer.render(scene, camera);
+
+      // Capture screenshot
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      document.getElementById('selfieSnapshotImg').src = dataUrl;
+      document.getElementById('selfieDownloadLink').href = dataUrl;
+      document.getElementById('selfieWatermarkNick').innerText = `@${player.nickname}`;
+
+      openStationModal('selfieBoothModal');
+    }
+
+    function shareSelfieWhatsApp() {
+      const shareUrl = `https://clubr.online`;
+      const text = `Yo! Check out my 3D Anime avatar in the VIP Cyber-Lounge on Clubr.online! Step in and let's party: ${shareUrl}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // =========================================================================
+    // 🎆 3D CONFETTI & FIREWORKS CANNON
+    // =========================================================================
+    function triggerClubConfettiBlast() {
+      const confettiColors = [0x00f0ff, 0xff2a85, 0x9d4edd, 0xffb703, 0x06d6a0, 0xffffff];
+      
+      for (let i = 0; i < 120; i++) {
+        const cGeo = new THREE.PlaneGeometry(0.22, 0.22);
+        const col = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        const cMat = new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide });
+        const cMesh = new THREE.Mesh(cGeo, cMat);
+
+        cMesh.position.set(
+          player.position.x + (Math.random() - 0.5) * 8,
+          player.position.y + 7 + Math.random() * 5,
+          player.position.z + (Math.random() - 0.5) * 8
+        );
+
+        scene.add(cMesh);
+        confettiParticles.push({
+          mesh: cMesh,
+          vx: (Math.random() - 0.5) * 0.15,
+          vy: -0.06 - Math.random() * 0.08,
+          vz: (Math.random() - 0.5) * 0.15,
+          rotX: Math.random() * 0.2,
+          rotY: Math.random() * 0.2,
+          life: 1.0
+        });
+      }
+
+      showToast('🎆 NEON CONFETTI BLAST! 🎆');
+    }
+
+    // =========================================================================
+    // KEYBOARD & MOBILE JOYSTICK
     // =========================================================================
     window.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1553,18 +1895,17 @@
         }
       }, { passive: false });
 
-      const resetJoystick = () => {
+      const reset = () => {
         joystickActive = false;
         joystickDeltaX = 0;
         joystickDeltaY = 0;
         knob.style.transform = 'translate(0px, 0px)';
       };
 
-      zone.addEventListener('touchend', resetJoystick);
-      zone.addEventListener('touchcancel', resetJoystick);
+      zone.addEventListener('touchend', reset);
+      zone.addEventListener('touchcancel', reset);
     }
 
-    // Click on 3D floor to walk
     function initFloorInteraction() {
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
@@ -1594,7 +1935,6 @@
       ring.rotation.x = -Math.PI / 2;
       ring.position.set(x, 0.05, z);
       scene.add(ring);
-
       shockwaveRings.push({ mesh: ring, scaleSpeed: 0.06, opacitySpeed: 0.035 });
     }
 
@@ -1604,7 +1944,7 @@
     function selectGender(g) {
       player.gender = g;
       document.getElementById('avatarGenderIcon').innerText = g === 'boy' ? '👦' : '👧';
-      document.getElementById('avatarPreviewArchetype').innerText = g === 'boy' ? 'Cyber Hustler' : 'Cyber Idol Drip';
+      document.getElementById('avatarPreviewArchetype').innerText = g === 'boy' ? 'Cyber Hustler' : 'Cyber Idol Pleated';
 
       const boyBtn = document.getElementById('genderBoyBtn');
       const girlBtn = document.getElementById('genderGirlBtn');
@@ -1627,7 +1967,7 @@
       player.color = hex;
       const preview = document.getElementById('avatarLivePreview');
       preview.style.background = `radial-gradient(circle, ${hex}, #090918)`;
-      preview.style.boxShadow = `0 0 30px ${hex}`;
+      preview.style.boxShadow = `0 0 35px ${hex}`;
 
       document.querySelectorAll('.color-swatch-btn').forEach(b => {
         b.style.borderColor = 'transparent';
@@ -1651,22 +1991,18 @@
       const input = document.getElementById('nicknameInput').value.trim();
       player.nickname = input || (player.gender === 'boy' ? 'Ryu_3D' : 'Maya_3D');
 
-      // Create Player Anime 3D Character Mesh
-      player.mesh = createAnimeCharacterMesh(player.gender, player.color, player.accessory, player.nickname, true);
-      player.mesh.position.copy(player.position);
-      scene.add(player.mesh);
+      rebuildPlayer3DMesh();
 
       const overlay = document.getElementById('onboardingOverlay');
       overlay.classList.add('opacity-0', 'pointer-events-none');
       setTimeout(() => overlay.remove(), 500);
 
-      // Start Synthesizer beats
       initClubAudio();
       showToast(`Welcome to Clubr 3D, ${player.nickname}! ⚡`);
     }
 
     // =========================================================================
-    // WEB AUDIO SYNTHESIZER BEAT & SOUNDBOARD
+    // AUDIO ENGINE & 3-BEAT JUKEBOX (LO-FI / CYBERWAVE / DESI DHOL)
     // =========================================================================
     function initClubAudio() {
       if (audioCtx) return;
@@ -1674,7 +2010,7 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(0.28, audioCtx.currentTime);
         masterGain.connect(audioCtx.destination);
         startBeatLoop();
       } catch (e) {
@@ -1686,7 +2022,8 @@
       if (beatTimer) clearInterval(beatTimer);
       if (!audioCtx || isMuted) return;
 
-      const bpm = beatMode === 'cyber' ? 124 : 84;
+      const bpmMap = { lofi: 84, cyber: 124, desi: 110 };
+      const bpm = bpmMap[beatMode] || 100;
       const stepInterval = (60 / bpm) / 4 * 1000;
 
       beatTimer = setInterval(() => {
@@ -1698,18 +2035,39 @@
           if (currentBeatStep % 8 === 4) synthSnare(now);
           if (currentBeatStep % 2 === 0) synthHiHat(now);
           if (currentBeatStep % 16 === 0) synthChords(now);
-        } else {
+        } else if (beatMode === 'cyber') {
           if (currentBeatStep % 4 === 0) synthKick(now, 135, 42, 0.38);
           if (currentBeatStep % 8 === 4) synthSnare(now);
           if (currentBeatStep % 2 === 1) synthHiHat(now);
           if (currentBeatStep % 16 === 0) synthCyberBassline(now);
+        } else {
+          // Desi Club Dhol Bass
+          if (currentBeatStep % 8 === 0 || currentBeatStep % 8 === 6) synthDholBase(now);
+          if (currentBeatStep % 8 === 4) synthDholSnare(now);
+          if (currentBeatStep % 2 === 0) synthHiHat(now);
         }
 
-        // Pulse LED dance tiles to beat!
         pulseDanceFloorTiles(currentBeatStep);
-
         currentBeatStep = (currentBeatStep + 1) % 32;
       }, stepInterval);
+    }
+
+    function synthDholBase(time) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.frequency.setValueAtTime(140, time);
+      osc.frequency.exponentialRampToValueAtTime(50, time + 0.15);
+      gain.gain.setValueAtTime(0.4, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.18);
+      osc.start(time);
+      osc.stop(time + 0.18);
+    }
+
+    function synthDholSnare(time) {
+      synthSnare(time);
+      synthHiHat(time + 0.04);
     }
 
     function pulseDanceFloorTiles(step) {
@@ -1717,28 +2075,32 @@
       danceFloorTiles.forEach(t => {
         const idx = (t.col + t.row + step) % palette.length;
         t.mesh.material.emissive.setHex(palette[idx]);
-        t.mesh.material.emissiveIntensity = 0.35 + Math.sin(step) * 0.2;
+        t.mesh.material.emissiveIntensity = 0.5 + Math.sin(step) * 0.3;
       });
     }
 
     function setBeatMode(mode) {
       beatMode = mode;
-      document.getElementById('beatModeLofiBtn').className = mode === 'lofi' 
-        ? 'px-3 py-1 text-xs font-bold rounded-xl bg-cyan-500 text-black' 
-        : 'px-3 py-1 text-xs font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20';
-      document.getElementById('beatModeCyberBtn').className = mode === 'cyber' 
-        ? 'px-3 py-1 text-xs font-bold rounded-xl bg-pink-500 text-white' 
-        : 'px-3 py-1 text-xs font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20';
-      
+      const lofi = document.getElementById('beatModeLofiBtn');
+      const cyber = document.getElementById('beatModeCyberBtn');
+      const desi = document.getElementById('beatModeDesiBtn');
+
+      [lofi, cyber, desi].forEach(b => b.className = 'px-2 py-1.5 text-[11px] font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20');
+
+      if (mode === 'lofi') lofi.className = 'px-2 py-1.5 text-[11px] font-bold rounded-xl bg-cyan-500 text-black';
+      if (mode === 'cyber') cyber.className = 'px-2 py-1.5 text-[11px] font-bold rounded-xl bg-pink-500 text-white';
+      if (mode === 'desi') desi.className = 'px-2 py-1.5 text-[11px] font-bold rounded-xl bg-amber-400 text-black';
+
       startBeatLoop();
-      showToast(mode === 'lofi' ? 'Beat: Chill Lo-Fi Lounge 🌙' : 'Beat: High Voltage Cyberwave ⚡');
+      const labels = { lofi: 'Beat: Chill Lo-Fi Lounge 🌙', cyber: 'Beat: High Voltage Cyberwave ⚡', desi: 'Beat: Desi Club Dhol Bass 🥁' };
+      showToast(labels[mode]);
     }
 
     function toggleClubAudio() {
       isMuted = !isMuted;
       document.getElementById('audioIcon').innerText = isMuted ? '🔇' : '🔊';
       if (masterGain && audioCtx) {
-        masterGain.gain.setValueAtTime(isMuted ? 0 : 0.25, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(isMuted ? 0 : 0.28, audioCtx.currentTime);
       }
       if (!isMuted && !beatTimer) startBeatLoop();
       showToast(isMuted ? '3D Club Audio Muted 🔇' : '3D Club Beats Playing 🔊');
@@ -1768,7 +2130,7 @@
       filter.type = 'bandpass';
       filter.frequency.value = 1400;
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.2, time);
+      gain.gain.setValueAtTime(0.22, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
       noise.connect(filter);
       filter.connect(gain);
@@ -1816,7 +2178,7 @@
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(450, time);
       filter.frequency.exponentialRampToValueAtTime(100, time + 0.3);
-      gain.gain.setValueAtTime(0.18, time);
+      gain.gain.setValueAtTime(0.2, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
       osc.connect(filter);
       filter.connect(gain);
@@ -1839,7 +2201,7 @@
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(freq, blastTime);
           osc.frequency.linearRampToValueAtTime(freq * 0.96, blastTime + dur);
-          gain.gain.setValueAtTime(0.24, blastTime);
+          gain.gain.setValueAtTime(0.25, blastTime);
           gain.gain.exponentialRampToValueAtTime(0.001, blastTime + dur);
           osc.connect(gain);
           gain.connect(masterGain);
@@ -1861,7 +2223,7 @@
       osc.frequency.setValueAtTime(300, now);
       osc.frequency.exponentialRampToValueAtTime(1400, now + 0.08);
       osc.frequency.exponentialRampToValueAtTime(120, now + 0.22);
-      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.setValueAtTime(0.32, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
       osc.connect(gain);
       gain.connect(masterGain);
@@ -1880,7 +2242,7 @@
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(2200, now);
       osc.frequency.exponentialRampToValueAtTime(80, now + 0.28);
-      gain.gain.setValueAtTime(0.32, now);
+      gain.gain.setValueAtTime(0.35, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
       osc.connect(gain);
       gain.connect(masterGain);
@@ -1899,7 +2261,7 @@
       osc.type = 'sine';
       osc.frequency.setValueAtTime(120, now);
       osc.frequency.exponentialRampToValueAtTime(32, now + 0.65);
-      gain.gain.setValueAtTime(0.5, now);
+      gain.gain.setValueAtTime(0.55, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
       osc.connect(gain);
       gain.connect(masterGain);
@@ -1980,13 +2342,13 @@
     }
 
     let confessions = [
-      { id: 'c1', text: "I told my parents I was in library, but I was partying in 3D club.", color: 'from-pink-950/60 to-zinc-900 border-pink-500/30 text-pink-300', reactions: { fire: 18, skull: 4, flag: 2 } },
-      { id: 'c2', text: "I use AI agents to automate all my office work while playing games.", color: 'from-cyan-950/60 to-zinc-900 border-cyan-500/30 text-cyan-300', reactions: { fire: 34, skull: 12, flag: 0 } },
-      { id: 'c3', text: "I still remember my ex's birthday passcode and check their status.", color: 'from-amber-950/60 to-zinc-900 border-amber-500/30 text-amber-300', reactions: { fire: 12, skull: 29, flag: 9 } }
+      { id: 'c1', text: "I told my parents I was in library, but I was partying in 3D club.", color: 'from-pink-950/60 to-zinc-900 border-pink-500/30 text-pink-300', reactions: { fire: 24, skull: 6, flag: 2 } },
+      { id: 'c2', text: "I use AI agents to automate all my office work while playing games.", color: 'from-cyan-950/60 to-zinc-900 border-cyan-500/30 text-cyan-300', reactions: { fire: 42, skull: 14, flag: 0 } },
+      { id: 'c3', text: "I still remember my ex's birthday passcode and check their status.", color: 'from-amber-950/60 to-zinc-900 border-amber-500/30 text-amber-300', reactions: { fire: 16, skull: 32, flag: 11 } }
     ];
 
     function loadConfessions() {
-      const saved = localStorage.getItem('clubr_confessions_3d');
+      const saved = localStorage.getItem('clubr_confessions_3d_v2');
       if (saved) {
         try { confessions = JSON.parse(saved); } catch (e) {}
       }
@@ -2036,7 +2398,7 @@
         reactions: { fire: 1, skull: 0, flag: 0 }
       });
 
-      localStorage.setItem('clubr_confessions_3d', JSON.stringify(confessions.slice(0, 20)));
+      localStorage.setItem('clubr_confessions_3d_v2', JSON.stringify(confessions.slice(0, 20)));
       renderConfessionsList();
       input.value = '';
       showToast('Confession pinned to 3D Wall! 💌');
@@ -2046,7 +2408,7 @@
       const target = confessions.find(c => c.id === id);
       if (target) {
         target.reactions[type] = (target.reactions[type] || 0) + 1;
-        localStorage.setItem('clubr_confessions_3d', JSON.stringify(confessions));
+        localStorage.setItem('clubr_confessions_3d_v2', JSON.stringify(confessions));
         renderConfessionsList();
       }
     }
@@ -2068,11 +2430,6 @@
     function toggleCameraView() {
       cameraMode = cameraMode === 'thirdPerson' ? 'stageView' : 'thirdPerson';
       showToast(cameraMode === 'thirdPerson' ? 'Camera: 3D Third Person 🎥' : 'Camera: Cinematic DJ Stage 🎛️');
-    }
-
-    function toggleAvatarDance() {
-      player.isDancing = !player.isDancing;
-      showToast(player.isDancing ? '3D Anime Dance Mode Activated! 🕺⚡' : 'Dance Mode Paused');
     }
 
     function triggerAvatarEmote(emoji) {
@@ -2116,15 +2473,16 @@
       const delta = clock.getDelta();
       const elapsed = clock.getElapsedTime();
 
-      // 1. Rotate Disco Ball
+      // 1. Rotate Disco Ball & Point Light
       if (discoBall) {
-        discoBall.rotation.y += 0.01;
+        discoBall.rotation.y += 0.012;
       }
 
-      // 2. Sweep 3D Laser Cones
-      laserCones.forEach((laser, idx) => {
-        laser.mesh.rotation.z = Math.sin(elapsed * 1.2 + laser.baseAngle) * 0.45;
-        laser.mesh.rotation.y = Math.cos(elapsed * 0.8 + laser.baseAngle) * 0.3;
+      // 2. Oscillate 4 Moving-Head Ceiling Lights
+      movingHeadLights.forEach((mh, idx) => {
+        const sweepX = mh.baseX + Math.sin(elapsed * 1.5 + idx) * 8;
+        const sweepZ = 2 + Math.cos(elapsed * 1.2 + idx) * 6;
+        mh.target.position.set(sweepX, 0, sweepZ);
       });
 
       // 3. Update Shockwave Rings
@@ -2139,7 +2497,23 @@
         }
       }
 
-      // 4. Update Player Movement (Keyboard, Joystick, or Target)
+      // 4. Update Confetti Particles
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const cp = confettiParticles[i];
+        cp.mesh.position.x += cp.vx;
+        cp.mesh.position.y += cp.vy;
+        cp.mesh.position.z += cp.vz;
+        cp.mesh.rotation.x += cp.rotX;
+        cp.mesh.rotation.y += cp.rotY;
+        cp.life -= 0.005;
+
+        if (cp.mesh.position.y <= 0.1 || cp.life <= 0) {
+          scene.remove(cp.mesh);
+          confettiParticles.splice(i, 1);
+        }
+      }
+
+      // 5. Update Player Movement (Keyboard, Joystick, or Target)
       if (player.mesh) {
         let moveX = 0;
         let moveZ = 0;
@@ -2157,6 +2531,7 @@
         const len = Math.hypot(moveX, moveZ);
         if (len > 0.1) {
           player.isMoving = true;
+          player.isDancing = false;
           const normX = moveX / len;
           const normZ = moveZ / len;
           player.position.x += normX * player.speed;
@@ -2164,10 +2539,10 @@
           player.heading = Math.atan2(normX, normZ);
           player.targetPosition.copy(player.position);
         } else {
-          // Check click-to-walk target
           const distToTarget = Math.hypot(player.targetPosition.x - player.position.x, player.targetPosition.z - player.position.z);
           if (distToTarget > 0.2) {
             player.isMoving = true;
+            player.isDancing = false;
             const dx = player.targetPosition.x - player.position.x;
             const dz = player.targetPosition.z - player.position.z;
             player.position.x += (dx / distToTarget) * player.speed;
@@ -2178,78 +2553,112 @@
           }
         }
 
-        // Clamp inside room
         player.position.x = Math.max(-26, Math.min(26, player.position.x));
         player.position.z = Math.max(-26, Math.min(26, player.position.z));
 
         player.mesh.position.copy(player.position);
         player.mesh.rotation.y = player.heading;
 
-        // Animate Player Limbs
+        // Animate Player Limbs with Selected Dance Style
         animateLimbs(player, elapsed, delta);
 
-        // 5. Update Camera (Third-Person Follow or Stage View)
+        // 6. Update Camera
         if (cameraMode === 'thirdPerson') {
           const targetCamX = player.position.x;
           const targetCamY = player.position.y + 7.5;
           const targetCamZ = player.position.z + 14;
           camera.position.lerp(new THREE.Vector3(targetCamX, targetCamY, targetCamZ), 0.1);
           camera.lookAt(player.position.x, player.position.y + 2.5, player.position.z);
-        } else {
-          // Cinematic Stage View
+        } else if (cameraMode === 'stageView') {
           camera.position.lerp(new THREE.Vector3(0, 8, 18), 0.08);
           camera.lookAt(0, 3, -6);
         }
 
-        // 6. Check Proximity Zones
         check3DProximityZones();
       }
 
       // Animate NPC Limbs
       npcs.forEach(npc => {
-        if (npc.mesh) {
-          animateLimbs(npc, elapsed, delta);
-        }
+        if (npc.mesh) animateLimbs(npc, elapsed, delta);
       });
 
-      // 7. Render 3D Scene
       renderer.render(scene, camera);
     }
 
+    // ADVANCED 3D LIMB ANIMATION WITH 4 DANCE STYLES
     function animateLimbs(char, elapsed, delta) {
       if (!char.limbs.torso) return;
 
       if (char.isDancing) {
-        // High-energy 3D Dance Move
-        const danceBop = Math.sin(elapsed * 12) * 0.2;
-        char.limbs.torso.position.y = 1.9 + Math.abs(danceBop);
-        char.limbs.head.position.y = 3.0 + danceBop;
+        const style = char.danceStyle || 'hype';
 
-        char.limbs.leftArm.rotation.x = Math.sin(elapsed * 10) * 0.8 - 0.4;
-        char.limbs.rightArm.rotation.x = -Math.sin(elapsed * 10) * 0.8 - 0.4;
+        if (style === 'hype') {
+          // 1. Hype Rave Jump: Double fist pumping & bounce
+          const bop = Math.abs(Math.sin(elapsed * 12)) * 0.45;
+          char.limbs.torso.position.y = 1.95 + bop;
+          char.limbs.head.position.y = 3.1 + bop;
 
-        char.limbs.leftLeg.rotation.x = Math.sin(elapsed * 8) * 0.3;
-        char.limbs.rightLeg.rotation.x = -Math.sin(elapsed * 8) * 0.3;
+          char.limbs.leftArm.rotation.x = -1.8 + Math.sin(elapsed * 14) * 0.6;
+          char.limbs.rightArm.rotation.x = -1.8 + Math.cos(elapsed * 14) * 0.6;
+
+          char.limbs.leftLeg.rotation.x = Math.sin(elapsed * 12) * 0.3;
+          char.limbs.rightLeg.rotation.x = -Math.sin(elapsed * 12) * 0.3;
+        } else if (style === 'wave') {
+          // 2. K-Pop Body Wave: Fluid sinusoidal wave through spine and arms
+          const wave = Math.sin(elapsed * 6) * 0.2;
+          char.limbs.torso.rotation.z = wave;
+          char.limbs.head.rotation.z = -wave * 0.8;
+
+          char.limbs.leftArm.rotation.z = -0.5 + Math.sin(elapsed * 6) * 0.8;
+          char.limbs.rightArm.rotation.z = 0.5 - Math.sin(elapsed * 6) * 0.8;
+
+          char.limbs.leftArm.rotation.x = Math.cos(elapsed * 6) * 0.5;
+          char.limbs.rightArm.rotation.x = -Math.cos(elapsed * 6) * 0.5;
+        } else if (style === 'shuffle') {
+          // 3. Cyber Shuffle: Rapid leg footwork sliding side to side
+          const shuffle = Math.sin(elapsed * 16);
+          char.limbs.torso.position.y = 1.95 + Math.abs(shuffle) * 0.15;
+          char.limbs.leftLeg.rotation.x = shuffle * 0.7;
+          char.limbs.rightLeg.rotation.x = -shuffle * 0.7;
+          char.limbs.leftLeg.rotation.z = shuffle * 0.2;
+          char.limbs.rightLeg.rotation.z = -shuffle * 0.2;
+
+          char.limbs.leftArm.rotation.x = -shuffle * 0.5;
+          char.limbs.rightArm.rotation.x = shuffle * 0.5;
+        } else if (style === 'spin') {
+          // 4. Spin & Pose: Full 360 pirouette & idol pose
+          char.mesh.rotation.y += 0.08;
+          char.limbs.leftArm.rotation.x = -1.2;
+          char.limbs.rightArm.rotation.x = -0.5;
+          char.limbs.leftArm.rotation.z = -0.6;
+          char.limbs.rightArm.rotation.z = 0.6;
+        }
 
         if (char.limbs.leftTwintail) {
-          char.limbs.leftTwintail.rotation.x = Math.sin(elapsed * 10) * 0.4;
-          char.limbs.rightTwintail.rotation.x = -Math.sin(elapsed * 10) * 0.4;
+          char.limbs.leftTwintail.rotation.x = Math.sin(elapsed * 10) * 0.45;
+          char.limbs.rightTwintail.rotation.x = -Math.sin(elapsed * 10) * 0.45;
         }
       } else if (char.isMoving) {
-        // Natural 3D Walking stride
+        // Natural walking stride
         const stride = Math.sin(elapsed * 12);
         char.limbs.leftLeg.rotation.x = stride * 0.65;
         char.limbs.rightLeg.rotation.x = -stride * 0.65;
+        char.limbs.leftLeg.rotation.z = 0;
+        char.limbs.rightLeg.rotation.z = 0;
 
         char.limbs.leftArm.rotation.x = -stride * 0.6;
         char.limbs.rightArm.rotation.x = stride * 0.6;
+        char.limbs.leftArm.rotation.z = 0;
+        char.limbs.rightArm.rotation.z = 0;
 
-        char.limbs.torso.position.y = 1.9 + Math.abs(Math.sin(elapsed * 12)) * 0.1;
-        char.limbs.head.position.y = 3.0 + Math.abs(Math.sin(elapsed * 12)) * 0.08;
+        char.limbs.torso.rotation.z = 0;
+        char.limbs.torso.position.y = 1.95 + Math.abs(Math.sin(elapsed * 12)) * 0.1;
+        char.limbs.head.position.y = 3.1 + Math.abs(Math.sin(elapsed * 12)) * 0.08;
       } else {
-        // Idle breathing & subtle beat head bob
+        // Smooth idle breathing
         const bop = Math.sin(elapsed * 4) * 0.04;
-        char.limbs.head.position.y = 3.0 + bop;
+        char.limbs.head.position.y = 3.1 + bop;
+        char.limbs.torso.rotation.z = 0;
         char.limbs.leftArm.rotation.x = THREE.MathUtils.lerp(char.limbs.leftArm.rotation.x, 0, 0.1);
         char.limbs.rightArm.rotation.x = THREE.MathUtils.lerp(char.limbs.rightArm.rotation.x, 0, 0.1);
         char.limbs.leftLeg.rotation.x = THREE.MathUtils.lerp(char.limbs.leftLeg.rotation.x, 0, 0.1);
@@ -2285,7 +2694,6 @@
         zoneIndText.innerText = activeZone.name;
         zoneIndDot.style.background = activeZone.color;
 
-        // Spotlight banner if on DJ stage
         if (activeZone.id === 'dj' && player.position.distanceTo(new THREE.Vector3(0, 0, -6)) < 6) {
           spotBanner.classList.remove('hidden');
           document.getElementById('spotlightUserText').innerText = `${player.nickname} is rocking the 3D DJ Stage! 🎙️`;
@@ -2297,7 +2705,7 @@
         chatBox.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
         chatBox.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
 
-        zoneIndText.innerText = '3D Nightclub Floor';
+        zoneIndText.innerText = '3D Radiant LED Dance Floor';
         zoneIndDot.style.background = '#ff2a85';
         spotBanner.classList.add('hidden');
       }

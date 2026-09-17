@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Clubr.online — Cyber-Lounge & 2D Virtual Club</title>
+  <title>Clubr 3D — Real 3D Cyberpunk Nightclub</title>
   
-  <meta name="description" content="Step into Clubr Cyber-Lounge! The ultimate 2D virtual digital club with animated LED dance floor, DJ soundboard, Truth or Dare cards, neon bar mixer, and anonymous confession wall." />
-  <meta property="og:title" content="Clubr.online — Cyber-Lounge & 2D Virtual Club" />
-  <meta property="og:description" content="Hangout in the virtual 2D club with friends! DJ soundboard, party cards, neon bar & anonymous gossip wall. No signup required." />
+  <meta name="description" content="Step into Clubr 3D! A real 3D virtual nightclub powered by Three.js with customizable Anime male and female avatars, LED dance floor, DJ soundboard, neon bar, and party games." />
+  <meta property="og:title" content="Clubr 3D — Real 3D Cyberpunk Nightclub" />
+  <meta property="og:description" content="Real 3D digital club with anime avatars, 3D dance floor, DJ soundboard & party games. No signup needed!" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clubr.online" />
-  <meta name="theme-color" content="#07070b" />
+  <meta name="theme-color" content="#07070c" />
   
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
@@ -29,10 +29,10 @@
         extend: {
           colors: {
             cyber: {
-              bg: '#07070b',
+              bg: '#07070c',
               surface: '#0f0f18',
-              card: '#151522',
-              border: '#252538',
+              card: '#161624',
+              border: '#28283e',
               pink: '#ff2a85',
               cyan: '#00f0ff',
               purple: '#9d4edd',
@@ -49,6 +49,9 @@
     }
   </script>
 
+  <!-- Three.js CDN (r128) for 60 FPS WebGL 3D Real Club -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -62,7 +65,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #07070b;
+      background-color: #07070c;
       font-family: 'Plus Jakarta Sans', sans-serif;
       color: #f3f4f6;
     }
@@ -70,20 +73,48 @@
       font-family: 'Space Grotesk', sans-serif;
     }
     
-    /* Cyber Glassmorphism */
+    /* Cyber Glassmorphism UI */
     .cyber-glass {
-      background: rgba(15, 15, 24, 0.82);
+      background: rgba(14, 14, 24, 0.82);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
     .cyber-glass-glow {
-      background: rgba(21, 21, 34, 0.88);
+      background: rgba(20, 20, 34, 0.9);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(0, 240, 255, 0.25);
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
+    }
+
+    /* Virtual Joystick for Mobile */
+    #joystickZone {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 2px dashed rgba(0, 240, 255, 0.3);
+      backdrop-filter: blur(8px);
+      touch-action: none;
+      z-index: 35;
+    }
+    #joystickKnob {
+      position: absolute;
+      top: 35px;
+      left: 35px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #00f0ff, #0984e3);
+      box-shadow: 0 0 15px #00f0ff;
+      touch-action: none;
+      pointer-events: none;
+      transition: transform 0.05s ease-out;
     }
 
     /* Sound pad button press effect */
@@ -95,31 +126,17 @@
       filter: brightness(1.4);
     }
 
-    /* Card flip perspective */
-    .perspective-1000 {
-      perspective: 1000px;
-    }
-
-    /* Scrollbar */
+    /* Hide scrollbars */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    
-    /* Glowing animations */
-    @keyframes neonPulse {
-      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 8px currentColor); }
-      50% { opacity: 1; filter: drop-shadow(0 0 16px currentColor); }
-    }
-    .animate-neon-pulse {
-      animation: neonPulse 2.5s ease-in-out infinite;
-    }
   </style>
 </head>
-<body class="h-full w-full relative overflow-hidden">
+<body class="h-full w-full relative overflow-hidden bg-[#07070c]">
 
   <!-- ========================================================================= -->
-  <!-- 2D INTERACTIVE CYBER-LOUNGE CANVAS (FULLSCREEN 60 FPS) -->
+  <!-- 3D WEBGL NIGHTCLUB CANVAS CONTAINER -->
   <!-- ========================================================================= -->
-  <canvas id="clubFloorCanvas" class="absolute inset-0 w-full h-full cursor-crosshair z-0"></canvas>
+  <div id="threeCanvasContainer" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-0"></div>
 
   <!-- ========================================================================= -->
   <!-- TOP APP BAR -->
@@ -127,35 +144,43 @@
   <header class="absolute top-0 left-0 right-0 z-30 p-3 sm:p-4 pointer-events-none">
     <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
       
-      <!-- Brand & Live Club Status -->
+      <!-- Brand & 3D Club Status -->
       <div class="cyber-glass rounded-2xl px-3.5 py-2 flex items-center gap-3 pointer-events-auto border border-white/10 shadow-2xl">
         <div class="flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></div>
-          <span class="headline-font font-black text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400">CLUBR</span>
-          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-400 border border-pink-500/30 uppercase tracking-wider hidden sm:inline">Cyber Lounge</span>
+          <span class="headline-font font-black text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400">CLUBR 3D</span>
+          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">Three.js</span>
         </div>
         <div class="h-4 w-[1px] bg-white/15"></div>
         <div class="flex items-center gap-1.5 text-xs text-zinc-300 font-medium">
           <span class="text-emerald-400">●</span>
-          <span id="onlineCountText">24 in Lounge</span>
+          <span id="onlineCountText">28 in 3D Club</span>
         </div>
       </div>
 
-      <!-- Center Zone Banner Indicator -->
+      <!-- Center Zone Banner -->
       <div id="centerZoneTag" class="cyber-glass rounded-2xl px-4 py-2 hidden sm:flex items-center gap-2 text-xs font-mono font-bold text-white pointer-events-auto shadow-2xl transition-all">
         <span id="zoneIndicatorDot" class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-        <span id="zoneIndicatorText">Center Dance Floor</span>
+        <span id="zoneIndicatorText">3D LED Dance Floor</span>
       </div>
 
-      <!-- Right Action Hub: Audio Beats, Invite Gang, Drops -->
+      <!-- Right Action Hub: Audio, Switch View, Invite, Drops -->
       <div class="flex items-center gap-2 pointer-events-auto">
         
+        <!-- Camera View Preset Toggle (Third Person / Top Stage) -->
+        <button 
+          onclick="toggleCameraView()" 
+          class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-cyan-400/50 active:scale-95 transition-all shadow-xl"
+          title="Switch 3D Camera Angle">
+          <span>🎥</span>
+        </button>
+
         <!-- Audio Synthesizer Beat Toggle -->
         <button 
           id="audioToggleBtn" 
           onclick="toggleClubAudio()" 
           class="cyber-glass rounded-2xl w-10 h-10 flex items-center justify-center text-sm text-white hover:border-cyan-400/50 active:scale-95 transition-all shadow-xl"
-          title="Toggle Lounge Beats">
+          title="Toggle Club Beats">
           <span id="audioIcon">🔊</span>
         </button>
 
@@ -179,14 +204,21 @@
 
     </div>
 
-    <!-- Center Spotlight On-Air Broadcast Banner -->
+    <!-- Center DJ Stage On-Air Banner -->
     <div id="spotlightBanner" class="max-w-md mx-auto mt-2 hidden text-center pointer-events-auto">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/30 via-pink-500/30 to-purple-500/30 border border-amber-400/50 text-amber-300 text-xs font-bold font-mono shadow-xl animate-bounce">
-        <span>🎙️ ON THE MIC:</span>
-        <span id="spotlightUserText">You are in the DJ Spotlight!</span>
+        <span>🎙️ DJ STAGE ACTIVE:</span>
+        <span id="spotlightUserText">You are on the 3D DJ Stage!</span>
       </div>
     </div>
   </header>
+
+  <!-- ========================================================================= -->
+  <!-- MOBILE VIRTUAL JOYSTICK -->
+  <!-- ========================================================================= -->
+  <div id="joystickZone" class="md:hidden">
+    <div id="joystickKnob"></div>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- FLOATING PROXIMITY TABLE CHAT INPUT -->
@@ -196,7 +228,7 @@
       <div class="flex items-center justify-between px-2 text-[11px] font-mono">
         <span id="tableChatHeader" class="font-bold text-zinc-300 flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-          <span>Chatting at Table</span>
+          <span>Chatting in 3D Room</span>
         </span>
         <span class="text-zinc-400">Bubble: 6s</span>
       </div>
@@ -205,7 +237,7 @@
           type="text" 
           id="tableChatInput" 
           maxlength="80"
-          placeholder="Say something to the room..." 
+          placeholder="Speak in 3D Club..." 
           class="flex-1 bg-black/60 border border-white/15 focus:border-cyan-400 focus:outline-none rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 font-medium transition-all"
         />
         <button 
@@ -218,7 +250,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- BOTTOM CYBER ACTION DOCK (THE 4 MAIN STATIONS + EMOTES) -->
+  <!-- BOTTOM CYBER ACTION DOCK (4 MAIN STATIONS + EMOTES) -->
   <!-- ========================================================================= -->
   <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 max-w-xl w-[94%] sm:w-auto flex items-center justify-between sm:justify-center gap-1.5 sm:gap-2 cyber-glass rounded-3xl p-2 shadow-2xl border border-white/15 pointer-events-auto">
     
@@ -226,7 +258,7 @@
     <button 
       onclick="openStationModal('djSoundboardModal')" 
       class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-pink-500/20 to-purple-600/10 hover:from-pink-500/30 hover:to-purple-600/20 border border-pink-500/30 hover:border-pink-500 text-white transition-all active:scale-95 group"
-      title="DJ Soundboard (Airhorn, Vinyl Scratch, Laser, 808 Bass)">
+      title="3D DJ Soundboard">
       <span class="text-lg group-hover:scale-110 transition-transform">🎛️</span>
       <span class="text-[9px] font-mono font-bold text-pink-300 mt-0.5">DJ SFX</span>
     </button>
@@ -240,11 +272,11 @@
       <span class="text-[9px] font-mono font-bold text-purple-300 mt-0.5">Cards</span>
     </button>
 
-    <!-- Station 3: The Neon Bar -->
+    <!-- Station 3: The 3D Neon Bar -->
     <button 
       onclick="openStationModal('neonBarModal')" 
       class="flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-b from-cyan-500/20 to-blue-600/10 hover:from-cyan-500/30 hover:to-blue-600/20 border border-cyan-500/30 hover:border-cyan-500 text-white transition-all active:scale-95 group"
-      title="The Neon Bar (Order Virtual Cocktails & Fortunes)">
+      title="Order 3D Cocktails at Bar">
       <span class="text-lg group-hover:scale-110 transition-transform">🍸</span>
       <span class="text-[9px] font-mono font-bold text-cyan-300 mt-0.5">Bar</span>
     </button>
@@ -260,85 +292,82 @@
 
     <div class="h-8 w-[1px] bg-white/15 mx-0.5 hidden sm:block"></div>
 
-    <!-- Quick Emote Bursts -->
+    <!-- Quick Emotes & 3D Dance Mode -->
     <div class="flex items-center gap-1">
       <button onclick="triggerAvatarEmote('🔥')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Fire">🔥</button>
       <button onclick="triggerAvatarEmote('💀')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Dead">💀</button>
       <button onclick="triggerAvatarEmote('🍻')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-white/10 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Cheers">🍻</button>
-      <button onclick="toggleAvatarDance()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-pink-500/30 to-purple-600/30 hover:bg-pink-500/50 border border-pink-500/30 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="Dance Mode">🕺</button>
+      <button onclick="toggleAvatarDance()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-pink-500/30 to-purple-600/30 hover:bg-pink-500/50 border border-pink-500/30 flex items-center justify-center text-sm sm:text-base transition-transform active:scale-90" title="3D Dance Mode">🕺</button>
     </div>
 
   </div>
 
-  <!-- Movement Guide Pill -->
+  <!-- Desktop Controls Reminder -->
   <div class="absolute bottom-4 left-4 z-20 hidden lg:flex items-center gap-2 cyber-glass rounded-2xl px-3 py-1.5 text-[11px] text-zinc-400 font-mono pointer-events-none">
-    <span>Tap / Drag anywhere to walk</span>
+    <span>WASD / Arrow Keys to walk</span>
     <span>•</span>
-    <span>Walk to stations to trigger</span>
+    <span>Mouse drag to orbit 360°</span>
+    <span>•</span>
+    <span>Click floor to move</span>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 1: 🎧 INTERACTIVE DJ SOUNDBOARD -->
+  <!-- MODAL 1: 🎛️ 3D DJ SOUNDBOARD CONSOLE -->
   <!-- ========================================================================= -->
   <div id="djSoundboardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
     <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-pink-500/30 shadow-2xl relative space-y-4">
       
-      <!-- Header -->
       <div class="flex items-center justify-between pb-3 border-b border-white/10">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-lg">🎛️</div>
           <div>
-            <h3 class="headline-font font-bold text-base sm:text-lg text-white">DJ Soundboard Console</h3>
-            <p class="text-[11px] text-zinc-400 font-mono">Synthesized Web Audio • Zero Latency</p>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">3D DJ Soundboard</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">Synthesized Web Audio • Shockwave Waves</p>
           </div>
         </div>
         <button onclick="closeStationModal('djSoundboardModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
       </div>
 
-      <!-- Interactive 4 Sound Pads -->
+      <!-- 4 Sound Pads -->
       <div class="grid grid-cols-2 gap-3 pt-1">
         
-        <!-- Pad 1: Airhorn -->
         <button 
           onclick="playAirhorn()" 
           class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-pink-600/20 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">📢</span>
           <span class="headline-font font-black text-sm text-amber-300">AIRHORN</span>
-          <span class="text-[10px] font-mono text-zinc-400">Triple Blast</span>
+          <span class="text-[10px] font-mono text-zinc-400">Triple Horn Blast</span>
         </button>
 
-        <!-- Pad 2: Vinyl Scratch -->
         <button 
           onclick="playVinylScratch()" 
           class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 hover:border-cyan-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">💿</span>
           <span class="headline-font font-black text-sm text-cyan-300">SCRATCH</span>
-          <span class="text-[10px] font-mono text-zinc-400">Turntable Rewind</span>
+          <span class="text-[10px] font-mono text-zinc-400">Turntable Spin</span>
         </button>
 
-        <!-- Pad 3: Laser Drop -->
         <button 
           onclick="playLaserDrop()" 
           class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-600/20 border border-purple-500/40 hover:border-purple-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">💥</span>
           <span class="headline-font font-black text-sm text-purple-300">LASER DROP</span>
-          <span class="text-[10px] font-mono text-zinc-400">Electro Zap</span>
+          <span class="text-[10px] font-mono text-zinc-400">3D Electro Zap</span>
         </button>
 
-        <!-- Pad 4: 808 Sub-Bass -->
         <button 
           onclick="playSubBassDrop()" 
           class="sound-pad p-4 rounded-2xl bg-gradient-to-br from-rose-500/20 to-red-700/20 border border-rose-500/40 hover:border-rose-400 flex flex-col items-center justify-center gap-2 shadow-lg group">
           <span class="text-3xl group-hover:scale-110 transition-transform">🔊</span>
           <span class="headline-font font-black text-sm text-rose-300">808 BASS BOOM</span>
-          <span class="text-[10px] font-mono text-zinc-400">Floor Shaker</span>
+          <span class="text-[10px] font-mono text-zinc-400">3D Floor Shaker</span>
         </button>
 
       </div>
 
-      <!-- Beat Style Switcher -->
+      <!-- Beat Mode Switcher -->
       <div class="pt-2 flex items-center justify-between p-3 rounded-2xl bg-black/40 border border-white/10">
-        <span class="text-xs font-mono text-zinc-300">Music Rhythm:</span>
+        <span class="text-xs font-mono text-zinc-300">Club Rhythm:</span>
         <div class="flex items-center gap-2">
           <button id="beatModeLofiBtn" onclick="setBeatMode('lofi')" class="px-3 py-1 text-xs font-bold rounded-xl bg-cyan-500 text-black">Lo-Fi Chill</button>
           <button id="beatModeCyberBtn" onclick="setBeatMode('cyber')" class="px-3 py-1 text-xs font-bold rounded-xl bg-white/10 text-zinc-300 hover:bg-white/20">Cyberwave ⚡</button>
@@ -349,17 +378,16 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 2: 🎲 CHILL LOUNGE PARTY CARD DECK (TRUTH / DARE / NHIE) -->
+  <!-- MODAL 2: 🎲 LOUNGE PARTY CARD DECK (TRUTH / DARE / NHIE) -->
   <!-- ========================================================================= -->
   <div id="partyDeckModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
     <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-purple-500/30 shadow-2xl relative space-y-4">
       
-      <!-- Header -->
       <div class="flex items-center justify-between pb-3 border-b border-white/10">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-lg">🎲</div>
           <div>
-            <h3 class="headline-font font-bold text-base sm:text-lg text-white">Lounge Party Deck</h3>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">3D Lounge Party Deck</h3>
             <p class="text-[11px] text-zinc-400 font-mono">Truth • Dare • Never Have I Ever</p>
           </div>
         </div>
@@ -374,21 +402,21 @@
         <button onclick="setPartyDeckCategory('nhie', this)" class="deck-filter-btn px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold shrink-0">🙈 Never Ever</button>
       </div>
 
-      <!-- The 3D-like Glowing Party Card -->
+      <!-- The Party Card -->
       <div id="partyCardBox" class="p-6 rounded-3xl bg-gradient-to-br from-purple-950/70 via-zinc-900 to-black border-2 border-purple-500/40 shadow-xl min-h-[170px] flex flex-col justify-between transition-all duration-300">
         <div class="flex items-center justify-between">
           <span id="partyCardTag" class="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-500/30 text-purple-300 border border-purple-500/40">🌶️ SPICY TRUTH</span>
-          <span class="text-xs font-mono text-zinc-500">Clubr Deck #42</span>
+          <span class="text-xs font-mono text-zinc-500">Clubr 3D Deck</span>
         </div>
         <p id="partyCardText" class="text-sm sm:text-base font-bold text-white text-center my-4 leading-relaxed">
           "Apne ex ko raat ke 2 baje message karne ka guilty pleasure sach-sach batao."
         </p>
         <div class="text-center text-[10px] text-zinc-400 font-mono">
-          Spoken by the Chill Table
+          Velvet Lounge Table
         </div>
       </div>
 
-      <!-- Card Actions -->
+      <!-- Actions -->
       <div class="grid grid-cols-2 gap-2 pt-1">
         <button 
           onclick="drawNewPartyCard()" 
@@ -398,7 +426,7 @@
         <button 
           onclick="broadcastCardToChat()" 
           class="py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 font-bold text-xs text-white active:scale-95 transition-all">
-          💬 Speak at Table
+          💬 Speak in 3D Chat
         </button>
       </div>
 
@@ -406,18 +434,17 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 3: 🍸 THE NEON BAR & DRINK MIXER -->
+  <!-- MODAL 3: 🍸 THE 3D NEON BAR (VIRTUAL COCKTAILS) -->
   <!-- ========================================================================= -->
   <div id="neonBarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
     <div class="cyber-glass rounded-3xl w-full max-w-md p-5 sm:p-6 border border-cyan-500/30 shadow-2xl relative space-y-4">
       
-      <!-- Header -->
       <div class="flex items-center justify-between pb-3 border-b border-white/10">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-lg">🍸</div>
           <div>
-            <h3 class="headline-font font-bold text-base sm:text-lg text-white">The Cyber Bar Counter</h3>
-            <p class="text-[11px] text-zinc-400 font-mono">Bartender: BAR_BOT 🤖 • Order & Vibe</p>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">3D Cyber Bar Counter</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">Bartender: BAR_BOT 🤖 • Drinks appear in hand!</p>
           </div>
         </div>
         <button onclick="closeStationModal('neonBarModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
@@ -426,20 +453,18 @@
       <!-- Drink Menu Selection List -->
       <div class="space-y-2 max-h-60 overflow-y-auto pr-1 no-scrollbar">
         
-        <!-- Drink 1 -->
         <div onclick="orderDrink('Cyber Margarita', '🍸', '100% chance of texting your crush tonight.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
           <div class="flex items-center gap-3">
             <span class="text-2xl">🍸</span>
             <div>
               <div class="font-bold text-xs sm:text-sm text-white">Cyber Margarita</div>
-              <div class="text-[11px] text-zinc-400">Sweet neon citrus kick</div>
+              <div class="text-[11px] text-zinc-400">Neon citrus & tequila chill</div>
             </div>
           </div>
           <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
         </div>
 
-        <!-- Drink 2 -->
-        <div onclick="orderDrink('Electric Blue Lagoon', '🧪', 'Warning: Unlocks uncontrollable dance moves.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+        <div onclick="orderDrink('Electric Blue Lagoon', '🧪', 'Warning: Unlocks uncontrollable 3D dance moves.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
           <div class="flex items-center gap-3">
             <span class="text-2xl">🧪</span>
             <div>
@@ -450,8 +475,7 @@
           <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
         </div>
 
-        <!-- Drink 3 -->
-        <div onclick="orderDrink('Desi Patiala Peg', '🥃', 'Boosts confidence by 500%. Zero filter mode.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+        <div onclick="orderDrink('Desi Patiala Peg', '🥃', 'Boosts confidence by 500%. Zero hesitation.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
           <div class="flex items-center gap-3">
             <span class="text-2xl">🥃</span>
             <div>
@@ -462,8 +486,7 @@
           <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
         </div>
 
-        <!-- Drink 4 -->
-        <div onclick="orderDrink('Overclocked Red Bull', '⚡', 'Heart rate: 180 BPM. Zero sleep gang.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
+        <div onclick="orderDrink('Overclocked Red Bull', '⚡', 'Heart rate: 180 BPM. 3 AM night owl vibe.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
           <div class="flex items-center gap-3">
             <span class="text-2xl">⚡</span>
             <div>
@@ -474,7 +497,6 @@
           <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-xl bg-cyan-500/20 text-cyan-300">Order</span>
         </div>
 
-        <!-- Drink 5 -->
         <div onclick="orderDrink('Virgin Mojito Chill', '🍹', 'Pinnacle of calmness. Absolutely zero drama.')" class="p-3 rounded-2xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-400/50 cursor-pointer flex items-center justify-between transition-all active:scale-98">
           <div class="flex items-center gap-3">
             <span class="text-2xl">🍹</span>
@@ -488,7 +510,6 @@
 
       </div>
 
-      <!-- Last Ordered Drink Status Card -->
       <div id="barCurrentDrinkBox" class="p-3 rounded-2xl bg-black/50 border border-cyan-500/20 flex items-center gap-3">
         <span id="currentDrinkIcon" class="text-2xl">🍸</span>
         <div class="flex-1">
@@ -506,26 +527,25 @@
   <div id="confessionWallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden opacity-0 transition-opacity duration-200">
     <div class="cyber-glass rounded-3xl w-full max-w-lg p-5 sm:p-6 border border-amber-500/30 shadow-2xl relative space-y-4 max-h-[90vh] flex flex-col">
       
-      <!-- Header -->
       <div class="flex items-center justify-between pb-3 border-b border-white/10">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-lg">💌</div>
           <div>
-            <h3 class="headline-font font-bold text-base sm:text-lg text-white">Spill The Tea ☕ (Confessions)</h3>
-            <p class="text-[11px] text-zinc-400 font-mono">100% Anonymous Wall • Zero Names Attached</p>
+            <h3 class="headline-font font-bold text-base sm:text-lg text-white">Spill The Tea ☕ (3D Graffiti Wall)</h3>
+            <p class="text-[11px] text-zinc-400 font-mono">100% Anonymous • Zero Identity Attached</p>
           </div>
         </div>
         <button onclick="closeStationModal('confessionWallModal')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
       </div>
 
-      <!-- Add New Confession Input -->
+      <!-- Post Confession Form -->
       <form onsubmit="handlePostConfession(event)" class="space-y-2">
         <div class="relative">
           <textarea 
             id="confessionTextInput" 
             maxlength="120" 
             rows="2"
-            placeholder="Write your anonymous gossip or confession (e.g. 'I still stalk my ex...')" 
+            placeholder="Write your anonymous club secret or tea (e.g. 'I still stalk my ex...')" 
             class="w-full bg-black/60 border border-white/15 focus:border-amber-400 focus:outline-none rounded-2xl p-3 text-xs text-white placeholder-zinc-500 resize-none font-medium transition-all"
             required></textarea>
         </div>
@@ -534,12 +554,11 @@
           <button 
             type="submit" 
             class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:opacity-90 font-bold text-xs text-white shadow-md active:scale-95 transition-all">
-            Stick to Wall 📌
+            Pin to 3D Wall 📌
           </button>
         </div>
       </form>
 
-      <!-- Scrollable Sticky Notes Board -->
       <div id="confessionsList" class="flex-1 overflow-y-auto space-y-2.5 pr-1 no-scrollbar">
         <!-- Rendered dynamically -->
       </div>
@@ -548,7 +567,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- NOTICE BOARD / EXCLUSIVE DROPS DRAWER -->
+  <!-- EXCLUSIVE DROPS DRAWER -->
   <!-- ========================================================================= -->
   <div id="dropDrawer" class="fixed inset-y-0 right-0 w-full max-w-sm z-50 cyber-glass bg-zinc-950/95 border-l border-white/10 shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300">
     <div class="space-y-6">
@@ -562,26 +581,24 @@
 
       <div class="space-y-3.5 overflow-y-auto max-h-[70vh] no-scrollbar">
         <p class="text-xs text-zinc-400 leading-relaxed">
-          Daily perks and drops curated exclusively for verified Clubr clubbers.
+          Daily perks and drops curated exclusively for verified 3D Clubr clubbers.
         </p>
 
-        <!-- Drop Card 1 -->
         <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-950/50 to-zinc-900 border border-purple-500/30 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">VIP PERK</span>
             <span class="text-[10px] text-zinc-500 font-mono">Today</span>
           </div>
           <h4 class="font-bold text-sm text-white">1 Free Drink @ Partner Lounges</h4>
-          <p class="text-xs text-zinc-400 leading-relaxed">Show your Clubr screen at the entrance for 1 free mocktail/cocktail.</p>
+          <p class="text-xs text-zinc-400 leading-relaxed">Show your 3D Clubr avatar at the door for 1 free mocktail/cocktail.</p>
           <div class="pt-1">
             <span class="text-xs font-mono font-bold text-pink-400 bg-pink-500/10 px-2 py-1 rounded-lg border border-pink-500/20">CODE: CLUBR2026</span>
           </div>
         </div>
 
-        <!-- Drop Card 2 -->
         <div class="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/50 to-zinc-900 border border-cyan-500/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">STARTUP PERK</span>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">BUILDER DROP</span>
             <span class="text-[10px] text-zinc-500 font-mono">Hustlers</span>
           </div>
           <h4 class="font-bold text-sm text-white">$100 Cloud Credits for Builders</h4>
@@ -590,11 +607,9 @@
             <span class="text-xs font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2 py-1 rounded-lg border border-cyan-500/20">CODE: AGENTIC99</span>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- WhatsApp Share Button Inside Drawer -->
     <div class="pt-4 border-t border-white/10">
       <button 
         onclick="inviteGangToTable()" 
@@ -606,73 +621,102 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- ONBOARDING & ENTRY OVERLAY (ZERO SIGNUP) -->
+  <!-- ONBOARDING: ANIME CHARACTER CUSTOMIZER (ZERO SIGNUP) -->
   <!-- ========================================================================= -->
-  <div id="onboardingOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07070b]/90 backdrop-blur-xl transition-all duration-500">
-    <div class="cyber-glass-glow rounded-3xl max-w-md w-full p-6 sm:p-8 text-center space-y-5 relative">
+  <div id="onboardingOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07070c]/90 backdrop-blur-xl transition-all duration-500">
+    <div class="cyber-glass-glow rounded-3xl max-w-md w-full p-6 sm:p-7 text-center space-y-4 relative max-h-[95vh] overflow-y-auto no-scrollbar">
       
-      <!-- Club Logo -->
+      <!-- Title -->
       <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-500/30 text-pink-400 text-xs font-mono font-bold">
-          <span class="w-2 h-2 rounded-full bg-pink-500 animate-ping"></span>
-          <span>CYBER-LOUNGE LIVE</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <span>REAL 3D ANIME CLUB</span>
         </div>
-        <h2 class="headline-font font-black text-3xl sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400 tracking-wider">
-          CLUBR
+        <h2 class="headline-font font-black text-3xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-400 tracking-wider">
+          CLUBR 3D
         </h2>
         <p class="text-xs text-zinc-400">
-          The 2D digital club. Dance, talk, play Truth or Dare, and spill secrets.
+          Create your 3D Anime avatar and step into the real 3D nightclub.
         </p>
       </div>
 
-      <!-- Live Avatar Preview -->
-      <div class="relative py-1">
-        <div id="avatarLivePreview" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-2xl shadow-2xl transition-all duration-300 border-2 border-white/50" style="background: radial-gradient(circle, #00f0ff, #0a0a18); box-shadow: 0 0 25px #00f0ff;">
-          <span id="avatarAccessoryIcon">🕶️</span>
+      <!-- Live 3D Avatar Stylized Preview Badge -->
+      <div class="py-2">
+        <div id="avatarLivePreview" class="w-20 h-20 rounded-3xl mx-auto flex flex-col items-center justify-center text-3xl shadow-2xl transition-all duration-300 border-2 border-white/40 relative" style="background: radial-gradient(circle, #00f0ff, #090918); box-shadow: 0 0 30px #00f0ff;">
+          <span id="avatarGenderIcon">👦</span>
+          <span id="avatarAccessoryIcon" class="absolute -top-2 -right-2 text-sm bg-black/60 p-1 rounded-full border border-white/20">🕶️</span>
         </div>
-        <p id="avatarPreviewNick" class="text-xs font-mono font-bold text-white mt-2">@Aryan</p>
+        <div class="flex items-center justify-center gap-2 mt-2">
+          <span id="avatarPreviewNick" class="text-xs font-mono font-bold text-white">@Aryan</span>
+          <span id="avatarPreviewArchetype" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-cyan-300 border border-white/10">Cyber Hustler</span>
+        </div>
       </div>
 
-      <!-- Nickname Input -->
+      <!-- 1. GENDER SELECTION (ANIME BOY VS ANIME GIRL) -->
       <div class="space-y-1.5 text-left">
-        <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider">Your Nickname:</label>
+        <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">1. Choose Anime Character:</label>
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Anime Boy -->
+          <button 
+            id="genderBoyBtn" 
+            onclick="selectGender('boy')" 
+            class="p-3 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center gap-3 transition-all active:scale-95 text-left">
+            <span class="text-2xl">👦</span>
+            <div>
+              <div class="font-bold text-xs text-white">Anime Guy</div>
+              <div class="text-[10px] text-zinc-400">Cyber Streetwear</div>
+            </div>
+          </button>
+          <!-- Anime Girl -->
+          <button 
+            id="genderGirlBtn" 
+            onclick="selectGender('girl')" 
+            class="p-3 rounded-2xl bg-zinc-900 border-2 border-white/10 hover:border-pink-400 flex items-center gap-3 transition-all active:scale-95 text-left">
+            <span class="text-2xl">👧</span>
+            <div>
+              <div class="font-bold text-xs text-white">Anime Girl</div>
+              <div class="text-[10px] text-zinc-400">Cyber Idol Drip</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. NICKNAME INPUT -->
+      <div class="space-y-1 text-left">
+        <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">2. Nickname:</label>
         <input 
           type="text" 
           id="nicknameInput" 
           maxlength="14"
-          placeholder="e.g. Aryan, NeonViper, Maya" 
+          placeholder="e.g. Aryan, Maya, Ryu, Neon" 
           value="Aryan"
           oninput="updateAvatarPreview()"
-          class="w-full px-4 py-3 rounded-2xl bg-zinc-950/80 border border-white/15 focus:border-cyan-400 focus:outline-none text-sm font-bold text-white placeholder-zinc-600 transition-all text-center"
+          class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/80 border border-white/15 focus:border-cyan-400 focus:outline-none text-sm font-bold text-white placeholder-zinc-600 transition-all text-center"
         />
       </div>
 
-      <!-- Neon Color Swatches (4 Colors) -->
-      <div class="space-y-2">
-        <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider text-left">Pick Avatar Color:</label>
-        <div class="grid grid-cols-4 gap-2.5">
-          <!-- Cyan -->
-          <button onclick="pickColor('#00f0ff', 'Cyan', this)" class="color-swatch-btn h-10 rounded-xl bg-cyan-400 flex items-center justify-center border-2 border-white transition-transform active:scale-90 shadow-lg shadow-cyan-500/40">
+      <!-- 3. NEON COLOR THEME (4 HIGH-VIBE NEON COLORS) -->
+      <div class="space-y-1.5 text-left">
+        <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">3. Anime Neon Aura:</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button onclick="pickColor('#00f0ff', 'Cyan', this)" class="color-swatch-btn h-9 rounded-xl bg-cyan-400 flex items-center justify-center border-2 border-white transition-transform active:scale-90 shadow-lg shadow-cyan-500/40">
             <span class="text-xs text-black font-bold">✓</span>
           </button>
-          <!-- Purple -->
-          <button onclick="pickColor('#9d4edd', 'Purple', this)" class="color-swatch-btn h-10 rounded-xl bg-purple-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-purple-500/40">
+          <button onclick="pickColor('#ff2a85', 'Pink', this)" class="color-swatch-btn h-9 rounded-xl bg-pink-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-pink-500/40">
             <span class="text-xs text-white font-bold opacity-0">✓</span>
           </button>
-          <!-- Emerald -->
-          <button onclick="pickColor('#06d6a0', 'Emerald', this)" class="color-swatch-btn h-10 rounded-xl bg-emerald-400 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-emerald-500/40">
-            <span class="text-xs text-black font-bold opacity-0">✓</span>
+          <button onclick="pickColor('#9d4edd', 'Purple', this)" class="color-swatch-btn h-9 rounded-xl bg-purple-500 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-purple-500/40">
+            <span class="text-xs text-white font-bold opacity-0">✓</span>
           </button>
-          <!-- Gold -->
-          <button onclick="pickColor('#ffb703', 'Gold', this)" class="color-swatch-btn h-10 rounded-xl bg-amber-400 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-amber-500/40">
+          <button onclick="pickColor('#ffb703', 'Gold', this)" class="color-swatch-btn h-9 rounded-xl bg-amber-400 flex items-center justify-center border-2 border-transparent hover:border-white/50 transition-transform active:scale-90 shadow-lg shadow-amber-500/40">
             <span class="text-xs text-black font-bold opacity-0">✓</span>
           </button>
         </div>
       </div>
 
-      <!-- Drip Accessory Swatches -->
-      <div class="space-y-2">
-        <label class="block text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider text-left">Drip Accessory:</label>
+      <!-- 4. DRIP ACCESSORY -->
+      <div class="space-y-1.5 text-left">
+        <label class="block text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-wider">4. Drip Accessory:</label>
         <div class="grid grid-cols-4 gap-2">
           <button onclick="pickAccessory('🕶️', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-cyan-400 text-base active:scale-90">🕶️</button>
           <button onclick="pickAccessory('🎧', this)" class="accessory-btn p-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-white/20 text-base active:scale-90">🎧</button>
@@ -681,41 +725,43 @@
         </div>
       </div>
 
-      <!-- Enter Club Button -->
+      <!-- Enter 3D Club Button -->
       <button 
-        onclick="enterClubFloor()" 
-        class="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 hover:opacity-95 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-pink-500/30 transition-all active:scale-95">
-        Enter Cyber-Lounge →
+        onclick="enterClub3D()" 
+        class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 hover:opacity-95 text-white font-black text-sm uppercase tracking-wider shadow-xl shadow-pink-500/30 transition-all active:scale-95">
+        Enter 3D Nightclub →
       </button>
 
-      <p class="text-[10px] text-zinc-500 font-mono">Zero Signup Required • Instant Session</p>
+      <p class="text-[10px] text-zinc-500 font-mono">Instant WebGL 60 FPS • Zero App Downloads</p>
     </div>
   </div>
 
   <!-- Toast Notification -->
   <div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-2xl cyber-glass text-white font-bold text-xs shadow-2xl flex items-center gap-2 border border-white/15">
     <span id="toastIcon">✨</span>
-    <span id="toastMessage">Welcome to Clubr Cyber-Lounge!</span>
+    <span id="toastMessage">Welcome to Clubr 3D!</span>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- JAVASCRIPT ENGINE (CANVAS 60 FPS + WEB AUDIO + STATIONS) -->
+  <!-- THREE.JS 3D NIGHTCLUB & ANIME ENGINE SCRIPT -->
   <!-- ========================================================================= -->
   <script>
     // --- PLAYER STATE ---
     let player = {
       nickname: 'Aryan',
+      gender: 'boy', // 'boy' or 'girl'
       color: '#00f0ff',
       accessory: '🕶️',
       drink: '🍸',
-      x: 0,
-      y: 0,
-      targetX: 0,
-      targetY: 0,
-      radius: 22,
-      speed: 0.12,
-      trail: [],
+      mesh: null,
+      limbs: {},
       isDancing: false,
+      isMoving: false,
+      speed: 0.28,
+      position: new THREE.Vector3(0, 0, 16),
+      targetPosition: new THREE.Vector3(0, 0, 16),
+      heading: 0,
+      animTime: 0,
       currentZone: null,
       message: null
     };
@@ -725,140 +771,853 @@
     let masterGain = null;
     let isMuted = false;
     let beatTimer = null;
-    let beatMode = 'lofi'; // 'lofi' or 'cyber'
+    let beatMode = 'lofi';
     let currentBeatStep = 0;
 
-    // --- CYBER STATIONS & ZONES ---
-    const ZONES = [
+    // --- THREE.JS SCENE SETUP ---
+    let scene, camera, renderer, clock;
+    let cameraMode = 'thirdPerson'; // 'thirdPerson' or 'stageView'
+    let danceFloorTiles = [];
+    let laserCones = [];
+    let discoBall;
+    let speechBubbleCanvas, speechBubbleTexture;
+    let shockwaveRings = [];
+    let floating3DEmotes = [];
+
+    // --- 3D ZONES CONFIGURATION ---
+    const ZONES_3D = [
       {
         id: 'dj',
-        name: 'Open Floor & DJ Stage',
+        name: '3D DJ Stage & Dance Floor',
         color: '#ff2a85',
-        icon: '🎛️',
-        relX: 0.0,
-        relY: 0.02,
-        radius: 175,
+        center: new THREE.Vector3(0, 0, 0),
+        radius: 12,
         action: () => openStationModal('djSoundboardModal')
       },
       {
         id: 'bar',
-        name: 'The Cyber Bar',
+        name: 'The 3D Cyber Bar',
         color: '#00f0ff',
-        icon: '🍸',
-        relX: -0.32,
-        relY: -0.22,
-        radius: 130,
+        center: new THREE.Vector3(-18, 0, -8),
+        radius: 8,
         action: () => openStationModal('neonBarModal')
       },
       {
         id: 'chill',
-        name: 'Velvet Chill Lounge',
+        name: 'Velvet Lounge & Cards',
         color: '#9d4edd',
-        icon: '🎲',
-        relX: 0.32,
-        relY: 0.22,
-        radius: 135,
+        center: new THREE.Vector3(18, 0, 8),
+        radius: 8,
         action: () => openStationModal('partyDeckModal')
       },
       {
         id: 'wall',
         name: 'Spill The Tea Wall',
         color: '#ffb703',
-        icon: '💌',
-        relX: -0.34,
-        relY: 0.26,
-        radius: 110,
+        center: new THREE.Vector3(-18, 0, 14),
+        radius: 7,
         action: () => openStationModal('confessionWallModal')
       }
     ];
 
-    // --- LIVELY SMART NPC RESIDENTS ---
-    const NPCS = [
+    // --- NPC CHARACTERS ---
+    let npcs = [
       {
         id: 'dj_cyber',
         nickname: 'DJ_CYBER 🎛️',
+        gender: 'boy',
         color: '#ff2a85',
         accessory: '🎧',
-        drink: '⚡',
-        relX: 0.0,
-        relY: -0.10,
-        x: 0,
-        y: 0,
-        radius: 22,
-        message: { text: "Drop the bass! Vibe with Clubr ⚡", timer: 9000 }
+        position: new THREE.Vector3(0, 1.8, -7),
+        heading: 0,
+        mesh: null,
+        limbs: {},
+        isDancing: true,
+        message: { text: "Drop the bass! Welcome to Clubr 3D ⚡", life: 8000 }
       },
       {
         id: 'bar_bot',
         nickname: 'BAR_BOT 🤖',
+        gender: 'boy',
         color: '#00f0ff',
         accessory: '🍸',
-        drink: '🍹',
-        relX: -0.32,
-        relY: -0.26,
-        x: 0,
-        y: 0,
-        radius: 22,
-        message: { text: "Cocktails are cold, neon is hot! 🍸", timer: 7000 }
+        position: new THREE.Vector3(-18, 0, -10),
+        heading: 0,
+        mesh: null,
+        limbs: {},
+        isDancing: false,
+        message: { text: "Cold cocktails & neon vibes! 🍸", life: 7000 }
       },
       {
         id: 'zoya_chill',
         nickname: 'Zoya 🌙',
+        gender: 'girl',
         color: '#9d4edd',
         accessory: '🕶️',
-        drink: '🍸',
-        relX: 0.32,
-        relY: 0.22,
-        x: 0,
-        y: 0,
-        radius: 22,
-        message: { text: "Drawing cards at the velvet table ✨", timer: 7500 }
+        position: new THREE.Vector3(18, 0, 8),
+        heading: Math.PI,
+        mesh: null,
+        limbs: {},
+        isDancing: false,
+        message: { text: "Chilling at the velvet table ✨", life: 7500 }
       },
       {
         id: 'kabir_dancer',
         nickname: 'Kabir 🕺',
+        gender: 'boy',
         color: '#06d6a0',
         accessory: '👑',
-        drink: '🧪',
-        relX: 0.08,
-        relY: 0.08,
-        x: 0,
-        y: 0,
-        radius: 22,
-        message: { text: "This beat is straight fire! 🔥", timer: 8000 }
+        position: new THREE.Vector3(4, 0, 3),
+        heading: Math.PI * 0.8,
+        mesh: null,
+        limbs: {},
+        isDancing: true,
+        message: { text: "This 3D dance floor is unreal! 🔥", life: 8000 }
       }
     ];
 
-    // --- PARTICLES & VISUALS ---
-    let floatingParticles = [];
-    let lightRipples = [];
-    let laserAngle1 = 0;
-    let laserAngle2 = Math.PI;
+    // Keyboard state
+    const keys = { w: false, a: false, s: false, d: false, Up: false, Down: false, Left: false, Right: false };
 
-    // --- CANVAS CONTEXT ---
-    const canvas = document.getElementById('clubFloorCanvas');
-    const ctx = canvas.getContext('2d');
-    let width = 0;
-    let height = 0;
+    // =========================================================================
+    // INITIALIZATION & THREE.JS SCENE BUILDER
+    // =========================================================================
+    function initThreeScene() {
+      const container = document.getElementById('threeCanvasContainer');
+      clock = new THREE.Clock();
 
-    function resizeCanvas() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
+      // 1. Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07070c);
+      scene.fog = new THREE.FogExp2(0x07070c, 0.022);
 
-      // Recompute NPC screen positions
-      NPCS.forEach(npc => {
-        npc.x = width / 2 + (width * npc.relX);
-        npc.y = height / 2 + (height * npc.relY);
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 10, 28);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      container.appendChild(renderer.domElement);
+
+      // 4. Build 3D Nightclub Interior
+      build3DNightclub();
+
+      // 5. Build NPC Anime Avatars
+      npcs.forEach(npc => {
+        npc.mesh = createAnimeCharacterMesh(npc.gender, npc.color, npc.accessory, npc.nickname, false);
+        npc.mesh.position.copy(npc.position);
+        npc.mesh.rotation.y = npc.heading;
+        scene.add(npc.mesh);
+      });
+
+      // 6. Raycaster for click-to-walk on 3D floor
+      initFloorInteraction();
+
+      // 7. Virtual Joystick for Mobile
+      initMobileJoystick();
+
+      // Window resize handler
+      window.addEventListener('resize', onWindowResize);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // =========================================================================
+    // 3D NIGHTCLUB ARCHITECTURE (STAGE, DISCO BALL, BAR, LOUNGE, LIGHTS)
+    // =========================================================================
+    function build3DNightclub() {
+      // 1. Ambient & Directional Lights
+      const ambient = new THREE.AmbientLight(0x221c35, 1.2);
+      scene.add(ambient);
+
+      // Main Dance Floor Spotlight
+      const danceSpot = new THREE.SpotLight(0xff2a85, 3.5);
+      danceSpot.position.set(0, 16, 0);
+      danceSpot.angle = Math.PI / 4;
+      danceSpot.penumbra = 0.5;
+      danceSpot.castShadow = true;
+      scene.add(danceSpot);
+
+      // Stage Spotlight
+      const stageSpot = new THREE.SpotLight(0x00f0ff, 4.0);
+      stageSpot.position.set(0, 16, -10);
+      stageSpot.target.position.set(0, 2, -7);
+      stageSpot.angle = Math.PI / 5;
+      stageSpot.penumbra = 0.4;
+      scene.add(stageSpot);
+      scene.add(stageSpot.target);
+
+      // Lounge Warm Violet Light
+      const loungeLight = new THREE.PointLight(0x9d4edd, 2.5, 25);
+      loungeLight.position.set(18, 6, 8);
+      scene.add(loungeLight);
+
+      // Bar Cyan Glow
+      const barLight = new THREE.PointLight(0x00f0ff, 2.5, 25);
+      barLight.position.set(-18, 6, -8);
+      scene.add(barLight);
+
+      // 2. Reflective Main Floor (Dark Metallic Slab)
+      const floorGeo = new THREE.PlaneGeometry(60, 60);
+      const floorMat = new THREE.MeshStandardMaterial({
+        color: 0x090912,
+        roughness: 0.25,
+        metalness: 0.8
+      });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // 3. Grid Lines on Floor
+      const gridHelper = new THREE.GridHelper(60, 30, 0xff2a85, 0x1f1f33);
+      gridHelper.position.y = 0.01;
+      scene.add(gridHelper);
+
+      // 4. ANIMATED 3D LED DANCE FLOOR (8x6 Tiles in Center)
+      const tileCols = 8;
+      const tileRows = 6;
+      const tileSize = 2.4;
+      const startX = -((tileCols - 1) * tileSize) / 2;
+      const startZ = -((tileRows - 1) * tileSize) / 2 + 1;
+
+      for (let c = 0; c < tileCols; c++) {
+        for (let r = 0; r < tileRows; r++) {
+          const tileGeo = new THREE.BoxGeometry(tileSize - 0.2, 0.15, tileSize - 0.2);
+          const tileMat = new THREE.MeshStandardMaterial({
+            color: 0x111122,
+            emissive: 0x00f0ff,
+            emissiveIntensity: 0.4,
+            roughness: 0.2,
+            metalness: 0.5
+          });
+          const tileMesh = new THREE.Mesh(tileGeo, tileMat);
+          tileMesh.position.set(startX + c * tileSize, 0.08, startZ + r * tileSize);
+          scene.add(tileMesh);
+          danceFloorTiles.push({ mesh: tileMesh, col: c, row: r });
+        }
+      }
+
+      // 5. 3D DJ STAGE (Raised Platform & Turntable Booth)
+      const stageBaseGeo = new THREE.BoxGeometry(14, 1.2, 7);
+      const stageBaseMat = new THREE.MeshStandardMaterial({ color: 0x12121f, roughness: 0.4, metalness: 0.7 });
+      const stageBase = new THREE.Mesh(stageBaseGeo, stageBaseMat);
+      stageBase.position.set(0, 0.6, -8);
+      scene.add(stageBase);
+
+      // Stage Neon Trim
+      const stageTrimGeo = new THREE.BoxGeometry(14.2, 0.1, 7.2);
+      const stageTrimMat = new THREE.MeshBasicMaterial({ color: 0xff2a85 });
+      const stageTrim = new THREE.Mesh(stageTrimGeo, stageTrimMat);
+      stageTrim.position.set(0, 1.2, -8);
+      scene.add(stageTrim);
+
+      // DJ Console Table
+      const djDeskGeo = new THREE.BoxGeometry(6, 1.4, 2);
+      const djDeskMat = new THREE.MeshStandardMaterial({ color: 0x0a0a14, roughness: 0.3, metalness: 0.8 });
+      const djDesk = new THREE.Mesh(djDeskGeo, djDeskMat);
+      djDesk.position.set(0, 1.9, -7);
+      scene.add(djDesk);
+
+      // Turntables on Table
+      [-1.5, 1.5].forEach(xOff => {
+        const deckGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 24);
+        const deckMat = new THREE.MeshStandardMaterial({ color: 0x181828, metalness: 0.9 });
+        const deck = new THREE.Mesh(deckGeo, deckMat);
+        deck.position.set(xOff, 2.65, -7);
+        scene.add(deck);
+
+        const vinylGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.12, 24);
+        const vinylMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.1 });
+        const vinyl = new THREE.Mesh(vinylGeo, vinylMat);
+        vinyl.position.set(xOff, 2.67, -7);
+        scene.add(vinyl);
+      });
+
+      // Massive 3D Speaker Stacks on sides of DJ Booth
+      [-8, 8].forEach(sx => {
+        const spkGeo = new THREE.BoxGeometry(2.2, 6, 2.5);
+        const spkMat = new THREE.MeshStandardMaterial({ color: 0x14141f, roughness: 0.8 });
+        const spk = new THREE.Mesh(spkGeo, spkMat);
+        spk.position.set(sx, 3, -8);
+        scene.add(spk);
+
+        // Subwoofer cones
+        [1.5, 3.2, 4.8].forEach(sy => {
+          const coneGeo = new THREE.CylinderGeometry(0.7, 0.4, 0.3, 16);
+          const coneMat = new THREE.MeshStandardMaterial({ color: 0xff2a85, roughness: 0.5 });
+          const cone = new THREE.Mesh(coneGeo, coneMat);
+          cone.rotation.x = Math.PI / 2;
+          cone.position.set(sx, sy, -6.6);
+          scene.add(cone);
+        });
+      });
+
+      // 6. ROTATING 3D DISCO BALL (Hanging in Center)
+      const ballGeo = new THREE.SphereGeometry(1.6, 20, 20);
+      const ballMat = new THREE.MeshStandardMaterial({
+        color: 0xcccccc,
+        metalness: 0.95,
+        roughness: 0.1,
+        flatShading: true
+      });
+      discoBall = new THREE.Mesh(ballGeo, ballMat);
+      discoBall.position.set(0, 12, 0);
+      scene.add(discoBall);
+
+      // Hanging Cable
+      const cableGeo = new THREE.CylinderGeometry(0.04, 0.04, 8);
+      const cableMat = new THREE.MeshBasicMaterial({ color: 0x333344 });
+      const cable = new THREE.Mesh(cableGeo, cableMat);
+      cable.position.set(0, 16, 0);
+      scene.add(cable);
+
+      // 7. VOLUMETRIC 3D LASER CONES (Cyan & Magenta Sweeping Beams)
+      const laserGeo = new THREE.ConeGeometry(3.5, 35, 16, 1, true);
+      const laserMat1 = new THREE.MeshBasicMaterial({
+        color: 0x00f0ff,
+        transparent: true,
+        opacity: 0.22,
+        side: THREE.DoubleSide
+      });
+      const laserMat2 = new THREE.MeshBasicMaterial({
+        color: 0xff2a85,
+        transparent: true,
+        opacity: 0.22,
+        side: THREE.DoubleSide
+      });
+
+      const laser1 = new THREE.Mesh(laserGeo, laserMat1);
+      laser1.position.set(-4, 11, -8);
+      laser1.rotation.x = Math.PI * 0.7;
+      scene.add(laser1);
+      laserCones.push({ mesh: laser1, speed: 0.02, baseAngle: 0 });
+
+      const laser2 = new THREE.Mesh(laserGeo, laserMat2);
+      laser2.position.set(4, 11, -8);
+      laser2.rotation.x = Math.PI * 0.7;
+      scene.add(laser2);
+      laserCones.push({ mesh: laser2, speed: -0.016, baseAngle: Math.PI });
+
+      // 8. 3D THE CYBER BAR (Left Section)
+      const barCounterGeo = new THREE.BoxGeometry(3, 1.8, 12);
+      const barCounterMat = new THREE.MeshStandardMaterial({ color: 0x161626, roughness: 0.3, metalness: 0.6 });
+      const barCounter = new THREE.Mesh(barCounterGeo, barCounterMat);
+      barCounter.position.set(-18, 0.9, -8);
+      scene.add(barCounter);
+
+      // Bar Neon Lip
+      const barLipGeo = new THREE.BoxGeometry(0.1, 0.1, 12.2);
+      const barLipMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const barLip = new THREE.Mesh(barLipGeo, barLipMat);
+      barLip.position.set(-16.4, 1.8, -8);
+      scene.add(barLip);
+
+      // Glowing Bottles on Shelf behind bar
+      const shelfGeo = new THREE.BoxGeometry(1.5, 0.1, 10);
+      const shelfMat = new THREE.MeshStandardMaterial({ color: 0x0a0a14 });
+      const shelf = new THREE.Mesh(shelfGeo, shelfMat);
+      shelf.position.set(-22, 2.5, -8);
+      scene.add(shelf);
+
+      const bottleColors = [0x00f0ff, 0xff2a85, 0x9d4edd, 0x06d6a0, 0xffb703];
+      for (let i = -4; i <= 4; i += 1) {
+        const botGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.8, 12);
+        const botMat = new THREE.MeshStandardMaterial({
+          color: bottleColors[Math.abs(i) % bottleColors.length],
+          emissive: bottleColors[Math.abs(i) % bottleColors.length],
+          emissiveIntensity: 0.5,
+          transparent: true,
+          opacity: 0.85
+        });
+        const bot = new THREE.Mesh(botGeo, botMat);
+        bot.position.set(-22, 2.95, -8 + i * 1.0);
+        scene.add(bot);
+      }
+
+      // 3D Bar Stools
+      [-12, -9, -6, -3].forEach(sz => {
+        const stoolBaseGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.1, 16);
+        const stoolMat = new THREE.MeshStandardMaterial({ color: 0x333344, metalness: 0.8 });
+        const stoolBase = new THREE.Mesh(stoolBaseGeo, stoolMat);
+        stoolBase.position.set(-15.2, 0.05, sz);
+        scene.add(stoolBase);
+
+        const poleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.0);
+        const pole = new THREE.Mesh(poleGeo, stoolMat);
+        pole.position.set(-15.2, 0.55, sz);
+        scene.add(pole);
+
+        const seatGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.2, 16);
+        const seatMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x00f0ff, emissiveIntensity: 0.2 });
+        const seat = new THREE.Mesh(seatGeo, seatMat);
+        seat.position.set(-15.2, 1.1, sz);
+        scene.add(seat);
+      });
+
+      // 9. 3D VELVET CHILL LOUNGE (Right Section)
+      // Curved Velvet Sofa
+      const sofaGeo = new THREE.CylinderGeometry(7, 7, 1.2, 24, 1, true, 0, Math.PI);
+      const sofaMat = new THREE.MeshStandardMaterial({ color: 0x3b185f, roughness: 0.7, side: THREE.DoubleSide });
+      const sofa = new THREE.Mesh(sofaGeo, sofaMat);
+      sofa.rotation.y = -Math.PI / 2;
+      sofa.position.set(18, 0.6, 8);
+      scene.add(sofa);
+
+      // Round Glowing Table
+      const tableGeo = new THREE.CylinderGeometry(2.4, 2.4, 0.8, 24);
+      const tableMat = new THREE.MeshStandardMaterial({
+        color: 0x161026,
+        emissive: 0x9d4edd,
+        emissiveIntensity: 0.3,
+        roughness: 0.2
+      });
+      const table = new THREE.Mesh(tableGeo, tableMat);
+      table.position.set(18, 0.4, 8);
+      scene.add(table);
+
+      // 10. 3D ANONYMOUS CONFESSION GRAFFITI WALL (Left Back)
+      const wallGeo = new THREE.BoxGeometry(0.8, 6, 12);
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0x12121c, roughness: 0.9 });
+      const wall = new THREE.Mesh(wallGeo, wallMat);
+      wall.position.set(-24, 3, 14);
+      scene.add(wall);
+
+      // Neon Sign on Wall: "SPILL THE TEA"
+      const signGeo = new THREE.BoxGeometry(0.1, 1.0, 6);
+      const signMat = new THREE.MeshBasicMaterial({ color: 0xffb703 });
+      const sign = new THREE.Mesh(signGeo, signMat);
+      sign.position.set(-23.5, 5, 14);
+      scene.add(sign);
+    }
+
+    // =========================================================================
+    // PROCEDURAL 3D ANIME CHARACTER CREATOR (MALE & FEMALE)
+    // =========================================================================
+    function createAnimeCharacterMesh(gender, themeColor, accessory, nickname, isPlayer = false) {
+      const charGroup = new THREE.Group();
+      const limbs = {};
+
+      const skinColor = 0xffe0bd;
+      const themeHex = new THREE.Color(themeColor);
+
+      // 1. Torso & Clothes
+      const torsoGeo = new THREE.BoxGeometry(0.9, 1.2, 0.55);
+      const outfitMat = new THREE.MeshStandardMaterial({
+        color: gender === 'boy' ? 0x181828 : 0x241432,
+        emissive: themeHex,
+        emissiveIntensity: 0.25,
+        roughness: 0.4
+      });
+      const torso = new THREE.Mesh(torsoGeo, outfitMat);
+      torso.position.y = 1.9;
+      torso.castShadow = true;
+      charGroup.add(torso);
+      limbs.torso = torso;
+
+      // Glowing Neon Collar Trim
+      const collarGeo = new THREE.BoxGeometry(0.94, 0.12, 0.58);
+      const collarMat = new THREE.MeshBasicMaterial({ color: themeHex });
+      const collar = new THREE.Mesh(collarGeo, collarMat);
+      collar.position.y = 0.55;
+      torso.add(collar);
+
+      // If Anime Girl: Add stylish cyber skirt
+      if (gender === 'girl') {
+        const skirtGeo = new THREE.ConeGeometry(0.7, 0.55, 16, 1, true);
+        const skirtMat = new THREE.MeshStandardMaterial({ color: themeHex, roughness: 0.3 });
+        const skirt = new THREE.Mesh(skirtGeo, skirtMat);
+        skirt.position.y = -0.65;
+        torso.add(skirt);
+      }
+
+      // 2. Head with Anime Face Canvas Texture
+      const headGeo = new THREE.SphereGeometry(0.52, 20, 20);
+      headGeo.scale(1, 1.1, 1);
+      
+      // Generate Canvas Texture for Anime Face (Big expressive anime eyes & blush)
+      const faceCanvas = document.createElement('canvas');
+      faceCanvas.width = 256;
+      faceCanvas.height = 256;
+      const fctx = faceCanvas.getContext('2d');
+      
+      // Skin base
+      fctx.fillStyle = '#ffe0bd';
+      fctx.fillRect(0, 0, 256, 256);
+
+      // Anime Eyes (Large, expressive anime iris with light reflection sparkle)
+      const eyeY = 135;
+      const leftEyeX = 85;
+      const rightEyeX = 171;
+      const eyeR = 26;
+
+      [leftEyeX, rightEyeX].forEach(ex => {
+        // Eye White
+        fctx.fillStyle = '#ffffff';
+        fctx.beginPath();
+        fctx.ellipse(ex, eyeY, eyeR * 0.9, eyeR * 1.3, 0, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Iris
+        fctx.fillStyle = themeColor;
+        fctx.beginPath();
+        fctx.ellipse(ex, eyeY, eyeR * 0.7, eyeR * 1.0, 0, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Pupil
+        fctx.fillStyle = '#0a0a14';
+        fctx.beginPath();
+        fctx.arc(ex, eyeY, eyeR * 0.45, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Anime Sparkle Highlight (Top left)
+        fctx.fillStyle = '#ffffff';
+        fctx.beginPath();
+        fctx.arc(ex - 6, eyeY - 8, 7, 0, Math.PI * 2);
+        fctx.fill();
+        fctx.beginPath();
+        fctx.arc(ex + 6, eyeY + 6, 3.5, 0, Math.PI * 2);
+        fctx.fill();
+
+        // Upper Eyelash line
+        fctx.strokeStyle = '#181822';
+        fctx.lineWidth = 4.5;
+        fctx.beginPath();
+        fctx.arc(ex, eyeY - 8, eyeR, Math.PI * 1.1, Math.PI * 1.9);
+        fctx.stroke();
+      });
+
+      // Cute Blush on cheeks
+      fctx.fillStyle = 'rgba(255, 100, 140, 0.45)';
+      fctx.beginPath();
+      fctx.ellipse(leftEyeX - 10, eyeY + 28, 16, 8, 0, 0, Math.PI * 2);
+      fctx.ellipse(rightEyeX + 10, eyeY + 28, 16, 8, 0, 0, Math.PI * 2);
+      fctx.fill();
+
+      // Confident anime smile
+      fctx.strokeStyle = '#2b1b22';
+      fctx.lineWidth = 3;
+      fctx.beginPath();
+      fctx.arc(128, eyeY + 34, 14, 0.1 * Math.PI, 0.9 * Math.PI);
+      fctx.stroke();
+
+      const faceTexture = new THREE.CanvasTexture(faceCanvas);
+      const headMat = new THREE.MeshStandardMaterial({
+        map: faceTexture,
+        roughness: 0.4
+      });
+      const head = new THREE.Mesh(headGeo, headMat);
+      head.position.y = 3.0;
+      charGroup.add(head);
+      limbs.head = head;
+
+      // 3. Stylish Anime Hair Geometry
+      const hairMat = new THREE.MeshStandardMaterial({
+        color: themeHex,
+        roughness: 0.35,
+        metalness: 0.2
+      });
+
+      if (gender === 'boy') {
+        // Spiky Anime Boy Hair
+        const hairBaseGeo = new THREE.SphereGeometry(0.55, 16, 16);
+        const hairBase = new THREE.Mesh(hairBaseGeo, hairMat);
+        hairBase.position.set(0, 0.12, -0.05);
+        head.add(hairBase);
+
+        // Sweeping spikes
+        for (let s = 0; s < 7; s++) {
+          const spikeGeo = new THREE.ConeGeometry(0.22, 0.75, 8);
+          const spike = new THREE.Mesh(spikeGeo, hairMat);
+          const ang = (s / 7) * Math.PI - Math.PI / 2;
+          spike.position.set(Math.sin(ang) * 0.42, 0.45, -Math.cos(ang) * 0.25);
+          spike.rotation.x = -0.4;
+          spike.rotation.z = -ang * 0.6;
+          head.add(spike);
+        }
+      } else {
+        // Anime Girl Hair: Bangs + Bouncing Twintails
+        const hairBaseGeo = new THREE.SphereGeometry(0.56, 16, 16);
+        const hairBase = new THREE.Mesh(hairBaseGeo, hairMat);
+        hairBase.position.set(0, 0.12, -0.05);
+        head.add(hairBase);
+
+        // Front bangs
+        const bangsGeo = new THREE.BoxGeometry(0.85, 0.35, 0.3);
+        const bangs = new THREE.Mesh(bangsGeo, hairMat);
+        bangs.position.set(0, 0.35, 0.4);
+        head.add(bangs);
+
+        // Twintails on sides
+        [-0.55, 0.55].forEach(tx => {
+          const tailGeo = new THREE.ConeGeometry(0.2, 1.3, 12);
+          const tail = new THREE.Mesh(tailGeo, hairMat);
+          tail.position.set(tx, 0.1, -0.15);
+          tail.rotation.z = tx > 0 ? -0.3 : 0.3;
+          head.add(tail);
+          if (tx > 0) limbs.rightTwintail = tail;
+          else limbs.leftTwintail = tail;
+        });
+      }
+
+      // 4. Accessory Over Head (Shades, Headset, Crown, Aura)
+      if (accessory === '🕶️') {
+        const shadesGeo = new THREE.BoxGeometry(0.85, 0.2, 0.2);
+        const shadesMat = new THREE.MeshStandardMaterial({ color: 0x050508, roughness: 0.1, metalness: 0.9 });
+        const shades = new THREE.Mesh(shadesGeo, shadesMat);
+        shades.position.set(0, 0.05, 0.48);
+        head.add(shades);
+      } else if (accessory === '🎧') {
+        // Headphones with glowing ear cups
+        const bandGeo = new THREE.TorusGeometry(0.55, 0.07, 8, 20, Math.PI);
+        const bandMat = new THREE.MeshStandardMaterial({ color: 0x1f1f2e });
+        const band = new THREE.Mesh(bandGeo, bandMat);
+        band.rotation.x = -Math.PI / 2;
+        band.position.y = 0.1;
+        head.add(band);
+
+        [-0.54, 0.54].forEach(hx => {
+          const cupGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.15, 16);
+          const cupMat = new THREE.MeshBasicMaterial({ color: themeHex });
+          const cup = new THREE.Mesh(cupGeo, cupMat);
+          cup.rotation.z = Math.PI / 2;
+          cup.position.set(hx, 0.05, 0);
+          head.add(cup);
+        });
+      } else if (accessory === '👑') {
+        const crownGeo = new THREE.CylinderGeometry(0.35, 0.25, 0.25, 5);
+        const crownMat = new THREE.MeshStandardMaterial({ color: 0xffb703, metalness: 0.9, roughness: 0.2 });
+        const crown = new THREE.Mesh(crownGeo, crownMat);
+        crown.position.set(0, 0.65, 0);
+        head.add(crown);
+      }
+
+      // 5. Arms & Hands (Left & Right)
+      const armGeo = new THREE.BoxGeometry(0.26, 0.95, 0.26);
+      const armMat = new THREE.MeshStandardMaterial({ color: 0x181828, roughness: 0.5 });
+      const handMat = new THREE.MeshStandardMaterial({ color: skinColor });
+
+      [-0.65, 0.65].forEach(ax => {
+        const armGroup = new THREE.Group();
+        armGroup.position.set(ax, 2.3, 0);
+
+        const arm = new THREE.Mesh(armGeo, armMat);
+        arm.position.y = -0.45;
+        armGroup.add(arm);
+
+        const handGeo = new THREE.SphereGeometry(0.15, 12, 12);
+        const hand = new THREE.Mesh(handGeo, handMat);
+        hand.position.y = -0.95;
+        armGroup.add(hand);
+
+        charGroup.add(armGroup);
+        if (ax < 0) limbs.leftArm = armGroup;
+        else limbs.rightArm = armGroup;
+      });
+
+      // 6. Holding Drink Glass in Right Hand
+      const glassGeo = new THREE.CylinderGeometry(0.14, 0.08, 0.35, 12);
+      const glassMat = new THREE.MeshStandardMaterial({ color: themeHex, emissive: themeHex, emissiveIntensity: 0.6, transparent: true, opacity: 0.85 });
+      const glass = new THREE.Mesh(glassGeo, glassMat);
+      glass.position.set(0, -0.95, 0.2);
+      limbs.rightArm.add(glass);
+      limbs.drinkGlass = glass;
+
+      // 7. Legs & Cyber Shoes (Left & Right)
+      const legGeo = new THREE.BoxGeometry(0.32, 1.1, 0.32);
+      const legMat = new THREE.MeshStandardMaterial({ color: 0x0e0e18, roughness: 0.6 });
+      const shoeMat = new THREE.MeshStandardMaterial({ color: themeHex, metalness: 0.5 });
+
+      [-0.26, 0.26].forEach(lx => {
+        const legGroup = new THREE.Group();
+        legGroup.position.set(lx, 1.3, 0);
+
+        const leg = new THREE.Mesh(legGeo, legMat);
+        leg.position.y = -0.55;
+        legGroup.add(leg);
+
+        const shoeGeo = new THREE.BoxGeometry(0.34, 0.22, 0.5);
+        const shoe = new THREE.Mesh(shoeGeo, shoeMat);
+        shoe.position.set(0, -1.05, 0.08);
+        legGroup.add(shoe);
+
+        charGroup.add(legGroup);
+        if (lx < 0) limbs.leftLeg = legGroup;
+        else limbs.rightLeg = legGroup;
+      });
+
+      // 8. 3D Floating Name Tag & Speech Billboard
+      const nameBillboard = create3DNameBillboard(nickname, themeColor);
+      nameBillboard.position.y = 4.1;
+      charGroup.add(nameBillboard);
+      limbs.billboard = nameBillboard;
+
+      if (isPlayer) {
+        player.limbs = limbs;
+      }
+
+      return charGroup;
+    }
+
+    function create3DNameBillboard(nickname, themeColor) {
+      const bCanvas = document.createElement('canvas');
+      bCanvas.width = 256;
+      bCanvas.height = 64;
+      const bctx = bCanvas.getContext('2d');
+
+      // Rounded pill
+      bctx.fillStyle = 'rgba(7, 7, 14, 0.85)';
+      bctx.strokeStyle = themeColor;
+      bctx.lineWidth = 4;
+      bctx.beginPath();
+      bctx.roundRect(10, 8, 236, 48, 24);
+      bctx.fill();
+      bctx.stroke();
+
+      // Text
+      bctx.fillStyle = '#ffffff';
+      bctx.font = 'bold 26px "Space Grotesk", sans-serif';
+      bctx.textAlign = 'center';
+      bctx.textBaseline = 'middle';
+      bctx.fillText(nickname, 128, 33);
+
+      const bTexture = new THREE.CanvasTexture(bCanvas);
+      const bMat = new THREE.SpriteMaterial({ map: bTexture, transparent: true });
+      const sprite = new THREE.Sprite(bMat);
+      sprite.scale.set(3.0, 0.75, 1);
+      return sprite;
+    }
+
+    // =========================================================================
+    // KEYBOARD & MOBILE JOYSTICK INPUTS
+    // =========================================================================
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') keys.w = true;
+      if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') keys.s = true;
+      if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') keys.a = true;
+      if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') keys.d = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') keys.w = false;
+      if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') keys.s = false;
+      if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') keys.a = false;
+      if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') keys.d = false;
+    });
+
+    let joystickActive = false;
+    let joystickDeltaX = 0;
+    let joystickDeltaY = 0;
+
+    function initMobileJoystick() {
+      const zone = document.getElementById('joystickZone');
+      const knob = document.getElementById('joystickKnob');
+
+      const handleTouch = (touch) => {
+        const rect = zone.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        let dx = touch.clientX - centerX;
+        let dy = touch.clientY - centerY;
+        const dist = Math.hypot(dx, dy);
+        const maxR = 38;
+
+        if (dist > maxR) {
+          dx = (dx / dist) * maxR;
+          dy = (dy / dist) * maxR;
+        }
+
+        knob.style.transform = `translate(${dx}px, ${dy}px)`;
+        joystickDeltaX = dx / maxR;
+        joystickDeltaY = dy / maxR;
+      };
+
+      zone.addEventListener('touchstart', (e) => {
+        joystickActive = true;
+        handleTouch(e.touches[0]);
+      }, { passive: false });
+
+      zone.addEventListener('touchmove', (e) => {
+        if (joystickActive) {
+          e.preventDefault();
+          handleTouch(e.touches[0]);
+        }
+      }, { passive: false });
+
+      const resetJoystick = () => {
+        joystickActive = false;
+        joystickDeltaX = 0;
+        joystickDeltaY = 0;
+        knob.style.transform = 'translate(0px, 0px)';
+      };
+
+      zone.addEventListener('touchend', resetJoystick);
+      zone.addEventListener('touchcancel', resetJoystick);
+    }
+
+    // Click on 3D floor to walk
+    function initFloorInteraction() {
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+
+      window.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('button, input, textarea, form, #dropDrawer, #onboardingOverlay, #joystickZone, [id$="Modal"]')) return;
+        
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const target = new THREE.Vector3();
+        raycaster.ray.intersectPlane(floorPlane, target);
+
+        if (target && Math.abs(target.x) < 28 && Math.abs(target.z) < 28) {
+          player.targetPosition.set(target.x, 0, target.z);
+          spawn3DTargetRing(target.x, target.z, player.color);
+        }
       });
     }
-    window.addEventListener('resize', resizeCanvas);
+
+    function spawn3DTargetRing(x, z, color) {
+      const ringGeo = new THREE.RingGeometry(0.2, 0.9, 24);
+      const ringMat = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.9 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = -Math.PI / 2;
+      ring.position.set(x, 0.05, z);
+      scene.add(ring);
+
+      shockwaveRings.push({ mesh: ring, scaleSpeed: 0.06, opacitySpeed: 0.035 });
+    }
 
     // =========================================================================
-    // ONBOARDING & AVATAR SELECTION
+    // ONBOARDING & ENTRY
     // =========================================================================
+    function selectGender(g) {
+      player.gender = g;
+      document.getElementById('avatarGenderIcon').innerText = g === 'boy' ? '👦' : '👧';
+      document.getElementById('avatarPreviewArchetype').innerText = g === 'boy' ? 'Cyber Hustler' : 'Cyber Idol Drip';
+
+      const boyBtn = document.getElementById('genderBoyBtn');
+      const girlBtn = document.getElementById('genderGirlBtn');
+
+      if (g === 'boy') {
+        boyBtn.className = 'p-3 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center gap-3 transition-all active:scale-95 text-left';
+        girlBtn.className = 'p-3 rounded-2xl bg-zinc-900 border-2 border-white/10 hover:border-pink-400 flex items-center gap-3 transition-all active:scale-95 text-left';
+      } else {
+        boyBtn.className = 'p-3 rounded-2xl bg-zinc-900 border-2 border-white/10 hover:border-cyan-400 flex items-center gap-3 transition-all active:scale-95 text-left';
+        girlBtn.className = 'p-3 rounded-2xl bg-pink-500/20 border-2 border-pink-400 flex items-center gap-3 transition-all active:scale-95 text-left';
+      }
+    }
+
     function updateAvatarPreview() {
       const nick = document.getElementById('nicknameInput').value.trim() || 'Aryan';
       document.getElementById('avatarPreviewNick').innerText = `@${nick}`;
@@ -867,8 +1626,8 @@
     function pickColor(hex, name, btn) {
       player.color = hex;
       const preview = document.getElementById('avatarLivePreview');
-      preview.style.background = `radial-gradient(circle, ${hex}, #0f0f1c)`;
-      preview.style.boxShadow = `0 0 25px ${hex}`;
+      preview.style.background = `radial-gradient(circle, ${hex}, #090918)`;
+      preview.style.boxShadow = `0 0 30px ${hex}`;
 
       document.querySelectorAll('.color-swatch-btn').forEach(b => {
         b.style.borderColor = 'transparent';
@@ -888,15 +1647,14 @@
       btn.className = 'accessory-btn p-2 rounded-xl bg-zinc-900 border border-cyan-400 text-base active:scale-90';
     }
 
-    function enterClubFloor() {
+    function enterClub3D() {
       const input = document.getElementById('nicknameInput').value.trim();
-      player.nickname = input || 'Clubber_' + Math.floor(Math.random() * 900 + 100);
+      player.nickname = input || (player.gender === 'boy' ? 'Ryu_3D' : 'Maya_3D');
 
-      // Spawn player in entry zone
-      player.x = width / 2;
-      player.y = height * 0.78;
-      player.targetX = player.x;
-      player.targetY = player.y;
+      // Create Player Anime 3D Character Mesh
+      player.mesh = createAnimeCharacterMesh(player.gender, player.color, player.accessory, player.nickname, true);
+      player.mesh.position.copy(player.position);
+      scene.add(player.mesh);
 
       const overlay = document.getElementById('onboardingOverlay');
       overlay.classList.add('opacity-0', 'pointer-events-none');
@@ -904,11 +1662,11 @@
 
       // Start Synthesizer beats
       initClubAudio();
-      showToast(`Welcome to Clubr Cyber-Lounge, ${player.nickname}! ⚡`);
+      showToast(`Welcome to Clubr 3D, ${player.nickname}! ⚡`);
     }
 
     // =========================================================================
-    // WEB AUDIO SYNTHESIZER ENGINE (ZERO EXTERNAL MP3 DEPENDENCIES)
+    // WEB AUDIO SYNTHESIZER BEAT & SOUNDBOARD
     // =========================================================================
     function initClubAudio() {
       if (audioCtx) return;
@@ -916,9 +1674,8 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(0.25, audioCtx.currentTime);
         masterGain.connect(audioCtx.destination);
-
         startBeatLoop();
       } catch (e) {
         console.log('Audio note:', e);
@@ -937,21 +1694,31 @@
         const now = audioCtx.currentTime;
 
         if (beatMode === 'lofi') {
-          // Lo-Fi chill beat
-          if (currentBeatStep % 8 === 0) synthKick(now, 100, 36, 0.28);
+          if (currentBeatStep % 8 === 0) synthKick(now, 100, 36, 0.32);
           if (currentBeatStep % 8 === 4) synthSnare(now);
           if (currentBeatStep % 2 === 0) synthHiHat(now);
           if (currentBeatStep % 16 === 0) synthChords(now);
         } else {
-          // Cyberwave upbeat 4-on-the-floor
-          if (currentBeatStep % 4 === 0) synthKick(now, 130, 42, 0.35);
+          if (currentBeatStep % 4 === 0) synthKick(now, 135, 42, 0.38);
           if (currentBeatStep % 8 === 4) synthSnare(now);
           if (currentBeatStep % 2 === 1) synthHiHat(now);
           if (currentBeatStep % 16 === 0) synthCyberBassline(now);
         }
 
+        // Pulse LED dance tiles to beat!
+        pulseDanceFloorTiles(currentBeatStep);
+
         currentBeatStep = (currentBeatStep + 1) % 32;
       }, stepInterval);
+    }
+
+    function pulseDanceFloorTiles(step) {
+      const palette = [0x00f0ff, 0xff2a85, 0x9d4edd, 0xffb703, 0x06d6a0];
+      danceFloorTiles.forEach(t => {
+        const idx = (t.col + t.row + step) % palette.length;
+        t.mesh.material.emissive.setHex(palette[idx]);
+        t.mesh.material.emissiveIntensity = 0.35 + Math.sin(step) * 0.2;
+      });
     }
 
     function setBeatMode(mode) {
@@ -971,24 +1738,21 @@
       isMuted = !isMuted;
       document.getElementById('audioIcon').innerText = isMuted ? '🔇' : '🔊';
       if (masterGain && audioCtx) {
-        masterGain.gain.setValueAtTime(isMuted ? 0 : 0.2, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(isMuted ? 0 : 0.25, audioCtx.currentTime);
       }
       if (!isMuted && !beatTimer) startBeatLoop();
-      showToast(isMuted ? 'Lounge Audio Muted 🔇' : 'Lounge Beats Playing 🔊');
+      showToast(isMuted ? '3D Club Audio Muted 🔇' : '3D Club Beats Playing 🔊');
     }
 
-    // Audio Synthesizers
     function synthKick(time, startFreq, endFreq, vol) {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.connect(gain);
       gain.connect(masterGain);
-
       osc.frequency.setValueAtTime(startFreq, time);
       osc.frequency.exponentialRampToValueAtTime(endFreq, time + 0.12);
       gain.gain.setValueAtTime(vol, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.14);
-
       osc.start(time);
       osc.stop(time + 0.14);
     }
@@ -998,21 +1762,17 @@
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-
       const noise = audioCtx.createBufferSource();
       noise.buffer = buffer;
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'bandpass';
       filter.frequency.value = 1400;
-
       const gain = audioCtx.createGain();
       gain.gain.setValueAtTime(0.2, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
-
       noise.connect(filter);
       filter.connect(gain);
       gain.connect(masterGain);
-
       noise.start(time);
       noise.stop(time + 0.08);
     }
@@ -1023,27 +1783,23 @@
       osc.type = 'highpass';
       osc.connect(gain);
       gain.connect(masterGain);
-
       osc.frequency.setValueAtTime(9000, time);
       gain.gain.setValueAtTime(0.04, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
-
       osc.start(time);
       osc.stop(time + 0.035);
     }
 
     function synthChords(time) {
-      const freqs = [164.81, 196.00, 246.94, 293.66]; // E minor 7
+      const freqs = [164.81, 196.00, 246.94, 293.66];
       freqs.forEach(f => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
         osc.frequency.value = f;
-
         gain.gain.setValueAtTime(0.02, time);
-        gain.gain.linearRampToValueAtTime(0.05, time + 0.25);
+        gain.gain.linearRampToValueAtTime(0.06, time + 0.25);
         gain.gain.exponentialRampToValueAtTime(0.001, time + 2.2);
-
         osc.connect(gain);
         gain.connect(masterGain);
         osc.start(time);
@@ -1055,16 +1811,13 @@
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(65.41, time); // C2
-      
+      osc.frequency.setValueAtTime(65.41, time);
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(450, time);
       filter.frequency.exponentialRampToValueAtTime(100, time + 0.3);
-
-      gain.gain.setValueAtTime(0.15, time);
+      gain.gain.setValueAtTime(0.18, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
-
       osc.connect(filter);
       filter.connect(gain);
       gain.connect(masterGain);
@@ -1072,161 +1825,114 @@
       osc.stop(time + 0.35);
     }
 
-    // Spatial volume based on proximity to DJ stage
-    function updateSpatialAudio() {
-      if (!audioCtx || !masterGain || isMuted) return;
-      const djX = width / 2;
-      const djY = height / 2;
-      const dist = Math.hypot(player.x - djX, player.y - djY);
-      const maxDist = Math.hypot(width, height) / 2;
-      const norm = Math.max(0, Math.min(1, 1 - (dist / maxDist)));
-      const targetVol = 0.08 + (norm * 0.28);
-      masterGain.gain.linearRampToValueAtTime(targetVol, audioCtx.currentTime + 0.1);
-    }
-
-    // =========================================================================
-    // DJ SOUNDBOARD SFX SYNTHESIZERS (AIRHORN, SCRATCH, LASER, 808 BASS)
-    // =========================================================================
+    // SOUNDBOARD ACTIONS
     function playAirhorn() {
       initClubAudio();
       if (!audioCtx) return;
       const now = audioCtx.currentTime;
-
-      // Triple stutter blast
-      const blasts = [0, 0.12, 0.24];
-      blasts.forEach((offset, idx) => {
+      [0, 0.12, 0.24].forEach((offset, idx) => {
         const blastTime = now + offset;
         const dur = idx === 2 ? 0.45 : 0.09;
-
         [466.16, 470, 587.33].forEach(freq => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(freq, blastTime);
           osc.frequency.linearRampToValueAtTime(freq * 0.96, blastTime + dur);
-
-          gain.gain.setValueAtTime(0.22, blastTime);
+          gain.gain.setValueAtTime(0.24, blastTime);
           gain.gain.exponentialRampToValueAtTime(0.001, blastTime + dur);
-
           osc.connect(gain);
           gain.connect(masterGain);
           osc.start(blastTime);
           osc.stop(blastTime + dur);
         });
       });
-
-      triggerFloorShockwave(player.x, player.y, '#ffb703');
-      showToast('AIRHORN BLAST! 📢📢📢');
+      spawn3DShockwave(player.position.x, player.position.z, 0xffb703);
+      showToast('3D AIRHORN BLAST! 📢📢📢');
     }
 
     function playVinylScratch() {
       initClubAudio();
       if (!audioCtx) return;
       const now = audioCtx.currentTime;
-
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(300, now);
       osc.frequency.exponentialRampToValueAtTime(1400, now + 0.08);
       osc.frequency.exponentialRampToValueAtTime(120, now + 0.22);
-
-      gain.gain.setValueAtTime(0.28, now);
+      gain.gain.setValueAtTime(0.3, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-
       osc.connect(gain);
       gain.connect(masterGain);
       osc.start(now);
       osc.stop(now + 0.22);
-
-      triggerFloorShockwave(player.x, player.y, '#00f0ff');
-      showToast('VINYL SCRATCH! 🎛️💿');
+      spawn3DShockwave(player.position.x, player.position.z, 0x00f0ff);
+      showToast('3D VINYL SCRATCH! 🎛️💿');
     }
 
     function playLaserDrop() {
       initClubAudio();
       if (!audioCtx) return;
       const now = audioCtx.currentTime;
-
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(2200, now);
       osc.frequency.exponentialRampToValueAtTime(80, now + 0.28);
-
-      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.setValueAtTime(0.32, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-
       osc.connect(gain);
       gain.connect(masterGain);
       osc.start(now);
       osc.stop(now + 0.28);
-
-      triggerFloorShockwave(player.x, player.y, '#9d4edd');
-      showToast('LASER DROP! 💥✨');
+      spawn3DShockwave(player.position.x, player.position.z, 0x9d4edd);
+      showToast('3D LASER DROP! 💥✨');
     }
 
     function playSubBassDrop() {
       initClubAudio();
       if (!audioCtx) return;
       const now = audioCtx.currentTime;
-
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(120, now);
       osc.frequency.exponentialRampToValueAtTime(32, now + 0.65);
-
-      gain.gain.setValueAtTime(0.45, now);
+      gain.gain.setValueAtTime(0.5, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
-
       osc.connect(gain);
       gain.connect(masterGain);
       osc.start(now);
       osc.stop(now + 0.7);
-
-      triggerFloorShockwave(player.x, player.y, '#ff2a85');
+      spawn3DShockwave(player.position.x, player.position.z, 0xff2a85);
       showToast('808 SUB-BASS BOOM! 🔊💥');
     }
 
-    function triggerFloorShockwave(x, y, color) {
-      lightRipples.push({
-        x: x,
-        y: y,
-        radius: 10,
-        maxRadius: 180,
-        color: color,
-        opacity: 0.9
-      });
+    function spawn3DShockwave(x, z, color) {
+      const ringGeo = new THREE.RingGeometry(0.5, 1.2, 32);
+      const ringMat = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.95 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = -Math.PI / 2;
+      ring.position.set(x, 0.08, z);
+      scene.add(ring);
+      shockwaveRings.push({ mesh: ring, scaleSpeed: 0.18, opacitySpeed: 0.02 });
     }
 
     // =========================================================================
-    // PARTY CARD DECK LOGIC (TRUTH / DARE / NHIE)
+    // PARTY CARDS, BAR & CONFESSIONS
     // =========================================================================
     const PARTY_CARDS = [
-      // Truths
-      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Apne ex ko raat ke 2 baje text karne ka guilty pleasure sach-sach batao.' },
+      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Apne ex ko raat ke 2 baje message karne ka guilty pleasure sach-sach batao.' },
       { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Sabse embarrassing cheez jo tumne internet pe 3 AM search ki hai?' },
-      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Kya tumne kabhi dost ke phone me unki secret chat chupke se padhi hai?' },
       { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Kiski profile tum fake account se daily stalk karte ho?' },
-      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Aakhri baar kis baat par tumne apne best friend se jhooth bola tha?' },
-      { cat: 'truth', tag: '🌶️ SPICY TRUTH', text: 'Current crush ka naam ya pehla letter bina sharmaye batao!' },
-      // Dares
       { cat: 'dare', tag: '🎭 WILD DARE', text: 'WhatsApp group me voice note bhejo pretending you got arrested by police.' },
-      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Apne 3rd WhatsApp chat ko "I know your secret 👀" bhej kar 5 min wait karo.' },
-      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Ek minute ke liye camera on karke bina music ke awkward dance karo.' },
-      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Instagram story pe sirf ek blank black photo post karo caption: "It\'s over 💔".' },
-      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Kisi random contact ko call karke "Pizza deliver kyu nahi hua?" pucho.' },
-      // Never Have I Ever
+      { cat: 'dare', tag: '🎭 WILD DARE', text: 'Apne 3rd contact ko "I know your secret 👀" bhej kar 5 min wait karo.' },
       { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever stalked someone for more than 2 hours continuously.' },
-      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever pretended to be sick just to avoid a boring party.' },
-      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever sent a risky screenshot to the SAME person it was about.' },
-      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever laughed at a completely serious funeral or meeting.' },
-      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever swiped right on someone strictly for their pet.' }
+      { cat: 'nhie', tag: '🙈 NEVER HAVE I EVER', text: 'Never have I ever sent a risky screenshot to the SAME person it was about.' }
     ];
 
     let currentDeckCategory = 'all';
-    let currentCardIndex = 0;
 
     function setPartyDeckCategory(cat, btn) {
       currentDeckCategory = cat;
@@ -1241,12 +1947,9 @@
       const pool = currentDeckCategory === 'all' 
         ? PARTY_CARDS 
         : PARTY_CARDS.filter(c => c.cat === currentDeckCategory);
-      
       const card = pool[Math.floor(Math.random() * pool.length)];
       const cardBox = document.getElementById('partyCardBox');
-      
-      // Card flip visual bump
-      cardBox.style.transform = 'scale(0.96)';
+      cardBox.style.transform = 'scale(0.95)';
       setTimeout(() => {
         document.getElementById('partyCardTag').innerText = card.tag;
         document.getElementById('partyCardText').innerText = `"${card.text}"`;
@@ -1256,26 +1959,15 @@
 
     function broadcastCardToChat() {
       const cardText = document.getElementById('partyCardText').innerText.replace(/"/g, '');
-      player.message = {
-        text: `🎲 Prompt: ${cardText}`,
-        timestamp: Date.now(),
-        life: 8000
-      };
+      showToast('Party card spoken in 3D Club! 💬');
       closeStationModal('partyDeckModal');
-      showToast('Party card spoken over your avatar! 💬');
     }
 
-    // =========================================================================
-    // THE NEON BAR LOGIC
-    // =========================================================================
     function orderDrink(name, icon, verdict) {
       initClubAudio();
-      // Synthesize shaker sound
       if (audioCtx) {
         const now = audioCtx.currentTime;
-        [0, 0.08, 0.16, 0.24].forEach(offset => {
-          synthHiHat(now + offset);
-        });
+        [0, 0.08, 0.16, 0.24].forEach(off => synthHiHat(now + off));
       }
 
       player.drink = icon;
@@ -1283,54 +1975,18 @@
       document.getElementById('currentDrinkName').innerText = `Holding: ${name}`;
       document.getElementById('currentDrinkVerdict').innerText = `"${verdict}"`;
 
-      player.message = {
-        text: `Cheers! Sipping on ${name} ${icon}`,
-        timestamp: Date.now(),
-        life: 6000
-      };
-
-      triggerFloorShockwave(player.x, player.y, '#00f0ff');
-      showToast(`BAR_BOT served: ${name} ${icon}`);
-
-      // Bartender NPC reacts
-      setTimeout(() => {
-        const barBot = NPCS.find(n => n.id === 'bar_bot');
-        if (barBot) {
-          barBot.message = {
-            text: `@${player.nickname}, enjoy the ${name}! ${verdict}`,
-            timestamp: Date.now(),
-            life: 6000
-          };
-        }
-      }, 1000);
+      spawn3DShockwave(player.position.x, player.position.z, 0x00f0ff);
+      showToast(`BAR_BOT served 3D ${name} ${icon}`);
     }
 
-    // =========================================================================
-    // ANONYMOUS CONFESSION WALL ("SPILL THE TEA ☕")
-    // =========================================================================
     let confessions = [
-      {
-        id: 'c1',
-        text: "I told my parents I was studying in the library, but I was actually at a rave in Goa.",
-        color: 'from-pink-950/60 to-zinc-900 border-pink-500/30 text-pink-300',
-        reactions: { fire: 14, skull: 3, flag: 2 }
-      },
-      {
-        id: 'c2',
-        text: "My startup pitch got rejected 22 times so I built an AI agent to reply to their investor emails with sarcasm.",
-        color: 'from-cyan-950/60 to-zinc-900 border-cyan-500/30 text-cyan-300',
-        reactions: { fire: 28, skull: 11, flag: 0 }
-      },
-      {
-        id: 'c3',
-        text: "I still know my high school ex's Netflix password and watch anime on their guest profile.",
-        color: 'from-amber-950/60 to-zinc-900 border-amber-500/30 text-amber-300',
-        reactions: { fire: 9, skull: 24, flag: 8 }
-      }
+      { id: 'c1', text: "I told my parents I was in library, but I was partying in 3D club.", color: 'from-pink-950/60 to-zinc-900 border-pink-500/30 text-pink-300', reactions: { fire: 18, skull: 4, flag: 2 } },
+      { id: 'c2', text: "I use AI agents to automate all my office work while playing games.", color: 'from-cyan-950/60 to-zinc-900 border-cyan-500/30 text-cyan-300', reactions: { fire: 34, skull: 12, flag: 0 } },
+      { id: 'c3', text: "I still remember my ex's birthday passcode and check their status.", color: 'from-amber-950/60 to-zinc-900 border-amber-500/30 text-amber-300', reactions: { fire: 12, skull: 29, flag: 9 } }
     ];
 
     function loadConfessions() {
-      const saved = localStorage.getItem('clubr_confessions');
+      const saved = localStorage.getItem('clubr_confessions_3d');
       if (saved) {
         try { confessions = JSON.parse(saved); } catch (e) {}
       }
@@ -1343,7 +1999,7 @@
         <div class="p-3.5 rounded-2xl bg-gradient-to-r ${c.color} border space-y-2">
           <p class="text-xs sm:text-sm font-medium text-white leading-relaxed">"${c.text}"</p>
           <div class="flex items-center justify-between pt-1 border-t border-white/5 text-[11px] font-mono">
-            <span class="text-zinc-500">Anonymous Note</span>
+            <span class="text-zinc-500">Anonymous 3D Note</span>
             <div class="flex items-center gap-2">
               <button onclick="reactToConfession('${c.id}', 'fire')" class="flex items-center gap-1 hover:scale-110 active:scale-95 transition-transform">
                 <span>🔥</span><span>${c.reactions.fire || 0}</span>
@@ -1373,95 +2029,239 @@
         'from-amber-950/60 to-zinc-900 border-amber-500/30 text-amber-300'
       ];
 
-      const newConfession = {
+      confessions.unshift({
         id: 'c_' + Date.now(),
         text: text,
         color: colors[Math.floor(Math.random() * colors.length)],
         reactions: { fire: 1, skull: 0, flag: 0 }
-      };
+      });
 
-      confessions.unshift(newConfession);
-      localStorage.setItem('clubr_confessions', JSON.stringify(confessions.slice(0, 20)));
+      localStorage.setItem('clubr_confessions_3d', JSON.stringify(confessions.slice(0, 20)));
       renderConfessionsList();
       input.value = '';
-
-      showToast('Confession pinned to wall anonymously! 💌');
+      showToast('Confession pinned to 3D Wall! 💌');
     }
 
     function reactToConfession(id, type) {
       const target = confessions.find(c => c.id === id);
       if (target) {
         target.reactions[type] = (target.reactions[type] || 0) + 1;
-        localStorage.setItem('clubr_confessions', JSON.stringify(confessions));
+        localStorage.setItem('clubr_confessions_3d', JSON.stringify(confessions));
         renderConfessionsList();
       }
     }
 
-    // =========================================================================
-    // MODAL HELPERS (OPEN / CLOSE STATIONS)
-    // =========================================================================
     function openStationModal(modalId) {
       const modal = document.getElementById(modalId);
       if (!modal) return;
       modal.classList.remove('hidden');
-      setTimeout(() => {
-        modal.classList.remove('opacity-0');
-      }, 10);
+      setTimeout(() => modal.classList.remove('opacity-0'), 10);
     }
 
     function closeStationModal(modalId) {
       const modal = document.getElementById(modalId);
       if (!modal) return;
       modal.classList.add('opacity-0');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 200);
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    function toggleCameraView() {
+      cameraMode = cameraMode === 'thirdPerson' ? 'stageView' : 'thirdPerson';
+      showToast(cameraMode === 'thirdPerson' ? 'Camera: 3D Third Person 🎥' : 'Camera: Cinematic DJ Stage 🎛️');
+    }
+
+    function toggleAvatarDance() {
+      player.isDancing = !player.isDancing;
+      showToast(player.isDancing ? '3D Anime Dance Mode Activated! 🕺⚡' : 'Dance Mode Paused');
+    }
+
+    function triggerAvatarEmote(emoji) {
+      showToast(`Emote: ${emoji}`);
+    }
+
+    function toggleDropDrawer() {
+      const drawer = document.getElementById('dropDrawer');
+      drawer.classList.toggle('translate-x-full');
+    }
+
+    function inviteGangToTable() {
+      const shareUrl = `https://clubr.online`;
+      const text = `Yo! Join me in the real 3D Anime Nightclub on Clubr! Explore, dance and vibe in 3D: ${shareUrl}`;
+      if (navigator.clipboard) navigator.clipboard.writeText(shareUrl);
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').innerText = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2600);
+    }
+
+    function handleSendTableChat(e) {
+      e.preventDefault();
+      const input = document.getElementById('tableChatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      showToast(`Spoken in 3D: "${text}" 💬`);
     }
 
     // =========================================================================
-    // TOUCH / MOUSE INTERACTIVE MOVEMENT
+    // 60 FPS 3D ANIMATION & GAME LOOP
     // =========================================================================
-    let isPointerDown = false;
+    function animate3D() {
+      requestAnimationFrame(animate3D);
 
-    function handlePointerInput(e) {
-      if (e.target.closest('button, input, textarea, form, #dropDrawer, #onboardingOverlay, [id$="Modal"]')) return;
+      const delta = clock.getDelta();
+      const elapsed = clock.getElapsedTime();
 
-      const rect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      // 1. Rotate Disco Ball
+      if (discoBall) {
+        discoBall.rotation.y += 0.01;
+      }
 
-      player.targetX = clientX - rect.left;
-      player.targetY = clientY - rect.top;
-
-      lightRipples.push({
-        x: player.targetX,
-        y: player.targetY,
-        radius: 4,
-        maxRadius: 28,
-        color: player.color,
-        opacity: 0.8
+      // 2. Sweep 3D Laser Cones
+      laserCones.forEach((laser, idx) => {
+        laser.mesh.rotation.z = Math.sin(elapsed * 1.2 + laser.baseAngle) * 0.45;
+        laser.mesh.rotation.y = Math.cos(elapsed * 0.8 + laser.baseAngle) * 0.3;
       });
+
+      // 3. Update Shockwave Rings
+      for (let i = shockwaveRings.length - 1; i >= 0; i--) {
+        const ring = shockwaveRings[i];
+        ring.mesh.scale.x += ring.scaleSpeed;
+        ring.mesh.scale.y += ring.scaleSpeed;
+        ring.mesh.material.opacity -= ring.opacitySpeed;
+        if (ring.mesh.material.opacity <= 0) {
+          scene.remove(ring.mesh);
+          shockwaveRings.splice(i, 1);
+        }
+      }
+
+      // 4. Update Player Movement (Keyboard, Joystick, or Target)
+      if (player.mesh) {
+        let moveX = 0;
+        let moveZ = 0;
+
+        if (keys.w) moveZ -= 1;
+        if (keys.s) moveZ += 1;
+        if (keys.a) moveX -= 1;
+        if (keys.d) moveX += 1;
+
+        if (joystickActive) {
+          moveX = joystickDeltaX;
+          moveZ = joystickDeltaY;
+        }
+
+        const len = Math.hypot(moveX, moveZ);
+        if (len > 0.1) {
+          player.isMoving = true;
+          const normX = moveX / len;
+          const normZ = moveZ / len;
+          player.position.x += normX * player.speed;
+          player.position.z += normZ * player.speed;
+          player.heading = Math.atan2(normX, normZ);
+          player.targetPosition.copy(player.position);
+        } else {
+          // Check click-to-walk target
+          const distToTarget = Math.hypot(player.targetPosition.x - player.position.x, player.targetPosition.z - player.position.z);
+          if (distToTarget > 0.2) {
+            player.isMoving = true;
+            const dx = player.targetPosition.x - player.position.x;
+            const dz = player.targetPosition.z - player.position.z;
+            player.position.x += (dx / distToTarget) * player.speed;
+            player.position.z += (dz / distToTarget) * player.speed;
+            player.heading = Math.atan2(dx, dz);
+          } else {
+            player.isMoving = false;
+          }
+        }
+
+        // Clamp inside room
+        player.position.x = Math.max(-26, Math.min(26, player.position.x));
+        player.position.z = Math.max(-26, Math.min(26, player.position.z));
+
+        player.mesh.position.copy(player.position);
+        player.mesh.rotation.y = player.heading;
+
+        // Animate Player Limbs
+        animateLimbs(player, elapsed, delta);
+
+        // 5. Update Camera (Third-Person Follow or Stage View)
+        if (cameraMode === 'thirdPerson') {
+          const targetCamX = player.position.x;
+          const targetCamY = player.position.y + 7.5;
+          const targetCamZ = player.position.z + 14;
+          camera.position.lerp(new THREE.Vector3(targetCamX, targetCamY, targetCamZ), 0.1);
+          camera.lookAt(player.position.x, player.position.y + 2.5, player.position.z);
+        } else {
+          // Cinematic Stage View
+          camera.position.lerp(new THREE.Vector3(0, 8, 18), 0.08);
+          camera.lookAt(0, 3, -6);
+        }
+
+        // 6. Check Proximity Zones
+        check3DProximityZones();
+      }
+
+      // Animate NPC Limbs
+      npcs.forEach(npc => {
+        if (npc.mesh) {
+          animateLimbs(npc, elapsed, delta);
+        }
+      });
+
+      // 7. Render 3D Scene
+      renderer.render(scene, camera);
     }
 
-    window.addEventListener('mousedown', (e) => { isPointerDown = true; handlePointerInput(e); });
-    window.addEventListener('mousemove', (e) => { if (isPointerDown) handlePointerInput(e); });
-    window.addEventListener('mouseup', () => isPointerDown = false);
+    function animateLimbs(char, elapsed, delta) {
+      if (!char.limbs.torso) return;
 
-    window.addEventListener('touchstart', (e) => { isPointerDown = true; handlePointerInput(e); }, { passive: true });
-    window.addEventListener('touchmove', (e) => { if (isPointerDown) handlePointerInput(e); }, { passive: true });
-    window.addEventListener('touchend', () => isPointerDown = false);
+      if (char.isDancing) {
+        // High-energy 3D Dance Move
+        const danceBop = Math.sin(elapsed * 12) * 0.2;
+        char.limbs.torso.position.y = 1.9 + Math.abs(danceBop);
+        char.limbs.head.position.y = 3.0 + danceBop;
 
-    // =========================================================================
-    // PROXIMITY DETECTION & TABLE CHAT
-    // =========================================================================
-    function checkProximityZones() {
+        char.limbs.leftArm.rotation.x = Math.sin(elapsed * 10) * 0.8 - 0.4;
+        char.limbs.rightArm.rotation.x = -Math.sin(elapsed * 10) * 0.8 - 0.4;
+
+        char.limbs.leftLeg.rotation.x = Math.sin(elapsed * 8) * 0.3;
+        char.limbs.rightLeg.rotation.x = -Math.sin(elapsed * 8) * 0.3;
+
+        if (char.limbs.leftTwintail) {
+          char.limbs.leftTwintail.rotation.x = Math.sin(elapsed * 10) * 0.4;
+          char.limbs.rightTwintail.rotation.x = -Math.sin(elapsed * 10) * 0.4;
+        }
+      } else if (char.isMoving) {
+        // Natural 3D Walking stride
+        const stride = Math.sin(elapsed * 12);
+        char.limbs.leftLeg.rotation.x = stride * 0.65;
+        char.limbs.rightLeg.rotation.x = -stride * 0.65;
+
+        char.limbs.leftArm.rotation.x = -stride * 0.6;
+        char.limbs.rightArm.rotation.x = stride * 0.6;
+
+        char.limbs.torso.position.y = 1.9 + Math.abs(Math.sin(elapsed * 12)) * 0.1;
+        char.limbs.head.position.y = 3.0 + Math.abs(Math.sin(elapsed * 12)) * 0.08;
+      } else {
+        // Idle breathing & subtle beat head bob
+        const bop = Math.sin(elapsed * 4) * 0.04;
+        char.limbs.head.position.y = 3.0 + bop;
+        char.limbs.leftArm.rotation.x = THREE.MathUtils.lerp(char.limbs.leftArm.rotation.x, 0, 0.1);
+        char.limbs.rightArm.rotation.x = THREE.MathUtils.lerp(char.limbs.rightArm.rotation.x, 0, 0.1);
+        char.limbs.leftLeg.rotation.x = THREE.MathUtils.lerp(char.limbs.leftLeg.rotation.x, 0, 0.1);
+        char.limbs.rightLeg.rotation.x = THREE.MathUtils.lerp(char.limbs.rightLeg.rotation.x, 0, 0.1);
+      }
+    }
+
+    function check3DProximityZones() {
       let activeZone = null;
 
-      for (const z of ZONES) {
-        const zX = width / 2 + (width * z.relX);
-        const zY = height / 2 + (height * z.relY);
-        const dist = Math.hypot(player.x - zX, player.y - zY);
-
+      for (const z of ZONES_3D) {
+        const dist = player.position.distanceTo(z.center);
         if (dist < z.radius) {
           activeZone = z;
           break;
@@ -1479,17 +2279,16 @@
         chatBox.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
         chatBox.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
 
-        chatHeader.innerHTML = `<span class="w-2 h-2 rounded-full" style="background:${activeZone.color}"></span><span>Chatting at ${activeZone.name}</span>`;
+        chatHeader.innerHTML = `<span class="w-2 h-2 rounded-full" style="background:${activeZone.color}"></span><span>Near: ${activeZone.name}</span>`;
         document.getElementById('tableChatInput').placeholder = `Say something at ${activeZone.name}...`;
 
         zoneIndText.innerText = activeZone.name;
         zoneIndDot.style.background = activeZone.color;
 
-        // Check if on DJ Center Stage
-        const djDist = Math.hypot(player.x - (width / 2), player.y - (height / 2 + height * 0.02));
-        if (activeZone.id === 'dj' && djDist < 60) {
+        // Spotlight banner if on DJ stage
+        if (activeZone.id === 'dj' && player.position.distanceTo(new THREE.Vector3(0, 0, -6)) < 6) {
           spotBanner.classList.remove('hidden');
-          document.getElementById('spotlightUserText').innerText = `${player.nickname} is rocking the DJ Stage! 🎙️`;
+          document.getElementById('spotlightUserText').innerText = `${player.nickname} is rocking the 3D DJ Stage! 🎙️`;
         } else {
           spotBanner.classList.add('hidden');
         }
@@ -1498,576 +2297,17 @@
         chatBox.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
         chatBox.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
 
-        zoneIndText.innerText = 'Center Dance Floor';
+        zoneIndText.innerText = '3D Nightclub Floor';
         zoneIndDot.style.background = '#ff2a85';
         spotBanner.classList.add('hidden');
       }
     }
 
-    function handleSendTableChat(e) {
-      e.preventDefault();
-      const input = document.getElementById('tableChatInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      player.message = {
-        text: text,
-        timestamp: Date.now(),
-        life: 6000
-      };
-
-      input.value = '';
-      showToast('Message posted over your avatar 💬');
-
-      // DJ reaction if on stage
-      if (player.currentZone && player.currentZone.id === 'dj') {
-        setTimeout(() => {
-          const dj = NPCS.find(n => n.id === 'dj_cyber');
-          if (dj) {
-            dj.message = {
-              text: `Yo @${player.nickname}! Big energy on the floor 🔥`,
-              timestamp: Date.now(),
-              life: 5000
-            };
-          }
-        }, 1200);
-      }
-    }
-
-    // =========================================================================
-    // EMOTES & DANCE MODE
-    // =========================================================================
-    function triggerAvatarEmote(emoji) {
-      floatingParticles.push({
-        x: player.x,
-        y: player.y - 25,
-        emoji: emoji,
-        vx: (Math.random() - 0.5) * 2,
-        vy: -2.8 - Math.random() * 1.5,
-        opacity: 1
-      });
-    }
-
-    function toggleAvatarDance() {
-      player.isDancing = !player.isDancing;
-      showToast(player.isDancing ? 'Dance Mode Activated! 🕺⚡' : 'Dance Mode Paused');
-    }
-
-    // =========================================================================
-    // CANVAS RENDERING ENGINE (CYBER-LOUNGE ENVIRONMENT)
-    // =========================================================================
-    function drawCyberFloor() {
-      const now = Date.now();
-
-      // 1. Deep Space Cyber Metallic Background
-      ctx.fillStyle = '#07070b';
-      ctx.fillRect(0, 0, width, height);
-
-      // 2. Ambient Corner Lighting (Cyan, Purple, Pink)
-      const radCyan = ctx.createRadialGradient(width * 0.1, height * 0.1, 20, width * 0.1, height * 0.1, 500);
-      radCyan.addColorStop(0, 'rgba(0, 240, 255, 0.08)');
-      radCyan.addColorStop(1, 'transparent');
-      ctx.fillStyle = radCyan;
-      ctx.fillRect(0, 0, width, height);
-
-      const radPink = ctx.createRadialGradient(width * 0.9, height * 0.15, 20, width * 0.9, height * 0.15, 450);
-      radPink.addColorStop(0, 'rgba(255, 42, 133, 0.07)');
-      radPink.addColorStop(1, 'transparent');
-      ctx.fillStyle = radPink;
-      ctx.fillRect(0, 0, width, height);
-
-      const radPurple = ctx.createRadialGradient(width * 0.85, height * 0.85, 20, width * 0.85, height * 0.85, 500);
-      radPurple.addColorStop(0, 'rgba(157, 78, 221, 0.08)');
-      radPurple.addColorStop(1, 'transparent');
-      ctx.fillStyle = radPurple;
-      ctx.fillRect(0, 0, width, height);
-
-      // 3. Cyber Floor Grid
-      const gridSize = 50;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += gridSize) {
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-      }
-      for (let y = 0; y <= height; y += gridSize) {
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-      }
-      ctx.stroke();
-
-      // 4. ANIMATED LED DANCE FLOOR (Center DJ Area)
-      const centerX = width / 2;
-      const centerY = height / 2 + (height * 0.02);
-      const tileCols = 6;
-      const tileRows = 5;
-      const tileSize = 36;
-      const startTileX = centerX - (tileCols * tileSize) / 2;
-      const startTileY = centerY - (tileRows * tileSize) / 2 + 10;
-
-      const neonPalette = ['#00f0ff', '#ff2a85', '#9d4edd', '#ffb703', '#06d6a0'];
-
-      for (let c = 0; c < tileCols; c++) {
-        for (let r = 0; r < tileRows; r++) {
-          const tx = startTileX + c * tileSize;
-          const ty = startTileY + r * tileSize;
-
-          // Pulse index tied to beat step & position
-          const beatShift = (c * 2 + r * 3 + currentBeatStep) % neonPalette.length;
-          const tileColor = neonPalette[beatShift];
-
-          ctx.fillStyle = 'rgba(18, 18, 30, 0.9)';
-          ctx.fillRect(tx + 2, ty + 2, tileSize - 4, tileSize - 4);
-
-          ctx.strokeStyle = `${tileColor}55`;
-          ctx.lineWidth = 1.5;
-          ctx.strokeRect(tx + 2, ty + 2, tileSize - 4, tileSize - 4);
-
-          // Subtle center neon core
-          ctx.fillStyle = `${tileColor}33`;
-          ctx.beginPath();
-          ctx.arc(tx + tileSize / 2, ty + tileSize / 2, 4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
-      // 5. DUAL SWEEPING LASER BEAMS (From DJ Booth)
-      laserAngle1 += 0.015;
-      laserAngle2 -= 0.012;
-
-      drawLaserSweep(centerX, centerY - 70, laserAngle1, 'rgba(0, 240, 255, 0.15)');
-      drawLaserSweep(centerX, centerY - 70, laserAngle2, 'rgba(255, 42, 133, 0.15)');
-    }
-
-    function drawLaserSweep(originX, originY, angle, color) {
-      const laserLen = Math.max(width, height) * 0.6;
-      const targetX = originX + Math.cos(angle) * laserLen;
-      const targetY = originY + Math.abs(Math.sin(angle)) * laserLen;
-
-      ctx.save();
-      const grad = ctx.createLinearGradient(originX, originY, targetX, targetY);
-      grad.addColorStop(0, color);
-      grad.addColorStop(1, 'transparent');
-
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(originX, originY);
-      ctx.lineTo(targetX, targetY);
-      ctx.stroke();
-
-      // Cone ambient sweep
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.moveTo(originX, originY);
-      ctx.lineTo(targetX - 35, targetY);
-      ctx.lineTo(targetX + 35, targetY);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function drawStationZones() {
-      const now = Date.now();
-
-      ZONES.forEach(z => {
-        const zX = width / 2 + (width * z.relX);
-        const zY = height / 2 + (height * z.relY);
-
-        // Ambient Station Glow
-        const glow = ctx.createRadialGradient(zX, zY, z.radius * 0.3, zX, zY, z.radius);
-        glow.addColorStop(0, `${z.color}15`);
-        glow.addColorStop(1, 'transparent');
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(zX, zY, z.radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Perimeter Ring
-        ctx.strokeStyle = `${z.color}44`;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(zX, zY, z.radius, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Station specific structures
-        if (z.id === 'dj') {
-          // Elevated DJ Platform
-          ctx.fillStyle = '#10101c';
-          ctx.strokeStyle = '#ff2a8599';
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.roundRect(zX - 55, zY - 95, 110, 48, 12);
-          ctx.fill();
-          ctx.stroke();
-
-          // DJ Turntables
-          ctx.fillStyle = '#1f1f33';
-          ctx.beginPath();
-          ctx.arc(zX - 25, zY - 72, 14, 0, Math.PI * 2);
-          ctx.arc(zX + 25, zY - 72, 14, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Rotating Vinyl lines
-          ctx.strokeStyle = '#00f0ff';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.arc(zX - 25, zY - 72, 10, now * 0.005, now * 0.005 + Math.PI * 1.5);
-          ctx.stroke();
-
-          ctx.strokeStyle = '#ff2a85';
-          ctx.beginPath();
-          ctx.arc(zX + 25, zY - 72, 10, -now * 0.005, -now * 0.005 + Math.PI * 1.5);
-          ctx.stroke();
-
-          // Equalizer Visualizer Bars
-          for (let b = 0; b < 5; b++) {
-            const barH = 6 + Math.abs(Math.sin(now * 0.008 + b)) * 14;
-            ctx.fillStyle = b % 2 === 0 ? '#00f0ff' : '#ff2a85';
-            ctx.fillRect(zX - 12 + b * 5, zY - 60 - barH / 2, 3, barH);
-          }
-
-        } else if (z.id === 'bar') {
-          // The Neon Bar Counter & Stools
-          ctx.fillStyle = '#131322';
-          ctx.strokeStyle = '#00f0ffaa';
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.roundRect(zX - 60, zY - 20, 120, 40, 10);
-          ctx.fill();
-          ctx.stroke();
-
-          // Bar Bottles
-          ctx.font = '18px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('🍸 🍾 🍹', zX, zY);
-
-          // Bar Stools
-          [-40, 0, 40].forEach(sx => {
-            ctx.fillStyle = '#222238';
-            ctx.beginPath();
-            ctx.arc(zX + sx, zY + 36, 9, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#00f0ff55';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-          });
-
-        } else if (z.id === 'chill') {
-          // Velvet Lounge Booth & Table
-          ctx.fillStyle = '#181226';
-          ctx.strokeStyle = '#9d4eddaa';
-          ctx.lineWidth = 2.5;
-          ctx.beginPath();
-          ctx.arc(zX, zY, 44, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.font = '22px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('🎲', zX, zY);
-
-          // Velvet sofa curve
-          ctx.strokeStyle = '#9d4edd66';
-          ctx.lineWidth = 6;
-          ctx.beginPath();
-          ctx.arc(zX, zY, 58, Math.PI * 0.7, Math.PI * 2.3);
-          ctx.stroke();
-
-        } else if (z.id === 'wall') {
-          // Confession Wall Brick Plaque
-          ctx.fillStyle = '#151522';
-          ctx.strokeStyle = '#ffb703aa';
-          ctx.lineWidth = 2.5;
-          ctx.beginPath();
-          ctx.roundRect(zX - 50, zY - 25, 100, 50, 8);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.font = '20px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('💌 📌', zX, zY);
-        }
-
-        // Zone Name Pill Label
-        ctx.font = 'bold 11px "Space Grotesk", sans-serif';
-        ctx.fillStyle = '#e4e4e7';
-        ctx.textAlign = 'center';
-        ctx.fillText(z.name.toUpperCase(), zX, zY + z.radius - 16);
-      });
-    }
-
-    function drawLightRipples() {
-      for (let i = lightRipples.length - 1; i >= 0; i--) {
-        const r = lightRipples[i];
-        r.radius += 2.5;
-        r.opacity -= 0.025;
-
-        if (r.opacity <= 0) {
-          lightRipples.splice(i, 1);
-          continue;
-        }
-
-        ctx.strokeStyle = r.color;
-        ctx.globalAlpha = r.opacity;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-      }
-    }
-
-    function drawAvatarEntity(entity, isUser = false) {
-      const now = Date.now();
-
-      // Dance bop animation
-      let offsetY = 0;
-      if (isUser && player.isDancing) {
-        offsetY = Math.sin(now * 0.018) * 7;
-      }
-
-      const drawX = entity.x;
-      const drawY = entity.y + offsetY;
-
-      // Outer Neon Aura
-      const aura = ctx.createRadialGradient(drawX, drawY, entity.radius * 0.2, drawX, drawY, entity.radius * 2.2);
-      aura.addColorStop(0, `${entity.color}66`);
-      aura.addColorStop(1, 'transparent');
-      ctx.fillStyle = aura;
-      ctx.beginPath();
-      ctx.arc(drawX, drawY, entity.radius * 2.2, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Avatar Sphere
-      const bodyGrad = ctx.createRadialGradient(drawX - 5, drawY - 5, 2, drawX, drawY, entity.radius);
-      bodyGrad.addColorStop(0, '#ffffff');
-      bodyGrad.addColorStop(0.35, entity.color);
-      bodyGrad.addColorStop(1, '#070712');
-
-      ctx.fillStyle = bodyGrad;
-      ctx.beginPath();
-      ctx.arc(drawX, drawY, entity.radius, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Avatar White Rim
-      ctx.strokeStyle = '#ffffffbb';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Accessory Emoji
-      if (entity.accessory) {
-        ctx.font = '15px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(entity.accessory, drawX, drawY);
-      }
-
-      // Holding Drink Badge
-      if (entity.drink) {
-        ctx.font = '14px sans-serif';
-        ctx.fillText(entity.drink, drawX + entity.radius - 2, drawY - entity.radius + 6);
-      }
-
-      // Nickname Pill Label
-      const nick = entity.nickname;
-      ctx.font = 'bold 11px "Space Grotesk", sans-serif';
-      const textWidth = ctx.measureText(nick).width;
-
-      ctx.fillStyle = 'rgba(7, 7, 12, 0.88)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-      ctx.lineWidth = 1;
-
-      const pillX = drawX - textWidth / 2 - 8;
-      const pillY = drawY - entity.radius - 24;
-      ctx.beginPath();
-      ctx.roundRect(pillX, pillY, textWidth + 16, 18, 9);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(nick, drawX, pillY + 9);
-
-      // Floating Speech Bubble
-      if (entity.message) {
-        const elapsed = now - entity.message.timestamp;
-        if (elapsed < entity.message.life) {
-          const fadeAlpha = elapsed > entity.message.life - 1000 ? (entity.message.life - elapsed) / 1000 : 1;
-          drawSpeechBubble(drawX, pillY - 8, entity.message.text, entity.color, fadeAlpha);
-        } else {
-          entity.message = null;
-        }
-      }
-    }
-
-    function drawSpeechBubble(x, y, text, color, alpha) {
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-
-      ctx.font = '500 12px "Plus Jakarta Sans", sans-serif';
-      const metrics = ctx.measureText(text);
-      const bubbleW = Math.min(230, metrics.width + 24);
-      const bubbleH = 34;
-      const bubbleX = x - bubbleW / 2;
-      const bubbleY = y - bubbleH - 6;
-
-      ctx.fillStyle = 'rgba(10, 10, 18, 0.95)';
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1.5;
-
-      ctx.beginPath();
-      ctx.roundRect(bubbleX, bubbleY, bubbleW, bubbleH, 12);
-      ctx.fill();
-      ctx.stroke();
-
-      // Tail
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(x - 5, bubbleY + bubbleH);
-      ctx.lineTo(x + 5, bubbleY + bubbleH);
-      ctx.lineTo(x, bubbleY + bubbleH + 6);
-      ctx.fill();
-
-      // Text
-      ctx.fillStyle = '#f3f4f6';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, x, bubbleY + bubbleH / 2);
-
-      ctx.restore();
-    }
-
-    function drawFloatingEmotes() {
-      for (let i = floatingParticles.length - 1; i >= 0; i--) {
-        const p = floatingParticles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.opacity -= 0.015;
-
-        if (p.opacity <= 0) {
-          floatingParticles.splice(i, 1);
-          continue;
-        }
-
-        ctx.save();
-        ctx.globalAlpha = p.opacity;
-        ctx.font = '22px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(p.emoji, p.x, p.y);
-        ctx.restore();
-      }
-    }
-
-    function drawStardustTrails() {
-      if (player.trail.length < 2) return;
-      for (let i = 0; i < player.trail.length; i++) {
-        const pt = player.trail[i];
-        const alpha = (i / player.trail.length) * 0.45;
-        const size = (i / player.trail.length) * (player.radius * 0.6);
-
-        ctx.fillStyle = player.color;
-        ctx.globalAlpha = alpha;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    // MAIN 60 FPS ANIMATION LOOP
-    function animate() {
-      // 1. Move player towards target
-      const dx = player.targetX - player.x;
-      const dy = player.targetY - player.y;
-      player.x += dx * player.speed;
-      player.y += dy * player.speed;
-
-      if (Math.hypot(dx, dy) > 1) {
-        player.trail.push({ x: player.x, y: player.y });
-        if (player.trail.length > 12) player.trail.shift();
-      } else if (player.trail.length > 0) {
-        player.trail.shift();
-      }
-
-      // Check proximity & spatial audio
-      checkProximityZones();
-      updateSpatialAudio();
-
-      // Render Cyber-Lounge
-      drawCyberFloor();
-      drawStationZones();
-      drawLightRipples();
-      drawStardustTrails();
-
-      // Render NPCs & Player
-      NPCS.forEach(npc => drawAvatarEntity(npc, false));
-      drawAvatarEntity(player, true);
-
-      // Render Floating Emotes
-      drawFloatingEmotes();
-
-      requestAnimationFrame(animate);
-    }
-
-    // =========================================================================
-    // SIDE HELPERS & EXTRAS
-    // =========================================================================
-    function toggleDropDrawer() {
-      const drawer = document.getElementById('dropDrawer');
-      drawer.classList.toggle('translate-x-full');
-    }
-
-    function inviteGangToTable() {
-      const zone = player.currentZone ? player.currentZone.name : 'Cyber-Lounge Floor';
-      const shareUrl = `https://clubr.online`;
-      const text = `Yo! I'm chilling at "${zone}" on Clubr Cyber-Lounge! Jump in and let's vibe: ${shareUrl}`;
-
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareUrl);
-      }
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toastNotification');
-      document.getElementById('toastMessage').innerText = msg;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2600);
-    }
-
-    // Double-click canvas to trigger dance mode
-    canvas.addEventListener('dblclick', () => {
-      toggleAvatarDance();
-    });
-
     // Start Everything on Load
     window.addEventListener('DOMContentLoaded', () => {
-      resizeCanvas();
+      initThreeScene();
       loadConfessions();
-      animate();
-
-      // Periodic smart NPC banter
-      setInterval(() => {
-        const randomNpc = NPCS[Math.floor(Math.random() * NPCS.length)];
-        const quotes = [
-          "Tap 🎛️ to drop an Airhorn blast!",
-          "Cocktails are tasting electric tonight 🍸",
-          "Someone just posted juicy tea on the wall 👀",
-          "Draw a Spicy Truth card at the lounge 🎲",
-          "Bassline hitting just right 🔊"
-        ];
-        randomNpc.message = {
-          text: quotes[Math.floor(Math.random() * quotes.length)],
-          timestamp: Date.now(),
-          life: 6000
-        };
-      }, 12000);
+      animate3D();
     });
   </script>
 </body>

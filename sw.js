@@ -1,9 +1,8 @@
-// CLUBR PWA Service Worker v1.0.0
-const CACHE_NAME = 'clubr-cache-v1';
+// Findly PWA Service Worker v2.0.0
+const CACHE_NAME = 'findly-cache-v2';
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './superadmin.html',
   './manifest.json',
   './icons/icon.svg'
 ];
@@ -12,9 +11,9 @@ const STATIC_ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[CLUBR SW] Pre-caching core app shell');
+      console.log('[FINDLY SW] Pre-caching app shell');
       return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('[CLUBR SW] Cache addAll warning:', err);
+        console.warn('[FINDLY SW] Cache addAll warning:', err);
       });
     })
   );
@@ -28,7 +27,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((name) => {
           if (name !== CACHE_NAME) {
-            console.log('[CLUBR SW] Deleting old cache:', name);
+            console.log('[FINDLY SW] Deleting old cache:', name);
             return caches.delete(name);
           }
         })
@@ -38,19 +37,15 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: Network First with Cache Fallback for dynamic updates
+// Fetch: Network first with Cache fallback
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   
-  // Ignore non-GET requests or Firebase RTDB live websocket/api calls
-  if (req.method !== 'GET' || req.url.includes('firebasedatabase.app') || req.url.includes('googleapis.com')) {
-    return;
-  }
+  if (req.method !== 'GET') return;
 
   event.respondWith(
     fetch(req)
       .then((networkRes) => {
-        // Cache successful GET responses of static assets
         if (networkRes && networkRes.status === 200 && networkRes.type === 'basic') {
           const resClone = networkRes.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -60,7 +55,6 @@ self.addEventListener('fetch', (event) => {
         return networkRes;
       })
       .catch(() => {
-        // Fallback to cache when offline
         return caches.match(req).then((cachedRes) => {
           if (cachedRes) return cachedRes;
           if (req.headers.get('accept') && req.headers.get('accept').includes('text/html')) {

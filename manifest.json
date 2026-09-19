@@ -1,17 +1,17 @@
 {
-  "name": "Clubr.online — Virtual 2D Digital Club",
-  "short_name": "Clubr",
-  "description": "Step into Clubr.online, the virtual 2D digital club. Hangout at tables, chat with speech bubbles, and vibe to Lo-Fi beats.",
+  "name": "Findly — India's Local Marketplace",
+  "short_name": "Findly",
+  "description": "India's smartest hyperlocal marketplace. Buy, sell, post city demands, and chat directly in-app across PAN India.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#09090d",
-  "theme_color": "#09090d",
+  "background_color": "#17211b",
+  "theme_color": "#17211b",
   "categories": [
-    "social",
-    "games",
-    "entertainment"
+    "shopping",
+    "lifestyle",
+    "social"
   ],
   "icons": [
     {

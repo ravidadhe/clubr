@@ -1,34 +1,27 @@
-// Findly PWA Service Worker v2.0.0
-const CACHE_NAME = 'findly-cache-v2';
+// Findly PWA Service Worker v3.2.0 - PAN India & In-App Chat
+const CACHE_NAME = 'findly-v3-pan-india';
 const STATIC_ASSETS = [
-  './',
-  './index.html',
   './manifest.json',
   './icons/icon.svg'
 ];
 
-// Install: Pre-cache core shell
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[FINDLY SW] Pre-caching app shell');
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('[FINDLY SW] Cache addAll warning:', err);
-      });
+      return cache.addAll(STATIC_ASSETS).catch(() => {});
     })
   );
-  self.skipWaiting();
 });
 
-// Activate: Clean old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then((keys) => {
       return Promise.all(
-        cacheNames.map((name) => {
-          if (name !== CACHE_NAME) {
-            console.log('[FINDLY SW] Deleting old cache:', name);
-            return caches.delete(name);
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            console.log('[FINDLY SW] Clearing stale cache:', key);
+            return caches.delete(key);
           }
         })
       );
@@ -37,21 +30,14 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: Network first with Cache fallback
+// Network-First strategy: Always fetch fresh HTML from server
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  
   if (req.method !== 'GET') return;
 
   event.respondWith(
     fetch(req)
       .then((networkRes) => {
-        if (networkRes && networkRes.status === 200 && networkRes.type === 'basic') {
-          const resClone = networkRes.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(req, resClone);
-          });
-        }
         return networkRes;
       })
       .catch(() => {

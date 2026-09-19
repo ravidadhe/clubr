@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Findly — India's Hyperlocal Marketplace</title>
 <meta name="description" content="Findly — India's smartest community marketplace. Buy, sell, post city demands, and chat directly in-app across PAN India with zero fraud.">
 
@@ -2113,6 +2116,15 @@ let uploadedPhotoBase64 = '';
 // Initialize
 function initData() {
   try {
+    // Auto-upgrade to PAN-India version if previous single-city seed is saved
+    const FINDLY_APP_VER = 'v3.3_pan_india';
+    if (localStorage.getItem('findly_version') !== FINDLY_APP_VER) {
+      localStorage.removeItem('findly_listings');
+      localStorage.removeItem('findly_wants');
+      localStorage.removeItem('findly_current_city');
+      localStorage.setItem('findly_version', FINDLY_APP_VER);
+    }
+
     const savedL = localStorage.getItem('findly_listings');
     listings = savedL ? JSON.parse(savedL) : defaultListings;
 

@@ -276,6 +276,13 @@ button {
   font-size: 13px;
   font-weight: 800;
   color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.user-btn:hover {
+  background: #f0ebe1;
+  border-color: #c8c0b0;
 }
 
 .user-avatar-dot {
@@ -1813,13 +1820,18 @@ h1 {
     </div>
     <div class="chips">
       <button class="chip active" onclick="filterCategory('All', this)">⚡ All Items</button>
-      <button class="chip" onclick="filterCategory('Mobiles', this)">📱 Mobiles & Tabs</button>
-      <button class="chip" onclick="filterCategory('Bikes', this)">🏍️ Bikes & Scooters</button>
-      <button class="chip" onclick="filterCategory('Cars', this)">🚗 Cars & Autos</button>
-      <button class="chip" onclick="filterCategory('Furniture', this)">🛋️ Home & Furniture</button>
-      <button class="chip" onclick="filterCategory('Electronics', this)">💻 Laptops & Gadgets</button>
-      <button class="chip" onclick="filterCategory('Appliances', this)">📺 Home Appliances</button>
-      <button class="chip" onclick="filterCategory('Others', this)">📦 Books & Fashion</button>
+      <button class="chip" onclick="filterCategory('Mobiles', this)">📱 Mobiles</button>
+      <button class="chip" onclick="filterCategory('Properties', this)">🏠 Properties / Rent</button>
+      <button class="chip" onclick="filterCategory('Jobs', this)">💼 Jobs & Hiring</button>
+      <button class="chip" onclick="filterCategory('Bikes', this)">🏍️ Bikes</button>
+      <button class="chip" onclick="filterCategory('Cars', this)">🚗 Cars</button>
+      <button class="chip" onclick="filterCategory('Electronics', this)">💻 Electronics</button>
+      <button class="chip" onclick="filterCategory('Services', this)">🛠️ Services</button>
+      <button class="chip" onclick="filterCategory('Furniture', this)">🛋️ Furniture</button>
+      <button class="chip" onclick="filterCategory('Appliances', this)">📺 Appliances</button>
+      <button class="chip" onclick="filterCategory('Fashion', this)">👗 Fashion</button>
+      <button class="chip" onclick="filterCategory('Pets', this)">🐕 Pets</button>
+      <button class="chip" onclick="filterCategory('Others', this)">📦 Others</button>
     </div>
   </section>
 
@@ -2114,11 +2126,16 @@ h1 {
         </label>
         <div class="sell-cat-pills" id="sellCatPills">
           <button type="button" class="sell-cat-pill active" data-cat="Mobiles" onclick="selectSellCategory('Mobiles')">📱 Mobiles</button>
+          <button type="button" class="sell-cat-pill" data-cat="Properties" onclick="selectSellCategory('Properties')">🏠 Properties</button>
+          <button type="button" class="sell-cat-pill" data-cat="Jobs" onclick="selectSellCategory('Jobs')">💼 Jobs</button>
           <button type="button" class="sell-cat-pill" data-cat="Bikes" onclick="selectSellCategory('Bikes')">🏍️ Bikes</button>
           <button type="button" class="sell-cat-pill" data-cat="Cars" onclick="selectSellCategory('Cars')">🚗 Cars</button>
-          <button type="button" class="sell-cat-pill" data-cat="Furniture" onclick="selectSellCategory('Furniture')">🛋️ Furniture</button>
           <button type="button" class="sell-cat-pill" data-cat="Electronics" onclick="selectSellCategory('Electronics')">💻 Electronics</button>
+          <button type="button" class="sell-cat-pill" data-cat="Services" onclick="selectSellCategory('Services')">🛠️ Services</button>
+          <button type="button" class="sell-cat-pill" data-cat="Furniture" onclick="selectSellCategory('Furniture')">🛋️ Furniture</button>
           <button type="button" class="sell-cat-pill" data-cat="Appliances" onclick="selectSellCategory('Appliances')">📺 Appliances</button>
+          <button type="button" class="sell-cat-pill" data-cat="Fashion" onclick="selectSellCategory('Fashion')">👗 Fashion</button>
+          <button type="button" class="sell-cat-pill" data-cat="Pets" onclick="selectSellCategory('Pets')">🐕 Pets</button>
           <button type="button" class="sell-cat-pill" data-cat="Others" onclick="selectSellCategory('Others')">📦 Others</button>
         </div>
         <input type="hidden" id="sellCat" value="Mobiles">
@@ -2210,11 +2227,16 @@ h1 {
         <label>Category</label>
         <select id="wantCat">
           <option value="Mobiles">📱 Mobiles & Tabs</option>
+          <option value="Properties">🏠 Properties / Rent</option>
+          <option value="Jobs">💼 Jobs & Hiring</option>
           <option value="Bikes">🏍️ Bikes & Scooters</option>
           <option value="Cars">🚗 Cars & Autos</option>
-          <option value="Furniture">🛋️ Home & Furniture</option>
           <option value="Electronics">💻 Laptops & Gadgets</option>
+          <option value="Services">🛠️ Services</option>
+          <option value="Furniture">🛋️ Home & Furniture</option>
           <option value="Appliances">📺 Home Appliances</option>
+          <option value="Fashion">👗 Fashion & Lifestyle</option>
+          <option value="Pets">🐕 Pets & Care</option>
           <option value="Others">📦 Books & Others</option>
         </select>
       </div>
@@ -2642,40 +2664,70 @@ var OTHER_CITY_LABEL = window.OTHER_CITY_LABEL || "➕ Other (Enter My City / To
 // Dynamic Category Trust Badges Specification
 const CATEGORY_SPECS = {
   Mobiles: [
-    { key: 'bill', label: '🧾 Original Bill' },
-    { key: 'box', label: '📦 Box & Charger' },
-    { key: 'warranty', label: '🛡️ Under Warranty' },
-    { key: 'exchange', label: '🔄 Open for Exchange' }
+    { key: 'bill', label: '🧾 Original Purchase Bill Available' },
+    { key: 'box', label: '📦 Original Box & Charger Ready' },
+    { key: 'warranty', label: '🛡️ Under Active Brand Warranty' },
+    { key: 'exchange', label: '🔄 Open for Device Swap / Exchange' }
+  ],
+  Properties: [
+    { key: 'directOwner', label: '🔑 Direct Owner (0% Brokerage)' },
+    { key: 'bachelorOk', label: '👨‍👩‍👧 Family & Bachelor Friendly' },
+    { key: 'lowDeposit', label: '💰 Zero / Low Security Deposit' },
+    { key: 'parkingWater', label: '💧 24x7 Water & Reserved Parking' }
+  ],
+  Jobs: [
+    { key: 'directHire', label: '🏢 Direct Company Hiring (Zero Fees)' },
+    { key: 'immediateJoin', label: '⚡ Immediate Joiner Required' },
+    { key: 'freshersWelcome', label: '🎓 Freshers Welcome to Apply' },
+    { key: 'dailyIncentive', label: '💵 Fixed Salary + Daily Incentives' }
   ],
   Bikes: [
-    { key: 'rc', label: '📄 1st Owner / RC Book' },
-    { key: 'insurance', label: '🛡️ Active Insurance' },
-    { key: 'service', label: '🔧 Service Record Ready' },
+    { key: 'rc', label: '📄 1st Owner / Clean RC Book' },
+    { key: 'insurance', label: '🛡️ Active Insurance Available' },
+    { key: 'service', label: '🔧 Authorized Service Record Ready' },
     { key: 'exchange', label: '🔄 Open for Exchange' }
   ],
   Cars: [
-    { key: 'rc', label: '📄 1st Owner / Clean RC' },
-    { key: 'insurance', label: '🛡️ Comprehensive Insurance' },
+    { key: 'rc', label: '📄 1st Owner / Original RC' },
+    { key: 'insurance', label: '🛡️ Comprehensive Insurance Active' },
     { key: 'nonAccidental', label: '🚗 Certified Non-Accidental' },
     { key: 'exchange', label: '🔄 Open for Exchange' }
   ],
   Electronics: [
-    { key: 'bill', label: '🧾 Original Invoice' },
-    { key: 'charger', label: '🔌 Original Power Adapter' },
-    { key: 'battery', label: '🔋 Healthy Battery / Ports' },
-    { key: 'warranty', label: '🛡️ Brand Warranty / Clean' }
+    { key: 'bill', label: '🧾 Original Invoice / Receipt' },
+    { key: 'charger', label: '🔌 Original Power Adapter & Cord' },
+    { key: 'battery', label: '🔋 Healthy Battery & Functional Ports' },
+    { key: 'warranty', label: '🛡️ Warranty Valid' }
+  ],
+  Services: [
+    { key: 'verifiedPro', label: '🛡️ Background Verified Professional' },
+    { key: 'doorstep', label: '🚪 Same-Day Doorstep Service' },
+    { key: 'serviceWarranty', label: '✅ 30-Day Service Guarantee' },
+    { key: 'transparentRates', label: '🏷️ Fixed Transparent Rates (No Hidden Cost)' }
   ],
   Furniture: [
-    { key: 'material', label: '🪵 Solid Wood / Premium Fabric' },
+    { key: 'material', label: '🪵 Solid Wood / Premium Quality' },
     { key: 'spotless', label: '✨ Scratch-Free & Spotless' },
-    { key: 'readyToMove', label: '🚚 Disassembled / Ready to Move' },
-    { key: 'negotiable', label: '🤝 Price Negotiable' }
+    { key: 'readyToMove', label: '🚚 Disassembled / Ready to Transport' },
+    { key: 'negotiable', label: '🤝 Price Open for Negotiation' }
   ],
   Appliances: [
     { key: 'bill', label: '🧾 Original Bill' },
-    { key: 'remote', label: '🔌 Remote & Original Cables' },
-    { key: 'tested', label: '⚡ 100% Tested Working' },
-    { key: 'warranty', label: '🛡️ Brand Warranty Valid' }
+    { key: 'remote', label: '🔌 Original Remote & Connectors' },
+    { key: 'tested', label: '⚡ 100% Tested & Working' },
+    { key: 'warranty', label: '🛡️ Warranty Valid' }
+  ],
+  Fashion: [
+    { key: 'brandNew', label: '🏷️ Brand New / Unworn with Tags' },
+    { key: 'originalBrand', label: '✨ 100% Original Brand Authentic' },
+    { key: 'dryCleaned', label: '🧼 Freshly Washed / Dry Cleaned' },
+    { key: 'sizeTag', label: '📏 Standard Accurate Sizing' }
+  ],
+  Pets: [
+    { key: 'vaccinated', label: '💉 Fully Vaccinated with Vet Card' },
+    { key: 'dewormed', label: '🩺 Dewormed & Healthy' },
+    { key: 'friendlyTrained', label: '🐾 Friendly & Potty Trained' },
+    { key: 'ethicalAdoption', label: '❤️ Ethical Adoption / Direct Owner' }
   ],
   Others: [
     { key: 'condition', label: '✨ Mint / Like-New Condition' },
@@ -2714,13 +2766,18 @@ function selectSellCategory(cat) {
   const hintEl = document.getElementById('selectedCatHint');
   if (hintEl) {
     const labels = {
-      Mobiles: 'Mobiles & Tablets',
-      Bikes: 'Bikes & Scooters',
-      Cars: 'Cars & Four-Wheelers',
-      Furniture: 'Home & Furniture',
-      Electronics: 'Laptops & Gadgets',
-      Appliances: 'Home Appliances',
-      Others: 'Books, Fashion & Others'
+      Mobiles: '📱 Mobiles & Tablets',
+      Properties: '🏠 House & Property Rent',
+      Jobs: '💼 Jobs & Hiring',
+      Bikes: '🏍️ Bikes & Scooters',
+      Cars: '🚗 Cars & Four-Wheelers',
+      Electronics: '💻 Laptops & Tech',
+      Services: '🛠️ Home & Pro Services',
+      Furniture: '🛋️ Furniture & Living',
+      Appliances: '📺 TV & Appliances',
+      Fashion: '👗 Fashion & Lifestyle',
+      Pets: '🐕 Pets & Pet Care',
+      Others: '📦 Other Items'
     };
     hintEl.textContent = labels[cat] || cat;
   }
@@ -4906,8 +4963,9 @@ function submitListing() {
   });
 
   const emojiMap = {
-    Mobiles: '📱', Bikes: '🏍️', Cars: '🚗', Furniture: '🛋️',
-    Electronics: '💻', Appliances: '📺', Others: '📦'
+    Mobiles: '📱', Properties: '🏠', Jobs: '💼', Bikes: '🏍️', Cars: '🚗',
+    Electronics: '💻', Services: '🛠️', Furniture: '🛋️', Appliances: '📺',
+    Fashion: '👗', Pets: '🐕', Others: '📦'
   };
 
   const newListing = {
@@ -4924,10 +4982,10 @@ function submitListing() {
     isKycVerified: (currentUser.kycStatus === 'verified'),
     desc,
     badges,
-    bill: !!(badges.bill || badges.rc || badges.material || badges.condition),
-    box: !!(badges.box || badges.insurance || badges.remote || badges.packaging),
-    owner: !!(badges.warranty || badges.service || badges.tested || badges.proof),
-    exchange: !!(badges.exchange || badges.negotiable),
+    bill: !!(badges.bill || badges.rc || badges.material || badges.condition || badges.directOwner || badges.directHire || badges.verifiedPro || badges.brandNew || badges.vaccinated),
+    box: !!(badges.box || badges.insurance || badges.remote || badges.packaging || badges.bachelorOk || badges.immediateJoin || badges.doorstep || badges.originalBrand || badges.dewormed),
+    owner: !!(badges.warranty || badges.service || badges.tested || badges.proof || badges.lowDeposit || badges.freshersWelcome || badges.serviceWarranty || badges.dryCleaned || badges.friendlyTrained),
+    exchange: !!(badges.exchange || badges.negotiable || badges.parkingWater || badges.dailyIncentive || badges.transparentRates || badges.sizeTag || badges.ethicalAdoption),
     photo: uploadedPhotoBase64,
     time: 'Just now'
   };

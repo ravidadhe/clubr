@@ -151,10 +151,18 @@
           </span>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5" id="catPillsGrid">
-          <button type="button" onclick="selectPageCategory('Mobiles')" data-cat="Mobiles" class="cat-pill active flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-lime-400 text-slate-950 font-bold text-xs transition gap-1.5 shadow-xs">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5" id="catPillsGrid">
+          <button type="button" onclick="selectPageCategory('Mobiles')" data-cat="Mobiles" class="cat-pill active flex flex-col items-center justify-center p-3 rounded-2xl border border-lime-400 bg-lime-400 text-slate-950 font-bold text-xs transition gap-1.5 shadow-xs">
             <span class="text-2xl">📱</span>
             <span>Mobiles</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Properties')" data-cat="Properties" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">🏠</span>
+            <span>Properties / Rent</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Jobs')" data-cat="Jobs" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">💼</span>
+            <span>Jobs & Hiring</span>
           </button>
           <button type="button" onclick="selectPageCategory('Bikes')" data-cat="Bikes" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
             <span class="text-2xl">🏍️</span>
@@ -168,6 +176,10 @@
             <span class="text-2xl">💻</span>
             <span>Electronics</span>
           </button>
+          <button type="button" onclick="selectPageCategory('Services')" data-cat="Services" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">🛠️</span>
+            <span>Services</span>
+          </button>
           <button type="button" onclick="selectPageCategory('Furniture')" data-cat="Furniture" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
             <span class="text-2xl">🛋️</span>
             <span>Furniture</span>
@@ -175,6 +187,14 @@
           <button type="button" onclick="selectPageCategory('Appliances')" data-cat="Appliances" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
             <span class="text-2xl">📺</span>
             <span>Appliances</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Fashion')" data-cat="Fashion" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">👗</span>
+            <span>Fashion</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Pets')" data-cat="Pets" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">🐕</span>
+            <span>Pets</span>
           </button>
           <button type="button" onclick="selectPageCategory('Others')" data-cat="Others" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
             <span class="text-2xl">📦</span>
@@ -188,28 +208,28 @@
       <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
         <div class="border-b border-slate-100 pb-3">
           <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">2. Item Details & Price</h2>
-          <p class="text-xs text-slate-500">Provide clear product model and a realistic asking price</p>
+          <p class="text-xs text-slate-500">Provide clear details and a realistic asking price / rate</p>
         </div>
 
         <div class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">What are you selling? *</label>
+            <label id="titleFieldLabel" class="block text-xs font-bold text-slate-700 mb-1.5">What are you selling? *</label>
             <input id="itemTitle" required placeholder="e.g. Apple iPhone 13 128GB Midnight Blue / Honda Activa 6G 2022" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
-            <span class="text-[11px] text-slate-400 mt-1 block">Mention Brand + Model + Variant/Storage for best buyer response.</span>
+            <span id="titleFieldHint" class="text-[11px] text-slate-400 mt-1 block">Mention Brand + Model + Variant/Storage for best buyer response.</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Selling Price (₹) *</label>
+              <label id="priceFieldLabel" class="block text-xs font-bold text-slate-700 mb-1.5">Selling Price (₹) *</label>
               <div class="relative">
                 <span class="absolute left-4 top-3 text-slate-400 font-bold text-base">₹</span>
                 <input id="itemPrice" type="number" required placeholder="24000" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-mono font-bold transition">
               </div>
-              <span class="text-[11px] text-slate-400 mt-1 block">Fair prices receive 3x more chat requests.</span>
+              <span id="priceFieldHint" class="text-[11px] text-slate-400 mt-1 block">Fair prices receive 3x more responses.</span>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Item Condition *</label>
+              <label id="conditionFieldLabel" class="block text-xs font-bold text-slate-700 mb-1.5">Item Condition *</label>
               <select id="itemCondition" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-medium transition">
                 <option value="Like New">✨ Like New (Scratchless / Rarely Used)</option>
                 <option value="Good" selected>👍 Good (Well-maintained with normal usage)</option>
@@ -391,6 +411,18 @@
         { key: 'warranty', label: '🛡️ Under Active Brand Warranty' },
         { key: 'exchange', label: '🔄 Open for Device Swap / Exchange' }
       ],
+      Properties: [
+        { key: 'directOwner', label: '🔑 Direct Owner (0% Brokerage)' },
+        { key: 'bachelorOk', label: '👨‍👩‍👧 Family & Bachelor Friendly' },
+        { key: 'lowDeposit', label: '💰 Zero / Low Security Deposit' },
+        { key: 'parkingWater', label: '💧 24x7 Water & Reserved Parking' }
+      ],
+      Jobs: [
+        { key: 'directHire', label: '🏢 Direct Company Hiring (Zero Fees)' },
+        { key: 'immediateJoin', label: '⚡ Immediate Joiner Required' },
+        { key: 'freshersWelcome', label: '🎓 Freshers Welcome to Apply' },
+        { key: 'dailyIncentive', label: '💵 Fixed Salary + Daily Incentives' }
+      ],
       Bikes: [
         { key: 'rc', label: '📄 1st Owner / Clean RC Book' },
         { key: 'insurance', label: '🛡️ Active Insurance Available' },
@@ -409,6 +441,12 @@
         { key: 'battery', label: '🔋 Healthy Battery & Functional Ports' },
         { key: 'warranty', label: '🛡️ Warranty Valid' }
       ],
+      Services: [
+        { key: 'verifiedPro', label: '🛡️ Background Verified Professional' },
+        { key: 'doorstep', label: '🚪 Same-Day Doorstep Service' },
+        { key: 'serviceWarranty', label: '✅ 30-Day Service Guarantee' },
+        { key: 'transparentRates', label: '🏷️ Fixed Transparent Rates (No Hidden Cost)' }
+      ],
       Furniture: [
         { key: 'material', label: '🪵 Solid Wood / Premium Quality' },
         { key: 'spotless', label: '✨ Scratch-Free & Spotless' },
@@ -420,6 +458,18 @@
         { key: 'remote', label: '🔌 Original Remote & Connectors' },
         { key: 'tested', label: '⚡ 100% Tested & Working' },
         { key: 'warranty', label: '🛡️ Warranty Valid' }
+      ],
+      Fashion: [
+        { key: 'brandNew', label: '🏷️ Brand New / Unworn with Tags' },
+        { key: 'originalBrand', label: '✨ 100% Original Brand Authentic' },
+        { key: 'dryCleaned', label: '🧼 Freshly Washed / Dry Cleaned' },
+        { key: 'sizeTag', label: '📏 Standard Accurate Sizing' }
+      ],
+      Pets: [
+        { key: 'vaccinated', label: '💉 Fully Vaccinated with Vet Card' },
+        { key: 'dewormed', label: '🩺 Dewormed & Healthy' },
+        { key: 'friendlyTrained', label: '🐾 Friendly & Potty Trained' },
+        { key: 'ethicalAdoption', label: '❤️ Ethical Adoption / Direct Owner' }
       ],
       Others: [
         { key: 'condition', label: '✨ Mint / Like-New Condition' },
@@ -504,12 +554,17 @@
 
       const labels = {
         Mobiles: '📱 Mobiles & Tablets',
+        Properties: '🏠 House & Property Rent',
+        Jobs: '💼 Jobs & Hiring',
         Bikes: '🏍️ Bikes & Scooters',
         Cars: '🚗 Cars & Four-Wheelers',
         Electronics: '💻 Laptops & Tech',
+        Services: '🛠️ Home & Pro Services',
         Furniture: '🛋️ Furniture & Living',
-        Appliances: '📺 TV & Home Appliances',
-        Others: '📦 Books & Other Items'
+        Appliances: '📺 TV & Appliances',
+        Fashion: '👗 Fashion & Lifestyle',
+        Pets: '🐕 Pets & Pet Care',
+        Others: '📦 Other Items'
       };
       document.getElementById('selectedCatBadge').textContent = labels[cat] || cat;
       document.getElementById('trustCategoryLabel').textContent = `For ${cat}`;
@@ -522,6 +577,109 @@
           btn.className = 'cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5';
         }
       });
+
+      // Dynamic Form Adaptations for Title, Price & Condition
+      const titleLabel = document.getElementById('titleFieldLabel');
+      const titleInput = document.getElementById('itemTitle');
+      const titleHint = document.getElementById('titleFieldHint');
+      const priceLabel = document.getElementById('priceFieldLabel');
+      const priceInput = document.getElementById('itemPrice');
+      const priceHint = document.getElementById('priceFieldHint');
+      const condLabel = document.getElementById('conditionFieldLabel');
+      const condSelect = document.getElementById('itemCondition');
+
+      if (cat === 'Properties') {
+        if (titleLabel) titleLabel.textContent = 'Property Title & Configuration *';
+        if (titleInput) titleInput.placeholder = 'e.g. 2 BHK Semi-Furnished Flat for Rent in Kothrud with Balcony';
+        if (titleHint) titleHint.textContent = 'Mention BHK type, locality, and whether bachelor/family friendly.';
+        if (priceLabel) priceLabel.textContent = 'Monthly Rent / Expected Price (₹) *';
+        if (priceInput) priceInput.placeholder = '18000';
+        if (priceHint) priceHint.textContent = 'Enter monthly rent or expected sale price.';
+        if (condLabel) condLabel.textContent = 'Furnishing Status *';
+        if (condSelect) {
+          condSelect.innerHTML = `
+            <option value="Semi-Furnished" selected>🛋️ Semi-Furnished</option>
+            <option value="Fully Furnished">✨ Fully Furnished</option>
+            <option value="Unfurnished">📦 Unfurnished</option>
+          `;
+        }
+      } else if (cat === 'Jobs') {
+        if (titleLabel) titleLabel.textContent = 'Job Role / Title *';
+        if (titleInput) titleInput.placeholder = 'e.g. Delivery Driver / Retail Sales Associate / Telecaller / Accountant';
+        if (titleHint) titleHint.textContent = 'Mention job role, shifts, and key requirement for immediate candidate responses.';
+        if (priceLabel) priceLabel.textContent = 'Monthly Salary / Pay (₹) *';
+        if (priceInput) priceInput.placeholder = '22000';
+        if (priceHint) priceHint.textContent = 'Fixed monthly salary or per-day wage.';
+        if (condLabel) condLabel.textContent = 'Job Type *';
+        if (condSelect) {
+          condSelect.innerHTML = `
+            <option value="Full Time" selected>💼 Full-Time</option>
+            <option value="Part Time">⏱️ Part-Time</option>
+            <option value="Work from Home">🏠 Remote / Work from Home</option>
+          `;
+        }
+      } else if (cat === 'Services') {
+        if (titleLabel) titleLabel.textContent = 'Service Name / Offering *';
+        if (titleInput) titleInput.placeholder = 'e.g. Split AC Deep Servicing & Repair / Home Painting & Deep Cleaning';
+        if (titleHint) titleHint.textContent = 'Mention specific service offered, specialization, and coverage area.';
+        if (priceLabel) priceLabel.textContent = 'Starting Service Rate (₹) *';
+        if (priceInput) priceInput.placeholder = '499';
+        if (priceHint) priceHint.textContent = 'Base visiting charge or fixed package rate.';
+        if (condLabel) condLabel.textContent = 'Service Model *';
+        if (condSelect) {
+          condSelect.innerHTML = `
+            <option value="Doorstep" selected>🚪 At Home / Doorstep</option>
+            <option value="At Workshop">🏬 At Workshop / Service Center</option>
+            <option value="Online">💻 Remote / Online Consultation</option>
+          `;
+        }
+      } else if (cat === 'Pets') {
+        if (titleLabel) titleLabel.textContent = 'Pet Breed / Title *';
+        if (titleInput) titleInput.placeholder = 'e.g. Golden Retriever Puppy 2 Months Old / Persian Kitten / Pet Cage';
+        if (titleHint) titleHint.textContent = 'Mention breed, age, vaccination status, and temperament.';
+        if (priceLabel) priceLabel.textContent = 'Adoption / Price (₹) *';
+        if (priceInput) priceInput.placeholder = '4500';
+        if (priceHint) priceHint.textContent = 'Mention adoption fee or asking price.';
+        if (condLabel) condLabel.textContent = 'Health & Age *';
+        if (condSelect) {
+          condSelect.innerHTML = `
+            <option value="Young / Puppy / Kitten" selected>🐾 Young / Puppy / Kitten</option>
+            <option value="Adult / Healthy">🐕 Adult / Healthy & Trained</option>
+            <option value="Pet Supplies">✨ Brand New Pet Supplies</option>
+          `;
+        }
+      } else if (cat === 'Fashion') {
+        if (titleLabel) titleLabel.textContent = 'Fashion Item & Brand *';
+        if (titleInput) titleInput.placeholder = 'e.g. Zara Men Slim Fit Blazer / Levi\'s 511 Jeans Size 32';
+        if (titleHint) titleHint.textContent = 'Mention brand, accurate size/fit, and material.';
+        if (priceLabel) priceLabel.textContent = 'Selling Price (₹) *';
+        if (priceInput) priceInput.placeholder = '1499';
+        if (priceHint) priceHint.textContent = 'Fair prices receive 3x more responses.';
+        if (condLabel) condLabel.textContent = 'Condition *';
+        if (condSelect) {
+          condSelect.innerHTML = `
+            <option value="Like New" selected>✨ Brand New / Tags On</option>
+            <option value="Good">👍 Gently Used / Clean</option>
+            <option value="Fair">👌 Vintage / Visible Wear</option>
+          `;
+        }
+      } else {
+        // Standard goods (Mobiles, Bikes, Cars, Electronics, Furniture, Appliances, Others)
+        if (titleLabel) titleLabel.textContent = 'What are you selling? *';
+        if (titleInput) titleInput.placeholder = 'e.g. Apple iPhone 13 128GB Midnight Blue / Honda Activa 6G 2022';
+        if (titleHint) titleHint.textContent = 'Mention Brand + Model + Variant/Storage for best buyer response.';
+        if (priceLabel) priceLabel.textContent = 'Selling Price (₹) *';
+        if (priceInput) priceInput.placeholder = '24000';
+        if (priceHint) priceHint.textContent = 'Fair prices receive 3x more responses.';
+        if (condLabel) condLabel.textContent = 'Item Condition *';
+        if (condSelect) {
+          condSelect.innerHTML = `
+            <option value="Like New">✨ Like New (Scratchless / Rarely Used)</option>
+            <option value="Good" selected>👍 Good (Well-maintained with normal usage)</option>
+            <option value="Fair">👌 Fair (Fully functional with visible wear)</option>
+          `;
+        }
+      }
 
       renderCheckpoints(cat);
     }
@@ -914,8 +1072,9 @@
       });
 
       const emojiMap = {
-        Mobiles: '📱', Bikes: '🏍️', Cars: '🚗', Furniture: '🛋️',
-        Electronics: '💻', Appliances: '📺', Others: '📦'
+        Mobiles: '📱', Properties: '🏠', Jobs: '💼', Bikes: '🏍️', Cars: '🚗',
+        Electronics: '💻', Services: '🛠️', Furniture: '🛋️', Appliances: '📺',
+        Fashion: '👗', Pets: '🐕', Others: '📦'
       };
 
       const btn = document.getElementById('btnPublishListing');
@@ -937,10 +1096,10 @@
         isKycVerified: (currentUser.kycStatus === 'verified'),
         desc,
         badges,
-        bill: !!(badges.bill || badges.rc || badges.material || badges.condition),
-        box: !!(badges.box || badges.insurance || badges.remote || badges.packaging),
-        owner: !!(badges.warranty || badges.service || badges.tested || badges.proof),
-        exchange: !!(badges.exchange || badges.negotiable),
+        bill: !!(badges.bill || badges.rc || badges.material || badges.condition || badges.directOwner || badges.directHire || badges.verifiedPro || badges.brandNew || badges.vaccinated),
+        box: !!(badges.box || badges.insurance || badges.remote || badges.packaging || badges.bachelorOk || badges.immediateJoin || badges.doorstep || badges.originalBrand || badges.dewormed),
+        owner: !!(badges.warranty || badges.service || badges.tested || badges.proof || badges.lowDeposit || badges.freshersWelcome || badges.serviceWarranty || badges.dryCleaned || badges.friendlyTrained),
+        exchange: !!(badges.exchange || badges.negotiable || badges.parkingWater || badges.dailyIncentive || badges.transparentRates || badges.sizeTag || badges.ethicalAdoption),
         photo: uploadedPhotos[0] || '',       // Primary Cover photo for backward compatibility
         photos: uploadedPhotos,                // Array of up to 10 photos!
         time: 'Just now'

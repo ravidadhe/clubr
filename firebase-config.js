@@ -106,8 +106,16 @@ async function formatClubrUserData(user) {
 // 1-CLICK GOOGLE SIGN-IN (REAL GOOGLE POPUP & REDIRECT)
 // ========================================================
 async function clubrSignInWithGoogle() {
+  // Detect file:// protocol (won't work with Firebase Auth)
+  if (window.location.protocol === 'file:') {
+    return {
+      success: false,
+      error: '⚠️ File Protocol Detected!\n\nGoogle Sign-In does not work when opening files directly from your computer.\n\nPlease run the app using a local server:\n1. Open terminal/PowerShell in the FRONTNEWS folder\n2. Run: node server.js\n3. Open browser at: http://localhost:3000'
+    };
+  }
+
   if (!firebaseAuth) {
-    return { success: false, error: 'Firebase Auth is not ready. Please refresh the page.' };
+    return { success: false, error: 'Firebase Auth is not ready. Please refresh the page and try again.' };
   }
 
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -122,16 +130,48 @@ async function clubrSignInWithGoogle() {
   } catch (popupErr) {
     console.warn('[Firebase Google Popup Notice]', popupErr.code, popupErr.message);
 
-    // If popup is blocked by browser on mobile, use standard Redirect
-    if (popupErr.code === 'auth/popup-blocked' || popupErr.code === 'auth/popup-closed-by-user') {
+    // Friendly error messages for common Firebase Auth errors
+    if (popupErr.code === 'auth/unauthorized-domain') {
+      const domain = window.location.hostname;
+      return {
+        success: false,
+        error: `❌ Domain "${domain}" is not authorized in Firebase.\n\nFix: Go to Firebase Console → Authentication → Settings → Authorized Domains → Add "${domain}" or use localhost:3000\n\nOR run: node server.js and open http://localhost:3000`
+      };
+    }
+
+    if (popupErr.code === 'auth/popup-blocked') {
+      // Try redirect as fallback for popup-blocked scenario
       try {
         await firebaseAuth.signInWithRedirect(provider);
         return { pendingRedirect: true };
       } catch (redirectErr) {
-        return { success: false, error: redirectErr.message };
+        return { success: false, error: 'Popup was blocked and redirect also failed. Please allow popups for this site in your browser settings.' };
       }
     }
-    return { success: false, error: popupErr.message };
+
+    if (popupErr.code === 'auth/popup-closed-by-user') {
+      return { success: false, error: 'Sign-In popup was closed. Please try again.' };
+    }
+
+    if (popupErr.code === 'auth/cancelled-popup-request') {
+      return { success: false, error: 'Another sign-in request is in progress. Please wait a moment and try again.' };
+    }
+
+    if (popupErr.code === 'auth/network-request-failed') {
+      return { success: false, error: '❌ Network error! Please check your internet connection and try again.' };
+    }
+
+    if (popupErr.code === 'auth/internal-error') {
+      return { success: false, error: '❌ Firebase internal error. This usually means the domain is not authorized. Run: node server.js and open http://localhost:3000' };
+    }
+
+    // Fallback redirect for mobile / any other popup failure
+    try {
+      await firebaseAuth.signInWithRedirect(provider);
+      return { pendingRedirect: true };
+    } catch (redirectErr) {
+      return { success: false, error: popupErr.message };
+    }
   }
 }
 

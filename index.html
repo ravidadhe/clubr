@@ -1029,6 +1029,73 @@ h1 {
   accent-color: var(--ink);
 }
 
+/* Sell Modal Category Pills */
+.sell-cat-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 8px 2px;
+  -webkit-overflow-scrolling: touch;
+}
+.sell-cat-pills::-webkit-scrollbar {
+  height: 4px;
+}
+.sell-cat-pills::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+.sell-cat-pill {
+  flex-shrink: 0;
+  background: #f7f4ee;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sell-cat-pill:hover {
+  border-color: var(--ink);
+  background: #eae5dc;
+}
+.sell-cat-pill.active {
+  background: var(--ink);
+  color: #ffffff;
+  border-color: var(--ink);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* User Profile Modern Dashboard */
+.profile-hero-card {
+  background: #f7f4ee;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.profile-tabs-scroller {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.profile-tabs-scroller::-webkit-scrollbar {
+  height: 3px;
+}
+.profile-tabs-scroller::-webkit-scrollbar-thumb {
+  background: var(--line);
+}
+
 /* Detail Drawer */
 .detail-img-box {
   width: 100%;
@@ -1808,38 +1875,64 @@ h1 {
 <!-- MODAL: USER PROFILE DASHBOARD WITH KYC & EDIT PROFILE   -->
 <!-- ======================================================= -->
 <div class="modal-bg" id="profileModal" onclick="if(event.target===this)closeProfileModal()">
-  <div class="modal">
+  <div class="modal" style="max-width:540px;">
     <div class="modal-head">
       <h2>👤 User Dashboard</h2>
       <button class="close-btn" onclick="closeProfileModal()">✕</button>
     </div>
 
-    <!-- User Info Card -->
-    <div style="background:#f7f4ee; border:1px solid var(--line); border-radius:18px; padding:18px; display:flex; align-items:center; justify-content:space-between; margin-bottom:16px">
+    <!-- User Info Hero Card -->
+    <div class="profile-hero-card">
       <div style="display:flex; align-items:center; gap:14px">
         <div id="profileCardAvatarContainer">
-          <div style="width:50px; height:50px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900" id="profileCardAvatar">
+          <div style="width:52px; height:52px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; border:2px solid #a3e635;" id="profileCardAvatar">
             R
           </div>
         </div>
         <div>
-          <div style="display:flex; align-items:center; gap:6px">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
             <b style="font-size:17px" id="profileCardName">Rahul Deshmukh</b>
             <span id="profileCardBadge" style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:99px">Unverified ⚠️</span>
           </div>
-          <span style="font-size:12px; color:var(--muted)" id="profileCardMeta">📍 Pune · 9823000000</span>
+          <div style="font-size:12px; color:var(--muted); margin-top:2px;" id="profileCardMeta">📍 Pune · 9823000000</div>
         </div>
       </div>
-      <button onclick="logoutUser()" style="font-size:12px; font-weight:800; color:#ef4444; border:1px solid #fecaca; background:#fff; padding:6px 12px; border-radius:10px">
+      <button onclick="logoutUser()" style="font-size:12px; font-weight:800; color:#ef4444; border:1px solid #fecaca; background:#fff; padding:6px 14px; border-radius:10px; cursor:pointer;">
         Logout
       </button>
     </div>
 
+    <!-- Quick Metrics Row -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px;">
+      <div style="background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center;">
+        <div style="font-size:18px; font-weight:900; color:var(--ink);" id="userMyListingsCount">0</div>
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase;">My Listings</div>
+      </div>
+      <div style="background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center;">
+        <div style="font-size:18px; font-weight:900; color:var(--orange);" id="userMyDemandsCount">0</div>
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase;">My Demands</div>
+      </div>
+      <div style="background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center; cursor:pointer;" onclick="closeProfileModal(); openInboxModal();">
+        <div style="font-size:18px; font-weight:900; color:#10b981;" id="userMyChatsCount">0</div>
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase;">Active Chats 💬</div>
+      </div>
+    </div>
+
+    <!-- Quick Post Actions -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
+      <button onclick="closeProfileModal(); openModal('sell')" style="background:var(--ink); color:#fff; border:none; border-radius:12px; padding:10px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+        <span>＋</span> Sell an Item
+      </button>
+      <button onclick="closeProfileModal(); openModal('want')" style="background:var(--orange); color:#fff; border:none; border-radius:12px; padding:10px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+        <span>📢</span> Post Requirement
+      </button>
+    </div>
+
     <!-- Dashboard Tabs -->
-    <div style="display:flex; border-bottom:1px solid var(--line); margin-bottom:14px; gap:4px; overflow-x:auto">
-      <button class="profile-tab-btn active" id="pTabListings" onclick="switchProfileTab('listings')">My Listings (<span id="userMyListingsCount">0</span>)</button>
-      <button class="profile-tab-btn" id="pTabDemands" onclick="switchProfileTab('demands')">My Demands (<span id="userMyDemandsCount">0</span>)</button>
-      <button class="profile-tab-btn" id="pTabChats" onclick="switchProfileTab('chats')">My Chats</button>
+    <div class="profile-tabs-scroller">
+      <button class="profile-tab-btn active" id="pTabListings" onclick="switchProfileTab('listings')">🛍️ My Listings</button>
+      <button class="profile-tab-btn" id="pTabDemands" onclick="switchProfileTab('demands')">📢 My Demands</button>
+      <button class="profile-tab-btn" id="pTabChats" onclick="switchProfileTab('chats')">💬 My Chats</button>
       <button class="profile-tab-btn" id="pTabKyc" onclick="switchProfileTab('kyc')">🛡️ User Verification</button>
       <button class="profile-tab-btn" id="pTabEdit" onclick="switchProfileTab('edit')">✏️ Edit Profile</button>
     </div>
@@ -1859,19 +1952,24 @@ h1 {
       <button class="close-btn" onclick="closeActionModal()">✕</button>
     </div>
 
-    <!-- SELL FORM -->
+    <!-- SELL FORM (Friction-Free, 10x Faster than OLX) -->
     <form id="sellForm" onsubmit="event.preventDefault(); submitListing();">
+      <!-- 1-Tap Category Pills -->
       <div class="field">
-        <label>Category</label>
-        <select id="sellCat" required>
-          <option value="Mobiles">📱 Mobiles & Tabs</option>
-          <option value="Bikes">🏍️ Bikes & Scooters</option>
-          <option value="Cars">🚗 Cars & Autos</option>
-          <option value="Furniture">🛋️ Home & Furniture</option>
-          <option value="Electronics">💻 Laptops & Gadgets</option>
-          <option value="Appliances">📺 Home Appliances</option>
-          <option value="Others">📦 Books & Fashion</option>
-        </select>
+        <label style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Select Category</span>
+          <span class="hint" id="selectedCatHint">Mobiles & Tabs</span>
+        </label>
+        <div class="sell-cat-pills" id="sellCatPills">
+          <button type="button" class="sell-cat-pill active" data-cat="Mobiles" onclick="selectSellCategory('Mobiles')">📱 Mobiles</button>
+          <button type="button" class="sell-cat-pill" data-cat="Bikes" onclick="selectSellCategory('Bikes')">🏍️ Bikes</button>
+          <button type="button" class="sell-cat-pill" data-cat="Cars" onclick="selectSellCategory('Cars')">🚗 Cars</button>
+          <button type="button" class="sell-cat-pill" data-cat="Furniture" onclick="selectSellCategory('Furniture')">🛋️ Furniture</button>
+          <button type="button" class="sell-cat-pill" data-cat="Electronics" onclick="selectSellCategory('Electronics')">💻 Electronics</button>
+          <button type="button" class="sell-cat-pill" data-cat="Appliances" onclick="selectSellCategory('Appliances')">📺 Appliances</button>
+          <button type="button" class="sell-cat-pill" data-cat="Others" onclick="selectSellCategory('Others')">📦 Others</button>
+        </div>
+        <input type="hidden" id="sellCat" value="Mobiles">
       </div>
 
       <div class="field">
@@ -1904,39 +2002,41 @@ h1 {
         </select>
       </div>
 
+      <!-- Category-Adaptive Trust Badges -->
       <div class="field">
-        <label>Trust & Verification Badges</label>
-        <div class="trust-checklist">
-          <label class="trust-check-label">
-            <input type="checkbox" id="checkBill"> 🧾 Original Bill
-          </label>
-          <label class="trust-check-label">
-            <input type="checkbox" id="checkBox"> 📦 Box & Charger
-          </label>
-          <label class="trust-check-label">
-            <input type="checkbox" id="checkOwner"> 📄 1st Owner / RC
-          </label>
-          <label class="trust-check-label">
-            <input type="checkbox" id="checkExchange"> 🔄 Open for Exchange
-          </label>
+        <label style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Trust & Verification Checkpoints</span>
+          <span class="hint" id="trustCatHint">For Mobiles</span>
+        </label>
+        <div class="trust-checklist" id="dynamicTrustChecklist">
+          <!-- Dynamically populated by renderDynamicChecklist() -->
         </div>
       </div>
 
+      <!-- Photo Dropzone / Camera -->
       <div class="field">
         <label>Upload Item Photo <span class="hint">Real photos get 5x more chats</span></label>
-        <div class="photo-picker">
+        <div class="photo-picker" style="position:relative">
           <input type="file" id="sellPhotoInput" accept="image/*" onchange="handlePhotoUpload(this)">
           <div id="photoPrompt">📸 Click to choose photo or take camera snap</div>
-          <img id="photoPreview" class="photo-preview" alt="Preview">
+          <div id="photoPreviewContainer" style="display:none; position:relative; width:100%; text-align:center;">
+            <img id="photoPreview" class="photo-preview" style="max-height:160px; border-radius:12px; margin:0 auto; object-fit:contain;" alt="Preview">
+            <button type="button" onclick="clearPhotoUpload(event)" style="position:absolute; top:8px; right:8px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:28px; height:28px; font-weight:bold; cursor:pointer;">✕</button>
+          </div>
         </div>
       </div>
 
       <div class="field">
         <label>A few useful details</label>
-        <textarea id="sellDesc" placeholder="Battery health, age, bill date, reason for selling..."></textarea>
+        <textarea id="sellDesc" placeholder="Battery health, age, invoice date, reason for selling..."></textarea>
       </div>
 
-      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:15px; margin-top:8px">
+      <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:8px; margin:10px 0 14px 0; font-size:11px; color:#166534;">
+        <span style="font-size:16px;">🔒</span>
+        <span><b>100% Privacy Protected:</b> Your phone number is kept private. Genuine buyers will contact you safely through Clubr In-App Chat.</span>
+      </div>
+
+      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:15px; margin-top:4px">
         🚀 Post Listing Live
       </button>
     </form>
@@ -2415,167 +2515,57 @@ const INDIA_STATE_DIRECTORY = {
   ]
 };
 
-// Seed Listings (with KYC verified flags)
-const defaultListings = [
-  {
-    id: 'l1',
-    title: 'iPhone 13 128GB Midnight',
-    price: 24500,
-    cat: 'Mobiles',
-    emoji: '📱',
-    city: 'Pune',
-    state: 'Maharashtra',
-    locality: 'Kothrud',
-    condition: 'Like New',
-    seller: 'Rohan Deshmukh',
-    sellerId: 'u_rohan',
-    isKycVerified: true,
-    desc: 'Battery health 88%. Screen replaced with genuine display, flawless condition. Original cable and box available.',
-    bill: true, box: true, owner: true, exchange: true, photo: '', time: '2 hours ago'
-  },
-  {
-    id: 'l2',
-    title: 'Honda Activa 6G DLX 2021',
-    price: 68000,
-    cat: 'Bikes',
-    emoji: '🛵',
-    city: 'Mumbai',
-    state: 'Maharashtra',
-    locality: 'Andheri West',
-    condition: 'Good',
-    seller: 'Amit Verma',
-    sellerId: 'u_amit',
-    isKycVerified: true,
-    desc: 'Only 14,200 km driven. Single owner, insurance active till Dec 2026. Serviced on time.',
-    bill: true, box: false, owner: true, exchange: false, photo: '', time: '4 hours ago'
-  },
-  {
-    id: 'l3',
-    title: 'Samsung Galaxy S23 5G 256GB',
-    price: 29000,
-    cat: 'Mobiles',
-    emoji: '📱',
-    city: 'Bengaluru',
-    state: 'Karnataka',
-    locality: 'Indiranagar',
-    condition: 'Like New',
-    seller: 'Karthik Rao',
-    sellerId: 'u_karthik',
-    isKycVerified: true,
-    desc: 'Used for 9 months with tempered glass. Mint condition, Snapdragon 8 Gen 2, bill available.',
-    bill: true, box: true, owner: true, exchange: true, photo: '', time: '5 hours ago'
-  },
-  {
-    id: 'l4',
-    title: 'Bajaj Pulsar 150 Twin Disc',
-    price: 64000,
-    cat: 'Bikes',
-    emoji: '🏍️',
-    city: 'Nagpur',
-    state: 'Maharashtra',
-    locality: 'Dharampeth',
-    condition: 'Good',
-    seller: 'Pravin Joshi',
-    sellerId: 'u_pravin',
-    isKycVerified: false,
-    desc: '2020 model, MH-31 registered. Brand new MRF rear tyre. Ready to ride, zero mechanical issues.',
-    bill: false, box: false, owner: true, exchange: true, photo: '', time: '6 hours ago'
-  },
-  {
-    id: 'l5',
-    title: '3-Seater L-Shape Fabric Sofa',
-    price: 8500,
-    cat: 'Furniture',
-    emoji: '🛋️',
-    city: 'Delhi NCR',
-    state: 'Delhi NCR',
-    locality: 'Sector 62, Noida',
-    condition: 'Good',
-    seller: 'Neha Sharma',
-    sellerId: 'u_neha',
-    isKycVerified: false,
-    desc: 'Very comfortable high density foam sofa. Relocating to Bangalore so selling at distress price.',
-    bill: false, box: false, owner: true, exchange: false, photo: '', time: '1 day ago'
-  },
-  {
-    id: 'l6',
-    title: 'HP 15s Ryzen 5 Laptop (16GB/512GB)',
-    price: 23500,
-    cat: 'Electronics',
-    emoji: '💻',
-    city: 'Hyderabad',
-    state: 'Telangana & AP',
-    locality: 'Hitec City',
-    condition: 'Like New',
-    seller: 'Suresh Reddy',
-    sellerId: 'u_suresh',
-    isKycVerified: true,
-    desc: 'Fast SSD, 16GB RAM upgrade, backlit keyboard, Windows 11 genuine. Ideal for students and IT work.',
-    bill: true, box: true, owner: true, exchange: false, photo: '', time: '1 day ago'
-  },
-  {
-    id: 'l7',
-    title: 'LG 43-inch Smart 4K Ultra HD TV',
-    price: 15500,
-    cat: 'Appliances',
-    emoji: '📺',
-    city: 'Yavatmal',
-    state: 'Maharashtra',
-    locality: 'Civil Lines',
-    condition: 'Good',
-    seller: 'Gaurav Kale',
-    sellerId: 'u_gaurav',
-    isKycVerified: false,
-    desc: 'WebOS with Netflix, YouTube, Prime. Crystal clear IPS panel, wall mount bracket included.',
-    bill: true, box: false, owner: true, exchange: false, photo: '', time: '2 days ago'
-  },
-  {
-    id: 'l8',
-    title: 'Solid Sheesham Wood Dining Table + 4 Chairs',
-    price: 11000,
-    cat: 'Furniture',
-    emoji: '🪑',
-    city: 'Jaipur',
-    state: 'Rajasthan',
-    locality: 'Vaishali Nagar',
-    condition: 'Good',
-    seller: 'Vikram Singh',
-    sellerId: 'u_vikram',
-    isKycVerified: true,
-    desc: 'Pure Sheesham wood with glass top. Heavy and sturdy. Buyer needs to arrange tempo transport.',
-    bill: false, box: false, owner: true, exchange: false, photo: '', time: '2 days ago'
-  }
-];
+// Dynamic Category Trust Badges Specification
+const CATEGORY_SPECS = {
+  Mobiles: [
+    { key: 'bill', label: '🧾 Original Bill' },
+    { key: 'box', label: '📦 Box & Charger' },
+    { key: 'warranty', label: '🛡️ Under Warranty' },
+    { key: 'exchange', label: '🔄 Open for Exchange' }
+  ],
+  Bikes: [
+    { key: 'rc', label: '📄 1st Owner / RC Book' },
+    { key: 'insurance', label: '🛡️ Active Insurance' },
+    { key: 'service', label: '🔧 Service Record Ready' },
+    { key: 'exchange', label: '🔄 Open for Exchange' }
+  ],
+  Cars: [
+    { key: 'rc', label: '📄 1st Owner / Clean RC' },
+    { key: 'insurance', label: '🛡️ Comprehensive Insurance' },
+    { key: 'nonAccidental', label: '🚗 Certified Non-Accidental' },
+    { key: 'exchange', label: '🔄 Open for Exchange' }
+  ],
+  Electronics: [
+    { key: 'bill', label: '🧾 Original Invoice' },
+    { key: 'charger', label: '🔌 Original Power Adapter' },
+    { key: 'battery', label: '🔋 Healthy Battery / Ports' },
+    { key: 'warranty', label: '🛡️ Brand Warranty / Clean' }
+  ],
+  Furniture: [
+    { key: 'material', label: '🪵 Solid Wood / Premium Fabric' },
+    { key: 'spotless', label: '✨ Scratch-Free & Spotless' },
+    { key: 'readyToMove', label: '🚚 Disassembled / Ready to Move' },
+    { key: 'negotiable', label: '🤝 Price Negotiable' }
+  ],
+  Appliances: [
+    { key: 'bill', label: '🧾 Original Bill' },
+    { key: 'remote', label: '🔌 Remote & Original Cables' },
+    { key: 'tested', label: '⚡ 100% Tested Working' },
+    { key: 'warranty', label: '🛡️ Brand Warranty Valid' }
+  ],
+  Others: [
+    { key: 'condition', label: '✨ Mint / Like-New Condition' },
+    { key: 'packaging', label: '🏷️ Original Packaging / Tags' },
+    { key: 'proof', label: '🧾 Genuine Purchase Proof' },
+    { key: 'exchange', label: '🔄 Open for Swap' }
+  ]
+};
 
-// Seed Demands
-const defaultWants = [
-  {
-    id: 'w1',
-    buyer: 'Rahul S.',
-    buyerId: 'u_rahul',
-    item: 'iPhone 13 or 14 (128GB)',
-    budget: '₹ 22,000 - ₹ 25,000',
-    cat: 'Mobiles',
-    urgency: 'Within 48 hours',
-    city: 'Pune',
-    locality: 'Viman Nagar',
-    desc: 'Looking for immediate purchase. Battery health 85%+ required. Original bill preferred.',
-    time: '1 hour ago'
-  },
-  {
-    id: 'w2',
-    buyer: 'Swapnil Deshmukh',
-    buyerId: 'u_swapnil',
-    item: 'Honda Activa 5G or 6G',
-    budget: '₹ 45,000 - ₹ 55,000',
-    cat: 'Bikes',
-    urgency: 'Within 7 days',
-    city: 'Mumbai',
-    locality: 'Dadar',
-    desc: 'Need for daily commute. Single owner, clean papers. Cash ready.',
-    time: '3 hours ago'
-  }
-];
+// Seed Listings (Purged - 100% Real Live Cloud Data)
+const defaultListings = [];
+
+// Seed Demands (Purged - 100% Real Live Cloud Data)
+const defaultWants = [];
 
 // App State
 let listings = [];
@@ -2593,10 +2583,64 @@ let authMode = 'signin';
 let uploadedPhotoBase64 = '';
 let uploadedKycPhotoBase64 = '';
 
+// Category Selection in Sell Modal
+function selectSellCategory(cat) {
+  const sellCatEl = document.getElementById('sellCat');
+  if (sellCatEl) sellCatEl.value = cat;
+  const hintEl = document.getElementById('selectedCatHint');
+  if (hintEl) {
+    const labels = {
+      Mobiles: 'Mobiles & Tablets',
+      Bikes: 'Bikes & Scooters',
+      Cars: 'Cars & Four-Wheelers',
+      Furniture: 'Home & Furniture',
+      Electronics: 'Laptops & Gadgets',
+      Appliances: 'Home Appliances',
+      Others: 'Books, Fashion & Others'
+    };
+    hintEl.textContent = labels[cat] || cat;
+  }
+  const trustHint = document.getElementById('trustCatHint');
+  if (trustHint) trustHint.textContent = `For ${cat}`;
+
+  document.querySelectorAll('.sell-cat-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-cat') === cat);
+  });
+
+  renderDynamicChecklist(cat);
+}
+
+function renderDynamicChecklist(cat) {
+  const container = document.getElementById('dynamicTrustChecklist');
+  if (!container) return;
+  const specs = CATEGORY_SPECS[cat] || CATEGORY_SPECS['Others'];
+  container.innerHTML = specs.map(spec => `
+    <label class="trust-check-label">
+      <input type="checkbox" id="check_${spec.key}"> ${spec.label}
+    </label>
+  `).join('');
+}
+
+function clearPhotoUpload(e) {
+  if (e) e.stopPropagation();
+  uploadedPhotoBase64 = '';
+  const fileInput = document.getElementById('sellPhotoInput');
+  if (fileInput) fileInput.value = '';
+  const previewImg = document.getElementById('photoPreview');
+  if (previewImg) previewImg.src = '';
+  const previewBox = document.getElementById('photoPreviewContainer');
+  if (previewBox) previewBox.style.display = 'none';
+  const promptEl = document.getElementById('photoPrompt');
+  if (promptEl) {
+    promptEl.style.display = 'block';
+    promptEl.textContent = '📸 Click to choose photo or take camera snap';
+  }
+}
+
 // Init
 function initData() {
   try {
-    const APP_VER = 'clubr_v3_6_kyc_enforced';
+    const APP_VER = 'clubr_v5_live_data_dynamic_specs';
     if (localStorage.getItem('clubr_app_version') !== APP_VER) {
       localStorage.removeItem('findly_listings');
       localStorage.removeItem('findly_wants');
@@ -2604,10 +2648,10 @@ function initData() {
     }
 
     const savedL = localStorage.getItem('findly_listings');
-    listings = savedL ? JSON.parse(savedL) : defaultListings;
+    listings = savedL ? JSON.parse(savedL) : [];
 
     const savedW = localStorage.getItem('findly_wants');
-    wants = savedW ? JSON.parse(savedW) : defaultWants;
+    wants = savedW ? JSON.parse(savedW) : [];
 
     const savedS = localStorage.getItem('findly_saved');
     if (savedS) savedItemIds = new Set(JSON.parse(savedS));
@@ -2626,34 +2670,10 @@ function initData() {
     if (savedUsers) {
       registeredUsers = JSON.parse(savedUsers);
     } else {
-      registeredUsers = [
-        {
-          id: 'usr_rohan',
-          name: 'Rohan Deshmukh',
-          phone: '9823012345',
-          password: 'password123',
-          city: 'Pune',
-          kycStatus: 'verified',
-          kycDocType: 'Voter ID Card',
-          kycDocNumber: 'EPIC-MH29-88741',
-          registeredAt: '15/09/2026'
-        },
-        {
-          id: 'usr_pravin',
-          name: 'Pravin Joshi',
-          phone: '9823011223',
-          password: 'password123',
-          city: 'Nagpur',
-          kycStatus: 'pending',
-          kycDocType: 'Driving License',
-          kycDocNumber: 'DL-MH31-20180041234',
-          registeredAt: '17/09/2026'
-        }
-      ];
-      localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
+      registeredUsers = [];
     }
 
-    // Purge legacy dummy sessions (e.g. Member / Verified Guest / u_current)
+    // Purge legacy dummy sessions
     const u = localStorage.getItem('clubr_current_user');
     if (u) {
       try {
@@ -2662,7 +2682,6 @@ function initData() {
           localStorage.removeItem('clubr_current_user');
           currentUser = null;
         } else {
-          // Re-sync with registeredUsers database to keep KYC and details latest
           const matched = registeredUsers.find(x => x.phone === parsed.phone || x.id === parsed.id);
           if (matched) {
             currentUser = matched;
@@ -2676,15 +2695,54 @@ function initData() {
         currentUser = null;
       }
     }
+
+    // Live Sync from Cloud Firestore
+    if (typeof clubrFetchLiveListings === 'function') {
+      clubrFetchLiveListings().then(cloudListings => {
+        if (cloudListings && Array.isArray(cloudListings)) {
+          listings = cloudListings;
+          localStorage.setItem('findly_listings', JSON.stringify(listings));
+          updateCounts();
+          renderFeed();
+        }
+      });
+    }
+    if (typeof clubrFetchLiveDemands === 'function') {
+      clubrFetchLiveDemands().then(cloudDemands => {
+        if (cloudDemands && Array.isArray(cloudDemands)) {
+          wants = cloudDemands;
+          localStorage.setItem('findly_wants', JSON.stringify(wants));
+          updateCounts();
+          renderFeed();
+        }
+      });
+    }
+    if (typeof clubrFetchLiveUsers === 'function') {
+      clubrFetchLiveUsers().then(cloudUsers => {
+        if (cloudUsers && Array.isArray(cloudUsers) && cloudUsers.length > 0) {
+          cloudUsers.forEach(cu => {
+            const idx = registeredUsers.findIndex(x => x.id === cu.id || (cu.email && x.email === cu.email) || (cu.phone && x.phone === cu.phone));
+            if (idx !== -1) {
+              registeredUsers[idx] = { ...registeredUsers[idx], ...cu };
+            } else {
+              registeredUsers.unshift(cu);
+            }
+          });
+          localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
+        }
+      });
+    }
+
   } catch(e) {
-    listings = defaultListings;
-    wants = defaultWants;
+    listings = [];
+    wants = [];
   }
   updateUserUI();
   updateCounts();
   renderCityDirectory();
   renderFeed();
   checkBroadcastBanner();
+  selectSellCategory('Mobiles');
 }
 
 function saveData() {
@@ -2837,9 +2895,9 @@ function openProfileModal() {
   // Avatar handling (Google Photo vs Initial)
   const avatarContainer = document.getElementById('profileCardAvatarContainer');
   if (currentUser.photoURL) {
-    avatarContainer.innerHTML = `<img src="${escapeHtml(currentUser.photoURL)}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid var(--lime)" alt="${escapeHtml(currentUser.name)}">`;
+    avatarContainer.innerHTML = `<img src="${escapeHtml(currentUser.photoURL)}" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid var(--lime)" alt="${escapeHtml(currentUser.name)}">`;
   } else {
-    avatarContainer.innerHTML = `<div style="width:50px; height:50px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900">${currentUser.name.charAt(0).toUpperCase()}</div>`;
+    avatarContainer.innerHTML = `<div style="width:52px; height:52px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900">${currentUser.name.charAt(0).toUpperCase()}</div>`;
   }
 
   const cityMeta = currentUser.city ? `📍 ${currentUser.city}` : '📍 Member';
@@ -2871,6 +2929,10 @@ function openProfileModal() {
   document.getElementById('userMyListingsCount').textContent = myL.length;
   document.getElementById('userMyDemandsCount').textContent = myW.length;
 
+  const chatCount = Object.keys(chatThreads).length;
+  const myChatsEl = document.getElementById('userMyChatsCount');
+  if (myChatsEl) myChatsEl.textContent = chatCount;
+
   switchProfileTab('listings');
   document.getElementById('profileModal').classList.add('show');
 }
@@ -2892,21 +2954,29 @@ function switchProfileTab(tab) {
   if (tab === 'listings') {
     const myL = listings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
     if (myL.length === 0) {
-      content.innerHTML = `<div style="text-align:center; padding:30px; color:var(--muted)"><b>You haven't posted any items yet</b><br><button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex; margin-top:10px" onclick="closeProfileModal(); openModal('sell')">＋ Post Listing Now</button></div>`;
+      content.innerHTML = `
+        <div style="text-align:center; padding:32px 16px; color:var(--muted); background:#faf7f2; border:1.5px dashed var(--line); border-radius:16px;">
+          <div style="font-size:32px; margin-bottom:8px;">📦</div>
+          <b style="font-size:15px; color:var(--ink); display:block;">You have no active listings</b>
+          <p style="font-size:12px; margin:6px 0 14px 0;">Post mobiles, bikes, furniture, or gadgets to buyers in your city.</p>
+          <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex; padding:10px 18px; border-radius:10px;" onclick="closeProfileModal(); openModal('sell')">
+            ＋ Sell an Item on Clubr
+          </button>
+        </div>`;
     } else {
       myL.forEach(item => {
         content.insertAdjacentHTML('beforeend', `
           <div style="display:flex; justify-content:space-between; align-items:center; background:#f7f4ee; padding:12px 14px; border-radius:14px; border:1px solid var(--line); margin-bottom:8px">
             <div style="display:flex; align-items:center; gap:10px">
-              <span style="font-size:24px">${item.emoji || '📦'}</span>
+              ${item.photo ? `<img src="${item.photo}" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">` : `<span style="font-size:24px">${item.emoji || '📦'}</span>`}
               <div>
-                <b style="font-size:14px; display:block">${item.title}</b>
-                <span style="font-size:12px; color:var(--muted)">₹${item.price.toLocaleString('en-IN')} · ${item.city}</span>
+                <b style="font-size:14px; display:block">${escapeHtml(item.title)}</b>
+                <span style="font-size:12px; color:var(--muted)">₹${item.price.toLocaleString('en-IN')} · ${escapeHtml(item.city)}</span>
               </div>
             </div>
             <div style="display:flex; gap:6px">
-              <button onclick="markAsSold('${item.id}')" style="font-size:11px; font-weight:800; background:#e8f9d2; color:#3b5f05; padding:6px 10px; border-radius:8px">Mark Sold</button>
-              <button onclick="deleteMyListing('${item.id}')" style="font-size:11px; font-weight:800; background:#fee2e2; color:#b91c1c; padding:6px 10px; border-radius:8px">Delete</button>
+              <button onclick="markAsSold('${item.id}')" style="font-size:11px; font-weight:800; background:#e8f9d2; color:#3b5f05; padding:6px 10px; border-radius:8px; border:none; cursor:pointer;">Mark Sold</button>
+              <button onclick="deleteMyListing('${item.id}')" style="font-size:11px; font-weight:800; background:#fee2e2; color:#b91c1c; padding:6px 10px; border-radius:8px; border:none; cursor:pointer;">Delete</button>
             </div>
           </div>
         `);
@@ -2915,16 +2985,24 @@ function switchProfileTab(tab) {
   } else if (tab === 'demands') {
     const myW = wants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
     if (myW.length === 0) {
-      content.innerHTML = `<div style="text-align:center; padding:30px; color:var(--muted)"><b>No active buyer demands</b><br><button class="want-btn" style="background:var(--orange); color:#fff; display:inline-flex; margin-top:10px" onclick="closeProfileModal(); openModal('want')">＋ Post Requirement</button></div>`;
+      content.innerHTML = `
+        <div style="text-align:center; padding:32px 16px; color:var(--muted); background:#faf7f2; border:1.5px dashed var(--line); border-radius:16px;">
+          <div style="font-size:32px; margin-bottom:8px;">📢</div>
+          <b style="font-size:15px; color:var(--ink); display:block;">No active buyer demands</b>
+          <p style="font-size:12px; margin:6px 0 14px 0;">Looking to buy something? Broadcast your requirement to verified sellers.</p>
+          <button class="want-btn" style="background:var(--orange); color:#fff; display:inline-flex; padding:10px 18px; border-radius:10px;" onclick="closeProfileModal(); openModal('want')">
+            📢 Post a Requirement
+          </button>
+        </div>`;
     } else {
       myW.forEach(w => {
         content.insertAdjacentHTML('beforeend', `
           <div style="display:flex; justify-content:space-between; align-items:center; background:#f7f4ee; padding:12px 14px; border-radius:14px; border:1px solid var(--line); margin-bottom:8px">
             <div>
-              <b style="font-size:14px; display:block">${w.item}</b>
-              <span style="font-size:12px; color:var(--muted)">Budget: ${w.budget} · ${w.city}</span>
+              <b style="font-size:14px; display:block">${escapeHtml(w.item)}</b>
+              <span style="font-size:12px; color:var(--muted)">Budget: ${escapeHtml(w.budget)} · ${escapeHtml(w.city)}</span>
             </div>
-            <button onclick="closeMyDemand('${w.id}')" style="font-size:11px; font-weight:800; background:#fee2e2; color:#b91c1c; padding:6px 10px; border-radius:8px">Close</button>
+            <button onclick="closeMyDemand('${w.id}')" style="font-size:11px; font-weight:800; background:#fee2e2; color:#b91c1c; padding:6px 10px; border-radius:8px; border:none; cursor:pointer;">Close</button>
           </div>
         `);
       });
@@ -3167,6 +3245,7 @@ function submitKycDocument() {
 function markAsSold(id) {
   listings = listings.filter(x => x.id !== id);
   saveData();
+  if (typeof clubrDeleteLiveListing === 'function') clubrDeleteLiveListing(id);
   openProfileModal();
   renderFeed();
   toast('🎉 Item marked as SOLD!');
@@ -3176,6 +3255,7 @@ function deleteMyListing(id) {
   if (confirm('Delete this listing?')) {
     listings = listings.filter(x => x.id !== id);
     saveData();
+    if (typeof clubrDeleteLiveListing === 'function') clubrDeleteLiveListing(id);
     openProfileModal();
     renderFeed();
     toast('Listing deleted.');
@@ -3185,6 +3265,7 @@ function deleteMyListing(id) {
 function closeMyDemand(id) {
   wants = wants.filter(x => x.id !== id);
   saveData();
+  if (typeof clubrDeleteLiveDemand === 'function') clubrDeleteLiveDemand(id);
   openProfileModal();
   renderFeed();
   toast('Demand requirement closed.');
@@ -3468,45 +3549,84 @@ function openItemDetail(id) {
   if (!item) return;
 
   const content = document.getElementById('detailContent');
+  const specs = CATEGORY_SPECS[item.cat] || CATEGORY_SPECS['Others'];
+
+  const badgesHtml = specs.map(spec => {
+    let isChecked = false;
+    if (item.badges && typeof item.badges[spec.key] !== 'undefined') {
+      isChecked = !!item.badges[spec.key];
+    } else {
+      // Backwards compatibility with earlier listings
+      if (spec.key === 'bill' || spec.key === 'rc' || spec.key === 'material' || spec.key === 'condition') isChecked = !!item.bill;
+      else if (spec.key === 'box' || spec.key === 'insurance' || spec.key === 'remote' || spec.key === 'packaging') isChecked = !!item.box;
+      else if (spec.key === 'warranty' || spec.key === 'service' || spec.key === 'tested' || spec.key === 'proof') isChecked = !!item.owner;
+      else if (spec.key === 'exchange' || spec.key === 'negotiable') isChecked = !!item.exchange;
+    }
+    return `
+      <div class="trust-check-label" style="background:${isChecked ? '#eefbf0':'#faf7f2'}; border-color:${isChecked ? '#86efac':'var(--line)'}; color:${isChecked ? '#15803d':'#64748b'}; padding:8px 10px; font-size:11px;">
+        ${isChecked ? '✅' : '❌'} ${spec.label}
+      </div>
+    `;
+  }).join('');
+
   content.innerHTML = `
     <div class="modal-head">
       <div>
-        <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase">${item.cat} · 📍 ${item.locality}, ${item.city}</span>
-        <h2>${item.title}</h2>
+        <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase">${escapeHtml(item.cat)} · 📍 ${escapeHtml(item.locality || '')}, ${escapeHtml(item.city || '')}</span>
+        <h2>${escapeHtml(item.title)}</h2>
       </div>
       <button class="close-btn" onclick="closeDetailModal()">✕</button>
     </div>
 
     <div class="detail-img-box">
-      ${item.photo ? `<img src="${item.photo}" alt="${item.title}">` : item.emoji || '📦'}
+      ${item.photo ? `<img src="${item.photo}" alt="${escapeHtml(item.title)}">` : item.emoji || '📦'}
     </div>
 
     <div class="detail-price-box">
       <div>
         <span style="font-size:11px; color:var(--muted); font-weight:700">ASKING PRICE</span>
-        <div class="detail-price">₹${item.price.toLocaleString('en-IN')}</div>
+        <div class="detail-price">₹${Number(item.price).toLocaleString('en-IN')}</div>
       </div>
       ${item.isKycVerified ? '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#dcfce7; color:#15803d">🛡️ Verified User</span>' : '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#f1f5f9; color:#64748b">Community Member</span>'}
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
-      <div class="trust-check-label" style="background:${item.bill ? '#eefbf0':'#faf7f2'}">
-        ${item.bill ? '✅' : '❌'} Original Bill
+    <!-- Dynamic Category Checkpoints -->
+    <div style="margin:12px 0;">
+      <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">
+        🛡️ Verification & Condition Checkpoints (${escapeHtml(item.cat)})
       </div>
-      <div class="trust-check-label" style="background:${item.box ? '#eefbf0':'#faf7f2'}">
-        ${item.box ? '✅' : '❌'} Box & Charger
-      </div>
-      <div class="trust-check-label" style="background:${item.owner ? '#eefbf0':'#faf7f2'}">
-        ${item.owner ? '✅' : '❌'} 1st Owner / RC
-      </div>
-      <div class="trust-check-label" style="background:${item.exchange ? '#fff8e6':'#faf7f2'}">
-        ${item.exchange ? '🔄 Exchange Accepted' : '❌ Cash Only'}
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        ${badgesHtml}
       </div>
     </div>
 
-    <p style="font-size:13px; color:var(--ink); line-height:1.5; margin:12px 0; background:#fdfbf7; padding:12px; border-radius:12px; border:1px solid var(--line)">
-      <b>Seller:</b> ${item.seller || 'Member'} ${item.isKycVerified ? '(🛡️ Verified User)' : '(Unverified)'} · ${item.desc || 'No description provided.'}
-    </p>
+    <!-- Dedicated Product Description Card -->
+    <div style="background:#ffffff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:12px 0;">
+      <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+        📝 Product Description
+      </div>
+      <p style="font-size:13px; color:var(--ink); line-height:1.55; margin:0; white-space:pre-line;">
+        ${escapeHtml(item.desc || 'No detailed description provided by the seller.')}
+      </p>
+    </div>
+
+    <!-- Dedicated Seller Profile Card -->
+    <div style="background:#f7f4ee; border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; margin:12px 0;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:42px; height:42px; border-radius:50%; background:var(--lime); color:var(--ink); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; border:1.5px solid #a3e635;">
+          ${(item.seller || 'C').charAt(0).toUpperCase()}
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <b style="font-size:15px; color:var(--ink);">${escapeHtml(item.seller || 'Clubr Citizen')}</b>
+            ${item.isKycVerified ? '<span style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:99px; background:#dcfce7; color:#15803d; border:1px solid #86efac;">🛡️ Verified User</span>' : '<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:#f1f5f9; color:#64748b;">Community Member</span>'}
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-top:2px;">
+            📍 ${escapeHtml(item.locality || '')}, ${escapeHtml(item.city || '')} · <span style="color:#15803d; font-weight:700;">🟢 Active on Clubr</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
       <button class="want-btn" style="background:var(--ink); color:#fff; width:100%; margin:0; padding:13px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:14px; font-weight:800;" onclick="closeDetailModal(); openInAppChat('${item.id}')">
@@ -3953,6 +4073,9 @@ function submitFraudReport() {
 
   reports.unshift(reportObj);
   localStorage.setItem('clubr_fraud_reports', JSON.stringify(reports));
+  if (typeof clubrPublishFraudReport === 'function') {
+    clubrPublishFraudReport(reportObj);
+  }
 
   closeReportFraudModal();
   toast('🚨 Report submitted to SuperAdmin. Account flagged for security review.');
@@ -4041,6 +4164,19 @@ function openModal(type) {
   document.getElementById('actionModalTitle').textContent = (type === 'sell') 
     ? 'Sell something on Clubr' 
     : '📢 Post what you need';
+
+  if (type === 'sell') {
+    const userCity = (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'Pune');
+    const cityInput = document.getElementById('sellCity');
+    if (cityInput) cityInput.value = userCity;
+    const localityInput = document.getElementById('sellLocality');
+    if (localityInput) localityInput.value = (currentUser && currentUser.locality) ? currentUser.locality : 'Local';
+    selectSellCategory('Mobiles');
+  } else {
+    const userCity = (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'Pune');
+    const wantCityInput = document.getElementById('wantCity');
+    if (wantCityInput) wantCityInput.value = userCity;
+  }
 }
 function closeActionModal() {
   document.getElementById('actionModal').classList.remove('show');
@@ -4060,10 +4196,18 @@ function submitListing() {
   const locality = document.getElementById('sellLocality').value.trim() || 'Local';
   const desc = document.getElementById('sellDesc').value.trim();
 
-  const bill = document.getElementById('checkBill').checked;
-  const box = document.getElementById('checkBox').checked;
-  const owner = document.getElementById('checkOwner').checked;
-  const exchange = document.getElementById('checkExchange').checked;
+  if (!title || !price) {
+    alert('Please enter a valid title and price.');
+    return;
+  }
+
+  // Dynamic Trust Badges
+  const specs = CATEGORY_SPECS[cat] || CATEGORY_SPECS['Others'];
+  const badges = {};
+  specs.forEach(spec => {
+    const el = document.getElementById('check_' + spec.key);
+    badges[spec.key] = el ? el.checked : false;
+  });
 
   const emojiMap = {
     Mobiles: '📱', Bikes: '🏍️', Cars: '🚗', Furniture: '🛋️',
@@ -4083,10 +4227,11 @@ function submitListing() {
     sellerId: currentUser.id,
     isKycVerified: (currentUser.kycStatus === 'verified'),
     desc,
-    bill,
-    box,
-    owner,
-    exchange,
+    badges,
+    bill: !!(badges.bill || badges.rc || badges.material || badges.condition),
+    box: !!(badges.box || badges.insurance || badges.remote || badges.packaging),
+    owner: !!(badges.warranty || badges.service || badges.tested || badges.proof),
+    exchange: !!(badges.exchange || badges.negotiable),
     photo: uploadedPhotoBase64,
     time: 'Just now'
   };
@@ -4101,9 +4246,7 @@ function submitListing() {
   toast('🎉 Listing published live!');
 
   document.getElementById('sellForm').reset();
-  uploadedPhotoBase64 = '';
-  document.getElementById('photoPreview').style.display = 'none';
-  document.getElementById('photoPrompt').textContent = '📸 Click to choose photo or take camera snap';
+  clearPhotoUpload();
 }
 
 function submitWant() {

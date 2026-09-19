@@ -326,6 +326,173 @@ async function clubrPublishKycRequest(req) {
   }
 }
 
+async function clubrPublishFraudReport(report) {
+  if (firebaseDb) {
+    try {
+      await firebaseDb.collection('fraud_reports').doc(report.id).set(report);
+    } catch(e) {
+      console.warn('[Firestore Fraud Report Publish]', e.message);
+    }
+  }
+}
+
+// ========================================================
+// LIVE CLOUD FETCH & QUERY METHODS
+// ========================================================
+async function clubrFetchLiveListings() {
+  if (!firebaseDb) return null;
+  try {
+    const snapshot = await firebaseDb.collection('listings').get();
+    if (!snapshot.empty) {
+      const items = [];
+      snapshot.forEach(doc => {
+        items.push({ ...doc.data(), id: doc.id });
+      });
+      return items;
+    }
+    return [];
+  } catch(e) {
+    console.warn('[Firestore Fetch Listings]', e.message);
+    return null;
+  }
+}
+
+async function clubrFetchLiveDemands() {
+  if (!firebaseDb) return null;
+  try {
+    const snapshot = await firebaseDb.collection('demands').get();
+    if (!snapshot.empty) {
+      const items = [];
+      snapshot.forEach(doc => {
+        items.push({ ...doc.data(), id: doc.id });
+      });
+      return items;
+    }
+    return [];
+  } catch(e) {
+    console.warn('[Firestore Fetch Demands]', e.message);
+    return null;
+  }
+}
+
+async function clubrFetchLiveUsers() {
+  if (!firebaseDb) return null;
+  try {
+    const snapshot = await firebaseDb.collection('users').get();
+    if (!snapshot.empty) {
+      const users = [];
+      snapshot.forEach(doc => {
+        users.push({ ...doc.data(), id: doc.id });
+      });
+      return users;
+    }
+    return [];
+  } catch(e) {
+    console.warn('[Firestore Fetch Users]', e.message);
+    return null;
+  }
+}
+
+async function clubrFetchLiveKycRequests() {
+  if (!firebaseDb) return null;
+  try {
+    const snapshot = await firebaseDb.collection('kyc_requests').get();
+    if (!snapshot.empty) {
+      const reqs = [];
+      snapshot.forEach(doc => {
+        reqs.push({ ...doc.data(), id: doc.id });
+      });
+      return reqs;
+    }
+    return [];
+  } catch(e) {
+    console.warn('[Firestore Fetch KYC]', e.message);
+    return null;
+  }
+}
+
+async function clubrFetchLiveFraudReports() {
+  if (!firebaseDb) return null;
+  try {
+    const snapshot = await firebaseDb.collection('fraud_reports').get();
+    if (!snapshot.empty) {
+      const reports = [];
+      snapshot.forEach(doc => {
+        reports.push({ ...doc.data(), id: doc.id });
+      });
+      return reports;
+    }
+    return [];
+  } catch(e) {
+    console.warn('[Firestore Fetch Fraud Reports]', e.message);
+    return null;
+  }
+}
+
+// ========================================================
+// LIVE CLOUD DELETE / MODERATION METHODS
+// ========================================================
+async function clubrDeleteLiveListing(listingId) {
+  if (firebaseDb) {
+    try {
+      await firebaseDb.collection('listings').doc(listingId).delete();
+    } catch(e) {
+      console.warn('[Firestore Delete Listing]', e.message);
+    }
+  }
+  if (firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('listings/' + listingId).remove();
+    } catch(e) {}
+  }
+}
+
+async function clubrDeleteLiveDemand(demandId) {
+  if (firebaseDb) {
+    try {
+      await firebaseDb.collection('demands').doc(demandId).delete();
+    } catch(e) {
+      console.warn('[Firestore Delete Demand]', e.message);
+    }
+  }
+  if (firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('demands/' + demandId).remove();
+    } catch(e) {}
+  }
+}
+
+async function clubrDeleteLiveUser(userId) {
+  if (firebaseDb) {
+    try {
+      await firebaseDb.collection('users').doc(userId).delete();
+    } catch(e) {
+      console.warn('[Firestore Delete User]', e.message);
+    }
+  }
+}
+
+async function clubrUpdateLiveKycStatus(reqId, userId, status) {
+  if (firebaseDb) {
+    try {
+      if (reqId) await firebaseDb.collection('kyc_requests').doc(reqId).set({ status }, { merge: true });
+      if (userId) await firebaseDb.collection('users').doc(userId).set({ kycStatus: status }, { merge: true });
+    } catch(e) {
+      console.warn('[Firestore KYC Update]', e.message);
+    }
+  }
+}
+
+async function clubrUpdateLiveFraudReport(reportId, updates) {
+  if (firebaseDb && reportId) {
+    try {
+      await firebaseDb.collection('fraud_reports').doc(reportId).set(updates, { merge: true });
+    } catch(e) {
+      console.warn('[Firestore Report Update]', e.message);
+    }
+  }
+}
+
 // Auto-check redirect result on page load (for mobile logins)
 if (typeof window !== 'undefined' && firebaseAuth) {
   window.addEventListener('load', () => {

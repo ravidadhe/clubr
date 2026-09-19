@@ -653,43 +653,18 @@ function initAdminData() {
     const w = localStorage.getItem('findly_wants');
     adminDemands = w ? JSON.parse(w) : [];
 
-    // Seed KYC Applications if empty
+    // Purge mock KYC applications
     const savedKyc = localStorage.getItem('clubr_kyc_requests');
     if (savedKyc) {
-      adminKycRequests = JSON.parse(savedKyc);
+      adminKycRequests = JSON.parse(savedKyc).filter(r => r.id !== 'kyc_sample_1' && r.id !== 'kyc_sample_2');
     } else {
-      adminKycRequests = [
-        {
-          id: 'kyc_sample_1',
-          userId: 'u_rohan',
-          userName: 'Rohan Deshmukh',
-          userPhone: '9823012345',
-          userCity: 'Pune',
-          docType: 'Voter ID Card',
-          docNumber: 'EPIC-MH29-88741',
-          docPhoto: 'icons/icon.svg',
-          date: '19/09/2026',
-          status: 'verified'
-        },
-        {
-          id: 'kyc_sample_2',
-          userId: 'u_pravin',
-          userName: 'Pravin Joshi',
-          userPhone: '9823011223',
-          userCity: 'Nagpur',
-          docType: 'Driving License',
-          docNumber: 'DL-MH31-20180041234',
-          docPhoto: 'icons/icon.svg',
-          date: '19/09/2026',
-          status: 'pending'
-        }
-      ];
-      localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
+      adminKycRequests = [];
     }
+    localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
 
     const chats = localStorage.getItem('findly_chats');
-    const chatCount = chats ? Object.keys(JSON.parse(chats)).length : 38;
-    document.getElementById('statChats').textContent = Math.max(38, chatCount);
+    const chatCount = chats ? Object.keys(JSON.parse(chats)).length : 0;
+    document.getElementById('statChats').textContent = chatCount;
 
     const b = localStorage.getItem('clubr_broadcast_banner');
     if (b) {
@@ -697,60 +672,91 @@ function initAdminData() {
       document.getElementById('broadcastStatus').textContent = `Active Banner: "${b}"`;
       document.getElementById('broadcastStatus').classList.remove('hidden');
     }
-    // Registered Users Database
+
+    // Registered Users Database (Purge mock users)
     const savedUsers = localStorage.getItem('clubr_registered_users');
     if (savedUsers) {
-      adminUsers = JSON.parse(savedUsers);
+      adminUsers = JSON.parse(savedUsers).filter(u => u.id !== 'usr_rohan' && u.id !== 'usr_pravin');
     } else {
-      adminUsers = [
-        {
-          id: 'usr_rohan',
-          name: 'Rohan Deshmukh',
-          phone: '9823012345',
-          password: 'password123',
-          city: 'Pune',
-          kycStatus: 'verified',
-          kycDocType: 'Voter ID Card',
-          docNumber: 'EPIC-MH29-88741',
-          registeredAt: '15/09/2026'
-        },
-        {
-          id: 'usr_pravin',
-          name: 'Pravin Joshi',
-          phone: '9823011223',
-          password: 'password123',
-          city: 'Nagpur',
-          kycStatus: 'pending',
-          kycDocType: 'Driving License',
-          docNumber: 'DL-MH31-20180041234',
-          registeredAt: '17/09/2026'
-        }
-      ];
-      localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+      adminUsers = [];
     }
+    localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+
+    // Load Fraud Reports (Purge mock reports)
+    const rep = localStorage.getItem('clubr_fraud_reports');
+    if (rep) {
+      adminReports = JSON.parse(rep).filter(r => r.id !== 'rep_sample_1' && r.id !== 'rep_sample_2');
+    } else {
+      adminReports = [];
+    }
+    localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
 
     // Live Sync from Google Cloud Firestore
-    if (typeof firebaseDb !== 'undefined' && firebaseDb) {
-      try {
-        firebaseDb.collection('users').get().then(snapshot => {
-          if (snapshot && !snapshot.empty) {
-            snapshot.forEach(doc => {
-              const u = doc.data();
-              const idx = adminUsers.findIndex(x => x.id === u.id || (u.email && x.email === u.email) || (u.phone && x.phone === u.phone));
-              if (idx !== -1) {
-                adminUsers[idx] = { ...adminUsers[idx], ...u };
-              } else {
-                adminUsers.unshift(u);
-              }
-            });
-            localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
-            const uCountEl = document.getElementById('adminUsersCount');
-            if (uCountEl) uCountEl.textContent = adminUsers.length;
-            if (typeof activeTab !== 'undefined' && activeTab === 'users') renderAdminUsers();
-          }
-        }).catch(err => console.warn('[Superadmin Firestore Users]', err.message));
-      } catch(e) {}
+    if (typeof clubrFetchLiveListings === 'function') {
+      clubrFetchLiveListings().then(cloudL => {
+        if (cloudL && Array.isArray(cloudL)) {
+          adminListings = cloudL;
+          localStorage.setItem('findly_listings', JSON.stringify(adminListings));
+          document.getElementById('adminListingsCount').textContent = adminListings.length;
+          if (typeof activeTab !== 'undefined' && activeTab === 'listings') renderAdminListings();
+        }
+      });
     }
+
+    if (typeof clubrFetchLiveDemands === 'function') {
+      clubrFetchLiveDemands().then(cloudD => {
+        if (cloudD && Array.isArray(cloudD)) {
+          adminDemands = cloudD;
+          localStorage.setItem('findly_wants', JSON.stringify(adminDemands));
+          document.getElementById('adminDemandsCount').textContent = adminDemands.length;
+          if (typeof activeTab !== 'undefined' && activeTab === 'demands') renderAdminDemands();
+        }
+      });
+    }
+
+    if (typeof clubrFetchLiveUsers === 'function') {
+      clubrFetchLiveUsers().then(cloudU => {
+        if (cloudU && Array.isArray(cloudU)) {
+          cloudU.forEach(u => {
+            const idx = adminUsers.findIndex(x => x.id === u.id || (u.email && x.email === u.email) || (u.phone && x.phone === u.phone));
+            if (idx !== -1) {
+              adminUsers[idx] = { ...adminUsers[idx], ...u };
+            } else {
+              adminUsers.unshift(u);
+            }
+          });
+          localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+          document.getElementById('adminUsersCount').textContent = adminUsers.length;
+          if (typeof activeTab !== 'undefined' && activeTab === 'users') renderAdminUsers();
+        }
+      });
+    }
+
+    if (typeof clubrFetchLiveKycRequests === 'function') {
+      clubrFetchLiveKycRequests().then(cloudKyc => {
+        if (cloudKyc && Array.isArray(cloudKyc)) {
+          adminKycRequests = cloudKyc;
+          localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
+          const pending = adminKycRequests.filter(x => x.status === 'pending').length;
+          document.getElementById('adminKycCount').textContent = pending;
+          if (typeof activeTab !== 'undefined' && activeTab === 'kyc') renderAdminKyc();
+        }
+      });
+    }
+
+    if (typeof clubrFetchLiveFraudReports === 'function') {
+      clubrFetchLiveFraudReports().then(cloudRep => {
+        if (cloudRep && Array.isArray(cloudRep)) {
+          adminReports = cloudRep;
+          localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+          const pendingRep = adminReports.filter(x => x.status === 'pending').length;
+          const repBadge = document.getElementById('adminReportsCount');
+          if (repBadge) repBadge.textContent = pendingRep;
+          if (typeof activeTab !== 'undefined' && activeTab === 'reports') renderAdminReports();
+        }
+      });
+    }
+
   } catch(e) {
     console.error(e);
   }
@@ -760,12 +766,6 @@ function initAdminData() {
   document.getElementById('adminUsersCount').textContent = adminUsers.length;
   document.getElementById('adminListingsCount').textContent = adminListings.length;
   document.getElementById('adminDemandsCount').textContent = adminDemands.length;
-
-  // Load Fraud Reports
-  try {
-    const rep = localStorage.getItem('clubr_fraud_reports');
-    adminReports = rep ? JSON.parse(rep) : [];
-  } catch(e) { adminReports = []; }
 
   const pendingReportsCount = adminReports.filter(x => x.status === 'pending').length;
   const repBadge = document.getElementById('adminReportsCount');
@@ -839,6 +839,9 @@ function adminApproveKyc(id) {
 
   req.status = 'verified';
   localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
+  if (typeof clubrUpdateLiveKycStatus === 'function') {
+    clubrUpdateLiveKycStatus(req.id, req.userId, 'verified');
+  }
 
   // Sync to currentUser if logged in on this browser
   try {
@@ -883,6 +886,9 @@ function adminRejectKyc(id) {
   if (confirm(`Reject KYC for ${req.userName}?`)) {
     req.status = 'rejected';
     localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
+    if (typeof clubrUpdateLiveKycStatus === 'function') {
+      clubrUpdateLiveKycStatus(req.id, req.userId, 'rejected');
+    }
     try {
       const cur = localStorage.getItem('clubr_current_user');
       if (cur) {
@@ -994,6 +1000,9 @@ function adminGrantUserKyc(userId) {
 
   u.kycStatus = 'verified';
   localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+  if (typeof clubrUpdateLiveKycStatus === 'function') {
+    clubrUpdateLiveKycStatus(null, userId, 'verified');
+  }
 
   try {
     const cur = localStorage.getItem('clubr_current_user');
@@ -1027,6 +1036,9 @@ function adminRevokeUserKyc(userId) {
   if (confirm(`Revoke verified KYC status for ${u.name}?`)) {
     u.kycStatus = 'none';
     localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+    if (typeof clubrUpdateLiveKycStatus === 'function') {
+      clubrUpdateLiveKycStatus(null, userId, 'none');
+    }
     try {
       const cur = localStorage.getItem('clubr_current_user');
       if (cur) {
@@ -1058,6 +1070,9 @@ function adminDeleteUser(userId) {
   if (confirm(`Are you sure you want to permanently delete account for ${u.name} (+91 ${u.phone})?`)) {
     adminUsers = adminUsers.filter(x => x.id !== userId);
     localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+    if (typeof clubrDeleteLiveUser === 'function') {
+      clubrDeleteLiveUser(userId);
+    }
 
     try {
       const cur = localStorage.getItem('clubr_current_user');
@@ -1130,6 +1145,9 @@ function adminDeleteListing(id) {
   if (confirm('Are you sure you want to permanently delete this listing from Clubr?')) {
     adminListings = adminListings.filter(x => x.id !== id);
     localStorage.setItem('findly_listings', JSON.stringify(adminListings));
+    if (typeof clubrDeleteLiveListing === 'function') {
+      clubrDeleteLiveListing(id);
+    }
     document.getElementById('adminListingsCount').textContent = adminListings.length;
     renderAdminListings();
   }
@@ -1167,6 +1185,9 @@ function adminDeleteDemand(id) {
   if (confirm('Dismiss this buyer requirement?')) {
     adminDemands = adminDemands.filter(x => x.id !== id);
     localStorage.setItem('findly_wants', JSON.stringify(adminDemands));
+    if (typeof clubrDeleteLiveDemand === 'function') {
+      clubrDeleteLiveDemand(id);
+    }
     document.getElementById('adminDemandsCount').textContent = adminDemands.length;
     renderAdminDemands();
   }
@@ -1289,10 +1310,18 @@ function escapeAdminHtml(str) {
 function adminBanReportedUser(userName, reportId) {
   if (confirm(`Are you sure you want to permanently BAN user "${userName}" from Clubr? All active listings from this user will be removed.`)) {
     // 1. Remove user listings
+    const userItems = adminListings.filter(x => (x.seller || '').toLowerCase() === userName.toLowerCase());
+    userItems.forEach(it => {
+      if (typeof clubrDeleteLiveListing === 'function') clubrDeleteLiveListing(it.id);
+    });
     adminListings = adminListings.filter(x => (x.seller || '').toLowerCase() !== userName.toLowerCase());
     localStorage.setItem('findly_listings', JSON.stringify(adminListings));
 
     // 2. Remove user registered account if found
+    const targetUser = adminUsers.find(x => (x.name || '').toLowerCase() === userName.toLowerCase());
+    if (targetUser && typeof clubrDeleteLiveUser === 'function') {
+      clubrDeleteLiveUser(targetUser.id);
+    }
     adminUsers = adminUsers.filter(x => (x.name || '').toLowerCase() !== userName.toLowerCase());
     localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
 
@@ -1300,6 +1329,9 @@ function adminBanReportedUser(userName, reportId) {
     const rep = adminReports.find(x => x.id === reportId);
     if (rep) rep.status = 'banned';
     localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+    if (typeof clubrUpdateLiveFraudReport === 'function') {
+      clubrUpdateLiveFraudReport(reportId, { status: 'banned' });
+    }
 
     renderAdminReports();
     document.getElementById('adminListingsCount').textContent = adminListings.length;
@@ -1312,10 +1344,16 @@ function adminDeleteReportedItem(itemId, reportId) {
   if (confirm(`Remove the reported listing from Clubr?`)) {
     adminListings = adminListings.filter(x => x.id !== itemId);
     localStorage.setItem('findly_listings', JSON.stringify(adminListings));
+    if (typeof clubrDeleteLiveListing === 'function') {
+      clubrDeleteLiveListing(itemId);
+    }
 
     const rep = adminReports.find(x => x.id === reportId);
     if (rep) rep.status = 'resolved';
     localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+    if (typeof clubrUpdateLiveFraudReport === 'function') {
+      clubrUpdateLiveFraudReport(reportId, { status: 'resolved' });
+    }
 
     renderAdminReports();
     document.getElementById('adminListingsCount').textContent = adminListings.length;
@@ -1328,6 +1366,9 @@ function adminResolveReport(reportId) {
   if (rep) {
     rep.status = 'resolved';
     localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+    if (typeof clubrUpdateLiveFraudReport === 'function') {
+      clubrUpdateLiveFraudReport(reportId, { status: 'resolved' });
+    }
     renderAdminReports();
   }
 }

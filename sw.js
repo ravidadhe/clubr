@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v5.0 - Professional Minimal Footer & Modals
-const CACHE_NAME = 'clubr-v5-0-minimal-professional-footer';
+// Clubr PWA Service Worker v5.1 - Dynamic Category Specs & Live Data Engine
+const CACHE_NAME = 'clubr-v5-1-dynamic-specs-live-data';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

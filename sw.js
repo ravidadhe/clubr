@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.2 - Dual Auth (Google OAuth + Firebase Phone SMS OTP)
-const CACHE_NAME = 'clubr-v4-2-dual-auth-google-phone-otp';
+// Clubr PWA Service Worker v4.3 - Pure 1-Click Google Sign-In (clubr.online)
+const CACHE_NAME = 'clubr-v4-3-pure-google-1click';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

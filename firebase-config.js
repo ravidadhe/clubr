@@ -1,199 +1,231 @@
 // ========================================================
 // Clubr.online — Firebase Configuration & Cloud Database
-// Powered by Google Firebase (Authentication & Firestore)
+// Powered by Google Firebase (clubr-online)
 // ========================================================
-
-// 1. YOUR FIREBASE CONFIGURATION
-// To get your live keys:
-// 1. Visit https://console.firebase.google.com/
-// 2. Create a project "clubr-marketplace" (or your own project)
-// 3. Enable Authentication -> Sign-in method -> Google
-// 4. In Authorized domains: add "clubr.online" and "localhost"
-// 5. Create Cloud Firestore in Test / Production mode
-// 6. Project Settings -> Your apps -> Web app (</>) -> Copy config below:
 
 const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "clubr-marketplace.firebaseapp.com",
-  projectId: "clubr-marketplace",
-  storageBucket: "clubr-marketplace.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456"
+  apiKey: "AIzaSyAsE1K8xU8aTsCAAeY4vt6LcghKXySUpdY",
+  authDomain: "clubr-online.firebaseapp.com",
+  databaseURL: "https://clubr-online-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "clubr-online",
+  storageBucket: "clubr-online.firebasestorage.app",
+  messagingSenderId: "755964912538",
+  appId: "1:755964912538:web:93393f32c5dabe59bf9023",
+  measurementId: "G-QJ2PCZN8PE"
 };
 
-// ========================================================
-// FIREBASE INITIALIZATION WITH SMART HYBRID FALLBACK
-// ========================================================
+// Global Firebase References
 let firebaseApp = null;
 let firebaseAuth = null;
 let firebaseDb = null;
+let firebaseRtdb = null;
 let isFirebaseLive = false;
 
 try {
-  if (typeof firebase !== 'undefined' && firebase.initializeApp) {
-    if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_FIREBASE_API_KEY") {
+  if (typeof firebase !== 'undefined') {
+    if (!firebase.apps.length) {
       firebaseApp = firebase.initializeApp(firebaseConfig);
-      firebaseAuth = firebase.auth();
-      firebaseDb = firebase.firestore();
-      isFirebaseLive = true;
-      console.log('[Clubr Cloud] ✅ Google Firebase connected to live project:', firebaseConfig.projectId);
     } else {
-      console.log('[Clubr Cloud] ℹ️ Using simulated Google OAuth & local cloud persistence until live API keys are provided in firebase-config.js');
+      firebaseApp = firebase.app();
     }
+    firebaseAuth = firebase.auth();
+    try { firebaseDb = firebase.firestore(); } catch(e) {}
+    try { firebaseRtdb = firebase.database(); } catch(e) {}
+    isFirebaseLive = true;
+    console.log('[Clubr Cloud] ✅ Google Firebase live connected:', firebaseConfig.projectId);
   }
 } catch (err) {
-  console.warn('[Clubr Cloud] Firebase init notice:', err.message);
+  console.warn('[Clubr Cloud] Firebase init error:', err.message);
+}
+
+// Transform Firebase User to Clubr Citizen Profile
+async function formatClubrUserData(user) {
+  let existingUser = null;
+
+  // Try fetching from Cloud Firestore first
+  if (firebaseDb) {
+    try {
+      const doc = await firebaseDb.collection('users').doc(user.uid).get();
+      if (doc.exists) {
+        existingUser = doc.data();
+      }
+    } catch(e) {
+      console.warn('[Firestore Read]', e.message);
+    }
+  }
+
+  // If not found in Firestore, check local store
+  if (!existingUser) {
+    try {
+      const localUsers = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+      existingUser = localUsers.find(u => u.id === user.uid || u.email === user.email);
+    } catch(e) {}
+  }
+
+  const userData = {
+    id: user.uid,
+    name: (existingUser && existingUser.name) ? existingUser.name : (user.displayName || 'Clubr Citizen'),
+    email: user.email || '',
+    photoURL: user.photoURL || '',
+    phone: (existingUser && existingUser.phone) ? existingUser.phone : '',
+    city: (existingUser && existingUser.city) ? existingUser.city : 'Mumbai',
+    bio: (existingUser && existingUser.bio) ? existingUser.bio : 'Community Member',
+    kycStatus: (existingUser && existingUser.kycStatus) ? existingUser.kycStatus : 'none',
+    kycDocType: (existingUser && existingUser.kycDocType) ? existingUser.kycDocType : '',
+    kycDocNumber: (existingUser && existingUser.kycDocNumber) ? existingUser.kycDocNumber : '',
+    registeredAt: (existingUser && existingUser.registeredAt) ? existingUser.registeredAt : new Date().toLocaleDateString('en-IN')
+  };
+
+  // Sync to Cloud Firestore in background
+  if (firebaseDb) {
+    firebaseDb.collection('users').doc(user.uid).set(userData, { merge: true }).catch(err => {
+      console.warn('[Firestore Sync]', err.message);
+    });
+  }
+
+  // Sync to local registered users list
+  try {
+    let all = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+    const idx = all.findIndex(x => x.id === userData.id || x.email === userData.email);
+    if (idx !== -1) {
+      all[idx] = userData;
+    } else {
+      all.unshift(userData);
+    }
+    localStorage.setItem('clubr_registered_users', JSON.stringify(all));
+  } catch(e) {}
+
+  return userData;
 }
 
 // ========================================================
-// 1-CLICK GOOGLE SIGN-IN HANDLER (NO PHONE / NO PASSWORD)
+// 1-CLICK GOOGLE SIGN-IN (REAL GOOGLE POPUP & REDIRECT)
 // ========================================================
 async function clubrSignInWithGoogle() {
-  if (isFirebaseLive && firebaseAuth) {
-    try {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.addScope('profile');
-      provider.addScope('email');
-      const result = await firebaseAuth.signInWithPopup(provider);
-      const user = result.user;
+  if (!firebaseAuth) {
+    return { success: false, error: 'Firebase Auth is not ready. Please refresh the page.' };
+  }
 
-      // Sync or create user record in Cloud Firestore
-      const userDocRef = firebaseDb.collection('users').doc(user.uid);
-      const docSnap = await userDocRef.get();
-      let userData = null;
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('profile');
+  provider.addScope('email');
+  provider.setCustomParameters({ prompt: 'select_account' });
 
-      if (!docSnap.exists) {
-        userData = {
-          id: user.uid,
-          name: user.displayName || 'Google User',
-          email: user.email || '',
-          photoURL: user.photoURL || '',
-          phone: '',
-          city: 'Mumbai',
-          bio: '',
-          kycStatus: 'none',
-          kycDocType: '',
-          kycDocNumber: '',
-          registeredAt: new Date().toLocaleDateString('en-IN')
-        };
-        await userDocRef.set(userData);
-      } else {
-        userData = docSnap.data();
-      }
+  try {
+    const result = await firebaseAuth.signInWithPopup(provider);
+    const userData = await formatClubrUserData(result.user);
+    return { success: true, user: userData };
+  } catch (popupErr) {
+    console.warn('[Firebase Google Popup Notice]', popupErr.code, popupErr.message);
 
-      return { success: true, user: userData };
-    } catch (error) {
-      console.error('[Google Sign-In Error]', error);
-      return { success: false, error: error.message };
-    }
-  } else {
-    // Interactive Simulation / Fallback for local testing before API keys
-    return new Promise((resolve) => {
-      // Simulate Google OAuth Account Chooser
-      const defaultName = "Ravi Dadhe";
-      const defaultEmail = "ravidadhe@gmail.com";
-      const enteredEmail = prompt("Google Sign-In (Simulation):\nEnter your Google Email to continue:", defaultEmail);
-      if (!enteredEmail) {
-        resolve({ success: false, error: 'Sign-in was cancelled.' });
-        return;
-      }
-      const enteredName = prompt("Enter your Full Display Name:", defaultName) || "Google Member";
-      
-      const simulatedUser = {
-        id: 'usr_g_' + Math.abs(enteredEmail.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)),
-        name: enteredName,
-        email: enteredEmail,
-        photoURL: 'https://lh3.googleusercontent.com/a/default-user=s96-c',
-        phone: '',
-        city: 'Mumbai',
-        bio: 'Community member on Clubr',
-        kycStatus: 'none',
-        kycDocType: '',
-        kycDocNumber: '',
-        registeredAt: new Date().toLocaleDateString('en-IN')
-      };
-
-      // Check if user already exists in local DB
-      let allUsers = [];
+    // If popup is blocked by browser on mobile, use standard Redirect
+    if (popupErr.code === 'auth/popup-blocked' || popupErr.code === 'auth/popup-closed-by-user') {
       try {
-        const saved = localStorage.getItem('clubr_registered_users');
-        if (saved) allUsers = JSON.parse(saved);
-      } catch(e) {}
-
-      const existing = allUsers.find(u => u.email === enteredEmail || u.id === simulatedUser.id);
-      if (existing) {
-        resolve({ success: true, user: existing });
-      } else {
-        allUsers.unshift(simulatedUser);
-        localStorage.setItem('clubr_registered_users', JSON.stringify(allUsers));
-        resolve({ success: true, user: simulatedUser });
+        await firebaseAuth.signInWithRedirect(provider);
+        return { pendingRedirect: true };
+      } catch (redirectErr) {
+        return { success: false, error: redirectErr.message };
       }
-    });
+    }
+    return { success: false, error: popupErr.message };
   }
 }
 
 // ========================================================
-// SIGN OUT HANDLER
+// SIGN OUT
 // ========================================================
 async function clubrSignOut() {
-  if (isFirebaseLive && firebaseAuth) {
-    await firebaseAuth.signOut();
+  if (firebaseAuth) {
+    try {
+      await firebaseAuth.signOut();
+    } catch(e) {}
   }
   localStorage.removeItem('clubr_current_user');
 }
 
 // ========================================================
-// USER PROFILE UPDATE HANDLER
+// USER PROFILE UPDATE
 // ========================================================
-async function clubrUpdateUserProfile(userId, profileUpdates) {
-  if (isFirebaseLive && firebaseDb) {
+async function clubrUpdateUserProfile(userId, updates) {
+  if (firebaseDb) {
     try {
-      await firebaseDb.collection('users').doc(userId).update(profileUpdates);
+      await firebaseDb.collection('users').doc(userId).set(updates, { merge: true });
     } catch(e) {
-      console.error('[Firestore Profile Update Error]', e);
+      console.warn('[Firestore User Update Notice]', e.message);
     }
   }
 
-  // Update in local store
   try {
-    let allUsers = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
-    const idx = allUsers.findIndex(u => u.id === userId);
+    let all = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+    const idx = all.findIndex(u => u.id === userId);
     if (idx !== -1) {
-      allUsers[idx] = { ...allUsers[idx], ...profileUpdates };
-      localStorage.setItem('clubr_registered_users', JSON.stringify(allUsers));
+      all[idx] = { ...all[idx], ...updates };
+      localStorage.setItem('clubr_registered_users', JSON.stringify(all));
     }
   } catch(e) {}
 }
 
 // ========================================================
-// FIRESTORE LISTING & DEMAND SYNC HELPERS
+// CLOUD PUBLISH METHODS
 // ========================================================
 async function clubrPublishListing(listing) {
-  if (isFirebaseLive && firebaseDb) {
+  if (firebaseDb) {
     try {
       await firebaseDb.collection('listings').doc(listing.id).set(listing);
     } catch(e) {
-      console.error('[Firestore Publish Error]', e);
+      console.warn('[Firestore Listing Publish]', e.message);
     }
+  }
+  if (firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('listings/' + listing.id).set(listing);
+    } catch(e) {}
   }
 }
 
 async function clubrPublishDemand(demand) {
-  if (isFirebaseLive && firebaseDb) {
+  if (firebaseDb) {
     try {
       await firebaseDb.collection('demands').doc(demand.id).set(demand);
     } catch(e) {
-      console.error('[Firestore Demand Error]', e);
+      console.warn('[Firestore Demand Publish]', e.message);
     }
+  }
+  if (firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('demands/' + demand.id).set(demand);
+    } catch(e) {}
   }
 }
 
 async function clubrPublishKycRequest(req) {
-  if (isFirebaseLive && firebaseDb) {
+  if (firebaseDb) {
     try {
       await firebaseDb.collection('kyc_requests').doc(req.id).set(req);
     } catch(e) {
-      console.error('[Firestore KYC Error]', e);
+      console.warn('[Firestore KYC Publish]', e.message);
     }
   }
+  if (firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('kyc_requests/' + req.id).set(req);
+    } catch(e) {}
+  }
+}
+
+// Auto-check redirect result on page load (for mobile logins)
+if (typeof window !== 'undefined' && firebaseAuth) {
+  window.addEventListener('load', () => {
+    firebaseAuth.getRedirectResult().then(async (result) => {
+      if (result && result.user) {
+        const u = await formatClubrUserData(result.user);
+        currentUser = u;
+        if (typeof saveData === 'function') saveData();
+        if (typeof updateUserUI === 'function') updateUserUI();
+        if (typeof toast === 'function') toast(`👋 Welcome ${u.name}! Signed in via Google.`);
+      }
+    }).catch(err => {
+      console.warn('[Firebase Auth Redirect]', err.message);
+    });
+  });
 }

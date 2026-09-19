@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.0 - Google Firebase Auth & Cloud Firestore
-const CACHE_NAME = 'clubr-v4-firebase-google-auth';
+// Clubr PWA Service Worker v4.1 - Live Google Firebase OAuth (clubr-online)
+const CACHE_NAME = 'clubr-v4-1-live-google-oauth';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

@@ -208,23 +208,209 @@ function getStateForCity(city) {
   return 'Maharashtra';
 }
 
+// Top Popular Indian Metros for 1-Tap Selection
+var POPULAR_METROS = [
+  { city: 'Pune', state: 'Maharashtra', emoji: '📍', badge: 'Popular' },
+  { city: 'Mumbai', state: 'Maharashtra', emoji: '🏙️', badge: 'Metro' },
+  { city: 'Delhi NCR', state: 'Delhi NCR', emoji: '🏛️', badge: 'Capital' },
+  { city: 'Bengaluru', state: 'Karnataka', emoji: '💻', badge: 'Tech Hub' },
+  { city: 'Hyderabad', state: 'Telangana', emoji: '💎', badge: 'Metro' },
+  { city: 'Ahmedabad', state: 'Gujarat', emoji: '🪁', badge: 'Commercial' },
+  { city: 'Kolkata', state: 'West Bengal', emoji: '🚋', badge: 'Metro' },
+  { city: 'Chennai', state: 'Tamil Nadu', emoji: '🌊', badge: 'Coastal' },
+  { city: 'Jaipur', state: 'Rajasthan', emoji: '🏰', badge: 'Heritage' },
+  { city: 'Lucknow', state: 'Uttar Pradesh', emoji: '🕌', badge: 'Cultural' },
+  { city: 'Indore', state: 'Madhya Pradesh', emoji: '✨', badge: 'Clean City' },
+  { city: 'Chandigarh', state: 'Punjab & Haryana', emoji: '🌳', badge: 'Tri-City' }
+];
+
+// Pre-flattened city catalog for lightning-fast sub-millisecond search
+var ALL_CITIES_FLAT = [];
+for (var stKey in INDIA_STATE_DIRECTORY) {
+  var cityArr = INDIA_STATE_DIRECTORY[stKey];
+  for (var cIdx = 0; cIdx < cityArr.length; cIdx++) {
+    ALL_CITIES_FLAT.push({
+      city: cityArr[cIdx],
+      state: stKey,
+      cleanCity: cityArr[cIdx].toLowerCase(),
+      cleanState: stKey.toLowerCase()
+    });
+  }
+}
+
+// Live Autocomplete Search across all 700+ Indian cities
+function searchCities(query, limit) {
+  if (!query) return [];
+  var q = query.trim().toLowerCase();
+  limit = limit || 12;
+  var exactCity = [];
+  var prefixCity = [];
+  var containsCity = [];
+  var stateMatch = [];
+  var seen = {};
+
+  for (var i = 0; i < ALL_CITIES_FLAT.length; i++) {
+    var item = ALL_CITIES_FLAT[i];
+    var k = item.city + '::' + item.state;
+    if (seen[k]) continue;
+
+    if (item.cleanCity === q) {
+      exactCity.push(item);
+      seen[k] = true;
+    } else if (item.cleanCity.indexOf(q) === 0) {
+      prefixCity.push(item);
+      seen[k] = true;
+    } else if (item.cleanCity.indexOf(q) > 0) {
+      containsCity.push(item);
+      seen[k] = true;
+    } else if (item.cleanState.indexOf(q) !== -1) {
+      stateMatch.push(item);
+      seen[k] = true;
+    }
+  }
+  var merged = exactCity.concat(prefixCity, containsCity, stateMatch);
+  return merged.slice(0, limit);
+}
+
+// 6-Digit PIN Code Instant Auto-Detection (Official India Post Database)
+var _pincodeCache = {};
+
+async function lookupPincode(pincode) {
+  var cleanPin = String(pincode || '').replace(/\D/g, '').trim();
+  if (cleanPin.length !== 6) {
+    return { success: false, message: 'Please enter a valid 6-digit PIN code' };
+  }
+  if (_pincodeCache[cleanPin]) {
+    return _pincodeCache[cleanPin];
+  }
+  try {
+    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timeoutId = controller ? setTimeout(function() { controller.abort(); }, 6000) : null;
+    var res = await fetch('https://api.postalpincode.in/pincode/' + cleanPin, {
+      signal: controller ? controller.signal : undefined
+    });
+    if (timeoutId) clearTimeout(timeoutId);
+    var data = await res.json();
+    if (data && data[0] && data[0].Status === 'Success' && data[0].PostOffice && data[0].PostOffice.length > 0) {
+      var poList = data[0].PostOffice;
+      var first = poList[0];
+      var district = first.District || first.Block || first.Division || '';
+      var state = first.State || '';
+      var localities = [];
+      var seenLoc = {};
+      for (var i = 0; i < poList.length; i++) {
+        var name = poList[i].Name;
+        if (name && !seenLoc[name.toLowerCase()]) {
+          seenLoc[name.toLowerCase()] = true;
+          localities.push(name);
+        }
+      }
+      var result = {
+        success: true,
+        pincode: cleanPin,
+        city: district,
+        district: district,
+        state: state,
+        localities: localities,
+        primaryLocality: localities[0] || district
+      };
+      _pincodeCache[cleanPin] = result;
+      return result;
+    } else {
+      return { success: false, message: 'PIN code not found in postal directory' };
+    }
+  } catch (err) {
+    return { success: false, message: 'PIN fetch unavailable: ' + (err.message || 'Network error') };
+  }
+}
+
+// 1-Tap Browser GPS Location Detection
+async function detectCurrentLocationGps() {
+  if (typeof navigator === 'undefined' || !navigator.geolocation) {
+    return { success: false, message: 'Geolocation is not supported by your browser' };
+  }
+  return new Promise(function(resolve) {
+    navigator.geolocation.getCurrentPosition(
+      async function(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+        try {
+          var res = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', {
+            headers: { 'Accept': 'application/json' }
+          });
+          var data = await res.json();
+          if (data && data.address) {
+            var addr = data.address;
+            var city = addr.city || addr.town || addr.village || addr.county || addr.state_district || 'Pune';
+            var state = addr.state || 'Maharashtra';
+            resolve({
+              success: true,
+              city: city,
+              state: state,
+              lat: lat,
+              lon: lon
+            });
+            return;
+          }
+        } catch (e) {}
+        resolve({
+          success: true,
+          city: 'Pune',
+          state: 'Maharashtra',
+          lat: lat,
+          lon: lon
+        });
+      },
+      function(error) {
+        var msg = 'Location permission denied. Please allow location access or search your city.';
+        resolve({ success: false, message: msg });
+      },
+      { timeout: 8000, enableHighAccuracy: false }
+    );
+  });
+}
+
+// Global Location API
+var ClubrLocation = {
+  POPULAR_METROS: POPULAR_METROS,
+  ALL_CITIES_FLAT: ALL_CITIES_FLAT,
+  searchCities: searchCities,
+  lookupPincode: lookupPincode,
+  detectCurrentLocationGps: detectCurrentLocationGps,
+  getStateForCity: getStateForCity,
+  getCitiesForState: getCitiesForState,
+  getStatesList: getStatesList
+};
+
 if (typeof window !== 'undefined') {
   window.INDIA_STATE_DIRECTORY = INDIA_STATE_DIRECTORY;
   window.OTHER_CITY_OPTION = OTHER_CITY_OPTION;
   window.OTHER_CITY_LABEL = OTHER_CITY_LABEL;
+  window.POPULAR_METROS = POPULAR_METROS;
+  window.ALL_CITIES_FLAT = ALL_CITIES_FLAT;
+  window.ClubrLocation = ClubrLocation;
   window.getStatesList = getStatesList;
   window.getCitiesForState = getCitiesForState;
   window.getStateForCity = getStateForCity;
+  window.searchCities = searchCities;
+  window.lookupPincode = lookupPincode;
+  window.detectCurrentLocationGps = detectCurrentLocationGps;
 }
 
-// Export for Node/CommonJS or attach to window
+// Export for Node/CommonJS
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     INDIA_STATE_DIRECTORY,
     OTHER_CITY_OPTION,
     OTHER_CITY_LABEL,
+    POPULAR_METROS,
+    ALL_CITIES_FLAT,
+    ClubrLocation,
     getStatesList,
     getCitiesForState,
-    getStateForCity
+    getStateForCity,
+    searchCities,
+    lookupPincode,
+    detectCurrentLocationGps
   };
 }

@@ -763,6 +763,20 @@
           </div>
         </div>
 
+        <!-- Fast PIN Code Auto-Fill -->
+        <div class="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-amber-900 flex items-center gap-1">⚡ Fast Location by PIN Code</span>
+            <span class="text-[9px] font-bold text-amber-700 bg-white border border-amber-200 px-1.5 py-0.5 rounded">Optional</span>
+          </div>
+          <div class="flex gap-2">
+            <input id="demandPincodeInput" maxlength="6" placeholder="Enter 6-digit PIN code (e.g. 411038)" class="flex-1 bg-white border border-amber-300 rounded-xl px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-amber-500 font-mono font-bold" oninput="handleDemandPincodeInput(this.value)">
+            <button type="button" onclick="detectDemandLocationGps()" class="bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+              <span>🎯</span> GPS
+            </button>
+          </div>
+        </div>
+
         <!-- State & City Cascading Dropdowns -->
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -850,6 +864,47 @@
         if (input) input.focus();
       } else {
         customBox.classList.add('hidden');
+      }
+    }
+
+    async function handleDemandPincodeInput(val) {
+      const clean = (val || '').trim();
+      if (clean.length === 6 && clean.match(/^\d{6}$/)) {
+        if (window.ClubrLocation && window.ClubrLocation.lookupPincode) {
+          const res = await window.ClubrLocation.lookupPincode(clean);
+          if (res && res.success) {
+            const stateSel = document.getElementById('demandStateSelect');
+            const citySel = document.getElementById('demandCitySelect');
+            if (stateSel) {
+              stateSel.value = res.state;
+              populateDemandCities(res.state);
+            }
+            if (citySel) {
+              citySel.value = res.city;
+              toggleDemandCustomCity();
+            }
+            toast(`⚡ Location Auto-Filled: ${res.city}, ${res.state}`);
+          }
+        }
+      }
+    }
+
+    async function detectDemandLocationGps() {
+      if (window.ClubrLocation && window.ClubrLocation.detectCurrentLocationGps) {
+        const res = await window.ClubrLocation.detectCurrentLocationGps();
+        if (res && res.success && res.city) {
+          const stateSel = document.getElementById('demandStateSelect');
+          const citySel = document.getElementById('demandCitySelect');
+          if (stateSel) {
+            stateSel.value = res.state;
+            populateDemandCities(res.state);
+          }
+          if (citySel) {
+            citySel.value = res.city;
+            toggleDemandCustomCity();
+          }
+          toast(`🎯 GPS Detected: ${res.city}, ${res.state}`);
+        }
       }
     }
 

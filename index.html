@@ -1888,70 +1888,93 @@ h1 {
 <!-- MODAL: STATE-WISE INDIAN CITIES SELECTOR DIRECTORY      -->
 <!-- ======================================================= -->
 <div class="modal-bg" id="cityModal" onclick="if(event.target===this)closeCityModal()">
-  <div class="modal">
-    <div class="modal-head">
+  <div class="modal" style="max-width:540px; max-height:88vh; display:flex; flex-direction:column; padding:0; overflow:hidden; border-radius:24px;">
+    
+    <!-- Modal Head -->
+    <div class="modal-head" style="padding:16px 20px; border-bottom:1px solid var(--line); margin-bottom:0; background:#ffffff;">
       <div>
-        <h2>📍 Choose City</h2>
-        <span style="font-size:11px; color:var(--muted)">Select state or search your city</span>
+        <h2 style="font-size:18px; font-weight:900;">📍 Select Your Location</h2>
+        <span style="font-size:11px; color:var(--muted)">Enter 6-digit PIN code or type your city name</span>
       </div>
       <button class="close-btn" onclick="closeCityModal()">✕</button>
     </div>
 
-    <!-- GPS Auto-Detect -->
-    <button class="want-btn" style="background:var(--lime); color:var(--ink); width:100%; margin-bottom:12px; padding:12px;" onclick="autoDetectLocation()">
-      🎯 Auto-Detect My Location (GPS)
-    </button>
-
-    <!-- State & City Dropdowns -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; background:#f8fafc; border:1px solid var(--line); border-radius:14px; padding:12px">
-      <div class="field" style="margin:0">
-        <label style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px; display:block">1. Select State</label>
-        <select id="stateDropdownSelect" onchange="onStateDropdownChanged(this.value)" style="width:100%; padding:9px 10px; border-radius:10px; border:1px solid var(--line); font-size:12px; background:var(--card); font-weight:700">
-          <option value="All">🇮🇳 All States</option>
-        </select>
+    <!-- Scrollable Body -->
+    <div style="padding:16px 20px; overflow-y:auto; flex:1;" class="custom-scroll">
+      
+      <!-- Instant Search / Pincode Input Box -->
+      <div style="position:relative; margin-bottom:12px;">
+        <input id="citySmartInput" placeholder="🔍 Type City (e.g. Pune, Noida) OR 6-digit PIN..." autocomplete="off" oninput="handleSmartLocationInput(this.value)" style="width:100%; padding:13px 40px 13px 40px; border-radius:14px; border:2px solid #e2e8f0; font-size:13px; font-weight:700; background:#f8fafc; outline:none; transition:all 0.15s ease;" onfocus="this.style.borderColor='#10b981'; this.style.background='#fff';" onblur="this.style.borderColor='#e2e8f0'">
+        <span style="position:absolute; left:14px; top:13px; font-size:16px; opacity:0.6;">📍</span>
+        <button id="citySmartClearBtn" onclick="clearSmartCityInput()" style="display:none; position:absolute; right:12px; top:12px; width:26px; height:26px; border-radius:50%; background:#e2e8f0; color:#64748b; font-size:12px; font-weight:800; align-items:center; justify-content:center; cursor:pointer;">✕</button>
       </div>
-      <div class="field" style="margin:0">
-        <label style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px; display:block">2. Select City</label>
-        <select id="cityDropdownSelect" onchange="onCityDropdownSelectChanged(this.value)" style="width:100%; padding:9px 10px; border-radius:10px; border:1px solid var(--line); font-size:12px; background:var(--card); font-weight:700">
-          <option value="">-- Choose City --</option>
-        </select>
+
+      <!-- Live Pincode Result Card (Appears automatically when 6 digits typed) -->
+      <div id="pincodeResultBox" style="display:none; background:#ecfdf5; border:1.5px solid #6ee7b7; border-radius:16px; padding:14px; margin-bottom:14px; animation:fadeIn 0.2s ease-out;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:22px;">⚡</span>
+            <div>
+              <b style="font-size:14px; color:#065f46;" id="pinResultTitle">Pune, Maharashtra</b>
+              <span style="font-size:11px; color:#047857; display:block;" id="pinResultSub">Postal PIN Code Verified</span>
+            </div>
+          </div>
+          <button onclick="confirmPincodeCity()" style="background:#047857; color:#fff; font-size:11px; font-weight:800; padding:7px 14px; border-radius:10px; cursor:pointer; border:none; box-shadow:0 2px 6px rgba(4,120,87,0.25);">Select City 📍</button>
+        </div>
+        <div id="pinLocalitiesList" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; border-top:1px dashed #a7f3d0; padding-top:10px;">
+          <!-- Localities pills -->
+        </div>
       </div>
-    </div>
 
-    <!-- Custom City Input (if user selects Other) -->
-    <div id="cityModalCustomContainer" style="display:none; margin-bottom:12px; background:#ecfdf5; padding:12px; border-radius:14px; border:1px solid #a7f3d0;">
-      <label style="font-size:11px; font-weight:800; color:#065f46; display:block; margin-bottom:4px">📍 Enter Your City / Town Name:</label>
-      <div style="display:flex; gap:6px">
-        <input id="cityModalCustomInput" placeholder="e.g. Baramati, Ratnagiri, Palwal, Shirdi..." style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid #a7f3d0; font-size:12px; font-weight:700">
-        <button onclick="saveCustomCityFromModal()" class="want-btn" style="background:var(--ink); color:#fff; padding:6px 12px; font-size:11px; margin:0">Set 📍</button>
+      <!-- Live Autocomplete Suggestion Dropdown List -->
+      <div id="citySuggestionsBox" style="display:none; margin-bottom:14px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:14px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.08); max-height:220px; overflow-y:auto;">
+        <!-- Populated dynamically -->
       </div>
-    </div>
 
-    <!-- Search Input -->
-    <div class="field" style="margin-top:0">
-      <input id="citySearchInput" placeholder="🔍 Search any city, district, or state..." oninput="filterCityDirectory(this.value)">
-    </div>
+      <!-- Quick Action Buttons: GPS Auto-Detect & Pan-India -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
+        <button onclick="handleGpsAutoDetect()" style="background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; border-radius:12px; padding:10px 12px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:all 0.15s ease;">
+          <span id="gpsBtnIcon">🎯</span> <span id="gpsBtnText">Use My GPS Location</span>
+        </button>
+        <button onclick="setCity('All India')" style="background:#f8fafc; border:1px solid var(--line); color:var(--ink); border-radius:12px; padding:10px 12px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+          <span>🇮🇳</span> <span>All India (Pan-India)</span>
+        </button>
+      </div>
 
-    <!-- State Filter Tabs Carousel -->
-    <div class="chips" style="margin-bottom:12px">
-      <button class="chip active" id="stateTabAll" onclick="selectStateFilter('All', this)">🇮🇳 All States</button>
-      <button class="chip" onclick="selectStateFilter('Maharashtra', this)">Maharashtra</button>
-      <button class="chip" onclick="selectStateFilter('Delhi NCR', this)">Delhi NCR</button>
-      <button class="chip" onclick="selectStateFilter('Karnataka', this)">Karnataka</button>
-      <button class="chip" onclick="selectStateFilter('Gujarat', this)">Gujarat</button>
-      <button class="chip" onclick="selectStateFilter('Telangana & AP', this)">Telangana & AP</button>
-      <button class="chip" onclick="selectStateFilter('Tamil Nadu', this)">Tamil Nadu</button>
-      <button class="chip" onclick="selectStateFilter('Uttar Pradesh', this)">Uttar Pradesh</button>
-      <button class="chip" onclick="selectStateFilter('Rajasthan', this)">Rajasthan</button>
-      <button class="chip" onclick="selectStateFilter('Madhya Pradesh', this)">Madhya Pradesh</button>
-      <button class="chip" onclick="selectStateFilter('West Bengal', this)">West Bengal</button>
-      <button class="chip" onclick="selectStateFilter('Punjab & Haryana', this)">Punjab & Haryana</button>
-      <button class="chip" onclick="selectStateFilter('Bihar & Jharkhand', this)">Bihar & Jharkhand</button>
-      <button class="chip" onclick="selectStateFilter('Kerala', this)">Kerala</button>
-    </div>
+      <!-- Popular Metros Section -->
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+          <span>🔥 Popular Indian Cities</span>
+          <span style="font-size:10px; color:#10b981; font-weight:700;">1-Tap Select</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:6px;" id="popularMetrosGrid">
+          <!-- Populated from POPULAR_METROS -->
+        </div>
+      </div>
 
-    <!-- Cities Grid -->
-    <div id="cityDirectoryGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:300px; overflow-y:auto"></div>
+      <!-- Custom City Entry Section -->
+      <div style="background:#faf7f2; border:1.5px dashed var(--line); border-radius:14px; padding:12px 14px; margin-bottom:16px;">
+        <div style="font-size:11px; font-weight:800; color:var(--ink); margin-bottom:6px;">📍 Don't see your town or village?</div>
+        <div style="display:flex; gap:6px;">
+          <input id="cityCustomInputInline" placeholder="Enter your custom town/village name..." style="flex:1; padding:8px 12px; border-radius:10px; border:1px solid var(--line); font-size:12px; font-weight:600; background:#fff; outline:none;">
+          <button onclick="saveCustomCityInline()" style="background:var(--ink); color:#fff; border:none; border-radius:10px; padding:8px 14px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;">Set City</button>
+        </div>
+      </div>
+
+      <!-- Explore by State Accordion / Directory -->
+      <div>
+        <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+          <span>📋 Explore All 36 States & UTs</span>
+        </div>
+        <div class="chips" id="modalStateTabsScroller" style="margin-bottom:10px; overflow-x:auto; padding-bottom:4px;">
+          <!-- Populated from Object.keys(INDIA_STATE_DIRECTORY) -->
+        </div>
+        <div id="modalStateCitiesList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:6px; max-height:160px; overflow-y:auto; padding:2px 0;">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -3543,43 +3566,200 @@ function onStateDropdownChanged(state) {
   renderCityDirectory(q);
 }
 
-function populateCityDropdown(state) {
-  const citySel = document.getElementById('cityDropdownSelect');
-  if (!citySel) return;
-  let cityList = [];
-  if (state === 'All') {
-    Object.values(INDIA_STATE_DIRECTORY).forEach(arr => cityList.push(...arr));
-  } else if (INDIA_STATE_DIRECTORY[state]) {
-    cityList = INDIA_STATE_DIRECTORY[state];
-  }
-  citySel.innerHTML = '<option value="">-- Choose City --</option>' + 
-    `<option value="All India"${currentCity === 'All India' ? ' selected' : ''}>🇮🇳 All India (Pan-India)</option>` +
-    cityList.map(c => `<option value="${c}"${c.toLowerCase() === currentCity.toLowerCase() ? ' selected' : ''}>${c}</option>`).join('') +
-    `<option value="${OTHER_CITY_OPTION}">${OTHER_CITY_LABEL}</option>`;
+let detectedPinData = null;
+
+function openCityModal() {
+  document.getElementById('cityModal').classList.add('show');
+  initSmartCityModal();
 }
 
-function onCityDropdownSelectChanged(val) {
-  const customBox = document.getElementById('cityModalCustomContainer');
-  if (val === OTHER_CITY_OPTION) {
-    if (customBox) {
-      customBox.style.display = 'block';
-      const input = document.getElementById('cityModalCustomInput');
-      if (input) input.focus();
+function closeCityModal() {
+  document.getElementById('cityModal').classList.remove('show');
+}
+
+function initSmartCityModal() {
+  // Render Popular Metros
+  const metrosGrid = document.getElementById('popularMetrosGrid');
+  if (metrosGrid && window.POPULAR_METROS) {
+    metrosGrid.innerHTML = window.POPULAR_METROS.map(m => {
+      const isSel = (currentCity.toLowerCase() === m.city.toLowerCase());
+      return `
+        <button onclick="setCity('${m.city}')" style="background:${isSel ? 'var(--ink)' : '#f8fafc'}; color:${isSel ? '#fff' : 'var(--ink)'}; border:1px solid ${isSel ? 'var(--ink)' : 'var(--line)'}; border-radius:12px; padding:8px 10px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; text-align:left; transition:all 0.15s ease;">
+          <span>${m.emoji}</span>
+          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${m.city}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  // Render State Tabs
+  const stateTabs = document.getElementById('modalStateTabsScroller');
+  if (stateTabs && window.INDIA_STATE_DIRECTORY) {
+    const states = Object.keys(window.INDIA_STATE_DIRECTORY);
+    stateTabs.innerHTML = states.map((st, i) => `
+      <button class="chip ${i === 0 ? 'active' : ''}" onclick="selectModalStateTab('${st}', this)">${st}</button>
+    `).join('');
+    selectModalStateTab(states[0]);
+  }
+
+  const smartInp = document.getElementById('citySmartInput');
+  if (smartInp) {
+    smartInp.value = '';
+    setTimeout(() => smartInp.focus(), 150);
+  }
+  clearSmartCityInput();
+}
+
+function selectModalStateTab(state, el) {
+  if (el) {
+    document.querySelectorAll('#modalStateTabsScroller .chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  const container = document.getElementById('modalStateCitiesList');
+  if (!container || !window.INDIA_STATE_DIRECTORY) return;
+  const list = window.INDIA_STATE_DIRECTORY[state] || [];
+  container.innerHTML = list.map(c => {
+    const isSel = (currentCity.toLowerCase() === c.toLowerCase());
+    return `
+      <button onclick="setCity('${c}')" style="background:${isSel ? 'var(--ink)' : '#ffffff'}; color:${isSel ? '#fff' : '#1e293b'}; border:1px solid ${isSel ? 'var(--ink)' : '#e2e8f0'}; border-radius:10px; padding:7px 10px; font-size:11px; font-weight:700; cursor:pointer; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        📍 ${c}
+      </button>
+    `;
+  }).join('');
+}
+
+async function handleSmartLocationInput(val) {
+  const clean = (val || '').trim();
+  const clearBtn = document.getElementById('citySmartClearBtn');
+  const pinBox = document.getElementById('pincodeResultBox');
+  const suggBox = document.getElementById('citySuggestionsBox');
+
+  if (clearBtn) clearBtn.style.display = clean ? 'flex' : 'none';
+
+  // Check if user entered 6-digit PIN code
+  const isPin = clean.match(/^\d{6}$/);
+  if (isPin) {
+    if (suggBox) suggBox.style.display = 'none';
+    if (pinBox) {
+      pinBox.style.display = 'block';
+      document.getElementById('pinResultTitle').textContent = `Checking PIN ${clean}...`;
+      document.getElementById('pinResultSub').textContent = 'Looking up India Postal Database...';
+      document.getElementById('pinLocalitiesList').innerHTML = '';
     }
-  } else if (val) {
-    if (customBox) customBox.style.display = 'none';
-    setCity(val);
-  }
-}
 
-function saveCustomCityFromModal() {
-  const input = document.getElementById('cityModalCustomInput');
-  const customCity = input ? input.value.trim() : '';
-  if (!customCity) {
-    toast('Please enter a valid city name');
+    if (window.ClubrLocation && window.ClubrLocation.lookupPincode) {
+      const res = await window.ClubrLocation.lookupPincode(clean);
+      if (res && res.success) {
+        detectedPinData = res;
+        document.getElementById('pinResultTitle').textContent = `${res.city}, ${res.state}`;
+        document.getElementById('pinResultSub').textContent = `PIN ${clean} · Verified Postal District`;
+        const locBox = document.getElementById('pinLocalitiesList');
+        if (locBox) {
+          locBox.innerHTML = res.localities.slice(0, 8).map(loc => `
+            <button onclick="selectLocalityCity('${loc}', '${res.city}')" style="background:#d1fae5; border:1px solid #6ee7b7; color:#065f46; font-size:11px; font-weight:700; padding:4px 9px; border-radius:8px; cursor:pointer;">
+              📍 ${loc}
+            </button>
+          `).join('');
+        }
+      } else {
+        document.getElementById('pinResultTitle').textContent = `PIN ${clean} Not Found`;
+        document.getElementById('pinResultSub').textContent = 'Please check the 6 digits or search by city name below.';
+      }
+    }
     return;
   }
-  setCity(capitalizeWords(customCity));
+
+  // Not a 6-digit PIN: Hide PIN card
+  if (pinBox) pinBox.style.display = 'none';
+
+  // Autocomplete Search (min 2 chars)
+  if (clean.length >= 2) {
+    const results = (window.ClubrLocation && window.ClubrLocation.searchCities)
+      ? window.ClubrLocation.searchCities(clean, 12)
+      : [];
+
+    if (suggBox) {
+      suggBox.style.display = 'block';
+      let html = '';
+      if (results.length > 0) {
+        html = results.map(r => `
+          <div onclick="setCity('${r.city}')" style="padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f1f5f9; cursor:pointer; transition:background 0.1s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:14px; opacity:0.7;">📍</span>
+              <b style="font-size:13px; color:#0f172a;">${r.city}</b>
+            </div>
+            <span style="font-size:11px; font-weight:700; color:#64748b; background:#f1f5f9; padding:3px 8px; border-radius:6px;">${r.state}</span>
+          </div>
+        `).join('');
+      }
+
+      // Add custom city row
+      html += `
+        <div onclick="setCity('${capitalizeWords(clean)}')" style="padding:11px 14px; background:#ecfdf5; color:#065f46; font-size:12px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <span>➕</span> Use "<b>${capitalizeWords(clean)}</b>" as custom location
+        </div>
+      `;
+      suggBox.innerHTML = html;
+    }
+  } else {
+    if (suggBox) suggBox.style.display = 'none';
+  }
+}
+
+function clearSmartCityInput() {
+  const inp = document.getElementById('citySmartInput');
+  if (inp) inp.value = '';
+  const clearBtn = document.getElementById('citySmartClearBtn');
+  if (clearBtn) clearBtn.style.display = 'none';
+  const pinBox = document.getElementById('pincodeResultBox');
+  if (pinBox) pinBox.style.display = 'none';
+  const suggBox = document.getElementById('citySuggestionsBox');
+  if (suggBox) suggBox.style.display = 'none';
+}
+
+function confirmPincodeCity() {
+  if (detectedPinData && detectedPinData.city) {
+    setCity(detectedPinData.city);
+  }
+}
+
+function selectLocalityCity(locality, city) {
+  setCity(city);
+  toast(`📍 Location set: ${locality}, ${city}`);
+}
+
+function saveCustomCityInline() {
+  const inp = document.getElementById('cityCustomInputInline');
+  const val = (inp ? inp.value : '').trim();
+  if (!val) {
+    toast('Please enter a town or city name');
+    return;
+  }
+  setCity(capitalizeWords(val));
+}
+
+async function handleGpsAutoDetect() {
+  const icon = document.getElementById('gpsBtnIcon');
+  const txt = document.getElementById('gpsBtnText');
+  if (icon) icon.textContent = '⏳';
+  if (txt) txt.textContent = 'Detecting GPS...';
+
+  if (window.ClubrLocation && window.ClubrLocation.detectCurrentLocationGps) {
+    const res = await window.ClubrLocation.detectCurrentLocationGps();
+    if (icon) icon.textContent = '🎯';
+    if (txt) txt.textContent = 'Use My GPS Location';
+
+    if (res && res.success && res.city) {
+      setCity(res.city);
+      toast(`🎯 GPS Location detected: ${res.city}, ${res.state}`);
+    } else {
+      toast(res.message || 'Could not detect location. Please type your city.');
+    }
+  } else {
+    if (icon) icon.textContent = '🎯';
+    if (txt) txt.textContent = 'Use My GPS Location';
+    autoDetectLocation();
+  }
 }
 
 function populateSellCities(state) {
@@ -3610,30 +3790,6 @@ function onWantCityChanged(val) {
   }
 }
 
-function selectStateFilter(st, el) {
-  activeSelectedState = st;
-  const stateSel = document.getElementById('stateDropdownSelect');
-  if (stateSel) stateSel.value = st;
-  populateCityDropdown(st);
-  document.querySelectorAll('#cityModal .chips .chip').forEach(c => c.classList.remove('active'));
-  if (el) el.classList.add('active');
-  const q = document.getElementById('citySearchInput').value;
-  renderCityDirectory(q);
-}
-
-function filterCityDirectory(val) {
-  renderCityDirectory(val);
-}
-
-function openCityModal() {
-  initStateCityDropdowns();
-  renderCityDirectory();
-  document.getElementById('cityModal').classList.add('show');
-}
-function closeCityModal() {
-  document.getElementById('cityModal').classList.remove('show');
-}
-
 function setCity(city) {
   currentCity = city;
   document.getElementById('currentCityText').textContent = city;
@@ -3644,21 +3800,7 @@ function setCity(city) {
 }
 
 function autoDetectLocation() {
-  if (!navigator.geolocation) {
-    toast('Geolocation not supported by browser');
-    return;
-  }
-  toast('Detecting GPS location...');
-  navigator.geolocation.getCurrentPosition(
-    () => {
-      setCity('Pune');
-      toast('🎯 GPS Detected: Pune, Maharashtra!');
-    },
-    () => {
-      toast('Permission denied. Please select city from list.');
-    },
-    { timeout: 5000 }
-  );
+  handleGpsAutoDetect();
 }
 
 function capitalizeWords(str) {

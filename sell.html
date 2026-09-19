@@ -258,43 +258,79 @@
         </div>
       </div>
 
-      <!-- SECTION 4: LOCATION (ALL-INDIA CASCADING DROPDOWNS) -->
-      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
-        <div class="border-b border-slate-100 pb-3">
-          <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">4. Location & Area</h2>
-          <p class="text-xs text-slate-500">Choose your State and City so local buyers nearby can contact you first</p>
+      <!-- SECTION 4: SMART LOCATION (PIN CODE AUTO-FILL & LIVE AUTOCOMPLETE) -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-5 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">4. Item Location & Pickup Area</h2>
+            <p class="text-xs text-slate-500">Enter 6-digit PIN code for instant auto-fill or choose your city</p>
+          </div>
+          <span id="sellLocationVerifiedBadge" class="hidden text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+            📍 Location Verified
+          </span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- State -->
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">State / Union Territory *</label>
-            <select id="listingStateSelect" onchange="onStateChanged(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
-              <!-- Populated dynamically via india-cities.js -->
-            </select>
+        <!-- FAST AUTO-FILL: 6-Digit PIN Code -->
+        <div class="bg-gradient-to-r from-emerald-50/70 via-lime-50/50 to-amber-50/40 border border-emerald-200 rounded-2xl p-4 sm:p-5 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">⚡</span>
+              <span class="text-xs font-black text-slate-900 uppercase tracking-wider">Fast Auto-Fill with PIN Code</span>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-800 bg-white border border-emerald-300 px-2 py-0.5 rounded-md">100% India Postal DB</span>
           </div>
 
-          <!-- City -->
+          <div class="flex gap-2">
+            <div class="relative flex-1">
+              <input id="sellPincodeInput" maxlength="6" placeholder="Enter 6-digit PIN code (e.g. 411038, 110001, 400001)..." class="w-full bg-white border border-emerald-300 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:border-emerald-500 font-mono font-bold placeholder:font-sans placeholder:font-normal placeholder:text-slate-400 transition" oninput="handleSellPincodeInput(this.value)">
+              <div id="sellPinStatus" class="hidden absolute right-3 top-3 text-xs text-emerald-700 font-bold">Checking...</div>
+            </div>
+            <button type="button" onclick="detectSellLocationGps()" class="bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-bold px-3 sm:px-4 py-3 rounded-xl transition flex items-center gap-1.5 shrink-0 shadow-2xs" title="Use Device GPS Location">
+              <span id="sellGpsIcon">🎯</span>
+              <span class="hidden sm:inline" id="sellGpsText">Use GPS</span>
+            </button>
+          </div>
+
+          <!-- Suggested Localities from PIN Code -->
+          <div id="sellPinLocalitiesContainer" class="hidden pt-2 border-t border-emerald-200/60">
+            <span class="text-[11px] font-bold text-slate-600 block mb-1.5">Detected Post Offices / Areas in this PIN:</span>
+            <div id="sellPinLocalitiesChips" class="flex flex-wrap gap-1.5">
+              <!-- Populated when PIN code resolves -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 1-Tap Popular Metros for quick select -->
+        <div>
+          <span class="text-xs font-bold text-slate-600 block mb-2">Or Choose Popular Hub:</span>
+          <div class="flex flex-wrap gap-1.5" id="sellPopularMetros">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- State & City Fields (Auto-filled by PIN / Search, or manually editable) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          <!-- State Selection / Dropdown -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">City / District *</label>
-            <select id="listingCitySelect" onchange="onCityChanged(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">State / Union Territory *</label>
+            <select id="listingStateSelect" onchange="onSellStateChanged(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
               <!-- Populated dynamically -->
             </select>
           </div>
+
+          <!-- City Search / Input with Live Autocomplete -->
+          <div class="relative">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">City / District / Town *</label>
+            <input id="listingCityInput" required placeholder="Type City (e.g. Pune, Noida, Nagpur)..." autocomplete="off" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition" oninput="handleSellCityInput(this.value)" onfocus="handleSellCityInput(this.value)">
+            <!-- Autocomplete suggestions dropdown -->
+            <div id="sellCitySuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-48 overflow-y-auto z-30 divide-y divide-slate-100"></div>
+          </div>
         </div>
 
-        <!-- Custom City Input (Shown when user chooses "Other") -->
-        <div id="customCityContainer" class="hidden bg-emerald-50/50 border border-emerald-200 p-4 rounded-2xl space-y-1.5">
-          <label class="block text-xs font-bold text-emerald-800">
-            📍 Enter Your Custom City or Town Name *
-          </label>
-          <input id="customCityInput" placeholder="e.g. Baramati, Ratnagiri, Shirdi, Palwal, Manesar..." class="w-full bg-white border border-emerald-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-emerald-500 font-semibold">
-          <span class="text-[11px] text-emerald-700 block">We'll publish your listing in this custom location so buyers can find you easily.</span>
-        </div>
-
+        <!-- Locality / Neighborhood -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5">Locality / Neighborhood / Landmark *</label>
-          <input id="listingLocality" required placeholder="e.g. Kothrud, Bandra West, Indiranagar, Civil Lines" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-medium transition">
+          <input id="listingLocality" required placeholder="e.g. Kothrud, Bandra West, Indiranagar, Civil Lines" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-medium transition" oninput="updateSellLocationBadge()">
         </div>
       </div>
 
@@ -506,59 +542,180 @@
       });
     }
 
-    // Location Dropdown Handling
+    // Smart Location Handling for Sell Page
     function initLocationDropdowns() {
       const stateSel = document.getElementById('listingStateSelect');
-      if (!stateSel) return;
-
-      const states = Object.keys(INDIA_STATE_DIRECTORY);
-      stateSel.innerHTML = states.map(st => `<option value="${st}">${st}</option>`).join('');
-
-      let defaultState = 'Maharashtra';
-      let defaultCity = 'Pune';
-
-      if (currentUser && currentUser.city) {
-        defaultCity = currentUser.city;
-        defaultState = getStateForCity(defaultCity);
+      if (stateSel && window.INDIA_STATE_DIRECTORY) {
+        const states = Object.keys(window.INDIA_STATE_DIRECTORY);
+        stateSel.innerHTML = '<option value="">-- Choose State --</option>' + states.map(st => `<option value="${st}">${st}</option>`).join('');
       }
 
-      stateSel.value = defaultState;
-      populateCitiesDropdown(defaultState, defaultCity);
+      // Render Popular Metros
+      const metroContainer = document.getElementById('sellPopularMetros');
+      if (metroContainer && window.POPULAR_METROS) {
+        metroContainer.innerHTML = window.POPULAR_METROS.map(m => `
+          <button type="button" onclick="selectSellMetroCity('${m.city}', '${m.state}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-semibold px-2.5 py-1 rounded-lg transition flex items-center gap-1">
+            <span>${m.emoji}</span>
+            <span>${m.city}</span>
+          </button>
+        `).join('');
+      }
+
+      // Pre-fill user's default city if available
+      let defaultCity = (currentUser && currentUser.city) ? currentUser.city : 'Pune';
+      let defaultState = (window.getStateForCity ? window.getStateForCity(defaultCity) : 'Maharashtra');
+      selectSellMetroCity(defaultCity, defaultState);
     }
 
-    function onStateChanged(state) {
-      populateCitiesDropdown(state, '');
+    function selectSellMetroCity(city, state) {
+      const cityInp = document.getElementById('listingCityInput');
+      const stateSel = document.getElementById('listingStateSelect');
+      if (cityInp) cityInp.value = city;
+      if (stateSel && state) stateSel.value = state;
+      hideSellCitySuggestions();
+      updateSellLocationBadge();
     }
 
-    function populateCitiesDropdown(state, selectedCity) {
-      const citySel = document.getElementById('listingCitySelect');
-      if (!citySel) return;
+    function onSellStateChanged(state) {
+      updateSellLocationBadge();
+    }
 
-      const cities = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
-      
-      let html = `<option value="">-- Select City / District --</option>`;
-      html += cities.map(c => `<option value="${c}"${(c.toLowerCase() === (selectedCity||'').toLowerCase()) ? ' selected' : ''}>${c}</option>`).join('');
-      html += `<option value="${OTHER_CITY_OPTION}">➕ Other (Enter My City / Town)</option>`;
+    // Fast 6-Digit PIN Code Lookup
+    async function handleSellPincodeInput(val) {
+      const clean = (val || '').trim();
+      const statusEl = document.getElementById('sellPinStatus');
+      const chipsBox = document.getElementById('sellPinLocalitiesContainer');
+      const chipsEl = document.getElementById('sellPinLocalitiesChips');
 
-      citySel.innerHTML = html;
+      if (clean.length === 6 && clean.match(/^\d{6}$/)) {
+        if (statusEl) {
+          statusEl.textContent = 'Verifying PIN...';
+          statusEl.classList.remove('hidden');
+        }
 
-      // If selectedCity was custom (not in list)
-      if (selectedCity && !cities.some(c => c.toLowerCase() === selectedCity.toLowerCase())) {
-        citySel.value = OTHER_CITY_OPTION;
-        document.getElementById('customCityContainer').classList.remove('hidden');
-        document.getElementById('customCityInput').value = selectedCity;
+        if (window.ClubrLocation && window.ClubrLocation.lookupPincode) {
+          const res = await window.ClubrLocation.lookupPincode(clean);
+          if (statusEl) statusEl.classList.add('hidden');
+
+          if (res && res.success) {
+            document.getElementById('listingCityInput').value = res.city;
+            document.getElementById('listingStateSelect').value = res.state;
+
+            // Show locality chips
+            if (chipsBox && chipsEl && res.localities && res.localities.length > 0) {
+              chipsBox.classList.remove('hidden');
+              chipsEl.innerHTML = res.localities.slice(0, 8).map(loc => `
+                <button type="button" onclick="setSellLocality('${loc}')" class="bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold px-2.5 py-1 rounded-lg transition">
+                  📍 ${loc}
+                </button>
+              `).join('');
+
+              // Auto-fill first locality if empty
+              const locInput = document.getElementById('listingLocality');
+              if (locInput && (!locInput.value || locInput.value === 'Local')) {
+                locInput.value = res.localities[0];
+              }
+            }
+            updateSellLocationBadge();
+            toast(`⚡ Location Auto-Filled: ${res.city}, ${res.state}`);
+          } else {
+            toast(res.message || 'PIN code not recognized');
+          }
+        }
       } else {
-        document.getElementById('customCityContainer').classList.add('hidden');
+        if (statusEl) statusEl.classList.add('hidden');
+        if (chipsBox) chipsBox.classList.add('hidden');
       }
     }
 
-    function onCityChanged(val) {
-      const customBox = document.getElementById('customCityContainer');
-      if (val === OTHER_CITY_OPTION) {
-        customBox.classList.remove('hidden');
-        document.getElementById('customCityInput').focus();
+    function setSellLocality(loc) {
+      const locInp = document.getElementById('listingLocality');
+      if (locInp) locInp.value = loc;
+      updateSellLocationBadge();
+    }
+
+    // Live City Autocomplete in Sell Wizard
+    function handleSellCityInput(val) {
+      const suggBox = document.getElementById('sellCitySuggestions');
+      if (!suggBox) return;
+      const clean = (val || '').trim();
+
+      if (clean.length < 2) {
+        suggBox.classList.add('hidden');
+        updateSellLocationBadge();
+        return;
+      }
+
+      const matches = (window.ClubrLocation && window.ClubrLocation.searchCities)
+        ? window.ClubrLocation.searchCities(clean, 10)
+        : [];
+
+      if (matches.length > 0) {
+        suggBox.innerHTML = matches.map(m => `
+          <div onclick="selectSellCitySuggestion('${m.city}', '${m.state}')" class="px-3.5 py-2 hover:bg-slate-50 flex items-center justify-between cursor-pointer text-xs">
+            <span class="font-bold text-slate-800">📍 ${m.city}</span>
+            <span class="text-[10px] text-slate-500 font-semibold bg-slate-100 px-2 py-0.5 rounded">${m.state}</span>
+          </div>
+        `).join('');
+        suggBox.classList.remove('hidden');
       } else {
-        customBox.classList.add('hidden');
+        suggBox.innerHTML = `
+          <div onclick="hideSellCitySuggestions()" class="px-3.5 py-2 text-xs text-slate-500 italic">
+            Using custom city: "<b>${clean}</b>"
+          </div>
+        `;
+        suggBox.classList.remove('hidden');
+      }
+      updateSellLocationBadge();
+    }
+
+    function selectSellCitySuggestion(city, state) {
+      document.getElementById('listingCityInput').value = city;
+      document.getElementById('listingStateSelect').value = state;
+      hideSellCitySuggestions();
+      updateSellLocationBadge();
+    }
+
+    function hideSellCitySuggestions() {
+      const suggBox = document.getElementById('sellCitySuggestions');
+      if (suggBox) suggBox.classList.add('hidden');
+    }
+
+    function updateSellLocationBadge() {
+      const city = (document.getElementById('listingCityInput')?.value || '').trim();
+      const state = (document.getElementById('listingStateSelect')?.value || '').trim();
+      const locality = (document.getElementById('listingLocality')?.value || '').trim();
+      const badge = document.getElementById('sellLocationVerifiedBadge');
+
+      if (city && state && badge) {
+        badge.textContent = `📍 ${locality ? locality + ', ' : ''}${city}`;
+        badge.classList.remove('hidden');
+      } else if (badge) {
+        badge.classList.add('hidden');
+      }
+    }
+
+    async function detectSellLocationGps() {
+      const icon = document.getElementById('sellGpsIcon');
+      const txt = document.getElementById('sellGpsText');
+      if (icon) icon.textContent = '⏳';
+      if (txt) txt.textContent = 'Detecting...';
+
+      if (window.ClubrLocation && window.ClubrLocation.detectCurrentLocationGps) {
+        const res = await window.ClubrLocation.detectCurrentLocationGps();
+        if (icon) icon.textContent = '🎯';
+        if (txt) txt.textContent = 'Use GPS';
+
+        if (res && res.success && res.city) {
+          selectSellMetroCity(res.city, res.state);
+          toast(`🎯 GPS Detected: ${res.city}, ${res.state}`);
+        } else {
+          toast(res.message || 'Could not detect location');
+        }
+      } else {
+        if (icon) icon.textContent = '🎯';
+        if (txt) txt.textContent = 'Use GPS';
+        toast('GPS not available');
       }
     }
 
@@ -730,22 +887,13 @@
       const title = document.getElementById('itemTitle').value.trim();
       const price = Number(document.getElementById('itemPrice').value);
       const cat = document.getElementById('pageCategoryInput').value;
-      const condition = document.getElementById('itemCondition').value;
-      const state = document.getElementById('listingStateSelect').value;
-      
-      let city = document.getElementById('listingCitySelect').value;
-      if (city === OTHER_CITY_OPTION) {
-        const customVal = document.getElementById('customCityInput').value.trim();
-        if (!customVal) {
-          alert('Please enter your custom City or Town name.');
-          document.getElementById('customCityInput').focus();
-          return;
-        }
-        city = customVal;
-      }
+      const condition = document.getElementById('itemCondition')?.value || 'Good';
+      const state = (document.getElementById('listingStateSelect')?.value || '').trim() || 'Maharashtra';
+      const city = (document.getElementById('listingCityInput')?.value || '').trim();
 
       if (!city) {
-        alert('Please select your City from the list or choose "Other" to enter your town name.');
+        alert('Please enter or select your City / Town.');
+        document.getElementById('listingCityInput').focus();
         return;
       }
 

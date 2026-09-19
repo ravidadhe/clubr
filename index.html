@@ -2727,6 +2727,13 @@ function initData() {
       }
     }
 
+    if (!currentUser) {
+      chatThreads = {};
+      savedItemIds.clear();
+      localStorage.removeItem('findly_chats');
+      localStorage.removeItem('findly_saved');
+    }
+
     // Live Sync from Cloud Firestore
     if (typeof clubrFetchLiveListings === 'function') {
       clubrFetchLiveListings().then(cloudListings => {
@@ -2822,28 +2829,36 @@ function saveData() {
 }
 
 function updateCounts() {
-  document.getElementById('sellBadgeCount').textContent = listings.length;
-  document.getElementById('wantBadgeCount').textContent = wants.length;
+  const sellBadge = document.getElementById('sellBadgeCount');
+  if (sellBadge) sellBadge.textContent = listings.length;
+  const wantBadge = document.getElementById('wantBadgeCount');
+  if (wantBadge) wantBadge.textContent = wants.length;
   
   const sc = document.getElementById('savedCount');
-  if (savedItemIds.size > 0) {
-    sc.style.display = 'flex';
-    sc.textContent = savedItemIds.size;
-  } else {
-    sc.style.display = 'none';
+  if (sc) {
+    if (currentUser && savedItemIds.size > 0) {
+      sc.style.display = 'flex';
+      sc.textContent = savedItemIds.size;
+    } else {
+      sc.style.display = 'none';
+    }
   }
 
-  const chatCount = Object.keys(chatThreads).length;
   const ibc = document.getElementById('inboxBadgeCount');
   const bcc = document.getElementById('bottomChatCount');
-  if (chatCount > 0) {
-    ibc.style.display = 'flex';
-    ibc.textContent = chatCount;
-    bcc.style.display = 'flex';
-    bcc.textContent = chatCount;
+  const chatCount = currentUser ? Object.keys(chatThreads).length : 0;
+  if (currentUser && chatCount > 0) {
+    if (ibc) {
+      ibc.style.display = 'flex';
+      ibc.textContent = chatCount;
+    }
+    if (bcc) {
+      bcc.style.display = 'flex';
+      bcc.textContent = chatCount;
+    }
   } else {
-    ibc.style.display = 'none';
-    bcc.style.display = 'none';
+    if (ibc) ibc.style.display = 'none';
+    if (bcc) bcc.style.display = 'none';
   }
 }
 
@@ -2938,10 +2953,16 @@ async function logoutUser() {
     await clubrSignOut();
   }
   currentUser = null;
+  chatThreads = {};
+  savedItemIds.clear();
   localStorage.removeItem('clubr_current_user');
+  localStorage.removeItem('findly_chats');
+  localStorage.removeItem('findly_saved');
   saveData();
   updateUserUI();
+  updateCounts();
   closeProfileModal();
+  renderFeed();
   toast('Logged out successfully.');
 }
 

@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell an Item · Clubr - Fast & Direct Peer-to-Peer Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clubr: {
+              lime: '#d4f738',
+              limeHover: '#c1e626',
+              dark: '#0f172a',
+              card: '#ffffff',
+              surface: '#f8f6f0',
+              line: '#e2e8f0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Outfit', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    #toastBox {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast-msg {
+      background: #0f172a;
+      color: #fff;
+      border: 1px solid #d4f738;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+
+  <!-- Google Firebase SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="india-cities.js"></script>
+</head>
+<body class="bg-[#f8f6f0] text-slate-900 min-h-screen font-sans antialiased flex flex-col selection:bg-lime-400 selection:text-slate-950">
+
+  <!-- Toast Container -->
+  <div id="toastBox"></div>
+
+  <!-- Header -->
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 py-3.5 sticky top-0 z-40 w-full shadow-xs">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shadow-lime-400/20 border border-lime-300/40 group-hover:scale-105 transition">
+            C
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="font-extrabold text-base tracking-tight text-slate-900 font-display">Clubr</span>
+            <span class="text-[11px] text-slate-500 font-medium">Post Verified Listing</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="index.html" class="text-xs font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition">
+          ← Cancel & Return
+        </a>
+        <div id="headerUserPill" class="hidden sm:flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-800">
+          <span id="headerUserName">User</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- Page Title & Value Proposition -->
+    <div class="bg-gradient-to-br from-white via-slate-50 to-lime-50/40 border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs">
+      <div class="inline-flex items-center gap-2 bg-lime-400/25 border border-lime-500/30 text-slate-900 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-2">
+        <span>🚀 10x Faster than OLX</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight">
+        Post an Item for Sale
+      </h1>
+      <p class="text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+        Zero commission. Real buyers in your city will see your item first, verified with direct in-app chat.
+      </p>
+    </div>
+
+    <!-- Auth Alert If Guest -->
+    <div id="guestAuthNotice" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="space-y-0.5">
+        <b class="text-xs sm:text-sm text-amber-900 font-bold flex items-center gap-1.5">
+          <span>🔒</span> Sign in with Google to publish
+        </b>
+        <p class="text-xs text-amber-700">
+          You can fill the form now. Sign in with 1 click so buyers can message you directly.
+        </p>
+      </div>
+      <button onclick="handleSellGoogleSignIn()" id="btnGuestGoogle" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 whitespace-nowrap shadow-xs">
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Sign In with Google</span>
+      </button>
+    </div>
+
+    <!-- Selling Form -->
+    <form id="fullSellForm" onsubmit="event.preventDefault(); submitFullPageListing();" class="space-y-6">
+
+      <!-- SECTION 1: CATEGORY -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">1. Select Category</h2>
+            <p class="text-xs text-slate-500">Pick the category that best matches your product</p>
+          </div>
+          <span id="selectedCatBadge" class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+            📱 Mobiles & Tablets
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5" id="catPillsGrid">
+          <button type="button" onclick="selectPageCategory('Mobiles')" data-cat="Mobiles" class="cat-pill active flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-lime-400 text-slate-950 font-bold text-xs transition gap-1.5 shadow-xs">
+            <span class="text-2xl">📱</span>
+            <span>Mobiles</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Bikes')" data-cat="Bikes" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">🏍️</span>
+            <span>Bikes</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Cars')" data-cat="Cars" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">🚗</span>
+            <span>Cars</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Electronics')" data-cat="Electronics" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">💻</span>
+            <span>Electronics</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Furniture')" data-cat="Furniture" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">🛋️</span>
+            <span>Furniture</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Appliances')" data-cat="Appliances" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">📺</span>
+            <span>Appliances</span>
+          </button>
+          <button type="button" onclick="selectPageCategory('Others')" data-cat="Others" class="cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5">
+            <span class="text-2xl">📦</span>
+            <span>Others</span>
+          </button>
+        </div>
+        <input type="hidden" id="pageCategoryInput" value="Mobiles">
+      </div>
+
+      <!-- SECTION 2: PRODUCT INFO & PRICING -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+        <div class="border-b border-slate-100 pb-3">
+          <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">2. Item Details & Price</h2>
+          <p class="text-xs text-slate-500">Provide clear product model and a realistic asking price</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">What are you selling? *</label>
+            <input id="itemTitle" required placeholder="e.g. Apple iPhone 13 128GB Midnight Blue / Honda Activa 6G 2022" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
+            <span class="text-[11px] text-slate-400 mt-1 block">Mention Brand + Model + Variant/Storage for best buyer response.</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Selling Price (₹) *</label>
+              <div class="relative">
+                <span class="absolute left-4 top-3 text-slate-400 font-bold text-base">₹</span>
+                <input id="itemPrice" type="number" required placeholder="24000" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-mono font-bold transition">
+              </div>
+              <span class="text-[11px] text-slate-400 mt-1 block">Fair prices receive 3x more chat requests.</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Item Condition *</label>
+              <select id="itemCondition" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-medium transition">
+                <option value="Like New">✨ Like New (Scratchless / Rarely Used)</option>
+                <option value="Good" selected>👍 Good (Well-maintained with normal usage)</option>
+                <option value="Fair">👌 Fair (Fully functional with visible wear)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: MULTI-IMAGE UPLOADER (UP TO 10 PHOTOS) -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">3. Upload Photos (Up to 10 Images)</h2>
+            <p class="text-xs text-slate-500">Upload clear photos from multiple angles (front, back, screen, accessories)</p>
+          </div>
+          <div id="photoCountBadge" class="text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full font-mono">
+            0 / 10 Photos
+          </div>
+        </div>
+
+        <!-- Dropzone Box -->
+        <div id="dropzoneBox" onclick="document.getElementById('multiPhotoInput').click()" class="border-2 border-dashed border-slate-200 hover:border-lime-500 rounded-2xl p-6 sm:p-8 text-center cursor-pointer bg-slate-50/70 hover:bg-slate-50 transition space-y-2">
+          <input type="file" id="multiPhotoInput" multiple accept="image/*" class="hidden" onchange="handleMultiFilesSelected(this.files)">
+          <div class="w-14 h-14 rounded-2xl bg-white shadow-xs border border-slate-200 text-2xl flex items-center justify-center mx-auto">
+            📸
+          </div>
+          <div>
+            <b class="text-sm text-slate-800 block">Click or Drag & Drop to upload up to 10 photos</b>
+            <p class="text-xs text-slate-500 mt-0.5">JPG, PNG, WEBP. Photos are automatically compressed for high-speed browsing.</p>
+          </div>
+        </div>
+
+        <!-- Thumbnail Grid Preview -->
+        <div id="photosGridContainer" class="hidden space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>The first photo is your <b>Cover Photo</b> shown on the marketplace feed.</span>
+            <button type="button" onclick="document.getElementById('multiPhotoInput').click()" class="text-emerald-700 hover:underline font-bold">
+              ＋ Add More
+            </button>
+          </div>
+          <div id="photosGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 pt-2">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: LOCATION (ALL-INDIA CASCADING DROPDOWNS) -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+        <div class="border-b border-slate-100 pb-3">
+          <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">4. Location & Area</h2>
+          <p class="text-xs text-slate-500">Choose your State and City so local buyers nearby can contact you first</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- State -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">State / Union Territory *</label>
+            <select id="listingStateSelect" onchange="onStateChanged(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
+              <!-- Populated dynamically via india-cities.js -->
+            </select>
+          </div>
+
+          <!-- City -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">City / District *</label>
+            <select id="listingCitySelect" onchange="onCityChanged(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Custom City Input (Shown when user chooses "Other") -->
+        <div id="customCityContainer" class="hidden bg-emerald-50/50 border border-emerald-200 p-4 rounded-2xl space-y-1.5">
+          <label class="block text-xs font-bold text-emerald-800">
+            📍 Enter Your Custom City or Town Name *
+          </label>
+          <input id="customCityInput" placeholder="e.g. Baramati, Ratnagiri, Shirdi, Palwal, Manesar..." class="w-full bg-white border border-emerald-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-emerald-500 font-semibold">
+          <span class="text-[11px] text-emerald-700 block">We'll publish your listing in this custom location so buyers can find you easily.</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">Locality / Neighborhood / Landmark *</label>
+          <input id="listingLocality" required placeholder="e.g. Kothrud, Bandra West, Indiranagar, Civil Lines" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-medium transition">
+        </div>
+      </div>
+
+      <!-- SECTION 5: TRUST CHECKPOINTS -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">5. Trust & Verification Checkpoints</h2>
+            <p class="text-xs text-slate-500">Tick items you can provide to build buyer confidence</p>
+          </div>
+          <span id="trustCategoryLabel" class="text-xs font-bold text-slate-500">For Mobiles</span>
+        </div>
+
+        <div id="dynamicCheckpointsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Populated dynamically based on category -->
+        </div>
+      </div>
+
+      <!-- SECTION 6: DESCRIPTION -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+        <div class="border-b border-slate-100 pb-3">
+          <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">6. Detailed Description</h2>
+          <p class="text-xs text-slate-500">Describe usage, battery health, purchase date, warranty or any minor flaws</p>
+        </div>
+
+        <div>
+          <textarea id="itemDesc" rows="4" placeholder="Mention RAM/Storage, how long you've used it, included accessories, reason for selling..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 leading-relaxed transition"></textarea>
+        </div>
+      </div>
+
+      <!-- SUBMIT CTA -->
+      <div class="sticky bottom-4 z-30 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
+        <div class="text-xs text-slate-500 text-center sm:text-left">
+          By publishing, you confirm the item is genuine and complies with Clubr community safety policies.
+        </div>
+        <button type="submit" id="btnPublishListing" class="w-full sm:w-auto bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-sm px-8 py-3.5 rounded-2xl transition shadow-md shadow-lime-400/25 shrink-0">
+          Publish Listing Live 🚀
+        </button>
+      </div>
+
+    </form>
+
+  </main>
+
+  <footer class="mt-12 py-8 border-t border-slate-200 text-center text-xs text-slate-400">
+    Clubr.online · India's Direct Peer-to-Peer Marketplace
+  </footer>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIC                                         -->
+  <!-- ======================================================== -->
+  <script>
+    // Category Trust Specs
+    const CATEGORY_SPECS = {
+      Mobiles: [
+        { key: 'bill', label: '🧾 Original Purchase Bill Available' },
+        { key: 'box', label: '📦 Original Box & Charger Ready' },
+        { key: 'warranty', label: '🛡️ Under Active Brand Warranty' },
+        { key: 'exchange', label: '🔄 Open for Device Swap / Exchange' }
+      ],
+      Bikes: [
+        { key: 'rc', label: '📄 1st Owner / Clean RC Book' },
+        { key: 'insurance', label: '🛡️ Active Insurance Available' },
+        { key: 'service', label: '🔧 Authorized Service Record Ready' },
+        { key: 'exchange', label: '🔄 Open for Exchange' }
+      ],
+      Cars: [
+        { key: 'rc', label: '📄 1st Owner / Original RC' },
+        { key: 'insurance', label: '🛡️ Comprehensive Insurance Active' },
+        { key: 'nonAccidental', label: '🚗 Certified Non-Accidental' },
+        { key: 'exchange', label: '🔄 Open for Exchange' }
+      ],
+      Electronics: [
+        { key: 'bill', label: '🧾 Original Invoice / Receipt' },
+        { key: 'charger', label: '🔌 Original Power Adapter & Cord' },
+        { key: 'battery', label: '🔋 Healthy Battery & Functional Ports' },
+        { key: 'warranty', label: '🛡️ Warranty Valid' }
+      ],
+      Furniture: [
+        { key: 'material', label: '🪵 Solid Wood / Premium Quality' },
+        { key: 'spotless', label: '✨ Scratch-Free & Spotless' },
+        { key: 'readyToMove', label: '🚚 Disassembled / Ready to Transport' },
+        { key: 'negotiable', label: '🤝 Price Open for Negotiation' }
+      ],
+      Appliances: [
+        { key: 'bill', label: '🧾 Original Bill' },
+        { key: 'remote', label: '🔌 Original Remote & Connectors' },
+        { key: 'tested', label: '⚡ 100% Tested & Working' },
+        { key: 'warranty', label: '🛡️ Warranty Valid' }
+      ],
+      Others: [
+        { key: 'condition', label: '✨ Mint / Like-New Condition' },
+        { key: 'packaging', label: '🏷️ Original Packaging / Tags' },
+        { key: 'proof', label: '🧾 Genuine Purchase Proof' },
+        { key: 'exchange', label: '🔄 Open for Swap' }
+      ]
+    };
+
+    let currentUser = null;
+    let uploadedPhotos = []; // Array of up to 10 base64 strings
+    let activeCat = 'Mobiles';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCurrentUser();
+      initCategoryPills();
+      initLocationDropdowns();
+      renderCheckpoints('Mobiles');
+      setupDragAndDrop();
+    });
+
+    function initCurrentUser() {
+      try {
+        const u = localStorage.getItem('clubr_current_user');
+        if (u) {
+          currentUser = JSON.parse(u);
+          if (currentUser.name === 'tiutu' || currentUser.email === 'tiutu@gmail.com') {
+            currentUser = null;
+            localStorage.removeItem('clubr_current_user');
+          }
+        }
+      } catch(e) {
+        currentUser = null;
+      }
+
+      if (currentUser) {
+        document.getElementById('headerUserPill').classList.remove('hidden');
+        document.getElementById('headerUserName').textContent = currentUser.name.split(' ')[0];
+        document.getElementById('guestAuthNotice').classList.add('hidden');
+      } else {
+        document.getElementById('headerUserPill').classList.add('hidden');
+        document.getElementById('guestAuthNotice').classList.remove('hidden');
+      }
+    }
+
+    async function handleSellGoogleSignIn() {
+      const btn = document.getElementById('btnGuestGoogle');
+      const orig = btn.innerHTML;
+      btn.innerHTML = 'Connecting to Google... ⏳';
+      btn.disabled = true;
+
+      try {
+        if (typeof clubrSignInWithGoogle === 'function') {
+          const res = await clubrSignInWithGoogle();
+          if (res && res.success && res.user) {
+            currentUser = res.user;
+            localStorage.setItem('clubr_current_user', JSON.stringify(currentUser));
+            initCurrentUser();
+            toast(`Signed in as ${currentUser.name}!`);
+          } else {
+            alert((res && res.error) ? res.error : 'Google Sign-In was cancelled.');
+          }
+        } else {
+          alert('Google authentication service is initializing. Please try again in a second.');
+        }
+      } catch (err) {
+        alert('Google Sign-In error: ' + err.message);
+      } finally {
+        btn.innerHTML = orig;
+        btn.disabled = false;
+      }
+    }
+
+    // Category Handling
+    function initCategoryPills() {
+      selectPageCategory('Mobiles');
+    }
+
+    function selectPageCategory(cat) {
+      activeCat = cat;
+      document.getElementById('pageCategoryInput').value = cat;
+
+      const labels = {
+        Mobiles: '📱 Mobiles & Tablets',
+        Bikes: '🏍️ Bikes & Scooters',
+        Cars: '🚗 Cars & Four-Wheelers',
+        Electronics: '💻 Laptops & Tech',
+        Furniture: '🛋️ Furniture & Living',
+        Appliances: '📺 TV & Home Appliances',
+        Others: '📦 Books & Other Items'
+      };
+      document.getElementById('selectedCatBadge').textContent = labels[cat] || cat;
+      document.getElementById('trustCategoryLabel').textContent = `For ${cat}`;
+
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        const matches = btn.getAttribute('data-cat') === cat;
+        if (matches) {
+          btn.className = 'cat-pill active flex flex-col items-center justify-center p-3 rounded-2xl border border-lime-400 bg-lime-400 text-slate-950 font-bold text-xs transition gap-1.5 shadow-xs';
+        } else {
+          btn.className = 'cat-pill flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition gap-1.5';
+        }
+      });
+
+      renderCheckpoints(cat);
+    }
+
+    function renderCheckpoints(cat) {
+      const container = document.getElementById('dynamicCheckpointsGrid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const specs = CATEGORY_SPECS[cat] || CATEGORY_SPECS['Others'];
+      specs.forEach(spec => {
+        container.insertAdjacentHTML('beforeend', `
+          <label class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white transition cursor-pointer">
+            <input type="checkbox" id="check_${spec.key}" class="w-4 h-4 rounded border-slate-300 accent-lime-500 cursor-pointer">
+            <span class="text-xs font-semibold text-slate-800 select-none">${spec.label}</span>
+          </label>
+        `);
+      });
+    }
+
+    // Location Dropdown Handling
+    function initLocationDropdowns() {
+      const stateSel = document.getElementById('listingStateSelect');
+      if (!stateSel) return;
+
+      const states = Object.keys(INDIA_STATE_DIRECTORY);
+      stateSel.innerHTML = states.map(st => `<option value="${st}">${st}</option>`).join('');
+
+      let defaultState = 'Maharashtra';
+      let defaultCity = 'Pune';
+
+      if (currentUser && currentUser.city) {
+        defaultCity = currentUser.city;
+        defaultState = getStateForCity(defaultCity);
+      }
+
+      stateSel.value = defaultState;
+      populateCitiesDropdown(defaultState, defaultCity);
+    }
+
+    function onStateChanged(state) {
+      populateCitiesDropdown(state, '');
+    }
+
+    function populateCitiesDropdown(state, selectedCity) {
+      const citySel = document.getElementById('listingCitySelect');
+      if (!citySel) return;
+
+      const cities = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
+      
+      let html = `<option value="">-- Select City / District --</option>`;
+      html += cities.map(c => `<option value="${c}"${(c.toLowerCase() === (selectedCity||'').toLowerCase()) ? ' selected' : ''}>${c}</option>`).join('');
+      html += `<option value="${OTHER_CITY_OPTION}">➕ Other (Enter My City / Town)</option>`;
+
+      citySel.innerHTML = html;
+
+      // If selectedCity was custom (not in list)
+      if (selectedCity && !cities.some(c => c.toLowerCase() === selectedCity.toLowerCase())) {
+        citySel.value = OTHER_CITY_OPTION;
+        document.getElementById('customCityContainer').classList.remove('hidden');
+        document.getElementById('customCityInput').value = selectedCity;
+      } else {
+        document.getElementById('customCityContainer').classList.add('hidden');
+      }
+    }
+
+    function onCityChanged(val) {
+      const customBox = document.getElementById('customCityContainer');
+      if (val === OTHER_CITY_OPTION) {
+        customBox.classList.remove('hidden');
+        document.getElementById('customCityInput').focus();
+      } else {
+        customBox.classList.add('hidden');
+      }
+    }
+
+    // Multi-Image Upload (Up to 10 Images) with Canvas Compression
+    function setupDragAndDrop() {
+      const dropzone = document.getElementById('dropzoneBox');
+      if (!dropzone) return;
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add('border-lime-500', 'bg-lime-50/20');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove('border-lime-500', 'bg-lime-50/20');
+        }, false);
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleMultiFilesSelected(files);
+      }, false);
+    }
+
+    function handleMultiFilesSelected(files) {
+      if (!files || files.length === 0) return;
+
+      const remainingSlots = 10 - uploadedPhotos.length;
+      if (remainingSlots <= 0) {
+        alert('You have already uploaded the maximum limit of 10 photos.');
+        return;
+      }
+
+      const filesToProcess = Array.from(files).slice(0, remainingSlots);
+      if (files.length > remainingSlots) {
+        toast(`⚠️ Only ${remainingSlots} more photo(s) could be added (Limit: 10).`);
+      }
+
+      let processedCount = 0;
+      filesToProcess.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+
+        compressImageFile(file, 1280, 0.8, (base64) => {
+          uploadedPhotos.push(base64);
+          processedCount++;
+          if (processedCount === filesToProcess.length) {
+            renderPhotosGrid();
+            toast(`✅ ${processedCount} photo(s) added successfully!`);
+          }
+        });
+      });
+
+      document.getElementById('multiPhotoInput').value = '';
+    }
+
+    // Client-side Canvas Image Compression
+    function compressImageFile(file, maxDimension, quality, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            } else {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          callback(compressedDataUrl);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removePhoto(index) {
+      uploadedPhotos.splice(index, 1);
+      renderPhotosGrid();
+      toast('Photo removed.');
+    }
+
+    function renderPhotosGrid() {
+      const container = document.getElementById('photosGridContainer');
+      const grid = document.getElementById('photosGrid');
+      const badge = document.getElementById('photoCountBadge');
+
+      badge.textContent = `${uploadedPhotos.length} / 10 Photos`;
+
+      if (uploadedPhotos.length === 0) {
+        container.classList.add('hidden');
+        grid.innerHTML = '';
+        return;
+      }
+
+      container.classList.remove('hidden');
+      grid.innerHTML = '';
+
+      uploadedPhotos.forEach((photo, idx) => {
+        const isCover = (idx === 0);
+        grid.insertAdjacentHTML('beforeend', `
+          <div class="relative group rounded-2xl overflow-hidden border ${isCover ? 'border-lime-500 ring-2 ring-lime-400' : 'border-slate-200'} bg-slate-100 aspect-square shadow-2xs">
+            <img src="${photo}" class="w-full h-full object-cover">
+            ${isCover ? `
+              <span class="absolute top-2 left-2 bg-lime-400 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md shadow-sm uppercase tracking-wider">
+                ⭐ Cover
+              </span>
+            ` : `
+              <span class="absolute top-2 left-2 bg-slate-900/80 text-white font-bold text-[9px] px-1.5 py-0.5 rounded-md">
+                #${idx + 1}
+              </span>
+            `}
+            <button type="button" onclick="removePhoto(${idx})" title="Remove photo" class="absolute top-2 right-2 w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-black flex items-center justify-center shadow-md hover:scale-110 transition">
+              ✕
+            </button>
+          </div>
+        `);
+      });
+
+      // Show 'Add More' tile if under 10 photos
+      if (uploadedPhotos.length < 10) {
+        grid.insertAdjacentHTML('beforeend', `
+          <div onclick="document.getElementById('multiPhotoInput').click()" class="rounded-2xl border-2 border-dashed border-slate-300 hover:border-lime-500 bg-slate-50 hover:bg-slate-100 aspect-square flex flex-col items-center justify-center cursor-pointer transition text-slate-500 hover:text-slate-900 gap-1">
+            <span class="text-2xl font-bold">＋</span>
+            <span class="text-[11px] font-bold">Add Photo</span>
+          </div>
+        `);
+      }
+    }
+
+    // Submit Listing
+    async function submitFullPageListing() {
+      // 1. Mandatory auth check
+      if (!currentUser) {
+        const proceed = confirm('Please Sign In with your Google account to publish your item.\n\nClick OK to connect with Google right now.');
+        if (proceed) {
+          await handleSellGoogleSignIn();
+          if (!currentUser) return;
+        } else {
+          return;
+        }
+      }
+
+      if (currentUser.isBlocked) {
+        alert('⛔ Account Suspended\n\nYour account has been suspended by Clubr Administration.\nYou cannot post items.\n\nFor questions, contact: rd.chatbox@gmail.com');
+        return;
+      }
+
+      // 2. Validate Fields
+      const title = document.getElementById('itemTitle').value.trim();
+      const price = Number(document.getElementById('itemPrice').value);
+      const cat = document.getElementById('pageCategoryInput').value;
+      const condition = document.getElementById('itemCondition').value;
+      const state = document.getElementById('listingStateSelect').value;
+      
+      let city = document.getElementById('listingCitySelect').value;
+      if (city === OTHER_CITY_OPTION) {
+        const customVal = document.getElementById('customCityInput').value.trim();
+        if (!customVal) {
+          alert('Please enter your custom City or Town name.');
+          document.getElementById('customCityInput').focus();
+          return;
+        }
+        city = customVal;
+      }
+
+      if (!city) {
+        alert('Please select your City from the list or choose "Other" to enter your town name.');
+        return;
+      }
+
+      const locality = document.getElementById('listingLocality').value.trim() || 'Local';
+      const desc = document.getElementById('itemDesc').value.trim();
+
+      if (!title || !price || price <= 0) {
+        alert('Please enter a valid product title and selling price.');
+        return;
+      }
+
+      // 3. Dynamic Badges
+      const specs = CATEGORY_SPECS[cat] || CATEGORY_SPECS['Others'];
+      const badges = {};
+      specs.forEach(spec => {
+        const el = document.getElementById('check_' + spec.key);
+        badges[spec.key] = el ? el.checked : false;
+      });
+
+      const emojiMap = {
+        Mobiles: '📱', Bikes: '🏍️', Cars: '🚗', Furniture: '🛋️',
+        Electronics: '💻', Appliances: '📺', Others: '📦'
+      };
+
+      const btn = document.getElementById('btnPublishListing');
+      btn.innerHTML = 'Publishing Live... ⏳';
+      btn.disabled = true;
+
+      const newListing = {
+        id: 'l_' + Date.now(),
+        title,
+        price,
+        cat,
+        emoji: emojiMap[cat] || '📦',
+        state,
+        city,
+        locality,
+        condition,
+        seller: currentUser.name,
+        sellerId: currentUser.id,
+        isKycVerified: (currentUser.kycStatus === 'verified'),
+        desc,
+        badges,
+        bill: !!(badges.bill || badges.rc || badges.material || badges.condition),
+        box: !!(badges.box || badges.insurance || badges.remote || badges.packaging),
+        owner: !!(badges.warranty || badges.service || badges.tested || badges.proof),
+        exchange: !!(badges.exchange || badges.negotiable),
+        photo: uploadedPhotos[0] || '',       // Primary Cover photo for backward compatibility
+        photos: uploadedPhotos,                // Array of up to 10 photos!
+        time: 'Just now'
+      };
+
+      // 4. Save to LocalStorage
+      let localListings = [];
+      try {
+        const l = localStorage.getItem('findly_listings');
+        if (l) localListings = JSON.parse(l);
+      } catch(e) {}
+      localListings.unshift(newListing);
+      localStorage.setItem('findly_listings', JSON.stringify(localListings));
+
+      // Also set the current city to the listing city so user immediately sees it
+      localStorage.setItem('findly_current_city', city);
+
+      // 5. Sync to Cloud Firestore
+      if (typeof clubrPublishListing === 'function') {
+        clubrPublishListing(newListing);
+      }
+
+      toast('🎉 Listing published live across India!');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 800);
+    }
+
+    function toast(msg) {
+      const box = document.getElementById('toastBox');
+      const div = document.createElement('div');
+      div.className = 'toast-msg';
+      div.textContent = msg;
+      box.appendChild(div);
+      setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transition = 'opacity 0.3s';
+        setTimeout(() => div.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

@@ -31,6 +31,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="firebase-config.js"></script>
+<script src="india-cities.js"></script>
 
 <style>
 :root {
@@ -642,6 +643,24 @@ h1 {
   color: #b45309;
 }
 
+.photo-count-pill {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 3;
+  letter-spacing: 0.2px;
+}
+
 .fav-btn {
   position: absolute;
   top: 10px;
@@ -1111,6 +1130,81 @@ h1 {
 }
 
 .detail-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-gallery-container {
+  margin-bottom: 16px;
+}
+.gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.75);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  z-index: 5;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+.gallery-nav-btn:hover {
+  background: rgba(15, 23, 42, 0.95);
+  transform: translateY(-50%) scale(1.08);
+}
+.gallery-nav-btn.prev { left: 10px; }
+.gallery-nav-btn.next { right: 10px; }
+.gallery-counter-pill {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+  z-index: 4;
+}
+.gallery-thumb-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 2px 2px 2px;
+  scrollbar-width: thin;
+}
+.gallery-thumb-strip::-webkit-scrollbar {
+  height: 4px;
+}
+.gallery-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+  background: #eae5dc;
+}
+.gallery-thumb.active {
+  border-color: #17211b;
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+.gallery-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1655,6 +1749,11 @@ h1 {
         <span class="badge-count" id="savedCount" style="display:none">0</span>
       </button>
 
+      <!-- Sell CTA Button -->
+      <a href="sell.html" class="nav-sell-btn" style="background:#d4f738; color:#0f172a; border:1px solid #c1e626; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(212,247,56,0.25);">
+        <span>＋</span> <span>Sell</span>
+      </a>
+
       <!-- User Auth / Profile Button -->
       <button class="user-btn" onclick="handleUserBtnClick()">
         <span class="user-avatar-dot" id="userBtnAvatar">👤</span>
@@ -1760,7 +1859,7 @@ h1 {
 </div>
 
 <!-- Floating Action Button -->
-<button class="fab" onclick="openModal('sell')">
+<button class="fab" onclick="window.location.href='sell.html'">
   <span class="fab-icon">＋</span>
   <span>Sell on Clubr</span>
 </button>
@@ -1773,7 +1872,7 @@ h1 {
   <button class="bottom-item" onclick="switchFeed('want'); window.scrollTo({top:0,behavior:'smooth'})">
     <b>📢</b>Demands
   </button>
-  <button class="bottom-sell-btn" onclick="openModal('sell')" title="Sell Item">
+  <button class="bottom-sell-btn" onclick="window.location.href='sell.html'" title="Sell Item">
     ＋
   </button>
   <button class="bottom-item" onclick="openInboxModal()">
@@ -1813,9 +1912,18 @@ h1 {
       </div>
       <div class="field" style="margin:0">
         <label style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px; display:block">2. Select City</label>
-        <select id="cityDropdownSelect" onchange="if(this.value) setCity(this.value)" style="width:100%; padding:9px 10px; border-radius:10px; border:1px solid var(--line); font-size:12px; background:var(--card); font-weight:700">
+        <select id="cityDropdownSelect" onchange="onCityDropdownSelectChanged(this.value)" style="width:100%; padding:9px 10px; border-radius:10px; border:1px solid var(--line); font-size:12px; background:var(--card); font-weight:700">
           <option value="">-- Choose City --</option>
         </select>
+      </div>
+    </div>
+
+    <!-- Custom City Input (if user selects Other) -->
+    <div id="cityModalCustomContainer" style="display:none; margin-bottom:12px; background:#ecfdf5; padding:12px; border-radius:14px; border:1px solid #a7f3d0;">
+      <label style="font-size:11px; font-weight:800; color:#065f46; display:block; margin-bottom:4px">📍 Enter Your City / Town Name:</label>
+      <div style="display:flex; gap:6px">
+        <input id="cityModalCustomInput" placeholder="e.g. Baramati, Ratnagiri, Palwal, Shirdi..." style="flex:1; padding:8px 10px; border-radius:10px; border:1px solid #a7f3d0; font-size:12px; font-weight:700">
+        <button onclick="saveCustomCityFromModal()" class="want-btn" style="background:var(--ink); color:#fff; padding:6px 12px; font-size:11px; margin:0">Set 📍</button>
       </div>
     </div>
 
@@ -1941,7 +2049,7 @@ h1 {
 
     <!-- Quick Post Actions -->
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
-      <button onclick="closeProfileModal(); openModal('sell')" style="background:var(--ink); color:#fff; border:none; border-radius:12px; padding:10px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+      <button onclick="window.location.href='sell.html'" style="background:var(--ink); color:#fff; border:none; border-radius:12px; padding:10px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
         <span>＋</span> Sell an Item
       </button>
       <button onclick="closeProfileModal(); openModal('want')" style="background:var(--orange); color:#fff; border:none; border-radius:12px; padding:10px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
@@ -2097,10 +2205,16 @@ h1 {
         </div>
         <div class="field">
           <label>City</label>
-          <select id="wantCitySelect" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; background:var(--card)">
+          <select id="wantCitySelect" onchange="onWantCityChanged(this.value)" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; background:var(--card)">
             <!-- Populated dynamically -->
           </select>
         </div>
+      </div>
+
+      <!-- Custom City for Want Form -->
+      <div id="wantCustomCityContainer" style="display:none; margin-bottom:12px; background:#fff7ed; padding:10px 14px; border-radius:12px; border:1px solid #fed7aa;">
+        <label style="font-size:11px; font-weight:800; color:#9a3412; display:block; margin-bottom:4px">📍 Enter Your Custom City / Town Name:</label>
+        <input id="wantCustomCityInput" placeholder="e.g. Baramati, Ratnagiri, Palwal, Shirdi..." style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #fed7aa; font-size:12px; font-weight:700">
       </div>
 
       <div class="field">
@@ -2497,54 +2611,10 @@ function dismissBroadcast() {
   document.getElementById('globalBroadcast').style.display = 'none';
 }
 
-// State-Wise Directory
-const INDIA_STATE_DIRECTORY = {
-  "Maharashtra": [
-    "Mumbai", "Pune", "Nagpur", "Nashik", "Chhatrapati Sambhaji Nagar", "Thane", 
-    "Navi Mumbai", "Kolhapur", "Solapur", "Amravati", "Nanded", "Akola", 
-    "Yavatmal", "Chandrapur", "Dhule", "Jalgaon", "Latur", "Satara", "Sangli"
-  ],
-  "Delhi NCR": [
-    "New Delhi", "Noida", "Gurgaon (Gurugram)", "Ghaziabad", "Faridabad", "Greater Noida"
-  ],
-  "Karnataka": [
-    "Bengaluru", "Mysuru", "Hubballi-Dharwad", "Mangaluru", "Belagavi", 
-    "Davanagere", "Kalaburagi", "Udupi", "Shivamogga", "Ballari"
-  ],
-  "Gujarat": [
-    "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar", "Anand"
-  ],
-  "Telangana & AP": [
-    "Hyderabad", "Warangal", "Nizamabad", "Visakhapatnam", "Vijayawada", "Guntur", "Tirupati", "Nellore"
-  ],
-  "Tamil Nadu": [
-    "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Vellore", "Erode"
-  ],
-  "Uttar Pradesh": [
-    "Lucknow", "Kanpur", "Varanasi", "Agra", "Prayagraj", "Meerut", "Bareilly", "Aligarh", "Gorakhpur", "Jhansi"
-  ],
-  "Rajasthan": [
-    "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer", "Bhilwara", "Alwar"
-  ],
-  "Madhya Pradesh": [
-    "Indore", "Bhopal", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Dewas", "Satna"
-  ],
-  "West Bengal": [
-    "Kolkata", "Howrah", "Siliguri", "Durgapur", "Asansol", "Kharagpur"
-  ],
-  "Punjab & Haryana": [
-    "Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Panipat", "Ambala", "Karnal", "Faridabad"
-  ],
-  "Bihar & Jharkhand": [
-    "Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"
-  ],
-  "Kerala": [
-    "Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur", "Kollam", "Kannur"
-  ],
-  "Other States": [
-    "Bhubaneswar", "Cuttack", "Guwahati", "Silchar", "Dehradun", "Haridwar", "Raipur", "Goa (Panaji)", "Shimla"
-  ]
-};
+// State-Wise Directory (Powered by india-cities.js)
+var INDIA_STATE_DIRECTORY = window.INDIA_STATE_DIRECTORY || {};
+var OTHER_CITY_OPTION = window.OTHER_CITY_OPTION || "__OTHER__";
+var OTHER_CITY_LABEL = window.OTHER_CITY_LABEL || "➕ Other (Enter My City / Town)";
 
 // Dynamic Category Trust Badges Specification
 const CATEGORY_SPECS = {
@@ -2801,7 +2871,7 @@ function initData() {
     const urlParams = new URLSearchParams(window.location.search);
     const action = urlParams.get('action');
     if (action === 'sell') {
-      setTimeout(() => openModal('sell'), 350);
+      window.location.href = 'sell.html';
     } else if (action === 'want') {
       setTimeout(() => openModal('want'), 350);
     } else if (action === 'dashboard') {
@@ -3080,7 +3150,7 @@ function switchProfileTab(tab) {
           <div style="font-size:32px; margin-bottom:8px;">📦</div>
           <b style="font-size:15px; color:var(--ink); display:block;">You have no active listings</b>
           <p style="font-size:12px; margin:6px 0 14px 0;">Post mobiles, bikes, furniture, or gadgets to buyers in your city.</p>
-          <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex; padding:10px 18px; border-radius:10px;" onclick="closeProfileModal(); openModal('sell')">
+          <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex; padding:10px 18px; border-radius:10px;" onclick="window.location.href='sell.html'">
             ＋ Sell an Item on Clubr
           </button>
         </div>`;
@@ -3484,7 +3554,32 @@ function populateCityDropdown(state) {
   }
   citySel.innerHTML = '<option value="">-- Choose City --</option>' + 
     `<option value="All India"${currentCity === 'All India' ? ' selected' : ''}>🇮🇳 All India (Pan-India)</option>` +
-    cityList.map(c => `<option value="${c}"${c.toLowerCase() === currentCity.toLowerCase() ? ' selected' : ''}>${c}</option>`).join('');
+    cityList.map(c => `<option value="${c}"${c.toLowerCase() === currentCity.toLowerCase() ? ' selected' : ''}>${c}</option>`).join('') +
+    `<option value="${OTHER_CITY_OPTION}">${OTHER_CITY_LABEL}</option>`;
+}
+
+function onCityDropdownSelectChanged(val) {
+  const customBox = document.getElementById('cityModalCustomContainer');
+  if (val === OTHER_CITY_OPTION) {
+    if (customBox) {
+      customBox.style.display = 'block';
+      const input = document.getElementById('cityModalCustomInput');
+      if (input) input.focus();
+    }
+  } else if (val) {
+    if (customBox) customBox.style.display = 'none';
+    setCity(val);
+  }
+}
+
+function saveCustomCityFromModal() {
+  const input = document.getElementById('cityModalCustomInput');
+  const customCity = input ? input.value.trim() : '';
+  if (!customCity) {
+    toast('Please enter a valid city name');
+    return;
+  }
+  setCity(capitalizeWords(customCity));
 }
 
 function populateSellCities(state) {
@@ -3498,7 +3593,21 @@ function populateWantCities(state) {
   const citySel = document.getElementById('wantCitySelect');
   if (!citySel) return;
   const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
-  citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+  citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('') +
+    `<option value="${OTHER_CITY_OPTION}">${OTHER_CITY_LABEL}</option>`;
+}
+
+function onWantCityChanged(val) {
+  const customBox = document.getElementById('wantCustomCityContainer');
+  if (val === OTHER_CITY_OPTION) {
+    if (customBox) {
+      customBox.style.display = 'block';
+      const input = document.getElementById('wantCustomCityInput');
+      if (input) input.focus();
+    }
+  } else {
+    if (customBox) customBox.style.display = 'none';
+  }
 }
 
 function selectStateFilter(st, el) {
@@ -3587,9 +3696,12 @@ function filterCategory(cat, el) {
 // Render Listings Feed with Prioritized City-First Display & KYC Badges
 function renderListingCard(container, item) {
   const isSaved = savedItemIds.has(item.id);
+  const photoCount = (item.photos && item.photos.length > 1)
+    ? `<span class="photo-count-pill">📷 ${item.photos.length}</span>`
+    : '';
   const visualHtml = item.photo
-    ? `<div class="visual"><img src="${item.photo}" alt="${escapeHtml(item.title)}"><div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`
-    : `<div class="visual">${item.emoji || '📦'}<div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`;
+    ? `<div class="visual"><img src="${item.photo}" alt="${escapeHtml(item.title)}"><div class="visual-pills">${renderPills(item)}</div>${photoCount}<button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`
+    : `<div class="visual">${item.emoji || '📦'}<div class="visual-pills">${renderPills(item)}</div>${photoCount}<button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`;
 
   const card = `
     <article class="item" onclick="openItemDetail('${item.id}')">
@@ -3662,7 +3774,7 @@ function renderFeed() {
           <div class="empty-state">
             <h3>No listings found</h3>
             <p>Be the first one to post a listing here!</p>
-            <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="openModal('sell')">
+            <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="window.location.href='sell.html'">
               ＋ Post Item
             </button>
           </div>`;
@@ -3681,7 +3793,7 @@ function renderFeed() {
           <div class="empty-state">
             <h3>No listings found</h3>
             <p>Be the first one to post a listing here or switch city!</p>
-            <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="openModal('sell')">
+            <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="window.location.href='sell.html'">
               ＋ Post Item in ${escapeHtml(currentCity)}
             </button>
           </div>`;
@@ -3703,7 +3815,7 @@ function renderFeed() {
             <b style="font-size:13px; color:#92400e; display:block">📍 No listings in ${escapeHtml(currentCity)} yet</b>
             <span style="font-size:12px; color:#b45309">Showing verified items across India below. Be the first to sell in ${escapeHtml(currentCity)}!</span>
             <div style="margin-top:8px">
-              <button class="want-btn" style="background:var(--ink); color:#fff; font-size:12px; padding:6px 14px; display:inline-flex" onclick="openModal('sell')">
+              <button class="want-btn" style="background:var(--ink); color:#fff; font-size:12px; padding:6px 14px; display:inline-flex" onclick="window.location.href='sell.html'">
                 ＋ Post Item in ${escapeHtml(currentCity)}
               </button>
             </div>
@@ -3833,6 +3945,30 @@ function toggleSave(id, e) {
 }
 
 // Detail View
+function changeDetailPhoto(dir) {
+  if (!window._detailPhotos || window._detailPhotos.length <= 1) return;
+  let idx = (window._detailPhotoIndex || 0) + dir;
+  if (idx < 0) idx = window._detailPhotos.length - 1;
+  if (idx >= window._detailPhotos.length) idx = 0;
+  setDetailActivePhoto(idx);
+}
+
+function setDetailActivePhoto(idx) {
+  if (!window._detailPhotos || !window._detailPhotos[idx]) return;
+  window._detailPhotoIndex = idx;
+  const mainImg = document.getElementById('detailMainImg');
+  if (mainImg) mainImg.src = window._detailPhotos[idx];
+  const counter = document.getElementById('detailPhotoCounter');
+  if (counter) counter.textContent = `${idx + 1} / ${window._detailPhotos.length}`;
+  document.querySelectorAll('.gallery-thumb').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  const activeThumb = document.getElementById(`detailThumb-${idx}`);
+  if (activeThumb && activeThumb.scrollIntoView) {
+    activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
 function openItemDetail(id) {
   const item = listings.find(x => x.id === id);
   if (!item) return;
@@ -3858,6 +3994,45 @@ function openItemDetail(id) {
     `;
   }).join('');
 
+  const photoList = (item.photos && Array.isArray(item.photos) && item.photos.length > 0)
+    ? item.photos
+    : (item.photo ? [item.photo] : []);
+
+  let galleryHtml = '';
+  if (photoList.length > 1) {
+    window._detailPhotos = photoList;
+    window._detailPhotoIndex = 0;
+    galleryHtml = `
+      <div class="detail-gallery-container">
+        <div class="detail-img-box" style="position:relative; margin-bottom:8px; background:#0f172a;">
+          <img id="detailMainImg" src="${photoList[0]}" alt="${escapeHtml(item.title)}" style="width:100%; height:100%; object-fit:contain;">
+          <button class="gallery-nav-btn prev" onclick="changeDetailPhoto(-1)" title="Previous photo">‹</button>
+          <button class="gallery-nav-btn next" onclick="changeDetailPhoto(1)" title="Next photo">›</button>
+          <div class="gallery-counter-pill" id="detailPhotoCounter">1 / ${photoList.length}</div>
+        </div>
+        <div class="gallery-thumb-strip" id="detailThumbStrip">
+          ${photoList.map((p, idx) => `
+            <div class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="setDetailActivePhoto(${idx})" id="detailThumb-${idx}">
+              <img src="${p}" alt="Photo ${idx + 1}">
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else if (photoList.length === 1) {
+    galleryHtml = `
+      <div class="detail-img-box">
+        <img src="${photoList[0]}" alt="${escapeHtml(item.title)}">
+      </div>
+    `;
+  } else {
+    galleryHtml = `
+      <div class="detail-img-box">
+        ${item.emoji || '📦'}
+      </div>
+    `;
+  }
+
   content.innerHTML = `
     <div class="modal-head">
       <div>
@@ -3867,9 +4042,7 @@ function openItemDetail(id) {
       <button class="close-btn" onclick="closeDetailModal()">✕</button>
     </div>
 
-    <div class="detail-img-box">
-      ${item.photo ? `<img src="${item.photo}" alt="${escapeHtml(item.title)}">` : item.emoji || '📦'}
-    </div>
+    ${galleryHtml}
 
     <div class="detail-price-box">
       <div>
@@ -4513,8 +4686,12 @@ function handlePhotoUpload(input) {
 
 // FORM SUBMISSION WITH MANDATORY AUTH GATEKEEPER
 function openModal(type) {
+  if (type === 'sell') {
+    window.location.href = 'sell.html';
+    return;
+  }
   if (!currentUser) {
-    openAuthModal(type === 'sell' ? 'Please sign in or register to post an item for sale!' : 'Please sign in or register to post a buyer requirement!');
+    openAuthModal('Please sign in or register to post a buyer requirement!');
     return;
   }
   if (currentUser.isBlocked) {

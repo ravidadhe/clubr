@@ -75,6 +75,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="india-cities.js"></script>
 </head>
 <body class="bg-[#f8f6f0] text-slate-900 min-h-screen font-sans antialiased flex flex-col selection:bg-lime-400 selection:text-slate-950">
 
@@ -113,7 +114,7 @@
       <!-- Right User Actions -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         <!-- Post New Item CTA -->
-        <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm shadow-lime-400/20 whitespace-nowrap">
+        <button onclick="window.location.href='sell.html'" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm shadow-lime-400/20 whitespace-nowrap">
           <span>＋</span>
           <span class="hidden sm:inline">Sell Item</span>
         </button>
@@ -772,10 +773,16 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">City *</label>
-            <select id="demandCitySelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-semibold">
+            <select id="demandCitySelect" onchange="toggleDemandCustomCity()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-semibold">
               <!-- Populated dynamically -->
             </select>
           </div>
+        </div>
+
+        <!-- Custom City Input if "Other" selected -->
+        <div id="demandCustomCityContainer" class="hidden">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Enter Your City / Town Name *</label>
+          <input id="demandCustomCityInput" placeholder="e.g. Alandi, Shirdi, Baramati..." class="w-full bg-slate-50 border border-amber-300 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-amber-500 font-semibold">
         </div>
 
         <div>
@@ -803,54 +810,8 @@
   <!-- JAVASCRIPT LOGIC & DATA SYNCHRONIZATION                  -->
   <!-- ======================================================== -->
   <script>
-    // State-Wise Directory
-    const INDIA_STATE_DIRECTORY = {
-      "Maharashtra": [
-        "Mumbai", "Pune", "Nagpur", "Nashik", "Chhatrapati Sambhaji Nagar", "Thane", 
-        "Navi Mumbai", "Kolhapur", "Solapur", "Amravati", "Nanded", "Akola", 
-        "Yavatmal", "Chandrapur", "Dhule", "Jalgaon", "Latur", "Satara", "Sangli"
-      ],
-      "Delhi NCR": [
-        "New Delhi", "Noida", "Gurgaon (Gurugram)", "Ghaziabad", "Faridabad", "Greater Noida"
-      ],
-      "Karnataka": [
-        "Bengaluru", "Mysuru", "Hubballi-Dharwad", "Mangaluru", "Belagavi", 
-        "Davanagere", "Kalaburagi", "Udupi", "Shivamogga", "Ballari"
-      ],
-      "Gujarat": [
-        "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar", "Anand"
-      ],
-      "Telangana & AP": [
-        "Hyderabad", "Warangal", "Nizamabad", "Visakhapatnam", "Vijayawada", "Guntur", "Tirupati", "Nellore"
-      ],
-      "Tamil Nadu": [
-        "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Vellore", "Erode"
-      ],
-      "Uttar Pradesh": [
-        "Lucknow", "Kanpur", "Varanasi", "Agra", "Prayagraj", "Meerut", "Bareilly", "Aligarh", "Gorakhpur", "Jhansi"
-      ],
-      "Rajasthan": [
-        "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer", "Bhilwara", "Alwar"
-      ],
-      "Madhya Pradesh": [
-        "Indore", "Bhopal", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Dewas", "Satna"
-      ],
-      "West Bengal": [
-        "Kolkata", "Howrah", "Siliguri", "Durgapur", "Asansol", "Kharagpur"
-      ],
-      "Punjab & Haryana": [
-        "Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Panipat", "Ambala", "Karnal", "Faridabad"
-      ],
-      "Bihar & Jharkhand": [
-        "Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"
-      ],
-      "Kerala": [
-        "Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur", "Kollam", "Kannur"
-      ],
-      "Other States": [
-        "Bhubaneswar", "Cuttack", "Guwahati", "Silchar", "Dehradun", "Haridwar", "Raipur", "Goa (Panaji)", "Shimla"
-      ]
-    };
+    // Use comprehensive all-India directory from india-cities.js
+    const INDIA_STATE_DIRECTORY = window.INDIA_STATE_DIRECTORY || {};
 
     function getStateForCity(city) {
       if (!city || city === 'All India') return 'Maharashtra';
@@ -865,15 +826,31 @@
     function populateSellCities(state) {
       const citySel = document.getElementById('sellCitySelect');
       if (!citySel) return;
-      const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
+      const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0] || [];
       citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
     }
 
     function populateDemandCities(state) {
       const citySel = document.getElementById('demandCitySelect');
       if (!citySel) return;
-      const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
-      citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+      const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0] || [];
+      let opts = list.map(c => `<option value="${c}">${c}</option>`).join('');
+      opts += `<option value="${window.OTHER_CITY_OPTION || '__OTHER__'}">${window.OTHER_CITY_LABEL || '➕ Other (Enter My City / Town)'}</option>`;
+      citySel.innerHTML = opts;
+      toggleDemandCustomCity();
+    }
+
+    function toggleDemandCustomCity() {
+      const citySel = document.getElementById('demandCitySelect');
+      const customBox = document.getElementById('demandCustomCityContainer');
+      if (!citySel || !customBox) return;
+      if (citySel.value === (window.OTHER_CITY_OPTION || '__OTHER__')) {
+        customBox.classList.remove('hidden');
+        const input = document.getElementById('demandCustomCityInput');
+        if (input) input.focus();
+      } else {
+        customBox.classList.add('hidden');
+      }
     }
 
     // State management
@@ -1083,7 +1060,7 @@
             <span class="text-3xl block mb-1">📦</span>
             <b class="text-sm text-slate-800">No active listings posted yet</b>
             <p class="text-xs text-slate-500 max-w-sm mx-auto">Post your phones, gadgets, bikes, or furniture directly to buyers in your city.</p>
-            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl transition mt-2 shadow-xs">
+            <button onclick="window.location.href='sell.html'" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl transition mt-2 shadow-xs">
               ＋ Sell an Item on Clubr
             </button>
           </div>
@@ -1163,7 +1140,7 @@
             <span class="text-4xl block mb-1">🛍️</span>
             <b class="text-base text-slate-900">No listings found in this category</b>
             <p class="text-xs text-slate-500 max-w-sm mx-auto">Click below to publish an item directly to verified local buyers.</p>
-            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-sm shadow-lime-400/20">
+            <button onclick="window.location.href='sell.html'" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-sm shadow-lime-400/20">
               ＋ Post an Item on Clubr
             </button>
           </div>
@@ -1191,6 +1168,10 @@
                 <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
                   ${escapeHtml(item.cat || 'Item')}
                 </div>
+                ${(item.photos && item.photos.length > 1) ? `
+                  <div class="absolute bottom-2 right-2 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                    📷 ${item.photos.length}
+                  </div>` : ''}
               </div>
 
               <div class="p-4 space-y-2">
@@ -1739,81 +1720,28 @@
     // SELL & DEMAND MODALS
     // ========================================================
     function openSellModal() {
-      const targetCity = (currentUser && currentUser.city) ? currentUser.city : 'Pune';
-      const targetState = getStateForCity(targetCity);
-
-      const stateSel = document.getElementById('sellStateSelect');
-      if (stateSel) {
-        stateSel.innerHTML = Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === targetState ? ' selected' : ''}>${st}</option>`).join('');
-        populateSellCities(targetState);
-        const citySel = document.getElementById('sellCitySelect');
-        if (citySel) citySel.value = targetCity;
-      }
-
-      document.getElementById('modalSell').classList.remove('hidden');
+      window.location.href = 'sell.html';
     }
     function closeSellModal() {
       document.getElementById('modalSell').classList.add('hidden');
     }
 
     function handleSellPhotoSelected(input) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedSellPhotoBase64 = e.target.result;
-          const preview = document.getElementById('sellPhotoPreview');
-          preview.src = uploadedSellPhotoBase64;
-          preview.classList.remove('hidden');
-          document.getElementById('sellPhotoPrompt').textContent = '✅ Photo loaded! Click to change.';
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadedSellPhotoBase64 = e.target.result;
+        const preview = document.getElementById('sellPhotoPreview');
+        preview.src = uploadedSellPhotoBase64;
+        preview.classList.remove('hidden');
+        document.getElementById('sellPhotoPrompt').textContent = '✅ Photo loaded! Click to change.';
+      };
+      reader.readAsDataURL(file);
     }
 
     function submitSellItem() {
-      if (!currentUser) return;
-      const title = document.getElementById('sellTitle').value.trim();
-      const price = Number(document.getElementById('sellPrice').value);
-      const cat = document.getElementById('sellCategory').value;
-      const city = (document.getElementById('sellCitySelect') ? document.getElementById('sellCitySelect').value : '') || (currentUser.city || 'Pune');
-      const locality = document.getElementById('sellLocality').value.trim() || 'Local';
-      const desc = document.getElementById('sellDesc').value.trim();
-
-      const emojiMap = {
-        Mobiles: '📱', Bikes: '🏍️', Cars: '🚗', Electronics: '💻', Appliances: '📺', Furniture: '🛋️', Others: '📦'
-      };
-
-      const newListing = {
-        id: 'l_' + Date.now(),
-        title,
-        price,
-        cat,
-        emoji: emojiMap[cat] || '📦',
-        city,
-        locality,
-        condition: 'Good',
-        seller: currentUser.name,
-        sellerId: currentUser.id,
-        isKycVerified: (currentUser.kycStatus === 'verified'),
-        desc,
-        photo: uploadedSellPhotoBase64,
-        time: 'Just now'
-      };
-
-      allListings.unshift(newListing);
-      localStorage.setItem('findly_listings', JSON.stringify(allListings));
-
-      // Sync Firestore
-      if (typeof clubrPublishListing === 'function') {
-        clubrPublishListing(newListing);
-      }
-
-      closeSellModal();
-      updateDashboardCounts();
-      renderOverviewTab();
-      renderMyListings();
-      switchTab('listings');
-      toast('🎉 Listing published live!');
+      window.location.href = 'sell.html';
     }
 
     function openDemandModal() {
@@ -1825,7 +1753,10 @@
         stateSel.innerHTML = Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === targetState ? ' selected' : ''}>${st}</option>`).join('');
         populateDemandCities(targetState);
         const citySel = document.getElementById('demandCitySelect');
-        if (citySel) citySel.value = targetCity;
+        if (citySel) {
+          citySel.value = targetCity;
+          toggleDemandCustomCity();
+        }
       }
 
       document.getElementById('modalDemand').classList.remove('hidden');
@@ -1839,7 +1770,17 @@
       const item = document.getElementById('demandItem').value.trim();
       const budget = document.getElementById('demandBudget').value.trim();
       const cat = document.getElementById('demandCategory').value;
-      const city = (document.getElementById('demandCitySelect') ? document.getElementById('demandCitySelect').value : '') || (currentUser.city || 'Pune');
+      let city = (document.getElementById('demandCitySelect') ? document.getElementById('demandCitySelect').value : '') || (currentUser.city || 'Pune');
+      if (city === (window.OTHER_CITY_OPTION || '__OTHER__')) {
+        const custom = document.getElementById('demandCustomCityInput') ? document.getElementById('demandCustomCityInput').value.trim() : '';
+        if (!custom) {
+          toast('Please enter your city/town name');
+          const inp = document.getElementById('demandCustomCityInput');
+          if (inp) inp.focus();
+          return;
+        }
+        city = custom;
+      }
       const urgency = document.getElementById('demandUrgency').value;
       const desc = document.getElementById('demandDesc').value.trim();
 

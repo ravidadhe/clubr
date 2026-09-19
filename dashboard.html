@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard · Clubr - Buy, Sell & Chat Directly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clubr: {
+              lime: '#d4f738',
+              limeHover: '#c1e626',
+              dark: '#0f172a',
+              card: '#1e293b',
+              surface: '#090d16',
+              line: '#334155'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Outfit', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar and animations */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .chat-bubble-mine { background: #d4f738; color: #0f172a; border-radius: 18px 18px 4px 18px; }
+    .chat-bubble-theirs { background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 18px 18px 18px 4px; }
+    @keyframes pulse-live {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.15); }
+    }
+    .live-dot { animation: pulse-live 2s infinite ease-in-out; }
+    /* Toast styles */
+    #toastBox {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast-msg {
+      background: #0f172a;
+      color: #fff;
+      border: 1px solid #d4f738;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+
+  <!-- Google Firebase SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col selection:bg-lime-400 selection:text-slate-950">
+
+  <!-- Toast Notification Container -->
+  <div id="toastBox"></div>
+
+  <!-- ======================================================== -->
+  <!-- TOP NAVIGATION BAR                                       -->
+  <!-- ======================================================== -->
+  <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-3.5 sticky top-0 z-40 w-full">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Brand & Page Title -->
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shadow-lime-400/20 shrink-0 border border-lime-300/40 group-hover:scale-105 transition">
+            C
+          </div>
+          <div class="flex flex-col leading-tight">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-base tracking-tight text-white font-display">Clubr</span>
+              <span class="bg-lime-400/15 text-lime-400 border border-lime-400/30 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">Dashboard</span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-medium whitespace-nowrap">Member Control Center</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center Link to Marketplace Feed -->
+      <div class="hidden md:flex items-center">
+        <a href="index.html" class="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 px-4 py-2 rounded-xl transition">
+          <span>← Browse Marketplace Feed</span>
+        </a>
+      </div>
+
+      <!-- Right User Actions -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <!-- Post New Item CTA -->
+        <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm shadow-lime-400/20 whitespace-nowrap">
+          <span>＋</span>
+          <span class="hidden sm:inline">Sell Item</span>
+        </button>
+
+        <!-- Post Demand CTA -->
+        <button onclick="openDemandModal()" class="bg-orange-500/15 hover:bg-orange-500/25 text-orange-400 border border-orange-500/30 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>📢</span>
+          <span class="hidden sm:inline">Post Demand</span>
+        </button>
+
+        <!-- User Quick Profile Pill -->
+        <div id="topUserPill" class="hidden sm:flex items-center gap-2 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-medium">
+          <div id="topUserAvatar" class="w-6 h-6 rounded-full bg-lime-400 text-slate-950 font-black flex items-center justify-center text-xs overflow-hidden">U</div>
+          <span id="topUserName" class="font-bold text-white max-w-[100px] truncate">User</span>
+          <span id="topKycBadge" class="text-[10px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded font-bold">Unverified</span>
+        </div>
+
+        <!-- Sign Out -->
+        <button onclick="handleLogout()" title="Log out" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 px-3 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">
+          <span>Exit 🚪</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- AUTH REQUIRED SCREEN (If Guest)                          -->
+  <!-- ======================================================== -->
+  <div id="authRequiredView" class="hidden flex-1 flex items-center justify-center p-6">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center shadow-2xl space-y-6">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 text-slate-950 flex items-center justify-center font-black text-3xl mx-auto shadow-lg shadow-lime-400/25">
+        C
+      </div>
+      <div>
+        <h2 class="text-2xl font-black text-white font-display">Sign In to Your Dashboard</h2>
+        <p class="text-sm text-slate-400 mt-2">
+          Manage your listings, chat directly with buyers, track active demands, and get your Gold Verified Seller badge.
+        </p>
+      </div>
+
+      <div class="space-y-3">
+        <button onclick="triggerDashboardGoogleSignIn()" id="btnGoogleSignIn" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-3 shadow-md">
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Continue with Google (1-Click)</span>
+        </button>
+
+        <a href="index.html" class="block w-full text-xs font-semibold text-slate-400 hover:text-white py-2 transition">
+          ← Return to Marketplace Feed
+        </a>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500">
+        🔒 Powered by Google Firebase Secure Cloud Authentication
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MAIN DASHBOARD APPLICATION INTERFACE                     -->
+  <!-- ======================================================== -->
+  <div id="mainDashboardView" class="flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto p-4 sm:p-6 gap-6">
+
+    <!-- SIDEBAR NAVIGATION (Desktop Sidebar / Mobile Sticky Top Bar) -->
+    <aside class="w-full lg:w-64 shrink-0 space-y-4">
+      
+      <!-- Profile Mini Card in Sidebar -->
+      <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-4 flex items-center gap-3">
+        <div id="sideUserAvatar" class="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-lg overflow-hidden border border-lime-400/40 shrink-0">
+          U
+        </div>
+        <div class="overflow-hidden leading-tight">
+          <b id="sideUserName" class="text-sm font-bold text-white block truncate">Member Name</b>
+          <span id="sideUserEmailOrPhone" class="text-[11px] text-slate-400 block truncate mt-0.5">user@gmail.com</span>
+          <div id="sideUserKycBadge" class="mt-1.5 inline-block">
+            <span class="text-[10px] bg-slate-800 text-slate-300 font-bold px-2 py-0.5 rounded-md border border-slate-700">Unverified</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex lg:flex-col gap-1 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 overflow-x-auto no-scrollbar shrink-0">
+        <button onclick="switchTab('overview')" id="tabBtnOverview" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 whitespace-nowrap bg-lime-400 text-slate-950 shadow-sm">
+          <span>📊</span>
+          <span>Overview</span>
+        </button>
+
+        <button onclick="switchTab('listings')" id="tabBtnListings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+          <div class="flex items-center gap-2.5">
+            <span>🛍️</span>
+            <span>My Listings</span>
+          </div>
+          <span id="sideBadgeListings" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono">0</span>
+        </button>
+
+        <button onclick="switchTab('messages')" id="tabBtnMessages" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+          <div class="flex items-center gap-2.5">
+            <span>💬</span>
+            <span>Messages</span>
+          </div>
+          <span id="sideBadgeMessages" class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">0</span>
+        </button>
+
+        <button onclick="switchTab('demands')" id="tabBtnDemands" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+          <div class="flex items-center gap-2.5">
+            <span>📢</span>
+            <span>My Demands</span>
+          </div>
+          <span id="sideBadgeDemands" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono">0</span>
+        </button>
+
+        <button onclick="switchTab('kyc')" id="tabBtnKyc" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+          <div class="flex items-center gap-2.5">
+            <span>🛡️</span>
+            <span>KYC Verification</span>
+          </div>
+          <span id="sideBadgeKyc" class="text-[10px] text-amber-400 font-bold">Verify</span>
+        </button>
+
+        <button onclick="switchTab('settings')" id="tabBtnSettings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+          <span>⚙️</span>
+          <span>Profile Settings</span>
+        </button>
+      </nav>
+
+      <!-- Trust & Security Banner in Sidebar -->
+      <div class="hidden lg:block bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800/80 rounded-2xl p-4 text-xs space-y-2">
+        <div class="flex items-center gap-2 text-lime-400 font-bold text-xs">
+          <span>🛡️</span>
+          <span>Clubr Trust Guarantee</span>
+        </div>
+        <p class="text-slate-400 text-[11px] leading-relaxed">
+          Zero middleman fees. Direct buyer chats with real phone/KYC verification.
+        </p>
+        <a href="index.html#terms" class="text-[10px] text-slate-400 hover:text-white underline block pt-1">
+          Safety Tips & Guidelines
+        </a>
+      </div>
+
+    </aside>
+
+    <!-- CONTENT WORKSPACE CONTAINER -->
+    <main class="flex-1 min-w-0">
+
+      <!-- ======================================================== -->
+      <!-- TAB 1: OVERVIEW DASHBOARD                                -->
+      <!-- ======================================================== -->
+      <section id="paneOverview" class="space-y-6">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800/80 border border-slate-800 rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+          <div class="relative z-10 max-w-xl space-y-2">
+            <div class="inline-flex items-center gap-2 bg-lime-400/10 border border-lime-400/30 text-lime-400 px-3 py-1 rounded-full text-xs font-bold">
+              <span class="w-2 h-2 rounded-full bg-lime-400 live-dot"></span>
+              <span>Account Active</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight font-display">
+              Welcome, <span id="heroUserName" class="text-lime-400">User</span>!
+            </h1>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Manage your posted listings, reply to interested buyers instantly, and unlock your Gold Verified badge.
+            </p>
+            <div class="flex flex-wrap gap-2.5 pt-2">
+              <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition shadow-md shadow-lime-400/20">
+                ＋ Post an Item for Sale
+              </button>
+              <button onclick="openDemandModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                📢 Broadcast a Demand
+              </button>
+              <button onclick="switchTab('kyc')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                🛡️ Verify Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Key Telemetry Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <!-- Stat 1: My Listings -->
+          <div onclick="switchTab('listings')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+              <span>My Listings</span>
+              <span class="text-lg group-hover:scale-110 transition">🛍️</span>
+            </div>
+            <div id="statListingsCount" class="text-2xl sm:text-3xl font-black text-white font-mono">0</div>
+            <div class="text-[11px] text-lime-400 font-medium mt-1">Live in marketplace →</div>
+          </div>
+
+          <!-- Stat 2: Chats -->
+          <div onclick="switchTab('messages')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+              <span>Conversations</span>
+              <span class="text-lg group-hover:scale-110 transition">💬</span>
+            </div>
+            <div id="statChatsCount" class="text-2xl sm:text-3xl font-black text-white font-mono">0</div>
+            <div class="text-[11px] text-emerald-400 font-medium mt-1">Active chat threads →</div>
+          </div>
+
+          <!-- Stat 3: Demands -->
+          <div onclick="switchTab('demands')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+              <span>Buyer Demands</span>
+              <span class="text-lg group-hover:scale-110 transition">📢</span>
+            </div>
+            <div id="statDemandsCount" class="text-2xl sm:text-3xl font-black text-white font-mono">0</div>
+            <div class="text-[11px] text-orange-400 font-medium mt-1">Broadcasted items →</div>
+          </div>
+
+          <!-- Stat 4: Verification Status -->
+          <div onclick="switchTab('kyc')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+              <span>KYC Trust</span>
+              <span class="text-lg group-hover:scale-110 transition">🛡️</span>
+            </div>
+            <div id="statKycText" class="text-base sm:text-lg font-black text-amber-400 truncate">Unverified</div>
+            <div class="text-[11px] text-slate-400 font-medium mt-1">Check status / Upload →</div>
+          </div>
+        </div>
+
+        <!-- Recent Listings Quick Widget -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-bold text-base text-white">Your Active Listings</h2>
+              <span class="text-xs text-slate-400">Quickly mark items as sold or delete completed deals</span>
+            </div>
+            <button onclick="switchTab('listings')" class="text-xs text-lime-400 hover:underline font-semibold">
+              View All (<span id="overviewListingsBadge">0</span>) →
+            </button>
+          </div>
+
+          <div id="overviewListingsContainer" class="space-y-3">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 2: MY LISTINGS MANAGER                               -->
+      <!-- ======================================================== -->
+      <section id="paneListings" class="hidden space-y-6">
+        
+        <!-- Header & Action Controls -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+          <div>
+            <h2 class="text-xl font-black text-white font-display">Manage Your Listings</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Control items for sale, update pricing, mark items sold, or remove listings</p>
+          </div>
+          <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm shadow-lime-400/20">
+            <span>＋</span>
+            <span>Post New Listing</span>
+          </button>
+        </div>
+
+        <!-- Listings Filter Tabs -->
+        <div class="flex items-center gap-2">
+          <button onclick="filterUserListings('all')" id="fltListingsAll" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-lime-400 text-slate-950">
+            All Items (<span id="countFltAll">0</span>)
+          </button>
+          <button onclick="filterUserListings('active')" id="fltListingsActive" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white bg-slate-900 border border-slate-800">
+            Active (<span id="countFltActive">0</span>)
+          </button>
+          <button onclick="filterUserListings('sold')" id="fltListingsSold" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white bg-slate-900 border border-slate-800">
+            Sold (<span id="countFltSold">0</span>)
+          </button>
+        </div>
+
+        <!-- Listings Grid Container -->
+        <div id="myListingsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <!-- Rendered via renderMyListings() -->
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 3: IN-APP MESSAGES & CHAT CENTER                     -->
+      <!-- ======================================================== -->
+      <section id="paneMessages" class="hidden space-y-4">
+        
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-black text-white font-display">In-App Chat & Inquiries</h2>
+            <p class="text-xs text-slate-400">Direct negotiations between buyers and sellers with zero middleman</p>
+          </div>
+          <span class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-300 font-mono">
+            <span id="activeChatsHeaderCount">0</span> Threads
+          </span>
+        </div>
+
+        <!-- Split Screen Chat Interface -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[550px] shadow-xl">
+          
+          <!-- Left Column: Conversation Thread List -->
+          <div id="chatThreadsColumn" class="md:col-span-5 border-r border-slate-800/80 flex flex-col bg-slate-950/50">
+            <!-- Search Thread -->
+            <div class="p-3 border-b border-slate-800">
+              <input id="chatSearchInput" oninput="filterChatThreads(this.value)" placeholder="🔍 Search conversations..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-lime-400">
+            </div>
+
+            <!-- Thread List -->
+            <div id="chatThreadsList" class="flex-1 overflow-y-auto divide-y divide-slate-800/50 max-h-[480px]">
+              <!-- Rendered via renderChatThreads() -->
+            </div>
+          </div>
+
+          <!-- Right Column: Active Conversation Stream -->
+          <div id="chatActiveColumn" class="md:col-span-7 flex flex-col bg-slate-900 min-h-[450px]">
+            <!-- Empty State when no chat selected -->
+            <div id="chatEmptyPlaceholder" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-500">
+              <span class="text-4xl mb-2">💬</span>
+              <b class="text-white text-sm">Select a conversation to start chatting</b>
+              <p class="text-xs text-slate-400 mt-1 max-w-xs">Chat directly with interested buyers, make counter offers, and close verified local deals.</p>
+            </div>
+
+            <!-- Active Chat Box (Hidden until conversation clicked) -->
+            <div id="chatActiveBox" class="hidden flex-1 flex flex-col h-full">
+              <!-- Chat Head -->
+              <div class="p-3.5 px-4 border-b border-slate-800 bg-slate-900/90 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <button onclick="mobileBackToThreads()" class="md:hidden text-slate-400 hover:text-white text-sm font-bold pr-1">
+                    ←
+                  </button>
+                  <div id="chatActiveItemThumb" class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl overflow-hidden border border-slate-700 shrink-0">
+                    📦
+                  </div>
+                  <div class="overflow-hidden leading-tight">
+                    <b id="chatActiveItemTitle" class="text-sm font-bold text-white block truncate">Product Name</b>
+                    <span id="chatActiveItemPrice" class="text-xs text-lime-400 font-mono font-bold block">₹0</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span id="chatActiveParticipant" class="text-xs text-slate-300 font-medium bg-slate-800 px-2.5 py-1 rounded-lg">Buyer</span>
+                </div>
+              </div>
+
+              <!-- Quick Suggestion Chips -->
+              <div class="px-4 py-2 border-b border-slate-800/60 bg-slate-950/30 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 text-[11px]">
+                <button onclick="sendQuickChatMessage('Is this still available for immediate pickup?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition whitespace-nowrap">
+                  Is this still available?
+                </button>
+                <button onclick="sendQuickChatMessage('What is your best final price?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition whitespace-nowrap">
+                  Best final price?
+                </button>
+                <button onclick="sendQuickChatMessage('Can we meet today in person to verify?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition whitespace-nowrap">
+                  Can we meet today?
+                </button>
+              </div>
+
+              <!-- Message Stream -->
+              <div id="chatMessagesStream" class="flex-1 overflow-y-auto p-4 space-y-3 max-h-[350px]">
+                <!-- Chat bubbles rendered dynamically -->
+              </div>
+
+              <!-- Chat Input Bar -->
+              <form onsubmit="event.preventDefault(); sendActiveChatMessage();" class="p-3 border-t border-slate-800 bg-slate-950/70 flex items-center gap-2">
+                <input id="chatMessageInput" placeholder="Type your message or offer..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400">
+                <button type="submit" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition shrink-0 shadow-sm">
+                  Send ✉️
+                </button>
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 4: MY BUYER DEMANDS                                  -->
+      <!-- ======================================================== -->
+      <section id="paneDemands" class="hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+          <div>
+            <h2 class="text-xl font-black text-white font-display">Your Broadcasted Requirements</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Looking to buy something? Sellers in your city will see your request and reach out</p>
+          </div>
+          <button onclick="openDemandModal()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm shadow-orange-500/20">
+            <span>📢</span>
+            <span>Broadcast New Demand</span>
+          </button>
+        </div>
+
+        <div id="myDemandsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Rendered via renderMyDemands() -->
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 5: KYC VERIFICATION & TRUST CENTER                   -->
+      <!-- ======================================================== -->
+      <section id="paneKyc" class="hidden space-y-6">
+        
+        <!-- Trust Status Card -->
+        <div id="kycStatusBanner" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
+          <!-- Populated via renderKycPane() -->
+        </div>
+
+        <!-- Verification Form Card (Shown if unverified or rejected) -->
+        <div id="kycFormCard" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
+          <div class="border-b border-slate-800 pb-4">
+            <h3 class="text-lg font-bold text-white">Submit Government ID for Gold Badge</h3>
+            <p class="text-xs text-slate-400 mt-1">
+              Documents are processed securely under India's Digital Personal Data Protection (DPDP) Act 2023. SuperAdmin reviews proofs within 24 hours.
+            </p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); submitKycVerification();" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Government ID Type</label>
+                <select id="kycDocTypeSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-lime-400">
+                  <option value="Aadhaar Card (Masked/UIDAI)">Aadhaar Card (Last 4 digits visible)</option>
+                  <option value="Driving License (Ministry of Road Transport)">Driving License</option>
+                  <option value="Voter ID Card (Election Commission)">Voter ID Card</option>
+                  <option value="Indian Passport">Indian Passport</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Document Number / Last 4 Digits</label>
+                <input id="kycDocNumberInput" placeholder="e.g. XXXX-XXXX-1234 or DL number" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-lime-400 font-mono">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">Upload Photo of Government ID</label>
+              <div class="border-2 border-dashed border-slate-700 hover:border-lime-400/80 rounded-2xl p-6 text-center cursor-pointer bg-slate-950/60 transition" onclick="document.getElementById('kycPhotoFileInput').click()">
+                <input type="file" id="kycPhotoFileInput" accept="image/*" class="hidden" onchange="handleKycPhotoSelected(this)">
+                <div id="kycUploadPrompt">
+                  <span class="text-3xl block mb-2">📸</span>
+                  <b class="text-xs text-slate-200">Click to upload photo proof</b>
+                  <p class="text-[10px] text-slate-500 mt-1">PNG, JPG, or WEBP up to 5MB. Name and photo must be clearly legible.</p>
+                </div>
+                <img id="kycPhotoPreview" class="hidden max-h-48 mx-auto rounded-xl border border-lime-400 mt-2 object-contain">
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2.5 bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <input type="checkbox" id="kycConsentCheckbox" required class="mt-0.5 rounded border-slate-700 accent-lime-400 cursor-pointer">
+              <label for="kycConsentCheckbox" class="text-[11px] text-slate-300 leading-relaxed cursor-pointer">
+                I hereby declare that this government identification document is authentic and belongs to me. I consent to Clubr verifying it exclusively for fraud prevention and conferring the Gold Verified Badge.
+              </label>
+            </div>
+
+            <button type="submit" id="btnSubmitKyc" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-lime-400/20">
+              Submit Document for Verification 🛡️
+            </button>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 6: PROFILE SETTINGS                                  -->
+      <!-- ======================================================== -->
+      <section id="paneSettings" class="hidden space-y-6">
+        
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
+          <div class="border-b border-slate-800 pb-4">
+            <h2 class="text-xl font-black text-white font-display">Profile & Account Settings</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Customize your marketplace presence and contact info</p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); saveProfileSettings();" class="space-y-4 max-w-xl">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">Full Name / Display Name</label>
+              <input id="settingsName" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400 font-semibold">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">Registered Email (Google Account)</label>
+              <input id="settingsEmail" readonly class="w-full bg-slate-950/60 border border-slate-800 text-slate-400 rounded-xl px-4 py-2.5 text-xs font-mono cursor-not-allowed">
+              <span class="text-[10px] text-slate-500 mt-1 block">Your email is verified via Google Sign-In and cannot be changed here.</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Contact Phone Number (+91)</label>
+                <input id="settingsPhone" placeholder="10-digit mobile number" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400 font-mono">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Primary City</label>
+                <input id="settingsCity" placeholder="e.g. Mumbai, Pune, Delhi" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">Bio / About Seller</label>
+              <textarea id="settingsBio" rows="3" placeholder="Brief note about yourself or the types of items you sell..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400"></textarea>
+            </div>
+
+            <button type="submit" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-lime-400/20">
+              Save Profile Changes 💾
+            </button>
+          </form>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="bg-rose-950/20 border border-rose-900/40 rounded-3xl p-6 space-y-3">
+          <h3 class="text-sm font-bold text-rose-300">Session & Security</h3>
+          <p class="text-xs text-slate-400">Sign out of your account on this browser. Your listings and chats will remain safely stored in the cloud.</p>
+          <button onclick="handleLogout()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold px-4 py-2 rounded-xl transition">
+            Log Out Session 🚪
+          </button>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: FAST SELL ITEM WIZARD DIRECTLY IN DASHBOARD       -->
+  <!-- ======================================================== -->
+  <div id="modalSell" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative">
+      <button onclick="closeSellModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      <div>
+        <h3 class="text-xl font-black text-white font-display">＋ Post an Item for Sale</h3>
+        <p class="text-xs text-slate-400">Your item will be immediately published live across all cities</p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); submitSellItem();" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Item Title *</label>
+          <input id="sellTitle" required placeholder="e.g. iPhone 13 128GB Midnight Blue" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Selling Price (₹) *</label>
+            <input id="sellPrice" type="number" required placeholder="e.g. 28000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400 font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Category *</label>
+            <select id="sellCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-lime-400">
+              <option value="Mobiles">📱 Mobiles & Tablets</option>
+              <option value="Vehicles">🚗 Cars & Bikes</option>
+              <option value="Electronics">💻 Laptops & Tech</option>
+              <option value="Appliances">📺 TV & Home Appliances</option>
+              <option value="Furniture">🛋️ Furniture & Living</option>
+              <option value="Others">📦 Other Categories</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">City *</label>
+            <input id="sellCity" required placeholder="e.g. Mumbai" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Locality / Area</label>
+            <input id="sellLocality" placeholder="e.g. Andheri West" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Description & Specs</label>
+          <textarea id="sellDesc" rows="3" placeholder="Condition, battery health, accessories included, reason for selling..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Upload Photo</label>
+          <div class="border border-dashed border-slate-700 hover:border-lime-400 rounded-xl p-4 text-center cursor-pointer bg-slate-950/60 transition" onclick="document.getElementById('sellPhotoInput').click()">
+            <input type="file" id="sellPhotoInput" accept="image/*" class="hidden" onchange="handleSellPhotoSelected(this)">
+            <span id="sellPhotoPrompt" class="text-xs text-slate-400">📷 Tap to upload item photo (optional)</span>
+            <img id="sellPhotoPreview" class="hidden max-h-32 mx-auto rounded-lg mt-2 object-contain border border-lime-400">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-xs py-3 rounded-xl transition shadow-md shadow-lime-400/20">
+          Publish Listing Live 🚀
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: BROADCAST BUYER DEMAND DIRECTLY IN DASHBOARD      -->
+  <!-- ======================================================== -->
+  <div id="modalDemand" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative">
+      <button onclick="closeDemandModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      <div>
+        <h3 class="text-xl font-black text-white font-display">📢 Broadcast a Requirement</h3>
+        <p class="text-xs text-slate-400">Tell local sellers what you are looking to purchase</p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); submitDemandItem();" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Item You Need *</label>
+          <input id="demandItem" required placeholder="e.g. Looking for used iPad 9th Gen or newer" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Your Budget *</label>
+            <input id="demandBudget" required placeholder="e.g. ₹15,000 - ₹20,000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Category</label>
+            <select id="demandCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-orange-400">
+              <option value="Mobiles">Mobiles & Tablets</option>
+              <option value="Electronics">Laptops & Tech</option>
+              <option value="Vehicles">Cars & Bikes</option>
+              <option value="Appliances">Appliances</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">City *</label>
+            <input id="demandCity" required placeholder="e.g. Mumbai" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Buying Urgency</label>
+            <select id="demandUrgency" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-orange-400">
+              <option value="Urgent (Today/Tomorrow)">Urgent (1-2 days)</option>
+              <option value="Within this week">Within this week</option>
+              <option value="Casually looking">Casually looking</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Details & Conditions Preferred</label>
+          <textarea id="demandDesc" rows="3" placeholder="Preferred color, condition, warranty requirements..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-400 text-slate-950 font-black text-xs py-3 rounded-xl transition shadow-md shadow-orange-500/20">
+          Broadcast Requirement 📢
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIC & DATA SYNCHRONIZATION                  -->
+  <!-- ======================================================== -->
+  <script>
+    // State management
+    let currentUser = null;
+    let allListings = [];
+    let allWants = [];
+    let allChats = {};
+    let activeTabId = 'overview';
+    let activeListingFilter = 'all';
+    let currentActiveChatKey = null;
+
+    let uploadedKycPhotoBase64 = null;
+    let uploadedSellPhotoBase64 = null;
+
+    // Initialize Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      initDashboardData();
+    });
+
+    function initDashboardData() {
+      // 1. Load active user
+      try {
+        const u = localStorage.getItem('clubr_current_user');
+        if (u) {
+          currentUser = JSON.parse(u);
+          if (currentUser.name === 'tiutu' || currentUser.email === 'tiutu@gmail.com') {
+            currentUser = null;
+            localStorage.removeItem('clubr_current_user');
+          }
+        }
+      } catch(e) {
+        currentUser = null;
+      }
+
+      // 2. Load Listings, Demands, Chats
+      try {
+        const l = localStorage.getItem('findly_listings');
+        allListings = l ? JSON.parse(l) : [];
+      } catch(e) { allListings = []; }
+
+      try {
+        const w = localStorage.getItem('findly_wants');
+        allWants = w ? JSON.parse(w) : [];
+      } catch(e) { allWants = []; }
+
+      try {
+        const c = localStorage.getItem('findly_chats');
+        allChats = c ? JSON.parse(c) : {};
+      } catch(e) { allChats = {}; }
+
+      // Check auth state
+      if (!currentUser) {
+        document.getElementById('authRequiredView').classList.remove('hidden');
+        document.getElementById('mainDashboardView').classList.add('hidden');
+        return;
+      }
+
+      document.getElementById('authRequiredView').classList.add('hidden');
+      document.getElementById('mainDashboardView').classList.remove('hidden');
+
+      // Populate user info
+      populateUserProfile();
+      updateDashboardCounts();
+      renderOverviewTab();
+      renderMyListings();
+      renderChatThreads();
+      renderMyDemands();
+      renderKycPane();
+      populateSettingsForm();
+
+      // Background cloud synchronization
+      syncCloudData();
+    }
+
+    // Populate user profile info in headers and cards
+    function populateUserProfile() {
+      if (!currentUser) return;
+      const firstName = currentUser.name.split(' ')[0] || 'User';
+
+      // Top bar
+      document.getElementById('topUserName').textContent = firstName;
+      const topAvatar = document.getElementById('topUserAvatar');
+      if (currentUser.photoURL) {
+        topAvatar.innerHTML = `<img src="${escapeHtml(currentUser.photoURL)}" class="w-full h-full object-cover">`;
+      } else {
+        topAvatar.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+      }
+
+      // Side card
+      document.getElementById('sideUserName').textContent = currentUser.name;
+      document.getElementById('sideUserEmailOrPhone').textContent = currentUser.email || currentUser.phone || 'Clubr Member';
+      const sideAvatar = document.getElementById('sideUserAvatar');
+      if (currentUser.photoURL) {
+        sideAvatar.innerHTML = `<img src="${escapeHtml(currentUser.photoURL)}" class="w-full h-full object-cover">`;
+      } else {
+        sideAvatar.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+      }
+
+      // Hero banner
+      document.getElementById('heroUserName').textContent = currentUser.name;
+
+      // KYC Badges
+      const isVerified = (currentUser.kycStatus === 'verified');
+      const isPending = (currentUser.kycStatus === 'pending');
+
+      const topBadge = document.getElementById('topKycBadge');
+      const sideBadge = document.getElementById('sideUserKycBadge');
+      const statKyc = document.getElementById('statKycText');
+      const sideKycTabBadge = document.getElementById('sideBadgeKyc');
+
+      if (isVerified) {
+        topBadge.className = 'text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30';
+        topBadge.textContent = '🛡️ Verified';
+
+        sideBadge.innerHTML = `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-md border border-emerald-500/30">🛡️ Gold Verified</span>`;
+        statKyc.className = 'text-base sm:text-lg font-black text-emerald-400 truncate';
+        statKyc.textContent = '🛡️ Gold Verified';
+        sideKycTabBadge.className = 'text-[10px] text-emerald-400 font-bold';
+        sideKycTabBadge.textContent = 'Active ✅';
+      } else if (isPending) {
+        topBadge.className = 'text-[10px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.5 rounded border border-amber-500/30';
+        topBadge.textContent = '⏳ Under Review';
+
+        sideBadge.innerHTML = `<span class="text-[10px] bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-md border border-amber-500/30">⏳ Under Review</span>`;
+        statKyc.className = 'text-base sm:text-lg font-black text-amber-400 truncate';
+        statKyc.textContent = '⏳ Under Review';
+        sideKycTabBadge.className = 'text-[10px] text-amber-400 font-bold';
+        sideKycTabBadge.textContent = 'In Review';
+      } else {
+        topBadge.className = 'text-[10px] bg-slate-800 text-slate-400 font-bold px-1.5 py-0.5 rounded border border-slate-700';
+        topBadge.textContent = '⚠️ Unverified';
+
+        sideBadge.innerHTML = `<span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-md border border-slate-700">⚠️ Unverified</span>`;
+        statKyc.className = 'text-base sm:text-lg font-black text-slate-400 truncate';
+        statKyc.textContent = 'Unverified';
+        sideKycTabBadge.className = 'text-[10px] text-amber-400 font-bold';
+        sideKycTabBadge.textContent = 'Verify';
+      }
+    }
+
+    function updateDashboardCounts() {
+      if (!currentUser) return;
+      const myL = allListings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
+      const myW = allWants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
+      const myChatsCount = Object.keys(allChats).length;
+
+      document.getElementById('statListingsCount').textContent = myL.length;
+      document.getElementById('statDemandsCount').textContent = myW.length;
+      document.getElementById('statChatsCount').textContent = myChatsCount;
+      document.getElementById('sideBadgeListings').textContent = myL.length;
+      document.getElementById('sideBadgeDemands').textContent = myW.length;
+      document.getElementById('sideBadgeMessages').textContent = myChatsCount;
+      document.getElementById('overviewListingsBadge').textContent = myL.length;
+      document.getElementById('activeChatsHeaderCount').textContent = myChatsCount;
+
+      // Filter breakdown
+      const activeCount = myL.filter(x => !x.isSold).length;
+      const soldCount = myL.filter(x => x.isSold).length;
+      document.getElementById('countFltAll').textContent = myL.length;
+      document.getElementById('countFltActive').textContent = activeCount;
+      document.getElementById('countFltSold').textContent = soldCount;
+    }
+
+    // ========================================================
+    // TAB SWITCHING
+    // ========================================================
+    function switchTab(tabId) {
+      activeTabId = tabId;
+      const tabs = ['overview', 'listings', 'messages', 'demands', 'kyc', 'settings'];
+
+      tabs.forEach(t => {
+        const pane = document.getElementById(`pane${capitalize(t)}`);
+        const btn = document.getElementById(`tabBtn${capitalize(t)}`);
+        if (!pane || !btn) return;
+
+        if (t === tabId) {
+          pane.classList.remove('hidden');
+          btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap bg-lime-400 text-slate-950 shadow-sm';
+        } else {
+          pane.classList.add('hidden');
+          btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white';
+        }
+      });
+
+      if (tabId === 'overview') renderOverviewTab();
+      if (tabId === 'listings') renderMyListings();
+      if (tabId === 'messages') renderChatThreads();
+      if (tabId === 'demands') renderMyDemands();
+      if (tabId === 'kyc') renderKycPane();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ========================================================
+    // TAB 1: OVERVIEW TAB
+    // ========================================================
+    function renderOverviewTab() {
+      const container = document.getElementById('overviewListingsContainer');
+      if (!container || !currentUser) return;
+      container.innerHTML = '';
+
+      const myL = allListings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
+
+      if (myL.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 px-4 bg-slate-950/60 border border-dashed border-slate-800 rounded-2xl text-slate-400 space-y-2">
+            <span class="text-3xl block mb-1">📦</span>
+            <b class="text-sm text-white">No active listings posted yet</b>
+            <p class="text-xs text-slate-400 max-w-sm mx-auto">Post your phones, gadgets, bikes, or furniture directly to buyers in your city.</p>
+            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl transition mt-2">
+              ＋ Sell an Item on Clubr
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Show top 3 recent listings
+      myL.slice(0, 3).forEach(item => {
+        const itemThumb = item.photo 
+          ? `<img src="${item.photo}" class="w-12 h-12 rounded-xl object-cover border border-slate-700 shrink-0">`
+          : `<div class="w-12 h-12 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-xl shrink-0">${item.emoji || '📦'}</div>`;
+
+        const statusTag = item.isSold 
+          ? `<span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded-full">Sold</span>`
+          : `<span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>`;
+
+        container.insertAdjacentHTML('beforeend', `
+          <div class="flex items-center justify-between gap-3 bg-slate-950/60 border border-slate-800 p-3.5 rounded-2xl hover:border-slate-700 transition">
+            <div class="flex items-center gap-3 overflow-hidden">
+              ${itemThumb}
+              <div class="overflow-hidden">
+                <div class="flex items-center gap-2">
+                  <b class="text-xs font-bold text-white truncate">${escapeHtml(item.title)}</b>
+                  ${statusTag}
+                </div>
+                <div class="text-xs text-lime-400 font-mono font-bold mt-0.5">₹${Number(item.price).toLocaleString('en-IN')} · <span class="text-slate-400 font-sans font-normal text-[11px]">${escapeHtml(item.city || 'India')}</span></div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="toggleItemSold('${item.id}')" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+                ${item.isSold ? 'Re-List' : 'Mark Sold'}
+              </button>
+              <button onclick="deleteListingFromDashboard('${item.id}')" class="text-[11px] font-bold px-2 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    // ========================================================
+    // TAB 2: MY LISTINGS TAB
+    // ========================================================
+    function filterUserListings(type) {
+      activeListingFilter = type;
+      ['All', 'Active', 'Sold'].forEach(t => {
+        const btn = document.getElementById(`fltListings${t}`);
+        if (!btn) return;
+        if (t.toLowerCase() === type) {
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-lime-400 text-slate-950';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white bg-slate-900 border border-slate-800';
+        }
+      });
+      renderMyListings();
+    }
+
+    function renderMyListings() {
+      const grid = document.getElementById('myListingsGrid');
+      if (!grid || !currentUser) return;
+      grid.innerHTML = '';
+
+      let myL = allListings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
+
+      if (activeListingFilter === 'active') {
+        myL = myL.filter(x => !x.isSold);
+      } else if (activeListingFilter === 'sold') {
+        myL = myL.filter(x => x.isSold);
+      }
+
+      if (myL.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-16 px-4 bg-slate-900/60 border border-dashed border-slate-800 rounded-3xl text-slate-400 space-y-3">
+            <span class="text-4xl block mb-1">🛍️</span>
+            <b class="text-base text-white">No listings found in this category</b>
+            <p class="text-xs text-slate-400 max-w-sm mx-auto">Click below to publish an item directly to verified local buyers.</p>
+            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-md shadow-lime-400/20">
+              ＋ Post an Item on Clubr
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      myL.forEach(item => {
+        const thumb = item.photo
+          ? `<img src="${item.photo}" class="w-full h-44 object-cover">`
+          : `<div class="w-full h-44 bg-slate-800 flex items-center justify-center text-5xl text-slate-400">${item.emoji || '📦'}</div>`;
+
+        const statusBadge = item.isSold 
+          ? `<span class="bg-slate-900/90 backdrop-blur-md text-slate-300 border border-slate-700 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">🏷️ SOLD</span>`
+          : `<span class="bg-emerald-500/90 backdrop-blur-md text-slate-950 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full">🟢 ACTIVE</span>`;
+
+        grid.insertAdjacentHTML('beforeend', `
+          <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl overflow-hidden transition flex flex-col justify-between group">
+            <div>
+              <div class="relative overflow-hidden">
+                ${thumb}
+                <div class="absolute top-3 left-3">
+                  ${statusBadge}
+                </div>
+                <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-slate-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700">
+                  ${escapeHtml(item.cat || 'Item')}
+                </div>
+              </div>
+
+              <div class="p-4 space-y-2">
+                <div class="flex items-baseline justify-between gap-2">
+                  <span class="text-lg font-black text-white font-mono">₹${Number(item.price).toLocaleString('en-IN')}</span>
+                  <span class="text-[11px] text-slate-400">📍 ${escapeHtml(item.city || 'India')}</span>
+                </div>
+                <h4 class="font-bold text-sm text-slate-100 line-clamp-1 group-hover:text-lime-400 transition">${escapeHtml(item.title)}</h4>
+                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${escapeHtml(item.desc || 'No description provided')}</p>
+              </div>
+            </div>
+
+            <div class="p-4 pt-0 border-t border-slate-800/80 mt-2 flex items-center justify-between gap-2">
+              <button onclick="toggleItemSold('${item.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+                ${item.isSold ? 'Re-List Active' : 'Mark as Sold'}
+              </button>
+
+              <div class="flex items-center gap-1.5">
+                <a href="index.html" target="_blank" title="View on Feed" class="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                  ↗
+                </a>
+                <button onclick="deleteListingFromDashboard('${item.id}')" title="Delete Listing" class="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    function toggleItemSold(id) {
+      const item = allListings.find(x => x.id === id);
+      if (!item) return;
+
+      item.isSold = !item.isSold;
+      localStorage.setItem('findly_listings', JSON.stringify(allListings));
+
+      // Sync with cloud firestore
+      if (firebaseDb) {
+        firebaseDb.collection('listings').doc(id).set({ isSold: item.isSold }, { merge: true }).catch(()=>{});
+      }
+
+      updateDashboardCounts();
+      renderOverviewTab();
+      renderMyListings();
+      toast(item.isSold ? '🎉 Item marked as SOLD!' : '🟢 Item restored to Active!');
+    }
+
+    function deleteListingFromDashboard(id) {
+      if (!confirm('Are you sure you want to permanently delete this listing?')) return;
+
+      allListings = allListings.filter(x => x.id !== id);
+      localStorage.setItem('findly_listings', JSON.stringify(allListings));
+
+      // Sync cloud delete
+      if (typeof clubrDeleteLiveListing === 'function') {
+        clubrDeleteLiveListing(id);
+      }
+
+      updateDashboardCounts();
+      renderOverviewTab();
+      renderMyListings();
+      toast('Listing permanently deleted.');
+    }
+
+    // ========================================================
+    // TAB 3: IN-APP MESSAGES & CHAT CENTER
+    // ========================================================
+    function renderChatThreads(query = '') {
+      const container = document.getElementById('chatThreadsList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const threadKeys = Object.keys(allChats);
+
+      if (threadKeys.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 px-4 text-slate-500">
+            <span class="text-3xl block mb-2">💬</span>
+            <b class="text-xs text-slate-400 block">No active chats yet</b>
+            <p class="text-[11px] text-slate-600 mt-1">Direct buyer messages will appear here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let filteredKeys = threadKeys;
+      if (query.trim()) {
+        const q = query.toLowerCase().trim();
+        filteredKeys = threadKeys.filter(k => {
+          const item = allListings.find(x => x.id === k) || allWants.find(x => x.id === k) || {};
+          const title = (item.title || item.item || '').toLowerCase();
+          return title.includes(q);
+        });
+      }
+
+      filteredKeys.forEach(k => {
+        const msgs = allChats[k] || [];
+        const lastMsg = msgs[msgs.length - 1] || { text: 'Direct chat', time: '' };
+        const item = allListings.find(x => x.id === k) || allWants.find(x => x.id === k) || { title: 'Direct Deal', emoji: '📦' };
+
+        const isSelected = (currentActiveChatKey === k);
+
+        container.insertAdjacentHTML('beforeend', `
+          <div onclick="openActiveChat('${k}')" class="p-3.5 px-4 cursor-pointer transition flex items-center justify-between gap-3 ${isSelected ? 'bg-lime-400/10 border-l-4 border-lime-400' : 'hover:bg-slate-900/80'}">
+            <div class="flex items-center gap-3 overflow-hidden">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-lg overflow-hidden shrink-0 border border-slate-700">
+                ${item.photo ? `<img src="${item.photo}" class="w-full h-full object-cover">` : (item.emoji || '💬')}
+              </div>
+              <div class="overflow-hidden">
+                <b class="text-xs font-bold text-white block truncate">${escapeHtml(item.title || item.item || 'Item')}</b>
+                <span class="text-[11px] text-slate-400 block truncate mt-0.5">${escapeHtml(lastMsg.text)}</span>
+              </div>
+            </div>
+            <span class="text-[10px] text-slate-500 shrink-0 font-mono">${escapeHtml(lastMsg.time || '')}</span>
+          </div>
+        `);
+      });
+    }
+
+    function filterChatThreads(q) {
+      renderChatThreads(q);
+    }
+
+    function openActiveChat(threadKey) {
+      currentActiveChatKey = threadKey;
+      renderChatThreads();
+
+      const item = allListings.find(x => x.id === threadKey) || allWants.find(x => x.id === threadKey) || { title: 'Marketplace Deal', price: 0, emoji: '📦' };
+
+      document.getElementById('chatEmptyPlaceholder').classList.add('hidden');
+      document.getElementById('chatActiveBox').classList.remove('hidden');
+
+      // Head
+      document.getElementById('chatActiveItemTitle').textContent = item.title || item.item || 'Marketplace Item';
+      document.getElementById('chatActiveItemPrice').textContent = item.price ? `₹${Number(item.price).toLocaleString('en-IN')}` : (item.budget || 'Open for Negotiation');
+      const thumb = document.getElementById('chatActiveItemThumb');
+      if (item.photo) {
+        thumb.innerHTML = `<img src="${item.photo}" class="w-full h-full object-cover">`;
+      } else {
+        thumb.textContent = item.emoji || '📦';
+      }
+
+      // Render Messages
+      renderChatMessagesStream();
+
+      // Mobile column toggle
+      document.getElementById('chatThreadsColumn').classList.add('hidden', 'md:flex');
+      document.getElementById('chatActiveColumn').classList.remove('hidden');
+    }
+
+    function mobileBackToThreads() {
+      document.getElementById('chatThreadsColumn').classList.remove('hidden');
+      document.getElementById('chatActiveBox').classList.add('hidden');
+      document.getElementById('chatEmptyPlaceholder').classList.remove('hidden');
+    }
+
+    function renderChatMessagesStream() {
+      const stream = document.getElementById('chatMessagesStream');
+      if (!stream || !currentActiveChatKey) return;
+      stream.innerHTML = '';
+
+      const msgs = allChats[currentActiveChatKey] || [];
+
+      if (msgs.length === 0) {
+        stream.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">Conversation started. Send a message to start negotiation.</div>`;
+        return;
+      }
+
+      msgs.forEach(m => {
+        const isMine = (m.sender === (currentUser ? currentUser.name : 'You') || m.sender === 'You');
+
+        if (m.type === 'offer') {
+          stream.insertAdjacentHTML('beforeend', `
+            <div class="flex justify-center my-2">
+              <div class="bg-slate-950 border border-lime-400/40 p-3.5 rounded-2xl max-w-sm text-center shadow-lg">
+                <span class="text-xs text-lime-400 font-bold block mb-1">🤝 Price Offer Received</span>
+                <span class="text-xl font-black text-white font-mono">₹${Number(m.amount).toLocaleString('en-IN')}</span>
+                <span class="text-[10px] text-slate-400 block mt-1">Status: <b>${escapeHtml(m.status || 'Pending')}</b></span>
+              </div>
+            </div>
+          `);
+        } else {
+          stream.insertAdjacentHTML('beforeend', `
+            <div class="flex ${isMine ? 'justify-end' : 'justify-start'}">
+              <div class="max-w-[78%] px-4 py-2.5 text-xs shadow-sm ${isMine ? 'chat-bubble-mine font-medium' : 'chat-bubble-theirs'}">
+                <p class="leading-relaxed break-words">${escapeHtml(m.text)}</p>
+                <span class="text-[9px] opacity-70 block text-right mt-1 font-mono">${escapeHtml(m.time || '')}</span>
+              </div>
+            </div>
+          `);
+        }
+      });
+
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    function sendActiveChatMessage() {
+      const input = document.getElementById('chatMessageInput');
+      const text = input.value.trim();
+      if (!text || !currentActiveChatKey || !currentUser) return;
+
+      if (!allChats[currentActiveChatKey]) {
+        allChats[currentActiveChatKey] = [];
+      }
+
+      const newMsg = {
+        sender: currentUser.name,
+        text: text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      allChats[currentActiveChatKey].push(newMsg);
+      localStorage.setItem('findly_chats', JSON.stringify(allChats));
+
+      // RTDB sync if available
+      if (firebaseRtdb) {
+        firebaseRtdb.ref(`chats/${currentActiveChatKey}`).push(newMsg).catch(()=>{});
+      }
+
+      input.value = '';
+      renderChatMessagesStream();
+      renderChatThreads();
+    }
+
+    function sendQuickChatMessage(phrase) {
+      document.getElementById('chatMessageInput').value = phrase;
+      sendActiveChatMessage();
+    }
+
+    // ========================================================
+    // TAB 4: MY DEMANDS
+    // ========================================================
+    function renderMyDemands() {
+      const grid = document.getElementById('myDemandsGrid');
+      if (!grid || !currentUser) return;
+      grid.innerHTML = '';
+
+      const myW = allWants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
+
+      if (myW.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-16 px-4 bg-slate-900/60 border border-dashed border-slate-800 rounded-3xl text-slate-400 space-y-3">
+            <span class="text-4xl block mb-1">📢</span>
+            <b class="text-base text-white">No buyer demands broadcasted yet</b>
+            <p class="text-xs text-slate-400 max-w-sm mx-auto">Can't find what you need on the feed? Broadcast your requirements to verified sellers.</p>
+            <button onclick="openDemandModal()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-md shadow-orange-500/20">
+              📢 Broadcast a Demand
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      myW.forEach(w => {
+        grid.insertAdjacentHTML('beforeend', `
+          <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="bg-orange-500/15 text-orange-400 border border-orange-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
+                  ${escapeHtml(w.cat || 'Demand')}
+                </span>
+                <span class="text-[11px] text-slate-400">📍 ${escapeHtml(w.city || 'India')}</span>
+              </div>
+              <h4 class="font-bold text-base text-white">${escapeHtml(w.item)}</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(w.desc || 'Budget: ' + w.budget)}</p>
+              <div class="text-xs font-mono font-bold text-lime-400">Budget: ${escapeHtml(w.budget)}</div>
+            </div>
+
+            <div class="flex items-center justify-between border-t border-slate-800 pt-3">
+              <span class="text-[10px] text-slate-500">${w.urgency || 'Active'}</span>
+              <button onclick="closeMyDemand('${w.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition">
+                Close Demand ✕
+              </button>
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    function closeMyDemand(id) {
+      if (!confirm('Close this buyer requirement?')) return;
+
+      allWants = allWants.filter(x => x.id !== id);
+      localStorage.setItem('findly_wants', JSON.stringify(allWants));
+
+      if (typeof clubrDeleteLiveDemand === 'function') {
+        clubrDeleteLiveDemand(id);
+      }
+
+      updateDashboardCounts();
+      renderMyDemands();
+      toast('Demand requirement closed.');
+    }
+
+    // ========================================================
+    // TAB 5: KYC VERIFICATION PANE
+    // ========================================================
+    function renderKycPane() {
+      const banner = document.getElementById('kycStatusBanner');
+      const formCard = document.getElementById('kycFormCard');
+      if (!banner || !currentUser) return;
+
+      const status = currentUser.kycStatus || 'none';
+
+      if (status === 'verified') {
+        banner.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-3xl shrink-0">
+              🛡️
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <h3 class="text-xl font-black text-white font-display">Gold Verified Seller Status</h3>
+                <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Active</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
+                Congratulations! Your government identity has been verified by Clubr SuperAdmin. Your listings feature the Gold Trust Shield, giving buyers 100% confidence.
+              </p>
+              <div class="pt-2 flex items-center gap-4 text-xs text-slate-400 font-mono">
+                <span>Verified ID: <b>${escapeHtml(currentUser.kycDocType || 'Govt Document')}</b></span>
+                <span>Badge: <b>Gold Trust Shield</b></span>
+              </div>
+            </div>
+          </div>
+        `;
+        if (formCard) formCard.classList.add('hidden');
+      } else if (status === 'pending') {
+        banner.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-3xl shrink-0">
+              ⏳
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <h3 class="text-xl font-black text-white font-display">Verification Under Review</h3>
+                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">In Review</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
+                Your verification document has been securely submitted. The Clubr Command Center will review your proof within 24 hours. Your listings will automatically receive the Gold Shield upon approval.
+              </p>
+            </div>
+          </div>
+        `;
+        if (formCard) formCard.classList.add('hidden');
+      } else {
+        banner.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-lime-400/20 text-lime-400 border border-lime-400/30 flex items-center justify-center text-3xl shrink-0">
+              🛡️
+            </div>
+            <div class="space-y-1">
+              <h3 class="text-xl font-black text-white font-display">Get Your Gold Verified Badge</h3>
+              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
+                Verified members enjoy 5x more buyer responses, guaranteed scam protection, and higher marketplace placement. Upload a masked Aadhaar or Government ID below to get certified.
+              </p>
+            </div>
+          </div>
+        `;
+        if (formCard) formCard.classList.remove('hidden');
+      }
+    }
+
+    function handleKycPhotoSelected(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedKycPhotoBase64 = e.target.result;
+          const preview = document.getElementById('kycPhotoPreview');
+          preview.src = uploadedKycPhotoBase64;
+          preview.classList.remove('hidden');
+          document.getElementById('kycUploadPrompt').classList.add('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function submitKycVerification() {
+      const docType = document.getElementById('kycDocTypeSelect').value;
+      const docNumber = document.getElementById('kycDocNumberInput').value.trim();
+      const consent = document.getElementById('kycConsentCheckbox').checked;
+
+      if (!uploadedKycPhotoBase64) {
+        toast('⚠️ Please attach a photo of your ID document.');
+        return;
+      }
+      if (!consent) {
+        toast('⚠️ Please accept the verification consent.');
+        return;
+      }
+
+      const reqObj = {
+        id: 'kyc_' + Date.now(),
+        userId: currentUser.id,
+        userName: currentUser.name,
+        userPhone: currentUser.phone || '',
+        userCity: currentUser.city || 'India',
+        docType: docType,
+        docNumber: docNumber,
+        docPhoto: uploadedKycPhotoBase64,
+        date: new Date().toLocaleDateString('en-IN'),
+        status: 'pending'
+      };
+
+      // Save locally
+      let kycList = [];
+      try {
+        const k = localStorage.getItem('clubr_kyc_requests');
+        if (k) kycList = JSON.parse(k);
+      } catch(e) {}
+      kycList.unshift(reqObj);
+      localStorage.setItem('clubr_kyc_requests', JSON.stringify(kycList));
+
+      // Cloud Firestore sync
+      if (typeof clubrPublishKycRequest === 'function') {
+        clubrPublishKycRequest(reqObj);
+      }
+
+      currentUser.kycStatus = 'pending';
+      currentUser.kycDocType = docType;
+      currentUser.kycDocNumber = docNumber;
+      localStorage.setItem('clubr_current_user', JSON.stringify(currentUser));
+
+      // Update in registeredUsers
+      try {
+        let reg = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+        const idx = reg.findIndex(u => u.id === currentUser.id);
+        if (idx !== -1) {
+          reg[idx] = { ...reg[idx], kycStatus: 'pending' };
+          localStorage.setItem('clubr_registered_users', JSON.stringify(reg));
+        }
+      } catch(e) {}
+
+      populateUserProfile();
+      renderKycPane();
+      toast('🛡️ Document submitted! SuperAdmin will review within 24 hours.');
+    }
+
+    // ========================================================
+    // TAB 6: SETTINGS FORM
+    // ========================================================
+    function populateSettingsForm() {
+      if (!currentUser) return;
+      document.getElementById('settingsName').value = currentUser.name || '';
+      document.getElementById('settingsEmail').value = currentUser.email || 'Google Account';
+      document.getElementById('settingsPhone').value = currentUser.phone || '';
+      document.getElementById('settingsCity').value = currentUser.city || '';
+      document.getElementById('settingsBio').value = currentUser.bio || '';
+    }
+
+    function saveProfileSettings() {
+      if (!currentUser) return;
+      const newName = document.getElementById('settingsName').value.trim();
+      const newPhone = document.getElementById('settingsPhone').value.trim();
+      const newCity = document.getElementById('settingsCity').value.trim();
+      const newBio = document.getElementById('settingsBio').value.trim();
+
+      currentUser.name = newName;
+      currentUser.phone = newPhone;
+      currentUser.city = newCity;
+      currentUser.bio = newBio;
+      localStorage.setItem('clubr_current_user', JSON.stringify(currentUser));
+
+      // Sync registered users
+      try {
+        let reg = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+        const idx = reg.findIndex(u => u.id === currentUser.id);
+        if (idx !== -1) {
+          reg[idx] = { ...reg[idx], name: newName, phone: newPhone, city: newCity, bio: newBio };
+          localStorage.setItem('clubr_registered_users', JSON.stringify(reg));
+        }
+      } catch(e) {}
+
+      // Cloud Firestore sync
+      if (typeof clubrUpdateUserProfile === 'function') {
+        clubrUpdateUserProfile(currentUser.id, { name: newName, phone: newPhone, city: newCity, bio: newBio });
+      }
+
+      populateUserProfile();
+      populateSettingsForm();
+      toast('✅ Profile changes saved successfully!');
+    }
+
+    // ========================================================
+    // SELL & DEMAND MODALS
+    // ========================================================
+    function openSellModal() {
+      document.getElementById('modalSell').classList.remove('hidden');
+    }
+    function closeSellModal() {
+      document.getElementById('modalSell').classList.add('hidden');
+    }
+
+    function handleSellPhotoSelected(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedSellPhotoBase64 = e.target.result;
+          const preview = document.getElementById('sellPhotoPreview');
+          preview.src = uploadedSellPhotoBase64;
+          preview.classList.remove('hidden');
+          document.getElementById('sellPhotoPrompt').textContent = '✅ Photo loaded! Click to change.';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function submitSellItem() {
+      if (!currentUser) return;
+      const title = document.getElementById('sellTitle').value.trim();
+      const price = Number(document.getElementById('sellPrice').value);
+      const cat = document.getElementById('sellCategory').value;
+      const city = document.getElementById('sellCity').value.trim();
+      const locality = document.getElementById('sellLocality').value.trim() || 'Local';
+      const desc = document.getElementById('sellDesc').value.trim();
+
+      const emojiMap = {
+        Mobiles: '📱', Vehicles: '🚗', Electronics: '💻', Appliances: '📺', Furniture: '🛋️', Others: '📦'
+      };
+
+      const newListing = {
+        id: 'l_' + Date.now(),
+        title,
+        price,
+        cat,
+        emoji: emojiMap[cat] || '📦',
+        city,
+        locality,
+        condition: 'Good',
+        seller: currentUser.name,
+        sellerId: currentUser.id,
+        isKycVerified: (currentUser.kycStatus === 'verified'),
+        desc,
+        photo: uploadedSellPhotoBase64,
+        time: 'Just now'
+      };
+
+      allListings.unshift(newListing);
+      localStorage.setItem('findly_listings', JSON.stringify(allListings));
+
+      // Sync Firestore
+      if (typeof clubrPublishListing === 'function') {
+        clubrPublishListing(newListing);
+      }
+
+      closeSellModal();
+      updateDashboardCounts();
+      renderOverviewTab();
+      renderMyListings();
+      switchTab('listings');
+      toast('🎉 Listing published live!');
+    }
+
+    function openDemandModal() {
+      document.getElementById('modalDemand').classList.remove('hidden');
+    }
+    function closeDemandModal() {
+      document.getElementById('modalDemand').classList.add('hidden');
+    }
+
+    function submitDemandItem() {
+      if (!currentUser) return;
+      const item = document.getElementById('demandItem').value.trim();
+      const budget = document.getElementById('demandBudget').value.trim();
+      const cat = document.getElementById('demandCategory').value;
+      const city = document.getElementById('demandCity').value.trim();
+      const urgency = document.getElementById('demandUrgency').value;
+      const desc = document.getElementById('demandDesc').value.trim();
+
+      const newDemand = {
+        id: 'w_' + Date.now(),
+        item,
+        budget,
+        cat,
+        city,
+        locality: 'Local',
+        urgency,
+        desc,
+        buyer: currentUser.name,
+        buyerId: currentUser.id,
+        time: 'Just now'
+      };
+
+      allWants.unshift(newDemand);
+      localStorage.setItem('findly_wants', JSON.stringify(allWants));
+
+      // Sync Firestore
+      if (typeof clubrPublishDemand === 'function') {
+        clubrPublishDemand(newDemand);
+      }
+
+      closeDemandModal();
+      updateDashboardCounts();
+      renderOverviewTab();
+      renderMyDemands();
+      switchTab('demands');
+      toast('📢 Requirement broadcasted live!');
+    }
+
+    // ========================================================
+    // AUTHENTICATION & SESSION
+    // ========================================================
+    async function triggerDashboardGoogleSignIn() {
+      const btn = document.getElementById('btnGoogleSignIn');
+      const orig = btn.innerHTML;
+      btn.innerHTML = 'Connecting to Google... ⏳';
+      btn.disabled = true;
+
+      try {
+        const res = await clubrSignInWithGoogle();
+        if (res && res.success && res.user) {
+          currentUser = res.user;
+          localStorage.setItem('clubr_current_user', JSON.stringify(currentUser));
+          initDashboardData();
+          toast(`Welcome ${currentUser.name}!`);
+        } else {
+          alert((res && res.error) ? res.error : 'Google Sign-In was cancelled.');
+        }
+      } catch(e) {
+        alert('Google Sign-In failed: ' + e.message);
+      } finally {
+        btn.innerHTML = orig;
+        btn.disabled = false;
+      }
+    }
+
+    async function handleLogout() {
+      if (confirm('Log out from your Clubr dashboard?')) {
+        if (typeof clubrSignOut === 'function') {
+          await clubrSignOut();
+        }
+        currentUser = null;
+        localStorage.removeItem('clubr_current_user');
+        window.location.href = 'index.html';
+      }
+    }
+
+    // ========================================================
+    // HELPERS & BACKGROUND LIVE CLOUD SYNC
+    // ========================================================
+    function syncCloudData() {
+      if (typeof clubrFetchLiveListings === 'function') {
+        clubrFetchLiveListings().then(cloudL => {
+          if (cloudL && Array.isArray(cloudL)) {
+            allListings = cloudL;
+            localStorage.setItem('findly_listings', JSON.stringify(allListings));
+            updateDashboardCounts();
+            if (activeTabId === 'overview') renderOverviewTab();
+            if (activeTabId === 'listings') renderMyListings();
+          }
+        });
+      }
+
+      if (typeof clubrFetchLiveDemands === 'function') {
+        clubrFetchLiveDemands().then(cloudW => {
+          if (cloudW && Array.isArray(cloudW)) {
+            allWants = cloudW;
+            localStorage.setItem('findly_wants', JSON.stringify(allWants));
+            updateDashboardCounts();
+            if (activeTabId === 'demands') renderMyDemands();
+          }
+        });
+      }
+    }
+
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function toast(msg) {
+      const box = document.getElementById('toastBox');
+      const div = document.createElement('div');
+      div.className = 'toast-msg';
+      div.textContent = msg;
+      box.appendChild(div);
+      setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transition = 'opacity 0.3s';
+        setTimeout(() => div.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

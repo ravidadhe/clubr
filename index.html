@@ -2757,6 +2757,19 @@ function initData() {
   if (typeof clubrInitLivePresence === 'function') {
     clubrInitLivePresence('marketplace');
   }
+
+  // Handle URL deep linking (e.g. ?action=sell or ?action=want)
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get('action');
+    if (action === 'sell') {
+      setTimeout(() => openModal('sell'), 350);
+    } else if (action === 'want') {
+      setTimeout(() => openModal('want'), 350);
+    } else if (action === 'dashboard') {
+      handleUserBtnClick();
+    }
+  } catch(e) {}
 }
 
 function saveData() {
@@ -2827,9 +2840,9 @@ function updateUserUI() {
 
 function handleUserBtnClick() {
   if (currentUser) {
-    openProfileModal();
+    window.location.href = 'dashboard.html';
   } else {
-    openAuthModal('Sign in to access your profile & listings');
+    openAuthModal('Sign in to access your personal dashboard, listings & chats');
   }
 }
 

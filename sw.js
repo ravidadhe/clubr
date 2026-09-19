@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v3.9 - Real Authentication & KYC Pipeline
-const CACHE_NAME = 'clubr-v3-9-real-auth';
+// Clubr PWA Service Worker v4.0 - Google Firebase Auth & Cloud Firestore
+const CACHE_NAME = 'clubr-v4-firebase-google-auth';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

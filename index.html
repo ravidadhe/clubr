@@ -25,6 +25,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+<!-- Google Firebase Compat SDK & Config -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
 <style>
 :root {
   --ink: #17211b;
@@ -1570,108 +1576,64 @@ h1 {
 <!-- ======================================================= -->
 <!-- MODAL: MANDATORY USER AUTH MODAL (GUEST REMOVED)        -->
 <!-- ======================================================= -->
+<!-- ======================================================= -->
+<!-- MODAL: GOOGLE 1-CLICK AUTH MODAL (FIREBASE)             -->
+<!-- ======================================================= -->
 <div class="modal-bg" id="authModal" onclick="if(event.target===this)closeAuthModal()">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-head">
-      <div>
-        <h2 id="authModalTitle">Sign in to Clubr</h2>
-        <span style="font-size:11px; color:var(--muted)">Verified accounts protect buyers & sellers</span>
+  <div class="modal" style="max-width:440px; text-align:center">
+    <div class="modal-head" style="border-bottom:none; padding-bottom:0">
+      <div style="text-align:left">
+        <h2 id="authModalTitle" style="font-size:20px">Sign in to Clubr</h2>
+        <span style="font-size:12px; color:var(--muted)">India's Hyperlocal Marketplace · clubr.online</span>
       </div>
       <button class="close-btn" onclick="closeAuthModal()">✕</button>
     </div>
 
-    <!-- Notice -->
-    <div style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:12px" id="authReasonNotice">
-      🔒 <b>Login Required:</b> You must be signed in with a verified account to Buy, Sell, or Chat on Clubr.
+    <!-- Reason Notice -->
+    <div style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:12px 14px; border-radius:14px; font-size:12px; font-weight:600; margin:16px 0; text-align:left; line-height:1.45" id="authReasonNotice">
+      🔒 <b>Login Required:</b> Sign in with your Google account to Buy, Sell, or Chat with sellers on Clubr.
     </div>
 
     <!-- Error Alert Box -->
-    <div id="authErrorBox" style="display:none; background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:12px"></div>
+    <div id="authErrorBox" style="display:none; background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:14px; text-align:left"></div>
 
-    <div style="display:flex; border-bottom:1px solid var(--line); margin-bottom:14px" id="authTabHeader">
-      <button class="profile-tab-btn active" id="authTabSignIn" onclick="switchAuthMode('signin')">Sign In</button>
-      <button class="profile-tab-btn" id="authTabSignUp" onclick="switchAuthMode('signup')">Create Account</button>
+    <!-- Google 1-Click Action Card -->
+    <div style="background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:24px 18px; margin:12px 0; box-shadow:0 8px 24px rgba(0,0,0,0.04)">
+      <div style="width:56px; height:56px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px auto">
+        <svg width="28" height="28" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <path fill="none" d="M0 0h48v48H0z"/>
+        </svg>
+      </div>
+
+      <h3 style="font-size:17px; font-weight:800; color:var(--ink); margin-bottom:6px">1-Click Google Sign-In</h3>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:18px; line-height:1.4">
+        No password to remember. No mobile number verification. Instant secure login powered by Google Firebase.
+      </p>
+
+      <button type="button" onclick="triggerGoogleSignIn()" id="googleSignInBtn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:12px; background:#ffffff; color:#1f2937; border:1.5px solid #d1d5db; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.06); transition:all 0.2s">
+        <svg width="22" height="22" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <path fill="none" d="M0 0h48v48H0z"/>
+        </svg>
+        <span>Continue with Google</span>
+      </button>
     </div>
 
-    <!-- 1. SIGN IN FORM -->
-    <form id="signInForm" onsubmit="event.preventDefault(); handleSignIn();">
-      <div class="field">
-        <label>Mobile Number</label>
-        <input id="loginPhone" type="tel" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
-      </div>
-
-      <div class="field">
-        <label>Account Password</label>
-        <input id="loginPass" type="password" placeholder="••••••••" required>
-      </div>
-
-      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px" id="signInBtn">
-        Sign In →
-      </button>
-
-      <div style="text-align:center; margin-top:14px; font-size:12px; color:var(--muted)">
-        Don't have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color:var(--ink); font-weight:700">Create Account</a>
-      </div>
-    </form>
-
-    <!-- 2. SIGN UP FORM STEP 1: Details -->
-    <form id="signUpFormStep1" style="display:none" onsubmit="event.preventDefault(); handleSignUpStep1();">
-      <div class="field">
-        <label>Your Full Legal Name</label>
-        <input id="regName" placeholder="e.g. Rahul Deshmukh" required>
-      </div>
-
-      <div class="field">
-        <label>Mobile Number (For SMS Verification)</label>
-        <input id="regPhone" type="tel" placeholder="10-digit Mobile Number" pattern="[0-9]{10}" maxlength="10" required>
-      </div>
-
-      <div class="field">
-        <label>Your City</label>
-        <input id="regCity" placeholder="e.g. Pune, Mumbai, Nagpur, Yavatmal..." required>
-      </div>
-
-      <div class="field">
-        <label>Create Account Password <span class="hint">Min. 4 chars</span></label>
-        <input id="regPass" type="password" placeholder="••••••••" minlength="4" required>
-      </div>
-
-      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px" id="signUpStep1Btn">
-        Send SMS OTP & Proceed →
-      </button>
-
-      <div style="text-align:center; margin-top:14px; font-size:12px; color:var(--muted)">
-        Already have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signin')" style="color:var(--ink); font-weight:700">Sign In</a>
-      </div>
-    </form>
-
-    <!-- 3. SIGN UP FORM STEP 2: OTP VERIFICATION -->
-    <div id="signUpFormOtp" style="display:none">
-      <div style="background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:12px; border-radius:12px; font-size:12px; line-height:1.4; margin-bottom:14px">
-        📱 Verification code sent via SMS to <b>+91 <span id="otpTargetPhone"></span></b>.<br>
-        <span style="font-size:11px; opacity:0.85">Simulation: Your 4-digit code is <b id="otpDemoCodeDisplay" style="font-family:monospace; background:#fff; padding:1px 5px; border-radius:4px; font-size:12px"></b></span>
-      </div>
-
-      <div class="field">
-        <label>Enter 4-Digit SMS Code</label>
-        <input id="regOtpInput" type="tel" placeholder="e.g. 1234" maxlength="4" style="letter-spacing:6px; font-size:18px; font-weight:900; text-align:center" required>
-      </div>
-
-      <button type="button" onclick="verifyOtpAndCreateUser()" class="want-btn" style="background:#15803d; color:#fff; width:100%; padding:14px; margin-top:8px">
-        Verify & Complete Registration →
-      </button>
-
-      <div style="display:flex; justify-content:space-between; margin-top:14px; font-size:12px">
-        <a href="javascript:void(0)" onclick="backToSignUpDetails()" style="color:var(--muted)">← Edit Details</a>
-        <a href="javascript:void(0)" onclick="resendOtp()" style="color:var(--ink); font-weight:700">Resend SMS OTP</a>
-      </div>
+    <div style="font-size:11px; color:var(--muted); line-height:1.45; margin-top:10px">
+      🛡️ After signing in with Google, you can customize your contact phone, city, and bio in your profile dashboard.
     </div>
-
   </div>
 </div>
 
 <!-- ======================================================= -->
-<!-- MODAL: USER PROFILE DASHBOARD WITH KYC VERIFICATION     -->
+<!-- MODAL: USER PROFILE DASHBOARD WITH KYC & EDIT PROFILE   -->
 <!-- ======================================================= -->
 <div class="modal-bg" id="profileModal" onclick="if(event.target===this)closeProfileModal()">
   <div class="modal">
@@ -1683,8 +1645,10 @@ h1 {
     <!-- User Info Card -->
     <div style="background:#f7f4ee; border:1px solid var(--line); border-radius:18px; padding:18px; display:flex; align-items:center; justify-content:space-between; margin-bottom:16px">
       <div style="display:flex; align-items:center; gap:14px">
-        <div style="width:50px; height:50px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900" id="profileCardAvatar">
-          R
+        <div id="profileCardAvatarContainer">
+          <div style="width:50px; height:50px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900" id="profileCardAvatar">
+            R
+          </div>
         </div>
         <div>
           <div style="display:flex; align-items:center; gap:6px">
@@ -1705,6 +1669,7 @@ h1 {
       <button class="profile-tab-btn" id="pTabDemands" onclick="switchProfileTab('demands')">My Demands (<span id="userMyDemandsCount">0</span>)</button>
       <button class="profile-tab-btn" id="pTabChats" onclick="switchProfileTab('chats')">My Chats</button>
       <button class="profile-tab-btn" id="pTabKyc" onclick="switchProfileTab('kyc')">🛡️ KYC Verification</button>
+      <button class="profile-tab-btn" id="pTabEdit" onclick="switchProfileTab('edit')">✏️ Edit Profile</button>
     </div>
 
     <!-- Tab Contents -->
@@ -2366,14 +2331,21 @@ function updateCounts() {
   }
 }
 
-// User Auth Management (Real Accounts Engine)
-let pendingRegistration = null;
+// User Auth Management (Google 1-Click Powered by Firebase)
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 function updateUserUI() {
   const avatarEl = document.getElementById('userBtnAvatar');
   const labelEl = document.getElementById('userBtnLabel');
   if (currentUser) {
-    avatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
+    if (currentUser.photoURL) {
+      avatarEl.innerHTML = `<img src="${escapeHtml(currentUser.photoURL)}" style="width:24px; height:24px; border-radius:50%; object-fit:cover" alt="Profile">`;
+    } else {
+      avatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
+    }
     labelEl.textContent = currentUser.name.split(' ')[0];
   } else {
     avatarEl.textContent = '👤';
@@ -2391,11 +2363,10 @@ function handleUserBtnClick() {
 
 function openAuthModal(reasonText) {
   hideAuthError();
-  switchAuthMode('signin');
   if (reasonText) {
     document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> ${reasonText}`;
   } else {
-    document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> You must be signed in to Buy, Sell, or Chat on Clubr.`;
+    document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> Sign in with Google to Buy, Sell, or Chat on Clubr.`;
   }
   document.getElementById('authModal').classList.add('show');
 }
@@ -2417,161 +2388,39 @@ function hideAuthError() {
   box.innerHTML = '';
 }
 
-function switchAuthMode(mode) {
-  authMode = mode;
+// 1-CLICK GOOGLE SIGN-IN TRIGGER
+async function triggerGoogleSignIn() {
   hideAuthError();
-  const isSignIn = (mode === 'signin');
-  document.getElementById('authTabSignIn').classList.toggle('active', isSignIn);
-  document.getElementById('authTabSignUp').classList.toggle('active', !isSignIn);
+  const btn = document.getElementById('googleSignInBtn');
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = '<span>Connecting to Google... ⏳</span>';
+  btn.style.opacity = '0.7';
+  btn.disabled = true;
 
-  document.getElementById('signInForm').style.display = isSignIn ? 'block' : 'none';
-  document.getElementById('signUpFormStep1').style.display = !isSignIn ? 'block' : 'none';
-  document.getElementById('signUpFormOtp').style.display = 'none';
-
-  document.getElementById('authModalTitle').textContent = isSignIn ? 'Sign in to Clubr' : 'Create Clubr Account';
-
-  if (!isSignIn) {
-    document.getElementById('regCity').value = (currentCity === 'All India' ? 'Mumbai' : currentCity);
+  try {
+    const res = await clubrSignInWithGoogle();
+    if (res && res.success && res.user) {
+      currentUser = res.user;
+      saveData();
+      updateUserUI();
+      closeAuthModal();
+      toast(`🎉 Welcome ${currentUser.name}! You are signed in.`);
+    } else {
+      showAuthError((res && res.error) ? res.error : 'Google Sign-In was cancelled or could not be completed.');
+    }
+  } catch (err) {
+    showAuthError('Google Sign-In error: ' + err.message);
+  } finally {
+    btn.innerHTML = originalHtml;
+    btn.style.opacity = '1';
+    btn.disabled = false;
   }
 }
 
-// REAL SIGN IN
-function handleSignIn() {
-  hideAuthError();
-  const phone = document.getElementById('loginPhone').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-
-  if (!/^[6-9]\d{9}$/.test(phone)) {
-    showAuthError('⚠️ Please enter a valid 10-digit Indian mobile number.');
-    return;
+async function logoutUser() {
+  if (typeof clubrSignOut === 'function') {
+    await clubrSignOut();
   }
-
-  // Look up registered user
-  const user = registeredUsers.find(x => x.phone === phone);
-  if (!user) {
-    showAuthError(`❌ No account registered for <b>+91 ${phone}</b>.<br><a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color:#991b1b; text-decoration:underline; font-weight:800; display:inline-block; margin-top:4px">Click here to Create Account →</a>`);
-    return;
-  }
-
-  if (user.password !== pass) {
-    showAuthError('❌ Incorrect password! Please check and try again.');
-    return;
-  }
-
-  // Successful Real Login
-  currentUser = user;
-  saveData();
-  updateUserUI();
-  closeAuthModal();
-  toast(`👋 Welcome back, ${currentUser.name}!`);
-}
-
-// REAL SIGN UP STEP 1: Details & OTP Trigger
-function handleSignUpStep1() {
-  hideAuthError();
-  const name = document.getElementById('regName').value.trim();
-  const phone = document.getElementById('regPhone').value.trim();
-  const city = document.getElementById('regCity').value.trim();
-  const pass = document.getElementById('regPass').value.trim();
-
-  if (name.length < 2) {
-    showAuthError('⚠️ Please enter your full legal name.');
-    return;
-  }
-
-  if (!/^[6-9]\d{9}$/.test(phone)) {
-    showAuthError('⚠️ Please enter a valid 10-digit Indian mobile number (starts with 6, 7, 8, or 9).');
-    return;
-  }
-
-  if (pass.length < 4) {
-    showAuthError('⚠️ Password must be at least 4 characters long.');
-    return;
-  }
-
-  // Check if phone already registered
-  const existing = registeredUsers.find(x => x.phone === phone);
-  if (existing) {
-    showAuthError(`⚠️ An account already exists for <b>+91 ${phone}</b>.<br><a href="javascript:void(0)" onclick="switchAuthMode('signin')" style="color:#991b1b; text-decoration:underline; font-weight:800; display:inline-block; margin-top:4px">Switch to Sign In →</a>`);
-    return;
-  }
-
-  // Generate 4-Digit OTP Simulation
-  const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-  pendingRegistration = {
-    name,
-    phone,
-    city: city || 'Mumbai',
-    password: pass,
-    otp: generatedOtp
-  };
-
-  document.getElementById('signUpFormStep1').style.display = 'none';
-  document.getElementById('signUpFormOtp').style.display = 'block';
-  document.getElementById('otpTargetPhone').textContent = phone;
-  document.getElementById('otpDemoCodeDisplay').textContent = generatedOtp;
-  document.getElementById('regOtpInput').value = '';
-  document.getElementById('regOtpInput').focus();
-
-  toast(`💬 SMS OTP for Clubr Verification: ${generatedOtp}`);
-}
-
-// REAL SIGN UP STEP 2: Verify OTP and Create Account
-function verifyOtpAndCreateUser() {
-  hideAuthError();
-  if (!pendingRegistration) {
-    switchAuthMode('signup');
-    return;
-  }
-
-  const enteredOtp = document.getElementById('regOtpInput').value.trim();
-  if (enteredOtp !== pendingRegistration.otp) {
-    showAuthError(`❌ Invalid OTP code! Please enter the 4-digit code shown above (e.g. ${pendingRegistration.otp}).`);
-    return;
-  }
-
-  // Create real persistent user account
-  const newUser = {
-    id: 'usr_' + Date.now(),
-    name: pendingRegistration.name,
-    phone: pendingRegistration.phone,
-    city: pendingRegistration.city,
-    password: pendingRegistration.password,
-    kycStatus: 'none', // Strictly unverified until ID is submitted & approved by SuperAdmin
-    kycDocType: '',
-    kycDocNumber: '',
-    kycDocPhoto: '',
-    registeredAt: new Date().toLocaleDateString('en-IN')
-  };
-
-  registeredUsers.unshift(newUser);
-  localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
-
-  currentUser = newUser;
-  saveData();
-  updateUserUI();
-  closeAuthModal();
-  pendingRegistration = null;
-
-  toast(`🎉 Welcome ${newUser.name}! Account registered successfully.`);
-}
-
-function backToSignUpDetails() {
-  hideAuthError();
-  document.getElementById('signUpFormStep1').style.display = 'block';
-  document.getElementById('signUpFormOtp').style.display = 'none';
-}
-
-function resendOtp() {
-  if (!pendingRegistration) return;
-  const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
-  pendingRegistration.otp = newOtp;
-  document.getElementById('otpDemoCodeDisplay').textContent = newOtp;
-  hideAuthError();
-  toast(`💬 New SMS OTP sent: ${newOtp}`);
-}
-
-function logoutUser() {
   currentUser = null;
   localStorage.removeItem('clubr_current_user');
   saveData();
@@ -2584,8 +2433,17 @@ function logoutUser() {
 function openProfileModal() {
   if (!currentUser) return;
   document.getElementById('profileCardName').textContent = currentUser.name;
-  document.getElementById('profileCardAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-  document.getElementById('profileCardMeta').textContent = `📍 ${currentUser.city} · ${currentUser.phone}`;
+  
+  // Avatar handling (Google Photo vs Initial)
+  const avatarContainer = document.getElementById('profileCardAvatarContainer');
+  if (currentUser.photoURL) {
+    avatarContainer.innerHTML = `<img src="${escapeHtml(currentUser.photoURL)}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid var(--lime)" alt="${escapeHtml(currentUser.name)}">`;
+  } else {
+    avatarContainer.innerHTML = `<div style="width:50px; height:50px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900">${currentUser.name.charAt(0).toUpperCase()}</div>`;
+  }
+
+  const userMetaText = `📍 ${currentUser.city || 'India'} · ${currentUser.phone ? currentUser.phone : (currentUser.email || '')}`;
+  document.getElementById('profileCardMeta').textContent = userMetaText;
 
   // KYC Badge in profile header
   const badgeEl = document.getElementById('profileCardBadge');
@@ -2624,6 +2482,8 @@ function switchProfileTab(tab) {
   document.getElementById('pTabDemands').classList.toggle('active', tab === 'demands');
   document.getElementById('pTabChats').classList.toggle('active', tab === 'chats');
   document.getElementById('pTabKyc').classList.toggle('active', tab === 'kyc');
+  const editTabBtn = document.getElementById('pTabEdit');
+  if (editTabBtn) editTabBtn.classList.toggle('active', tab === 'edit');
 
   const content = document.getElementById('profileTabContent');
   content.innerHTML = '';
@@ -2673,7 +2533,80 @@ function switchProfileTab(tab) {
     openInboxModal();
   } else if (tab === 'kyc') {
     renderKycTab(content);
+  } else if (tab === 'edit') {
+    renderEditProfileTab(content);
   }
+}
+
+// Self-Service Profile Editor (User khud apna profile edit kar sakega)
+function renderEditProfileTab(container) {
+  container.innerHTML = `
+    <div style="background:#fdfbf7; border:1px solid var(--line); border-radius:16px; padding:18px">
+      <div style="margin-bottom:14px">
+        <b style="font-size:15px">✏️ Edit Your Profile Details</b>
+        <p style="font-size:11px; color:var(--muted); line-height:1.4; margin-top:3px">
+          You are signed in via Google (<b>${escapeHtml(currentUser.email || '')}</b>). You can customize your name, contact phone, and city anytime.
+        </p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); saveProfileEdit();">
+        <div class="field">
+          <label>Your Display Name</label>
+          <input id="editProfileName" value="${escapeHtml(currentUser.name || '')}" required>
+        </div>
+
+        <div class="field">
+          <label>Google Email (Verified)</label>
+          <input value="${escapeHtml(currentUser.email || '')}" disabled style="background:#f1f5f9; color:#64748b; cursor:not-allowed">
+        </div>
+
+        <div class="field">
+          <label>Contact Phone / WhatsApp <span class="hint">10 digits (for trade calls)</span></label>
+          <input id="editProfilePhone" type="tel" placeholder="e.g. 9823012345" value="${escapeHtml(currentUser.phone || '')}" maxlength="10">
+        </div>
+
+        <div class="field">
+          <label>Your City / Locality</label>
+          <input id="editProfileCity" placeholder="e.g. Yavatmal, Pune, Mumbai, Nagpur..." value="${escapeHtml(currentUser.city || '')}" required>
+        </div>
+
+        <div class="field">
+          <label>About You / Seller Bio</label>
+          <textarea id="editProfileBio" placeholder="e.g. Verified citizen on Clubr. Deals in electronics and furniture." style="width:100%; min-height:70px; border:1px solid var(--line); border-radius:12px; padding:10px; font-family:inherit; font-size:13px; outline:none">${escapeHtml(currentUser.bio || '')}</textarea>
+        </div>
+
+        <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px">
+          💾 Save Profile Changes
+        </button>
+      </form>
+    </div>
+  `;
+}
+
+async function saveProfileEdit() {
+  const name = document.getElementById('editProfileName').value.trim();
+  const phone = document.getElementById('editProfilePhone').value.trim();
+  const city = document.getElementById('editProfileCity').value.trim();
+  const bio = document.getElementById('editProfileBio').value.trim();
+
+  if (!name) {
+    toast('⚠️ Name cannot be empty');
+    return;
+  }
+
+  currentUser.name = name;
+  currentUser.phone = phone;
+  currentUser.city = city || 'Mumbai';
+  currentUser.bio = bio;
+
+  if (typeof clubrUpdateUserProfile === 'function') {
+    await clubrUpdateUserProfile(currentUser.id, { name, phone, city, bio });
+  }
+
+  saveData();
+  updateUserUI();
+  openProfileModal();
+  toast('✅ Profile details updated successfully!');
 }
 
 // KYC Verification Engine in Profile
@@ -2803,6 +2736,10 @@ function submitKycDocument() {
 
   requests.unshift(newReq);
   localStorage.setItem('clubr_kyc_requests', JSON.stringify(requests));
+
+  if (typeof clubrPublishKycRequest === 'function') {
+    clubrPublishKycRequest(newReq);
+  }
 
   currentUser.kycStatus = 'pending';
   currentUser.kycDocType = docType;
@@ -3468,6 +3405,9 @@ function submitListing() {
 
   listings.unshift(newListing);
   saveData();
+  if (typeof clubrPublishListing === 'function') {
+    clubrPublishListing(newListing);
+  }
   closeActionModal();
   switchFeed('sell');
   toast('🎉 Listing published live across India!');
@@ -3508,6 +3448,9 @@ function submitWant() {
 
   wants.unshift(newWant);
   saveData();
+  if (typeof clubrPublishDemand === 'function') {
+    clubrPublishDemand(newWant);
+  }
   closeActionModal();
   switchFeed('want');
   toast('📢 Requirement broadcasted live!');

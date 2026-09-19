@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.9 - Clean English Terms & Liability Disclaimer
-const CACHE_NAME = 'clubr-v4-9-english-terms-and-disclaimer';
+// Clubr PWA Service Worker v5.0 - Professional Minimal Footer & Modals
+const CACHE_NAME = 'clubr-v5-0-minimal-professional-footer';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

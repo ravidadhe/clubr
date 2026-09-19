@@ -1439,6 +1439,105 @@ h1 {
     margin-top: -16px;
   }
 }
+
+/* Minimalist Professional Site Footer */
+.site-footer {
+  margin-top: 56px;
+  padding: 32px 0 28px 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+.footer-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.footer-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-brand-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.footer-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.footer-logo i {
+  color: var(--orange);
+  font-style: normal;
+}
+.footer-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+.footer-nav-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.footer-nav-links button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+.footer-nav-links button:hover {
+  color: var(--ink);
+}
+.footer-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  font-size: 11px;
+  color: var(--muted);
+}
+.footer-security-pill {
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+}
+@media (max-width: 600px) {
+  .site-footer {
+    padding-bottom: 20px;
+  }
+  .footer-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .footer-nav-links {
+    gap: 14px;
+  }
+  .footer-bottom-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
 </style>
 </head>
 <body>
@@ -1568,62 +1667,27 @@ h1 {
   </section>
 
   <!-- ======================================================= -->
-  <!-- FOOTER: ABOUT CLUBR, TERMS & LIABILITY DISCLAIMER       -->
   <!-- ======================================================= -->
-  <footer class="site-footer" style="margin-top:40px; padding:32px 20px 84px 20px; border-top:1px solid var(--line); background:#faf8f5; border-radius:24px 24px 0 0;">
-    <div style="max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:22px;">
-      
-      <!-- Brand & About -->
-      <div>
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
-          <span style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:900; letter-spacing:-0.5px">clubr<span style="color:var(--orange)">•</span></span>
-          <span style="font-size:11px; background:#e8f9d2; color:#3b5f05; padding:2px 8px; border-radius:6px; font-weight:800">Hyperlocal Community</span>
+  <!-- PROFESSIONAL MINIMAL FOOTER                             -->
+  <!-- ======================================================= -->
+  <footer class="site-footer">
+    <div class="footer-wrap">
+      <div class="footer-top-row">
+        <div class="footer-brand-block">
+          <div class="footer-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">clubr<i>•</i></div>
+          <p class="footer-desc">Hyperlocal community discovery & direct in-app trade.</p>
         </div>
-        <p style="font-size:13px; color:var(--ink); line-height:1.6; margin-bottom:12px">
-          Clubr is an independent hyperlocal marketplace designed to connect verified local citizens directly. Buyers and sellers can discover items and communicate one-on-one via real-time in-app chat with zero middlemen.
-        </p>
-        <div style="display:inline-flex; align-items:center; gap:8px; background:#ffffff; border:1px solid var(--line); padding:8px 14px; border-radius:12px; font-size:13px;">
-          <span style="font-size:16px">✉️</span>
-          <span style="color:var(--muted); font-weight:600">Support / Contact:</span>
-          <a href="mailto:rd.chatbox@gmail.com" style="color:var(--ink); font-weight:800; text-decoration:none">rd.chatbox@gmail.com</a>
+        <div class="footer-nav-links">
+          <button type="button" onclick="openAboutModal()">About Clubr</button>
+          <button type="button" onclick="openTermsModal()">Terms & Disclaimer</button>
+          <button type="button" onclick="openSafeTradeGuide()">Safe Trade Rules</button>
+          <button type="button" onclick="openAboutModal()">Support</button>
         </div>
       </div>
-
-      <!-- Legal Terms & Liability Disclaimer -->
-      <div style="background:#ffffff; border:1px solid var(--line); border-radius:16px; padding:18px 20px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px">
-          <b style="font-size:13px; color:var(--ink); display:flex; align-items:center; gap:6px">
-            ⚖️ Terms of Use & Liability Disclaimer
-          </b>
-        </div>
-        
-        <div style="font-size:12px; color:#555; line-height:1.65; display:flex; flex-direction:column; gap:8px">
-          <p>
-            <b>1. Neutral Connecting Platform:</b> Clubr functions solely as a technology directory connecting local buyers and sellers. Clubr is not a party to any transaction, does not hold or escrow funds, and does not verify physical product condition or ownership.
-          </p>
-          <p>
-            <b>2. Zero Liability for Platform & Owners:</b> Neither Clubr nor its owners, operators, or founders shall be held liable or accountable for any direct, indirect, or incidental loss, fraud, scam, dispute, or financial damages arising from interactions or transactions between users.
-          </p>
-          <p>
-            <b>3. Deal at Your Own Risk:</b> Users engage and trade entirely at their own discretion and responsibility. We strongly advise meeting in person in well-lit public places, inspecting items thoroughly before payment, and never sending advance token money or scanning QR codes.
-          </p>
-        </div>
+      <div class="footer-bottom-row">
+        <div>© 2026 Clubr. All rights reserved.</div>
+        <div class="footer-security-pill">🛡️ 100% In-App Safe Trading</div>
       </div>
-
-      <!-- Copyright & Quick Info -->
-      <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding-top:12px; border-top:1px solid var(--line); font-size:11px; color:var(--muted)">
-        <div>© 2026 Clubr. All rights reserved. Built for safe community commerce.</div>
-        <div style="display:flex; align-items:center; gap:12px">
-          <button type="button" onclick="openTermsModal()" style="background:none; border:none; color:var(--ink); font-weight:700; cursor:pointer; padding:0; text-decoration:underline">
-            View Full Terms & Disclaimer
-          </button>
-          <span>•</span>
-          <button type="button" onclick="openSafeTradeGuide()" style="background:none; border:none; color:var(--ink); font-weight:700; cursor:pointer; padding:0; text-decoration:underline">
-            Safe Trade Rules
-          </button>
-        </div>
-      </div>
-
     </div>
   </footer>
 </div>
@@ -2117,6 +2181,53 @@ h1 {
         </button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- MODAL: ABOUT CLUBR & DIRECT SUPPORT                     -->
+<!-- ======================================================= -->
+<div class="modal-bg" id="aboutModal" onclick="if(event.target===this)closeAboutModal()">
+  <div class="modal" style="max-width:480px; padding:24px">
+    <div class="modal-head" style="margin-bottom:14px">
+      <div>
+        <h2 style="font-size:18px; font-weight:900; color:var(--ink); display:flex; align-items:center; gap:8px">
+          clubr<span style="color:var(--orange)">•</span> About & Support
+        </h2>
+        <p style="font-size:12px; color:var(--muted); margin-top:2px">Hyperlocal community discovery platform</p>
+      </div>
+      <button class="close-btn" onclick="closeAboutModal()">✕</button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px; font-size:13px; line-height:1.6; color:#334155">
+      <p>
+        <b>Clubr</b> is a modern, independent hyperlocal marketplace designed to connect verified local citizens directly. Discover pre-owned items, post demands, and negotiate one-on-one via direct in-app chat with zero middlemen.
+      </p>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:6px">
+          Customer Support & Helpdesk
+        </div>
+        <div style="font-size:13px; color:var(--ink); font-weight:700; margin-bottom:6px">
+          Official Support Email:
+        </div>
+        <a href="mailto:rd.chatbox@gmail.com" style="display:inline-flex; align-items:center; gap:8px; font-size:15px; font-weight:800; font-family:monospace; color:#2563eb; text-decoration:none; background:#eff6ff; padding:8px 14px; border-radius:10px; border:1px solid #bfdbfe">
+          ✉️ rd.chatbox@gmail.com
+        </a>
+        <p style="font-size:11px; color:#64748b; margin-top:8px; margin-bottom:0">
+          Reach out directly via email for account inquiries, safety concerns, or listing support.
+        </p>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:4px">
+        <button type="button" onclick="closeAboutModal(); openTermsModal()" class="want-btn" style="flex:1; background:#f1f5f9; color:var(--ink); padding:11px; font-size:12px; border:1px solid var(--line); font-weight:700">
+          Terms & Disclaimer
+        </button>
+        <button type="button" onclick="closeAboutModal(); openSafeTradeGuide()" class="want-btn" style="flex:1; background:#f1f5f9; color:var(--ink); padding:11px; font-size:12px; border:1px solid var(--line); font-weight:700">
+          Safety Rules
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3734,6 +3845,14 @@ function sendPromptOffer() {
     renderChatMessages();
     toast(`🤝 Sent formal offer of ₹${amount.toLocaleString('en-IN')}`);
   }
+}
+
+// ABOUT & SUPPORT MODAL
+function openAboutModal() {
+  document.getElementById('aboutModal').classList.add('show');
+}
+function closeAboutModal() {
+  document.getElementById('aboutModal').classList.remove('show');
 }
 
 // SAFE TRADE RULES MODAL

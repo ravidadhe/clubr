@@ -655,6 +655,29 @@ function initAdminData() {
       ];
       localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
     }
+
+    // Live Sync from Google Cloud Firestore
+    if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+      try {
+        firebaseDb.collection('users').get().then(snapshot => {
+          if (snapshot && !snapshot.empty) {
+            snapshot.forEach(doc => {
+              const u = doc.data();
+              const idx = adminUsers.findIndex(x => x.id === u.id || (u.email && x.email === u.email) || (u.phone && x.phone === u.phone));
+              if (idx !== -1) {
+                adminUsers[idx] = { ...adminUsers[idx], ...u };
+              } else {
+                adminUsers.unshift(u);
+              }
+            });
+            localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+            const uCountEl = document.getElementById('adminUsersCount');
+            if (uCountEl) uCountEl.textContent = adminUsers.length;
+            if (typeof activeTab !== 'undefined' && activeTab === 'users') renderAdminUsers();
+          }
+        }).catch(err => console.warn('[Superadmin Firestore Users]', err.message));
+      } catch(e) {}
+    }
   } catch(e) {
     console.error(e);
   }
@@ -808,7 +831,11 @@ function renderAdminUsers() {
 
   const q = (document.getElementById('adminUserSearch') ? document.getElementById('adminUserSearch').value : '').toLowerCase().trim();
   const filtered = adminUsers.filter(u => {
-    return !q || (u.name && u.name.toLowerCase().includes(q)) || (u.phone && u.phone.includes(q)) || (u.city && u.city.toLowerCase().includes(q));
+    return !q || 
+      (u.name && u.name.toLowerCase().includes(q)) || 
+      (u.phone && u.phone.includes(q)) || 
+      (u.email && u.email.toLowerCase().includes(q)) || 
+      (u.city && u.city.toLowerCase().includes(q));
   });
 
   if (filtered.length === 0) {
@@ -816,10 +843,10 @@ function renderAdminUsers() {
     return;
   }
 
-  let activeCurPhone = '';
+  let activeCurId = '';
   try {
     const cur = localStorage.getItem('clubr_current_user');
-    if (cur) activeCurPhone = JSON.parse(cur).phone;
+    if (cur) activeCurId = JSON.parse(cur).id;
   } catch(e) {}
 
   filtered.forEach(u => {
@@ -835,25 +862,26 @@ function renderAdminUsers() {
     }
 
     const userListingsCount = adminListings.filter(x => x.sellerId === u.id || x.seller === u.name).length;
-    const isCurrentSession = (u.phone === activeCurPhone);
+    const isCurrentSession = (u.id === activeCurId);
+
+    const contactDisplay = u.phone ? `📱 +91 ${u.phone}` : (u.email ? `✉️ ${u.email}` : '<span class="text-slate-500">—</span>');
+    const avatarEl = u.photoURL ? `<img src="${u.photoURL}" class="w-7 h-7 rounded-full object-cover border border-lime-400">` : `<div class="w-7 h-7 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xs">${(u.name || 'C').charAt(0).toUpperCase()}</div>`;
 
     const tr = `
       <tr class="hover:bg-slate-800/40 transition">
         <td class="p-3.5">
           <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xs">
-              ${u.name.charAt(0).toUpperCase()}
-            </div>
+            ${avatarEl}
             <div>
               <div class="font-bold text-white flex items-center gap-1.5">
-                <span>${u.name}</span>
+                <span>${u.name || 'Citizen'}</span>
                 ${isCurrentSession ? '<span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[9px] px-1.5 py-0.2 rounded">Active Browser</span>' : ''}
               </div>
               <div class="text-[10px] text-slate-400 font-mono">${u.id || 'usr_x'}</div>
             </div>
           </div>
         </td>
-        <td class="p-3.5 font-mono text-slate-300">📱 +91 ${u.phone}</td>
+        <td class="p-3.5 font-mono text-slate-300 text-xs">${contactDisplay}</td>
         <td class="p-3.5 text-slate-300">📍 ${u.city || 'India'}</td>
         <td class="p-3.5 text-slate-400 font-mono">${u.registeredAt || '19/09/2026'}</td>
         <td class="p-3.5">${kycBadge}</td>

@@ -58,16 +58,20 @@ async function formatClubrUserData(user) {
   if (!existingUser) {
     try {
       const localUsers = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
-      existingUser = localUsers.find(u => u.id === user.uid || u.email === user.email);
+      existingUser = localUsers.find(u => u.id === user.uid || (user.email && u.email === user.email) || (user.phoneNumber && u.phone && u.phone.includes(user.phoneNumber.slice(-10))));
     } catch(e) {}
   }
 
+  const rawPhone = user.phoneNumber ? user.phoneNumber.replace(/^\+91/, '') : '';
+  const phone = (existingUser && existingUser.phone) ? existingUser.phone : rawPhone;
+  const defaultName = user.displayName ? user.displayName : (phone ? ('Citizen ' + phone.slice(-4)) : 'Clubr Citizen');
+
   const userData = {
     id: user.uid,
-    name: (existingUser && existingUser.name) ? existingUser.name : (user.displayName || 'Clubr Citizen'),
-    email: user.email || '',
-    photoURL: user.photoURL || '',
-    phone: (existingUser && existingUser.phone) ? existingUser.phone : '',
+    name: (existingUser && existingUser.name) ? existingUser.name : defaultName,
+    email: (existingUser && existingUser.email) ? existingUser.email : (user.email || ''),
+    photoURL: (existingUser && existingUser.photoURL) ? existingUser.photoURL : (user.photoURL || ''),
+    phone: phone,
     city: (existingUser && existingUser.city) ? existingUser.city : 'Mumbai',
     bio: (existingUser && existingUser.bio) ? existingUser.bio : 'Community Member',
     kycStatus: (existingUser && existingUser.kycStatus) ? existingUser.kycStatus : 'none',
@@ -86,7 +90,7 @@ async function formatClubrUserData(user) {
   // Sync to local registered users list
   try {
     let all = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
-    const idx = all.findIndex(x => x.id === userData.id || x.email === userData.email);
+    const idx = all.findIndex(x => x.id === userData.id || (userData.email && x.email === userData.email) || (userData.phone && x.phone === userData.phone));
     if (idx !== -1) {
       all[idx] = userData;
     } else {
@@ -128,6 +132,115 @@ async function clubrSignInWithGoogle() {
       }
     }
     return { success: false, error: popupErr.message };
+  }
+}
+
+// ========================================================
+// REAL FIREBASE PHONE AUTHENTICATION (SMS OTP + RECAPTCHA)
+// ========================================================
+let clubrRecaptchaVerifier = null;
+window.clubrConfirmationResult = null;
+
+function getOrCreateRecaptcha() {
+  const container = document.getElementById('recaptcha-container');
+  if (!container) {
+    console.error('[Firebase Phone Auth] #recaptcha-container element missing in DOM');
+    return null;
+  }
+
+  if (!clubrRecaptchaVerifier) {
+    try {
+      clubrRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible',
+        callback: () => {
+          console.log('[Clubr Recaptcha] Verified successfully');
+        },
+        'expired-callback': () => {
+          console.warn('[Clubr Recaptcha] Expired, resetting...');
+          resetRecaptchaVerifier();
+        }
+      });
+    } catch(err) {
+      console.warn('[Recaptcha Init Error]', err);
+    }
+  }
+  return clubrRecaptchaVerifier;
+}
+
+function resetRecaptchaVerifier() {
+  if (clubrRecaptchaVerifier) {
+    try {
+      clubrRecaptchaVerifier.clear();
+    } catch(e) {}
+    clubrRecaptchaVerifier = null;
+  }
+  const container = document.getElementById('recaptcha-container');
+  if (container) container.innerHTML = '';
+}
+
+async function clubrSendPhoneOtp(phoneNumber) {
+  if (!firebaseAuth) {
+    return { success: false, error: 'Firebase Auth is not ready. Please refresh the page.' };
+  }
+
+  const clean = String(phoneNumber || '').replace(/\D/g, '');
+  if (clean.length !== 10) {
+    return { success: false, error: 'Please enter a valid 10-digit mobile number (e.g. 9823012345)' };
+  }
+
+  const e164 = '+91' + clean;
+
+  try {
+    const verifier = getOrCreateRecaptcha();
+    if (!verifier) {
+      return { success: false, error: 'Verification container missing. Please refresh the page.' };
+    }
+    const confirmationResult = await firebaseAuth.signInWithPhoneNumber(e164, verifier);
+    window.clubrConfirmationResult = confirmationResult;
+    return { success: true, phoneNumber: e164, cleanPhone: clean };
+  } catch (err) {
+    console.error('[Firebase Phone Auth Error]', err);
+    resetRecaptchaVerifier();
+    let msg = err.message || 'Failed to send SMS OTP.';
+    if (err.code === 'auth/invalid-phone-number') {
+      msg = 'The mobile number provided is invalid. Please check the 10 digits.';
+    } else if (err.code === 'auth/quota-exceeded') {
+      msg = 'Daily SMS quota reached. Please sign in with Google or try again tomorrow.';
+    } else if (err.code === 'auth/billing-not-enabled') {
+      msg = 'SMS service setup required. Please use Google Sign-In or enable Phone provider in Firebase Console.';
+    } else if (err.code === 'auth/operation-not-allowed') {
+      msg = 'Phone authentication is not enabled in Firebase Console. Please toggle Phone provider to "Enable" in Firebase Console.';
+    } else if (err.code === 'auth/too-many-requests') {
+      msg = 'Too many attempts. Please wait a few minutes before requesting another OTP.';
+    }
+    return { success: false, error: msg, code: err.code };
+  }
+}
+
+async function clubrVerifyPhoneOtp(otpCode) {
+  if (!window.clubrConfirmationResult) {
+    return { success: false, error: 'No active OTP session found. Please enter your mobile number again.' };
+  }
+
+  const cleanOtp = String(otpCode || '').replace(/\D/g, '');
+  if (cleanOtp.length !== 6) {
+    return { success: false, error: 'Please enter the complete 6-digit OTP code received via SMS.' };
+  }
+
+  try {
+    const result = await window.clubrConfirmationResult.confirm(cleanOtp);
+    const userData = await formatClubrUserData(result.user);
+    window.clubrConfirmationResult = null;
+    return { success: true, user: userData };
+  } catch (err) {
+    console.error('[Firebase OTP Verify Error]', err);
+    let msg = err.message || 'Verification failed.';
+    if (err.code === 'auth/invalid-verification-code') {
+      msg = 'Incorrect SMS OTP code. Please enter the valid 6-digit code received on your phone.';
+    } else if (err.code === 'auth/code-expired') {
+      msg = 'This SMS OTP has expired. Please click Resend OTP to request a fresh code.';
+    }
+    return { success: false, error: msg, code: err.code };
   }
 }
 

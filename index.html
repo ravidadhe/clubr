@@ -1578,7 +1578,7 @@ h1 {
 <!-- MODAL: MANDATORY USER AUTH MODAL (GUEST REMOVED)        -->
 <!-- ======================================================= -->
 <!-- ======================================================= -->
-<!-- MODAL: GOOGLE 1-CLICK AUTH MODAL (FIREBASE)             -->
+<!-- MODAL: DUAL AUTH (GOOGLE 1-CLICK & REAL SMS PHONE OTP)  -->
 <!-- ======================================================= -->
 <div class="modal-bg" id="authModal" onclick="if(event.target===this)closeAuthModal()">
   <div class="modal" style="max-width:440px; text-align:center">
@@ -1591,44 +1591,80 @@ h1 {
     </div>
 
     <!-- Reason Notice -->
-    <div style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:12px 14px; border-radius:14px; font-size:12px; font-weight:600; margin:16px 0; text-align:left; line-height:1.45" id="authReasonNotice">
-      🔒 <b>Login Required:</b> Sign in with your Google account to Buy, Sell, or Chat with sellers on Clubr.
+    <div style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:12px 14px; border-radius:14px; font-size:12px; font-weight:600; margin:16px 0 12px 0; text-align:left; line-height:1.45" id="authReasonNotice">
+      🔒 <b>Login Required:</b> Sign in to Buy, Sell, or Chat with sellers on Clubr.
     </div>
 
     <!-- Error Alert Box -->
     <div id="authErrorBox" style="display:none; background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:14px; text-align:left"></div>
 
-    <!-- Google 1-Click Action Card -->
-    <div style="background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:24px 18px; margin:12px 0; box-shadow:0 8px 24px rgba(0,0,0,0.04)">
-      <div style="width:56px; height:56px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px auto">
-        <svg width="28" height="28" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          <path fill="none" d="M0 0h48v48H0z"/>
-        </svg>
-      </div>
+    <!-- OPTION 1: GOOGLE 1-CLICK SIGN-IN -->
+    <button type="button" onclick="triggerGoogleSignIn()" id="googleSignInBtn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:12px; background:#ffffff; color:#1f2937; border:1.5px solid #d1d5db; border-radius:14px; padding:13px 18px; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.06); transition:all 0.2s">
+      <svg width="22" height="22" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        <path fill="none" d="M0 0h48v48H0z"/>
+      </svg>
+      <span>Continue with Google</span>
+    </button>
 
-      <h3 style="font-size:17px; font-weight:800; color:var(--ink); margin-bottom:6px">1-Click Google Sign-In</h3>
-      <p style="font-size:12px; color:var(--muted); margin-bottom:18px; line-height:1.4">
-        No password to remember. No mobile number verification. Instant secure login powered by Google Firebase.
-      </p>
-
-      <button type="button" onclick="triggerGoogleSignIn()" id="googleSignInBtn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:12px; background:#ffffff; color:#1f2937; border:1.5px solid #d1d5db; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.06); transition:all 0.2s">
-        <svg width="22" height="22" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          <path fill="none" d="M0 0h48v48H0z"/>
-        </svg>
-        <span>Continue with Google</span>
-      </button>
+    <!-- DIVIDER -->
+    <div style="display:flex; align-items:center; margin:16px 0; gap:10px">
+      <div style="flex:1; height:1px; background:var(--line)"></div>
+      <span style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px">or with mobile number</span>
+      <div style="flex:1; height:1px; background:var(--line)"></div>
     </div>
 
-    <div style="font-size:11px; color:var(--muted); line-height:1.45; margin-top:10px">
-      🛡️ After signing in with Google, you can customize your contact phone, city, and bio in your profile dashboard.
+    <!-- OPTION 2: MOBILE NUMBER + REAL SMS OTP -->
+    <div id="phoneAuthContainer" style="background:#fafafa; border:1.5px solid var(--line); border-radius:16px; padding:16px">
+      <!-- Step 1: Mobile Number Input -->
+      <div id="phoneStep1">
+        <label style="display:block; text-align:left; font-size:12px; font-weight:700; color:var(--ink); margin-bottom:8px">Enter Mobile Number</label>
+        <div style="display:flex; gap:8px; margin-bottom:12px">
+          <div style="background:#f1f5f9; border:1.5px solid var(--line); border-radius:12px; padding:11px 13px; font-weight:700; font-size:14px; display:flex; align-items:center; gap:4px">
+            🇮🇳 +91
+          </div>
+          <input type="tel" id="authPhoneInput" placeholder="9823012345" maxlength="10" style="flex:1; border:1.5px solid var(--line); border-radius:12px; padding:11px 14px; font-size:15px; font-weight:600; outline:none; font-family:inherit" onkeypress="if(event.key==='Enter')triggerSendPhoneOtp()">
+        </div>
+        <button type="button" onclick="triggerSendPhoneOtp()" id="sendPhoneOtpBtn" style="width:100%; background:var(--ink); color:#fff; border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s">
+          <span>📲 Send SMS OTP</span>
+        </button>
+      </div>
+
+      <!-- Step 2: 6-digit SMS OTP Input -->
+      <div id="phoneStep2" style="display:none">
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:10px 12px; margin-bottom:12px; text-align:left">
+          <div style="font-size:11px; color:var(--muted)">SMS OTP sent to:</div>
+          <div style="font-size:14px; font-weight:800; color:var(--ink); display:flex; justify-content:space-between; align-items:center">
+            <span id="phoneTargetDisplay">+91 9823012345</span>
+            <button type="button" onclick="resetPhoneStep()" style="background:none; border:none; color:#2563eb; font-size:11px; font-weight:700; cursor:pointer; text-decoration:underline">Change</button>
+          </div>
+        </div>
+        <label style="display:block; text-align:left; font-size:12px; font-weight:700; color:var(--ink); margin-bottom:6px">Enter 6-Digit SMS Code</label>
+        <input type="text" id="authOtpInput" placeholder="• • • • • •" maxlength="6" style="width:100%; border:1.5px solid var(--line); border-radius:12px; padding:11px 14px; font-size:20px; font-weight:800; letter-spacing:6px; text-align:center; outline:none; font-family:inherit; margin-bottom:12px" onkeypress="if(event.key==='Enter')triggerVerifyPhoneOtp()">
+        
+        <button type="button" onclick="triggerVerifyPhoneOtp()" id="verifyPhoneOtpBtn" style="width:100%; background:var(--lime); color:var(--ink); border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px; transition:all 0.2s">
+          <span>✅ Verify OTP & Sign In</span>
+        </button>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px">
+          <button type="button" onclick="resetPhoneStep()" style="background:none; border:none; color:var(--muted); cursor:pointer; font-weight:600">
+            ← Back
+          </button>
+          <button type="button" onclick="triggerSendPhoneOtp()" id="resendOtpBtn" style="background:none; border:none; color:#2563eb; cursor:pointer; font-weight:700; text-decoration:underline">
+            🔄 Resend SMS OTP
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invisible Firebase reCAPTCHA Anchor -->
+    <div id="recaptcha-container"></div>
+
+    <div style="font-size:11px; color:var(--muted); line-height:1.45; margin-top:14px">
+      🛡️ Real SMS OTP & Google Sign-In powered by Firebase · clubr.online
     </div>
   </div>
 </div>
@@ -2364,10 +2400,11 @@ function handleUserBtnClick() {
 
 function openAuthModal(reasonText) {
   hideAuthError();
+  resetPhoneStep();
   if (reasonText) {
     document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> ${reasonText}`;
   } else {
-    document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> Sign in with Google to Buy, Sell, or Chat on Clubr.`;
+    document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> Sign in with Google or Mobile OTP to Buy, Sell, or Chat on Clubr.`;
   }
   document.getElementById('authModal').classList.add('show');
 }
@@ -2375,6 +2412,7 @@ function openAuthModal(reasonText) {
 function closeAuthModal() {
   document.getElementById('authModal').classList.remove('show');
   hideAuthError();
+  resetPhoneStep();
 }
 
 function showAuthError(msg) {
@@ -2415,6 +2453,111 @@ async function triggerGoogleSignIn() {
     btn.innerHTML = originalHtml;
     btn.style.opacity = '1';
     btn.disabled = false;
+  }
+}
+
+// ========================================================
+// REAL FIREBASE PHONE NUMBER + SMS OTP LOGIN HANDLERS
+// ========================================================
+function resetPhoneStep() {
+  const step1 = document.getElementById('phoneStep1');
+  const step2 = document.getElementById('phoneStep2');
+  const otpInput = document.getElementById('authOtpInput');
+  if (step1) step1.style.display = 'block';
+  if (step2) step2.style.display = 'none';
+  if (otpInput) otpInput.value = '';
+}
+
+async function triggerSendPhoneOtp() {
+  hideAuthError();
+  const phoneInput = document.getElementById('authPhoneInput');
+  if (!phoneInput) return;
+  const phoneVal = phoneInput.value.trim();
+
+  if (!phoneVal || phoneVal.replace(/\D/g, '').length !== 10) {
+    showAuthError('⚠️ Please enter a valid 10-digit mobile number (e.g. 9823012345).');
+    return;
+  }
+
+  const btn = document.getElementById('sendPhoneOtpBtn');
+  const resendBtn = document.getElementById('resendOtpBtn');
+  const originalBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '<span>Sending SMS OTP... ⏳</span>';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+  }
+  if (resendBtn) {
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Sending...';
+  }
+
+  try {
+    const res = await clubrSendPhoneOtp(phoneVal);
+    if (res && res.success) {
+      const displayEl = document.getElementById('phoneTargetDisplay');
+      if (displayEl) displayEl.textContent = res.phoneNumber;
+      document.getElementById('phoneStep1').style.display = 'none';
+      document.getElementById('phoneStep2').style.display = 'block';
+      const otpField = document.getElementById('authOtpInput');
+      if (otpField) setTimeout(() => otpField.focus(), 150);
+      toast(`📲 SMS OTP sent to ${res.phoneNumber}!`);
+    } else {
+      showAuthError((res && res.error) ? res.error : 'Failed to send SMS OTP. Please check your number.');
+    }
+  } catch (err) {
+    showAuthError('Error sending SMS OTP: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.innerHTML = originalBtnHtml;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+    if (resendBtn) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = '🔄 Resend SMS OTP';
+    }
+  }
+}
+
+async function triggerVerifyPhoneOtp() {
+  hideAuthError();
+  const otpInput = document.getElementById('authOtpInput');
+  if (!otpInput) return;
+  const otpVal = otpInput.value.trim();
+
+  if (!otpVal || otpVal.replace(/\D/g, '').length !== 6) {
+    showAuthError('⚠️ Please enter the complete 6-digit OTP code received on your phone.');
+    return;
+  }
+
+  const btn = document.getElementById('verifyPhoneOtpBtn');
+  const originalHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '<span>Verifying Code... ⏳</span>';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+  }
+
+  try {
+    const res = await clubrVerifyPhoneOtp(otpVal);
+    if (res && res.success && res.user) {
+      currentUser = res.user;
+      saveData();
+      updateUserUI();
+      closeAuthModal();
+      toast(`🎉 Welcome ${currentUser.name}! You are signed in via Mobile.`);
+    } else {
+      showAuthError((res && res.error) ? res.error : 'Invalid OTP code. Please try again.');
+    }
+  } catch (err) {
+    showAuthError('Verification error: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.innerHTML = originalHtml;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
   }
 }
 
@@ -2541,24 +2684,27 @@ function switchProfileTab(tab) {
 
 // Self-Service Profile Editor (User khud apna profile edit kar sakega)
 function renderEditProfileTab(container) {
+  const accountIdentifier = currentUser.email ? currentUser.email : (currentUser.phone ? ('+91 ' + currentUser.phone) : 'Citizen');
+  const accountTypeLabel = currentUser.email ? 'Google Email (Verified)' : 'Registered Mobile (Verified)';
+
   container.innerHTML = `
     <div style="background:#fdfbf7; border:1px solid var(--line); border-radius:16px; padding:18px">
       <div style="margin-bottom:14px">
         <b style="font-size:15px">✏️ Edit Your Profile Details</b>
         <p style="font-size:11px; color:var(--muted); line-height:1.4; margin-top:3px">
-          You are signed in via Google (<b>${escapeHtml(currentUser.email || '')}</b>). You can customize your name, contact phone, and city anytime.
+          You are signed in as <b>${escapeHtml(accountIdentifier)}</b>. You can customize your name, contact phone, city, and bio anytime.
         </p>
       </div>
 
       <form onsubmit="event.preventDefault(); saveProfileEdit();">
         <div class="field">
           <label>Your Display Name</label>
-          <input id="editProfileName" value="${escapeHtml(currentUser.name || '')}" required>
+          <input id="editProfileName" value="${escapeHtml(currentUser.name || '')}" placeholder="e.g. Rahul Sharma" required>
         </div>
 
         <div class="field">
-          <label>Google Email (Verified)</label>
-          <input value="${escapeHtml(currentUser.email || '')}" disabled style="background:#f1f5f9; color:#64748b; cursor:not-allowed">
+          <label>${accountTypeLabel}</label>
+          <input value="${escapeHtml(accountIdentifier)}" disabled style="background:#f1f5f9; color:#64748b; cursor:not-allowed">
         </div>
 
         <div class="field">

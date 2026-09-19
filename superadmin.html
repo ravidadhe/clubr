@@ -156,124 +156,87 @@
     <section id="tabAnalyticsSection" class="space-y-6">
       <!-- Key Metric Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 relative overflow-hidden">
-          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Live Visitors Now</div>
-          <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-emerald-400 font-mono" id="statLiveUsers">44</span>
-            <span class="text-xs text-emerald-500 font-bold">↑ Active sessions</span>
+        <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-5 relative overflow-hidden shadow-lg">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Live Visitors Now</div>
+            <span class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot"></span> Live RTDB
+            </span>
           </div>
-          <p class="text-xs text-slate-500 mt-2">Real-time pings across active cities</p>
+          <div class="flex items-baseline gap-2">
+            <span class="text-3xl font-black text-emerald-400 font-mono" id="statLiveUsers">1</span>
+            <span class="text-xs text-emerald-500 font-bold" id="statLiveUsersSub">Online session</span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-2">Active Firebase RTDB connection signals</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Today's Pageviews</div>
-          <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-white font-mono" id="statPageviews">1,482</span>
-            <span class="text-xs text-lime-400 font-bold">+18.4%</span>
+        <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-5 shadow-lg">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Today's Pageviews</div>
+            <span class="text-[10px] font-bold text-lime-400 bg-lime-400/10 px-2 py-0.5 rounded-full border border-lime-400/20">Today</span>
           </div>
-          <p class="text-xs text-slate-500 mt-2">Avg. 4.2 pageviews per visitor</p>
+          <div class="flex items-baseline gap-2">
+            <span class="text-3xl font-black text-white font-mono" id="statPageviews">1</span>
+            <span class="text-xs text-lime-400 font-bold">Real Count</span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-2">Recorded live today across pages</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">In-App Chat Deals</div>
+        <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-5 shadow-lg">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">In-App Chat Deals</div>
+            <span class="text-[10px] font-bold text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded-full border border-cyan-400/20">Private</span>
+          </div>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-lime-400 font-mono" id="statChats">38</span>
+            <span class="text-3xl font-black text-cyan-400 font-mono" id="statChats">0</span>
             <span class="text-xs text-slate-400">Conversations</span>
           </div>
-          <p class="text-xs text-slate-500 mt-2">Zero WhatsApp drop-offs</p>
+          <p class="text-[11px] text-slate-500 mt-2">Active in-app negotiations</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">KYC Verified Ratio</div>
-          <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-amber-400 font-mono" id="statKycRatio">62%</span>
-            <span class="text-xs text-slate-400">Verified Sellers</span>
+        <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-5 shadow-lg">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">KYC Verified Ratio</div>
+            <span class="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">Shield</span>
           </div>
-          <p class="text-xs text-slate-500 mt-2">Zero fraud complaints</p>
+          <div class="flex items-baseline gap-2">
+            <span class="text-3xl font-black text-amber-400 font-mono" id="statKycRatio">0%</span>
+            <span class="text-xs text-slate-400" id="statKycCountSub">0 Verified</span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-2">Computed from registered accounts</p>
         </div>
       </div>
 
       <!-- State-Wise & Device Breakdown -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-          <div class="flex items-center justify-between mb-4">
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800/90 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
             <div>
-              <h2 class="text-base font-bold text-white">State-Wise Traffic Share</h2>
-              <p class="text-xs text-slate-400">Real-time visitor geo-distribution</p>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <span>📍 Regional Market Distribution</span>
+                <span class="bg-lime-400/10 text-lime-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-lime-400/20">Live Sync</span>
+              </h2>
+              <p class="text-xs text-slate-400">Dynamic distribution calculated from real database items and registered users</p>
             </div>
-            <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full font-mono">Live Traffic</span>
+            <button onclick="updateAnalyticsDashboard()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded-xl transition font-mono border border-slate-700">
+              🔄 Refresh
+            </button>
           </div>
 
-          <div class="space-y-3.5">
-            <div>
-              <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Maharashtra (Mumbai, Pune, Nagpur, Yavatmal)</span>
-                <span class="text-lime-400 font-mono">42% (622 visitors)</span>
-              </div>
-              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                <div class="bg-lime-400 h-full rounded-full" style="width: 42%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Delhi NCR (New Delhi, Noida, Gurgaon, Ghaziabad)</span>
-                <span class="text-lime-400 font-mono">19% (281 visitors)</span>
-              </div>
-              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                <div class="bg-emerald-400 h-full rounded-full" style="width: 19%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Karnataka (Bengaluru, Mysuru, Hubballi)</span>
-                <span class="text-lime-400 font-mono">14% (207 visitors)</span>
-              </div>
-              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                <div class="bg-cyan-400 h-full rounded-full" style="width: 14%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Gujarat (Ahmedabad, Surat, Vadodara)</span>
-                <span class="text-lime-400 font-mono">10% (148 visitors)</span>
-              </div>
-              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                <div class="bg-amber-400 h-full rounded-full" style="width: 10%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Uttar Pradesh (Lucknow, Kanpur, Varanasi)</span>
-                <span class="text-lime-400 font-mono">8% (118 visitors)</span>
-              </div>
-              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                <div class="bg-orange-400 h-full rounded-full" style="width: 8%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Rajasthan & Other States</span>
-                <span class="text-lime-400 font-mono">7% (106 visitors)</span>
-              </div>
-              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                <div class="bg-purple-400 h-full rounded-full" style="width: 7%"></div>
-              </div>
-            </div>
+          <div id="stateTrafficContainer" class="space-y-3.5">
+            <!-- Dynamically populated by renderRealStateShare() from live Firestore & local store -->
           </div>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+        <div class="bg-slate-900 border border-slate-800/90 rounded-2xl p-6 flex flex-col justify-between shadow-xl">
           <div>
-            <h2 class="text-base font-bold text-white mb-1">Device Velocity & Security</h2>
-            <p class="text-xs text-slate-400 mb-5">Hardware split & KYC shield</p>
+            <div class="border-b border-slate-800 pb-3 mb-5">
+              <h2 class="text-base font-bold text-white">Device Velocity & Security</h2>
+              <p class="text-xs text-slate-400">Hardware telemetry & compliance status</p>
+            </div>
 
             <div class="space-y-4">
-              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-950 border border-slate-800">
                 <div class="flex items-center gap-3">
                   <span class="text-xl">📱</span>
                   <div>
@@ -281,21 +244,21 @@
                     <div class="text-[10px] text-slate-400">Android & iOS phones</div>
                   </div>
                 </div>
-                <span class="text-sm font-black text-lime-400 font-mono">84%</span>
+                <span class="text-sm font-black text-lime-400 font-mono" id="statMobilePct">100%</span>
               </div>
 
-              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-950 border border-slate-800">
                 <div class="flex items-center gap-3">
                   <span class="text-xl">💻</span>
                   <div>
                     <div class="text-xs font-bold text-white">Desktop / Laptop</div>
-                    <div class="text-[10px] text-slate-400">Chrome & Edge</div>
+                    <div class="text-[10px] text-slate-400">Chrome, Edge & Safari</div>
                   </div>
                 </div>
-                <span class="text-sm font-black text-slate-300 font-mono">16%</span>
+                <span class="text-sm font-black text-slate-300 font-mono" id="statDesktopPct">0%</span>
               </div>
 
-              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-950 border border-slate-800">
                 <div class="flex items-center gap-3">
                   <span class="text-xl">🛡️</span>
                   <div>
@@ -303,13 +266,14 @@
                     <div class="text-[10px] text-slate-400">Masked ID Verification</div>
                   </div>
                 </div>
-                <span class="text-xs font-bold text-emerald-400">Active</span>
+                <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/30">Active</span>
               </div>
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
-            ⚡ CDN Caching: Active on clubr.online
+          <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>⚡ Google Cloud Firestore</span>
+            <span class="text-emerald-400 font-mono">Live Synced</span>
           </div>
         </div>
       </div>
@@ -322,7 +286,7 @@
       <div class="flex items-center justify-between bg-slate-900 border border-slate-800 p-4 rounded-2xl">
         <div>
           <h2 class="text-base font-bold text-white">🛡️ Government ID KYC Verification Pipeline</h2>
-          <p class="text-xs text-slate-400">Review uploaded IDs (Voter ID, DL, Student ID) and grant Verified Citizen Badges</p>
+          <p class="text-xs text-slate-400">Review uploaded IDs (Voter ID, DL, Student ID) and grant Verified User Badges</p>
         </div>
         <span class="text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-xl font-bold">
           ⚖️ DPDP Act 2023 Compliant
@@ -334,7 +298,7 @@
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
               <tr>
-                <th class="p-3.5">Citizen Name</th>
+                <th class="p-3.5">User Name</th>
                 <th class="p-3.5">Phone & City</th>
                 <th class="p-3.5">Document Type</th>
                 <th class="p-3.5">ID Number</th>
@@ -445,13 +409,13 @@
     </section>
 
     <!-- ======================================================== -->
-    <!-- TAB 6: REGISTERED CITIZENS & USERS MANAGEMENT            -->
+    <!-- TAB 6: REGISTERED USERS MANAGEMENT                       -->
     <!-- ======================================================== -->
     <section id="tabUsersSection" class="space-y-4 hidden">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
         <div>
-          <h2 class="text-base font-bold text-white">Registered Marketplace Citizens</h2>
-          <p class="text-xs text-slate-400">Manage real user accounts, phone numbers, and KYC permissions</p>
+          <h2 class="text-base font-bold text-white">Registered Marketplace Users</h2>
+          <p class="text-xs text-slate-400">Manage user accounts, block/unblock permissions, and handle account moderation</p>
         </div>
         <div class="flex items-center gap-2">
           <input id="adminUserSearch" placeholder="Search by name, phone, or city..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none w-64" oninput="renderAdminUsers()">
@@ -466,11 +430,11 @@
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
               <tr>
-                <th class="p-3.5">Citizen Name</th>
-                <th class="p-3.5">Mobile Number</th>
+                <th class="p-3.5">User Details</th>
+                <th class="p-3.5">Contact</th>
                 <th class="p-3.5">City</th>
                 <th class="p-3.5">Joined Date</th>
-                <th class="p-3.5">KYC Status</th>
+                <th class="p-3.5">Account Status</th>
                 <th class="p-3.5">Listings Count</th>
                 <th class="p-3.5 text-right">Moderation Actions</th>
               </tr>
@@ -606,14 +570,127 @@ function lockAdmin() {
   document.getElementById('adminLockScreen').classList.remove('hidden');
 }
 
-function startTrafficTicker() {
-  setInterval(() => {
-    const delta = Math.floor(Math.random() * 5) - 2;
-    let current = parseInt(document.getElementById('liveVisitorsCount').textContent) || 44;
-    current = Math.max(28, Math.min(85, current + delta));
-    document.getElementById('liveVisitorsCount').textContent = current;
-    document.getElementById('statLiveUsers').textContent = current;
-  }, 4000);
+// ========================================================
+// REAL LIVE ANALYTICS & TELEMETRY ENGINE
+// ========================================================
+function initLiveAnalytics() {
+  if (typeof clubrInitLivePresence === 'function') {
+    clubrInitLivePresence('superadmin');
+  }
+
+  // 1. Real-time Presence Listener from Firebase Realtime Database
+  if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('presence').on('value', (snap) => {
+        let onlineCount = 1;
+        let mobileCount = 0;
+        let totalCount = 0;
+
+        if (snap && snap.exists()) {
+          const val = snap.val();
+          const keys = Object.keys(val);
+          onlineCount = Math.max(1, keys.length);
+          totalCount = onlineCount;
+          keys.forEach(k => {
+            if (val[k] && val[k].isMobile) mobileCount++;
+          });
+        }
+
+        const mobPct = totalCount > 0 ? Math.round((mobileCount / totalCount) * 100) : 100;
+        const dskPct = 100 - mobPct;
+
+        const liveBadge = document.getElementById('liveVisitorsCount');
+        if (liveBadge) liveBadge.textContent = onlineCount;
+        const liveStat = document.getElementById('statLiveUsers');
+        if (liveStat) liveStat.textContent = onlineCount;
+        const liveSub = document.getElementById('statLiveUsersSub');
+        if (liveSub) liveSub.textContent = onlineCount === 1 ? '1 online session' : `${onlineCount} online sessions`;
+
+        const mobEl = document.getElementById('statMobilePct');
+        if (mobEl) mobEl.textContent = mobPct + '%';
+        const dskEl = document.getElementById('statDesktopPct');
+        if (dskEl) dskEl.textContent = dskPct + '%';
+      });
+
+      // 2. Real Daily Pageview Counter from Firebase Realtime Database
+      const todayKey = new Date().toISOString().slice(0, 10);
+      firebaseRtdb.ref('stats/pageviews/' + todayKey).on('value', (snap) => {
+        const pvCount = (snap && snap.exists()) ? snap.val() : 1;
+        const pvEl = document.getElementById('statPageviews');
+        if (pvEl) pvEl.textContent = Number(pvCount).toLocaleString('en-IN');
+      });
+    } catch(e) {
+      console.warn('[Real Analytics Warning]', e.message);
+    }
+  }
+
+  updateAnalyticsDashboard();
+}
+
+function updateAnalyticsDashboard() {
+  const totalUsers = adminUsers.length;
+  const verifiedUsers = adminUsers.filter(u => u.kycStatus === 'verified').length;
+  const kycRatio = totalUsers > 0 ? Math.round((verifiedUsers / totalUsers) * 100) : 0;
+
+  const kycRatioEl = document.getElementById('statKycRatio');
+  if (kycRatioEl) kycRatioEl.textContent = kycRatio + '%';
+
+  const kycSubEl = document.getElementById('statKycCountSub');
+  if (kycSubEl) kycSubEl.textContent = `${verifiedUsers} of ${totalUsers} Verified`;
+
+  const chats = localStorage.getItem('findly_chats');
+  const chatCount = chats ? Object.keys(JSON.parse(chats)).length : 0;
+  const chatEl = document.getElementById('statChats');
+  if (chatEl) chatEl.textContent = chatCount;
+
+  renderRealStateShare();
+}
+
+function renderRealStateShare() {
+  const container = document.getElementById('stateTrafficContainer');
+  if (!container) return;
+
+  const locationCounts = {};
+  adminListings.forEach(item => {
+    const c = item.city || 'Other Cities';
+    locationCounts[c] = (locationCounts[c] || 0) + 1;
+  });
+  adminUsers.forEach(u => {
+    const c = u.city || 'Other Cities';
+    locationCounts[c] = (locationCounts[c] || 0) + 1;
+  });
+
+  const entries = Object.entries(locationCounts);
+  if (entries.length === 0) {
+    container.innerHTML = `
+      <div class="p-8 text-center text-slate-500 bg-slate-950/40 rounded-xl border border-slate-800/80">
+        <div class="text-2xl mb-2">📍</div>
+        <div class="font-bold text-slate-300 text-xs">Awaiting Regional Traffic Distribution</div>
+        <p class="text-[11px] text-slate-500 mt-1">Real geographic percentages will render dynamically here as new users register and post listings.</p>
+      </div>`;
+    return;
+  }
+
+  const totalPoints = entries.reduce((acc, [, count]) => acc + count, 0);
+  entries.sort((a, b) => b[1] - a[1]);
+
+  const barColors = ['bg-lime-400', 'bg-emerald-400', 'bg-cyan-400', 'bg-amber-400', 'bg-orange-400', 'bg-purple-400', 'bg-pink-400'];
+
+  container.innerHTML = entries.map(([cityName, count], index) => {
+    const pct = Math.max(1, Math.round((count / totalPoints) * 100));
+    const colorClass = barColors[index % barColors.length];
+    return `
+      <div>
+        <div class="flex justify-between text-xs font-semibold mb-1">
+          <span class="text-slate-200">📍 ${escapeAdminHtml(cityName)}</span>
+          <span class="text-lime-400 font-mono">${pct}% (${count} active signals)</span>
+        </div>
+        <div class="w-full bg-slate-800/80 h-2.5 rounded-full overflow-hidden">
+          <div class="${colorClass} h-full rounded-full transition-all duration-700" style="width: ${pct}%"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 function switchTab(tabId) {
@@ -699,6 +776,7 @@ function initAdminData() {
           localStorage.setItem('findly_listings', JSON.stringify(adminListings));
           document.getElementById('adminListingsCount').textContent = adminListings.length;
           if (typeof activeTab !== 'undefined' && activeTab === 'listings') renderAdminListings();
+          updateAnalyticsDashboard();
         }
       });
     }
@@ -728,6 +806,7 @@ function initAdminData() {
           localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
           document.getElementById('adminUsersCount').textContent = adminUsers.length;
           if (typeof activeTab !== 'undefined' && activeTab === 'users') renderAdminUsers();
+          updateAnalyticsDashboard();
         }
       });
     }
@@ -771,7 +850,7 @@ function initAdminData() {
   const repBadge = document.getElementById('adminReportsCount');
   if (repBadge) repBadge.textContent = pendingReportsCount;
 
-  startTrafficTicker();
+  initLiveAnalytics();
 }
 
 // Render KYC Approvals Table
@@ -928,7 +1007,11 @@ function renderAdminUsers() {
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-500">No registered citizens found matching search filter.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">
+      <div class="text-xl mb-1">👥</div>
+      <div class="font-bold text-slate-400 text-xs">No registered users found</div>
+      <p class="text-[10px] text-slate-600 mt-1">Real user accounts will appear here automatically upon Google or Phone Sign-In.</p>
+    </td></tr>`;
     return;
   }
 
@@ -939,22 +1022,24 @@ function renderAdminUsers() {
   } catch(e) {}
 
   filtered.forEach(u => {
-    let kycBadge = '';
-    if (u.kycStatus === 'verified') {
-      kycBadge = `<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full text-[10px]">🛡️ Verified User</span>`;
+    let statusBadge = '';
+    if (u.isBlocked) {
+      statusBadge = `<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold px-2 py-0.5 rounded-full text-[10px]">⛔ Suspended / Blocked</span>`;
+    } else if (u.kycStatus === 'verified') {
+      statusBadge = `<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold px-2 py-0.5 rounded-full text-[10px]">🛡️ Verified User</span>`;
     } else if (u.kycStatus === 'pending') {
-      kycBadge = `<span class="bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full text-[10px]">⏳ Pending Review</span>`;
+      statusBadge = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold px-2 py-0.5 rounded-full text-[10px]">⏳ Pending KYC</span>`;
     } else if (u.kycStatus === 'rejected') {
-      kycBadge = `<span class="bg-rose-500/20 text-rose-300 font-bold px-2 py-0.5 rounded-full text-[10px]">❌ Rejected</span>`;
+      statusBadge = `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold px-2 py-0.5 rounded-full text-[10px]">❌ KYC Rejected</span>`;
     } else {
-      kycBadge = `<span class="bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-full text-[10px]">⚠️ Unverified User</span>`;
+      statusBadge = `<span class="bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-full text-[10px]">⚠️ Unverified User</span>`;
     }
 
     const userListingsCount = adminListings.filter(x => x.sellerId === u.id || x.seller === u.name).length;
     const isCurrentSession = (u.id === activeCurId);
 
     const contactDisplay = u.phone ? `📱 +91 ${u.phone}` : (u.email ? `✉️ ${u.email}` : '<span class="text-slate-500">—</span>');
-    const avatarEl = u.photoURL ? `<img src="${u.photoURL}" class="w-7 h-7 rounded-full object-cover border border-lime-400">` : `<div class="w-7 h-7 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xs">${(u.name || 'C').charAt(0).toUpperCase()}</div>`;
+    const avatarEl = u.photoURL ? `<img src="${u.photoURL}" class="w-7 h-7 rounded-full object-cover border border-lime-400">` : `<div class="w-7 h-7 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xs">${(u.name || 'U').charAt(0).toUpperCase()}</div>`;
 
     const tr = `
       <tr class="hover:bg-slate-800/40 transition">
@@ -963,7 +1048,7 @@ function renderAdminUsers() {
             ${avatarEl}
             <div>
               <div class="font-bold text-white flex items-center gap-1.5">
-                <span>${u.name || 'Citizen'}</span>
+                <span>${escapeAdminHtml(u.name || 'User')}</span>
                 ${isCurrentSession ? '<span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[9px] px-1.5 py-0.2 rounded">Active Browser</span>' : ''}
               </div>
               <div class="text-[10px] text-slate-400 font-mono">${u.id || 'usr_x'}</div>
@@ -971,18 +1056,27 @@ function renderAdminUsers() {
           </div>
         </td>
         <td class="p-3.5 font-mono text-slate-300 text-xs">${contactDisplay}</td>
-        <td class="p-3.5 text-slate-300">📍 ${u.city || 'India'}</td>
-        <td class="p-3.5 text-slate-400 font-mono">${u.registeredAt || '19/09/2026'}</td>
-        <td class="p-3.5">${kycBadge}</td>
+        <td class="p-3.5 text-slate-300">📍 ${escapeAdminHtml(u.city || 'India')}</td>
+        <td class="p-3.5 text-slate-400 font-mono">${u.registeredAt || 'Today'}</td>
+        <td class="p-3.5">${statusBadge}</td>
         <td class="p-3.5 font-bold font-mono text-white">${userListingsCount} items</td>
-        <td class="p-3.5 text-right space-x-1.5">
+        <td class="p-3.5 text-right space-x-1.5 whitespace-nowrap">
           ${u.kycStatus !== 'verified' ? `
-            <button onclick="adminGrantUserKyc('${u.id}')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg transition text-[11px] font-bold">
+            <button onclick="adminGrantUserKyc('${u.id}')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded-lg transition text-[11px] font-bold">
               Grant KYC 🛡️
             </button>
           ` : `
-            <button onclick="adminRevokeUserKyc('${u.id}')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg transition text-[11px] font-bold">
+            <button onclick="adminRevokeUserKyc('${u.id}')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-1 rounded-lg transition text-[11px] font-bold">
               Revoke KYC
+            </button>
+          `}
+          ${u.isBlocked ? `
+            <button onclick="adminToggleBlockUser('${u.id}', false)" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded-lg transition text-[11px] font-bold">
+              🟢 Unblock
+            </button>
+          ` : `
+            <button onclick="adminToggleBlockUser('${u.id}', true)" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-1 rounded-lg transition text-[11px] font-bold">
+              ⛔ Block
             </button>
           `}
           <button onclick="adminDeleteUser('${u.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-1 rounded-lg transition text-[11px] font-bold">
@@ -992,6 +1086,40 @@ function renderAdminUsers() {
       </tr>`;
     tbody.insertAdjacentHTML('beforeend', tr);
   });
+}
+
+function adminToggleBlockUser(userId, blockState) {
+  const u = adminUsers.find(x => x.id === userId);
+  if (!u) return;
+
+  const actionName = blockState ? 'BLOCK & SUSPEND' : 'UNBLOCK & RESTORE';
+  if (!confirm(`Are you sure you want to ${actionName} user "${u.name}"?`)) return;
+
+  u.isBlocked = !!blockState;
+  u.blockedAt = blockState ? new Date().toISOString() : null;
+  localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+
+  // Sync to Cloud Firestore
+  if (typeof clubrToggleBlockLiveUser === 'function') {
+    clubrToggleBlockLiveUser(userId, blockState);
+  }
+
+  // If active session on this device, update session state
+  try {
+    const cur = localStorage.getItem('clubr_current_user');
+    if (cur) {
+      const cu = JSON.parse(cur);
+      if (cu.id === u.id || (u.phone && cu.phone === u.phone) || (u.email && cu.email === u.email)) {
+        cu.isBlocked = !!blockState;
+        localStorage.setItem('clubr_current_user', JSON.stringify(cu));
+      }
+    }
+  } catch(e) {}
+
+  renderAdminUsers();
+  alert(blockState 
+    ? `⛔ User "${u.name}" has been BLOCKED. They cannot post items, post demands, or send in-app messages.` 
+    : `🟢 User "${u.name}" has been UNBLOCKED. Full marketplace access restored.`);
 }
 
 function adminGrantUserKyc(userId) {
@@ -1026,6 +1154,7 @@ function adminGrantUserKyc(userId) {
   } catch(e) {}
 
   renderAdminUsers();
+  updateAnalyticsDashboard();
   alert(`✅ Verified User: ${u.name} has been granted the Verified User badge.`);
 }
 
@@ -1060,6 +1189,7 @@ function adminRevokeUserKyc(userId) {
       }
     } catch(e) {}
     renderAdminUsers();
+    updateAnalyticsDashboard();
   }
 }
 
@@ -1067,27 +1197,46 @@ function adminDeleteUser(userId) {
   const u = adminUsers.find(x => x.id === userId);
   if (!u) return;
 
-  if (confirm(`Are you sure you want to permanently delete account for ${u.name} (+91 ${u.phone})?`)) {
-    adminUsers = adminUsers.filter(x => x.id !== userId);
-    localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
-    if (typeof clubrDeleteLiveUser === 'function') {
-      clubrDeleteLiveUser(userId);
-    }
+  const confirmMsg = `Are you sure you want to permanently DELETE account for "${u.name || 'User'}"?\n\nThis will permanently delete:\n• The user document from Cloud Firestore\n• All their marketplace listings and demands\n• Their browser session if active\n\nThis cannot be undone.`;
+  if (!confirm(confirmMsg)) return;
 
-    try {
-      const cur = localStorage.getItem('clubr_current_user');
-      if (cur) {
-        const cu = JSON.parse(cur);
-        if (cu.id === u.id || cu.phone === u.phone) {
-          localStorage.removeItem('clubr_current_user');
-        }
-      }
-    } catch(e) {}
+  // 1. Remove from local adminUsers list
+  adminUsers = adminUsers.filter(x => x.id !== userId);
+  localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
 
-    document.getElementById('adminUsersCount').textContent = adminUsers.length;
-    renderAdminUsers();
-    alert(`User ${u.name} has been removed.`);
+  // 2. Cascade delete listings by this user
+  adminListings = adminListings.filter(x => x.sellerId !== userId && x.seller !== u.name);
+  localStorage.setItem('findly_listings', JSON.stringify(adminListings));
+
+  // 3. Cascade delete demands by this user
+  adminDemands = adminDemands.filter(x => x.buyerId !== userId && x.buyer !== u.name);
+  localStorage.setItem('findly_wants', JSON.stringify(adminDemands));
+
+  // 4. Delete from Live Cloud Firestore
+  if (typeof clubrDeleteLiveUser === 'function') {
+    clubrDeleteLiveUser(userId);
   }
+
+  // 5. If this user was active on this browser, purge session
+  try {
+    const cur = localStorage.getItem('clubr_current_user');
+    if (cur) {
+      const cu = JSON.parse(cur);
+      if (cu.id === u.id || (u.phone && cu.phone === u.phone) || (u.email && cu.email === u.email)) {
+        localStorage.removeItem('clubr_current_user');
+      }
+    }
+  } catch(e) {}
+
+  // 6. Update counts and re-render
+  document.getElementById('adminUsersCount').textContent = adminUsers.length;
+  document.getElementById('adminListingsCount').textContent = adminListings.length;
+  document.getElementById('adminDemandsCount').textContent = adminDemands.length;
+  renderAdminUsers();
+  renderAdminListings();
+  updateAnalyticsDashboard();
+
+  alert(`✅ User "${u.name}" and all their listings have been permanently deleted.`);
 }
 
 function exportUsersJSON() {

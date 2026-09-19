@@ -38,7 +38,7 @@ try {
   console.warn('[Clubr Cloud] Firebase init error:', err.message);
 }
 
-// Transform Firebase User to Clubr Citizen Profile
+// Transform Firebase User to Clubr User Profile
 async function formatClubrUserData(user) {
   let existingUser = null;
 
@@ -64,7 +64,7 @@ async function formatClubrUserData(user) {
 
   const rawPhone = user.phoneNumber ? user.phoneNumber.replace(/^\+91/, '') : '';
   const phone = (existingUser && existingUser.phone) ? existingUser.phone : rawPhone;
-  const defaultName = user.displayName ? user.displayName : (phone ? ('Citizen ' + phone.slice(-4)) : 'Clubr Citizen');
+  const defaultName = user.displayName ? user.displayName : (phone ? ('User ' + phone.slice(-4)) : 'Clubr User');
 
   const userData = {
     id: user.uid,
@@ -463,12 +463,87 @@ async function clubrDeleteLiveDemand(demandId) {
 }
 
 async function clubrDeleteLiveUser(userId) {
+  if (!userId) return;
   if (firebaseDb) {
     try {
       await firebaseDb.collection('users').doc(userId).delete();
     } catch(e) {
       console.warn('[Firestore Delete User]', e.message);
     }
+    // Cascade delete any listings belonging to this user
+    try {
+      const snap = await firebaseDb.collection('listings').where('sellerId', '==', userId).get();
+      if (!snap.empty) {
+        const batch = firebaseDb.batch();
+        snap.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+      }
+    } catch(e) {}
+  }
+  if (firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('users/' + userId).remove();
+    } catch(e) {}
+  }
+}
+
+async function clubrToggleBlockLiveUser(userId, isBlocked) {
+  if (!userId) return;
+  if (firebaseDb) {
+    try {
+      await firebaseDb.collection('users').doc(userId).set({
+        isBlocked: !!isBlocked,
+        blockedAt: isBlocked ? new Date().toISOString() : null
+      }, { merge: true });
+    } catch(e) {
+      console.warn('[Firestore Toggle Block User]', e.message);
+    }
+  }
+  if (firebaseRtdb) {
+    try {
+      firebaseRtdb.ref('users/' + userId + '/isBlocked').set(!!isBlocked);
+    } catch(e) {}
+  }
+}
+
+// ========================================================
+// REAL-TIME PRESENCE & LIVE TELEMETRY
+// ========================================================
+function clubrInitLivePresence(pageName) {
+  if (!firebaseRtdb) return;
+  try {
+    let sessionId = sessionStorage.getItem('clubr_presence_session');
+    if (!sessionId) {
+      sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+      sessionStorage.setItem('clubr_presence_session', sessionId);
+    }
+
+    const sessionRef = firebaseRtdb.ref('presence/' + sessionId);
+    const connectedRef = firebaseRtdb.ref('.info/connected');
+
+    connectedRef.on('value', (snap) => {
+      if (snap.val() === true) {
+        sessionRef.onDisconnect().remove();
+        sessionRef.set({
+          active: true,
+          page: pageName || 'marketplace',
+          city: (typeof currentCity !== 'undefined' && currentCity) ? currentCity : 'All Cities',
+          userAgent: navigator.userAgent || '',
+          isMobile: /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent || ''),
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+      }
+    });
+
+    // Record daily unique pageview in RTDB
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const pvSessionKey = 'clubr_pv_' + todayKey;
+    if (!sessionStorage.getItem(pvSessionKey)) {
+      sessionStorage.setItem(pvSessionKey, '1');
+      firebaseRtdb.ref('stats/pageviews/' + todayKey).transaction((curr) => (curr || 0) + 1);
+    }
+  } catch(e) {
+    console.warn('[Presence Tracker Notice]', e.message);
   }
 }
 

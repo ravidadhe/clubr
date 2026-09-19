@@ -1677,7 +1677,7 @@ h1 {
   <section class="hero" id="heroSection">
     <div class="hero-main">
       <div class="hero-sub">
-        <div class="eyebrow">⚡ Verified Citizens · In-App Chat · Zero Scams</div>
+        <div class="eyebrow">⚡ Verified Users · In-App Chat · Zero Scams</div>
         <h1 id="heroTitle">What are you looking for today?</h1>
       </div>
       <div class="search">
@@ -2301,7 +2301,7 @@ h1 {
 
     <div style="display:flex; flex-direction:column; gap:14px; font-size:13px; line-height:1.6; color:#334155">
       <p>
-        <b>Clubr</b> is a modern, independent hyperlocal marketplace designed to connect verified local citizens directly. Discover pre-owned items, post demands, and negotiate one-on-one via direct in-app chat with zero middlemen.
+        <b>Clubr</b> is a modern, independent hyperlocal marketplace designed to connect verified local users directly. Discover pre-owned items, post demands, and negotiate one-on-one via direct in-app chat with zero middlemen.
       </p>
 
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
@@ -2727,6 +2727,12 @@ function initData() {
             } else {
               registeredUsers.unshift(cu);
             }
+            // If active user session was updated or blocked in cloud
+            if (currentUser && (currentUser.id === cu.id || (cu.phone && currentUser.phone === cu.phone) || (cu.email && currentUser.email === cu.email))) {
+              currentUser = { ...currentUser, ...cu };
+              localStorage.setItem('clubr_current_user', JSON.stringify(currentUser));
+              updateUserUI();
+            }
           });
           localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
         }
@@ -2743,6 +2749,9 @@ function initData() {
   renderFeed();
   checkBroadcastBanner();
   selectSellCategory('Mobiles');
+  if (typeof clubrInitLivePresence === 'function') {
+    clubrInitLivePresence('marketplace');
+  }
 }
 
 function saveData() {
@@ -3019,7 +3028,7 @@ function switchProfileTab(tab) {
 
 // Self-Service Profile Editor (User khud apna profile edit kar sakega)
 function renderEditProfileTab(container) {
-  const accountIdentifier = currentUser.email ? currentUser.email : (currentUser.phone ? ('+91 ' + currentUser.phone) : 'Citizen');
+  const accountIdentifier = currentUser.email ? currentUser.email : (currentUser.phone ? ('+91 ' + currentUser.phone) : 'User');
   const accountTypeLabel = currentUser.email ? 'Google Email (Verified)' : 'Registered Mobile (Verified)';
 
   container.innerHTML = `
@@ -3054,7 +3063,7 @@ function renderEditProfileTab(container) {
 
         <div class="field">
           <label>About You / Seller Bio</label>
-          <textarea id="editProfileBio" placeholder="e.g. Verified citizen on Clubr. Deals in electronics and furniture." style="width:100%; min-height:70px; border:1px solid var(--line); border-radius:12px; padding:10px; font-family:inherit; font-size:13px; outline:none">${escapeHtml(currentUser.bio || '')}</textarea>
+          <textarea id="editProfileBio" placeholder="e.g. Verified user on Clubr. Deals in electronics and furniture." style="width:100%; min-height:70px; border:1px solid var(--line); border-radius:12px; padding:10px; font-family:inherit; font-size:13px; outline:none">${escapeHtml(currentUser.bio || '')}</textarea>
         </div>
 
         <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px">
@@ -3618,7 +3627,7 @@ function openItemDetail(id) {
         </div>
         <div>
           <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-            <b style="font-size:15px; color:var(--ink);">${escapeHtml(item.seller || 'Clubr Citizen')}</b>
+            <b style="font-size:15px; color:var(--ink);">${escapeHtml(item.seller || 'Clubr User')}</b>
             ${item.isKycVerified ? '<span style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:99px; background:#dcfce7; color:#15803d; border:1px solid #86efac;">🛡️ Verified User</span>' : '<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:#f1f5f9; color:#64748b;">Community Member</span>'}
           </div>
           <div style="font-size:12px; color:var(--muted); margin-top:2px;">
@@ -3660,6 +3669,10 @@ function closeDetailModal() {
 function openInAppChat(itemId) {
   if (!currentUser) {
     openAuthModal('Please sign in or create an account to chat with the seller!');
+    return;
+  }
+  if (currentUser.isBlocked) {
+    alert('⛔ Account Suspended\n\nYour account has been suspended by Clubr Administration.\nIn-app messaging is disabled for this account.\n\nFor support or appeal, contact: rd.chatbox@gmail.com');
     return;
   }
 
@@ -3706,6 +3719,10 @@ function openInAppChat(itemId) {
 function openBuyerChat(wantId) {
   if (!currentUser) {
     openAuthModal('Please sign in or create an account to contact this buyer!');
+    return;
+  }
+  if (currentUser.isBlocked) {
+    alert('⛔ Account Suspended\n\nYour account has been suspended by Clubr Administration.\nIn-app messaging is disabled for this account.\n\nFor support or appeal, contact: rd.chatbox@gmail.com');
     return;
   }
 
@@ -4155,6 +4172,10 @@ function handlePhotoUpload(input) {
 function openModal(type) {
   if (!currentUser) {
     openAuthModal(type === 'sell' ? 'Please sign in or register to post an item for sale!' : 'Please sign in or register to post a buyer requirement!');
+    return;
+  }
+  if (currentUser.isBlocked) {
+    alert('⛔ Account Suspended\n\nYour account has been suspended by Clubr Administration.\nYou cannot post items or demands.\n\nFor questions or support, email: rd.chatbox@gmail.com');
     return;
   }
 

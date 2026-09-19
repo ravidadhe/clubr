@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v5.1 - Dynamic Category Specs & Live Data Engine
-const CACHE_NAME = 'clubr-v5-1-dynamic-specs-live-data';
+// Clubr PWA Service Worker v5.3 - Real Analytics & User Moderation Engine
+const CACHE_NAME = 'clubr-v5-3-real-analytics-user-mgmt';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

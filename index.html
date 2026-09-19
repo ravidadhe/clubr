@@ -2668,17 +2668,17 @@ function initData() {
     // Registered Users Database (Real Accounts System)
     const savedUsers = localStorage.getItem('clubr_registered_users');
     if (savedUsers) {
-      registeredUsers = JSON.parse(savedUsers);
+      registeredUsers = JSON.parse(savedUsers).filter(u => u && u.name !== 'tiutu' && u.email !== 'tiutu@gmail.com' && u.id !== 'usr_x');
     } else {
       registeredUsers = [];
     }
 
-    // Purge legacy dummy sessions
+    // Purge legacy dummy sessions & tiutu test account
     const u = localStorage.getItem('clubr_current_user');
     if (u) {
       try {
         const parsed = JSON.parse(u);
-        if (!parsed || parsed.name === 'Member' || parsed.name === 'Verified Guest' || parsed.id === 'u_current' || parsed.name === 'Clubr User') {
+        if (!parsed || parsed.name === 'Member' || parsed.name === 'Verified Guest' || parsed.id === 'u_current' || parsed.name === 'Clubr User' || parsed.name === 'tiutu' || parsed.email === 'tiutu@gmail.com') {
           localStorage.removeItem('clubr_current_user');
           currentUser = null;
         } else {
@@ -2721,6 +2721,10 @@ function initData() {
       clubrFetchLiveUsers().then(cloudUsers => {
         if (cloudUsers && Array.isArray(cloudUsers) && cloudUsers.length > 0) {
           cloudUsers.forEach(cu => {
+            if (!cu || cu.name === 'tiutu' || cu.email === 'tiutu@gmail.com' || cu.id === 'usr_x') {
+              if (cu && typeof clubrDeleteLiveUser === 'function') clubrDeleteLiveUser(cu.id, cu.email, cu.phone, cu.name);
+              return;
+            }
             const idx = registeredUsers.findIndex(x => x.id === cu.id || (cu.email && x.email === cu.email) || (cu.phone && x.phone === cu.phone));
             if (idx !== -1) {
               registeredUsers[idx] = { ...registeredUsers[idx], ...cu };
@@ -2734,6 +2738,7 @@ function initData() {
               updateUserUI();
             }
           });
+          registeredUsers = registeredUsers.filter(u => u && u.name !== 'tiutu' && u.email !== 'tiutu@gmail.com' && u.id !== 'usr_x');
           localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
         }
       });

@@ -462,46 +462,114 @@ async function clubrDeleteLiveDemand(demandId) {
   }
 }
 
-async function clubrDeleteLiveUser(userId) {
-  if (!userId) return;
+async function clubrDeleteLiveUser(userId, userEmail, userPhone, userName) {
+  if (!userId && !userEmail && !userPhone && !userName) return;
   if (firebaseDb) {
     try {
-      await firebaseDb.collection('users').doc(userId).delete();
+      if (userId && userId !== 'undefined' && userId !== 'null' && userId !== 'usr_x') {
+        await firebaseDb.collection('users').doc(userId).delete();
+      }
     } catch(e) {
       console.warn('[Firestore Delete User]', e.message);
     }
+
+    // Delete any documents with matching email or phone
+    try {
+      if (userEmail) {
+        const snapEmail = await firebaseDb.collection('users').where('email', '==', userEmail).get();
+        snapEmail.forEach(d => d.ref.delete());
+      }
+      if (userPhone) {
+        const snapPhone = await firebaseDb.collection('users').where('phone', '==', userPhone).get();
+        snapPhone.forEach(d => d.ref.delete());
+      }
+    } catch(e) {}
+
     // Cascade delete any listings belonging to this user
     try {
-      const snap = await firebaseDb.collection('listings').where('sellerId', '==', userId).get();
-      if (!snap.empty) {
-        const batch = firebaseDb.batch();
-        snap.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
+      if (userId && userId !== 'undefined') {
+        const snap = await firebaseDb.collection('listings').where('sellerId', '==', userId).get();
+        if (!snap.empty) {
+          const batch = firebaseDb.batch();
+          snap.forEach(doc => batch.delete(doc.ref));
+          await batch.commit();
+        }
+      }
+      if (userName) {
+        const snapName = await firebaseDb.collection('listings').where('seller', '==', userName).get();
+        if (!snapName.empty) {
+          const batch2 = firebaseDb.batch();
+          snapName.forEach(doc => batch2.delete(doc.ref));
+          await batch2.commit();
+        }
+      }
+    } catch(e) {}
+
+    // Cascade delete any demands belonging to this user
+    try {
+      if (userId && userId !== 'undefined') {
+        const snap = await firebaseDb.collection('demands').where('buyerId', '==', userId).get();
+        if (!snap.empty) {
+          const batch = firebaseDb.batch();
+          snap.forEach(doc => batch.delete(doc.ref));
+          await batch.commit();
+        }
+      }
+      if (userName) {
+        const snapName = await firebaseDb.collection('demands').where('buyer', '==', userName).get();
+        if (!snapName.empty) {
+          const batch2 = firebaseDb.batch();
+          snapName.forEach(doc => batch2.delete(doc.ref));
+          await batch2.commit();
+        }
+      }
+    } catch(e) {}
+
+    // Cascade delete KYC requests
+    try {
+      if (userId && userId !== 'undefined') {
+        const snap = await firebaseDb.collection('kyc_requests').where('userId', '==', userId).get();
+        snap.forEach(doc => doc.ref.delete());
+      }
+      if (userName) {
+        const snap = await firebaseDb.collection('kyc_requests').where('userName', '==', userName).get();
+        snap.forEach(doc => doc.ref.delete());
       }
     } catch(e) {}
   }
+
   if (firebaseRtdb) {
     try {
-      firebaseRtdb.ref('users/' + userId).remove();
+      if (userId && userId !== 'undefined') {
+        firebaseRtdb.ref('users/' + userId).remove();
+      }
     } catch(e) {}
   }
 }
 
-async function clubrToggleBlockLiveUser(userId, isBlocked) {
-  if (!userId) return;
+async function clubrToggleBlockLiveUser(userId, isBlocked, userEmail, userPhone) {
+  if (!userId && !userEmail && !userPhone) return;
   if (firebaseDb) {
     try {
-      await firebaseDb.collection('users').doc(userId).set({
-        isBlocked: !!isBlocked,
-        blockedAt: isBlocked ? new Date().toISOString() : null
-      }, { merge: true });
+      if (userId && userId !== 'undefined' && userId !== 'usr_x') {
+        await firebaseDb.collection('users').doc(userId).set({
+          isBlocked: !!isBlocked,
+          blockedAt: isBlocked ? new Date().toISOString() : null
+        }, { merge: true });
+      }
+      if (userEmail) {
+        const snap = await firebaseDb.collection('users').where('email', '==', userEmail).get();
+        snap.forEach(doc => doc.ref.set({ isBlocked: !!isBlocked, blockedAt: isBlocked ? new Date().toISOString() : null }, { merge: true }));
+      }
     } catch(e) {
       console.warn('[Firestore Toggle Block User]', e.message);
     }
   }
   if (firebaseRtdb) {
     try {
-      firebaseRtdb.ref('users/' + userId + '/isBlocked').set(!!isBlocked);
+      if (userId && userId !== 'undefined') {
+        firebaseRtdb.ref('users/' + userId + '/isBlocked').set(!!isBlocked);
+      }
     } catch(e) {}
   }
 }

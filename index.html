@@ -1469,7 +1469,7 @@ h1 {
 
   <!-- Anti-Scam Trust Bar -->
   <aside class="trust-bar">
-    <div>🛡️ <b>Clubr Safety Shield:</b> Look for <b>"KYC Verified"</b> badge sellers. Never pay advance token money or scan unknown QR codes.</div>
+    <div>🛡️ <b>Clubr Safety Shield:</b> Look for <b>"Verified User"</b> badge sellers. Never pay advance token money or scan unknown QR codes.</div>
     <span style="cursor:pointer; text-decoration:underline" onclick="toast('Always inspect goods in person before transferring money!')">Safe Meet Guide</span>
   </aside>
 
@@ -1649,7 +1649,7 @@ h1 {
       <button class="profile-tab-btn active" id="pTabListings" onclick="switchProfileTab('listings')">My Listings (<span id="userMyListingsCount">0</span>)</button>
       <button class="profile-tab-btn" id="pTabDemands" onclick="switchProfileTab('demands')">My Demands (<span id="userMyDemandsCount">0</span>)</button>
       <button class="profile-tab-btn" id="pTabChats" onclick="switchProfileTab('chats')">My Chats</button>
-      <button class="profile-tab-btn" id="pTabKyc" onclick="switchProfileTab('kyc')">🛡️ KYC Verification</button>
+      <button class="profile-tab-btn" id="pTabKyc" onclick="switchProfileTab('kyc')">🛡️ User Verification</button>
       <button class="profile-tab-btn" id="pTabEdit" onclick="switchProfileTab('edit')">✏️ Edit Profile</button>
     </div>
 
@@ -2427,22 +2427,22 @@ function openProfileModal() {
   const contactMeta = currentUser.phone ? currentUser.phone : (currentUser.email || '');
   document.getElementById('profileCardMeta').textContent = `${cityMeta} · ${contactMeta}`;
 
-  // KYC Badge in profile header
+  // Verification Badge in profile header
   const badgeEl = document.getElementById('profileCardBadge');
   if (currentUser.kycStatus === 'verified') {
-    badgeEl.textContent = '🛡️ KYC Verified Seller';
+    badgeEl.textContent = '🛡️ Verified User';
     badgeEl.style.background = '#dcfce7';
     badgeEl.style.color = '#15803d';
   } else if (currentUser.kycStatus === 'pending') {
-    badgeEl.textContent = '⏳ KYC Under Review';
+    badgeEl.textContent = '⏳ Verification Under Review';
     badgeEl.style.background = '#fef3c7';
     badgeEl.style.color = '#b45309';
   } else if (currentUser.kycStatus === 'rejected') {
-    badgeEl.textContent = '❌ KYC Rejected (Re-upload)';
+    badgeEl.textContent = '❌ Verification Rejected';
     badgeEl.style.background = '#fee2e2';
     badgeEl.style.color = '#b91c1c';
   } else {
-    badgeEl.textContent = '⚠️ Unverified Account';
+    badgeEl.textContent = '⚠️ Unverified User';
     badgeEl.style.background = '#f1f5f9';
     badgeEl.style.color = '#64748b';
   }
@@ -2594,14 +2594,14 @@ async function saveProfileEdit() {
   toast('✅ Profile details updated successfully!');
 }
 
-// KYC Verification Engine in Profile
+// User Verification Engine in Profile
 function renderKycTab(container) {
   if (currentUser.kycStatus === 'verified') {
     container.innerHTML = `
       <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:16px; padding:20px; text-align:center">
         <span style="font-size:36px">🛡️</span>
-        <h3 style="font-size:16px; color:#15803d; margin:6px 0">You are a KYC Verified Citizen!</h3>
-        <p style="font-size:12px; color:#166534; line-height:1.45">Your Government ID (${currentUser.kycDocType || 'Document'}) has been verified by Clubr Admin. Your listings now display the official <b>Gold Verified Badge</b>, giving you 5x higher buyer trust.</p>
+        <h3 style="font-size:16px; color:#15803d; margin:6px 0">You are a Verified User!</h3>
+        <p style="font-size:12px; color:#166534; line-height:1.45">Your ID (${currentUser.kycDocType || 'Document'}) has been verified by Clubr Admin. Your listings and profile now display the official <b>Verified User Badge</b>, giving you 5x higher buyer trust.</p>
       </div>`;
     return;
   }
@@ -2610,8 +2610,8 @@ function renderKycTab(container) {
     container.innerHTML = `
       <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:16px; padding:20px; text-align:center">
         <span style="font-size:36px">⏳</span>
-        <h3 style="font-size:16px; color:#b45309; margin:6px 0">KYC Under Admin Review</h3>
-        <p style="font-size:12px; color:#92400e; line-height:1.45">Your ID (${currentUser.kycDocType || 'Document'}) is currently being inspected by Clubr SuperAdmin. Once approved, the <b>Verified Badge</b> will be automatically activated on your account and listings within 24 hours.</p>
+        <h3 style="font-size:16px; color:#b45309; margin:6px 0">Verification Under Admin Review</h3>
+        <p style="font-size:12px; color:#92400e; line-height:1.45">Your ID (${currentUser.kycDocType || 'Document'}) is currently being inspected by Clubr SuperAdmin. Once approved, the <b>Verified User Badge</b> will be automatically activated on your account and listings within 24 hours.</p>
       </div>`;
     return;
   }
@@ -2620,9 +2620,9 @@ function renderKycTab(container) {
   container.innerHTML = `
     <div style="background:#fdfbf7; border:1px solid var(--line); border-radius:16px; padding:18px">
       <div style="margin-bottom:12px">
-        <b style="font-size:15px">Upload Government ID for Verified Badge 🛡️</b>
+        <b style="font-size:15px">Upload Government ID for Verified User Badge 🛡️</b>
         <p style="font-size:11px; color:var(--muted); line-height:1.4; margin-top:3px">
-          Verified sellers close deals 3x faster. Under Indian Law & DPDP Act 2023, your documents are kept strictly private and used ONLY for account identity validation.
+          Verified users close deals 3x faster. Under privacy laws, your documents are kept strictly confidential and used ONLY for account identity validation.
         </p>
       </div>
 
@@ -3011,9 +3011,9 @@ function renderFeed() {
 function renderPills(item) {
   let pills = '';
   if (item.isKycVerified) {
-    pills += `<span class="badge-tag verified">🛡️ KYC Verified</span>`;
+    pills += `<span class="badge-tag verified">🛡️ Verified User</span>`;
   } else {
-    pills += `<span class="badge-tag unverified">Unverified Seller</span>`;
+    pills += `<span class="badge-tag unverified">Unverified User</span>`;
   }
   if (item.bill && item.box) pills += `<span class="badge-tag verified">🧾 Bill+Box</span>`;
   if (item.exchange) pills += `<span class="badge-tag exchange">🔄 Exchange OK</span>`;
@@ -3067,7 +3067,7 @@ function openItemDetail(id) {
         <span style="font-size:11px; color:var(--muted); font-weight:700">ASKING PRICE</span>
         <div class="detail-price">₹${item.price.toLocaleString('en-IN')}</div>
       </div>
-      ${item.isKycVerified ? '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#dcfce7; color:#15803d">🛡️ KYC Verified Seller</span>' : '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#f1f5f9; color:#64748b">Basic Seller</span>'}
+      ${item.isKycVerified ? '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#dcfce7; color:#15803d">🛡️ Verified User</span>' : '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#f1f5f9; color:#64748b">Community Member</span>'}
     </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
@@ -3130,7 +3130,7 @@ function openInAppChat(itemId) {
   document.getElementById('chatItemTitle').textContent = activeChatContext.itemTitle;
   document.getElementById('chatItemPrice').textContent = `₹${activeChatContext.itemPrice.toLocaleString('en-IN')}`;
   document.getElementById('chatItemEmoji').textContent = activeChatContext.itemEmoji;
-  document.getElementById('chatSellerVerifiedPill').textContent = activeChatContext.isVerified ? '🛡️ KYC Verified' : '🟢 Active on Clubr';
+  document.getElementById('chatSellerVerifiedPill').textContent = activeChatContext.isVerified ? '🛡️ Verified User' : '🟢 Active on Clubr';
 
   const discount5 = Math.round(item.price * 0.95);
   const discount10 = Math.round(item.price * 0.90);

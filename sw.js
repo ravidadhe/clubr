@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.4 - Clean Minimal Auth & Local Marketplace
-const CACHE_NAME = 'clubr-v4-4-clean-minimal-auth';
+// Clubr PWA Service Worker v4.5 - Verified User Badge
+const CACHE_NAME = 'clubr-v4-5-verified-user-badge';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

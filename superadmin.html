@@ -852,13 +852,13 @@ function renderAdminUsers() {
   filtered.forEach(u => {
     let kycBadge = '';
     if (u.kycStatus === 'verified') {
-      kycBadge = `<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full text-[10px]">🛡️ Verified</span>`;
+      kycBadge = `<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full text-[10px]">🛡️ Verified User</span>`;
     } else if (u.kycStatus === 'pending') {
       kycBadge = `<span class="bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full text-[10px]">⏳ Pending Review</span>`;
     } else if (u.kycStatus === 'rejected') {
       kycBadge = `<span class="bg-rose-500/20 text-rose-300 font-bold px-2 py-0.5 rounded-full text-[10px]">❌ Rejected</span>`;
     } else {
-      kycBadge = `<span class="bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-full text-[10px]">⚠️ Unverified</span>`;
+      kycBadge = `<span class="bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-full text-[10px]">⚠️ Unverified User</span>`;
     }
 
     const userListingsCount = adminListings.filter(x => x.sellerId === u.id || x.seller === u.name).length;
@@ -934,7 +934,7 @@ function adminGrantUserKyc(userId) {
   } catch(e) {}
 
   renderAdminUsers();
-  alert(`✅ KYC Verified: ${u.name} has been granted the Gold Verified Seller badge.`);
+  alert(`✅ Verified User: ${u.name} has been granted the Verified User badge.`);
 }
 
 function adminRevokeUserKyc(userId) {
@@ -1031,7 +1031,7 @@ function renderAdminListings() {
         <td class="p-3.5 font-bold font-mono text-lime-400">₹${Number(item.price).toLocaleString('en-IN')}</td>
         <td class="p-3.5 text-slate-300">📍 ${item.locality}, ${item.city}</td>
         <td class="p-3.5">
-          ${item.isKycVerified ? '<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded text-[10px]">🛡️ KYC Verified</span>' : '<span class="text-slate-500 text-[10px]">Unverified</span>'}
+          ${item.isKycVerified ? '<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded text-[10px]">🛡️ Verified User</span>' : '<span class="text-slate-500 text-[10px]">Unverified</span>'}
         </td>
         <td class="p-3.5 text-right space-x-2">
           <button onclick="adminDeleteListing('${item.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-lg transition text-[11px] font-bold">

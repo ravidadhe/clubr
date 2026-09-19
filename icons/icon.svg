@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="128" fill="#17211b"/>
   <defs>
-    <radialGradient id="glow" cx="40%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#c8f36b" stop-opacity="0.25"/>
+    <radialGradient id="clubrGlow" cx="40%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#c8f36b" stop-opacity="0.3"/>
       <stop offset="100%" stop-color="#17211b" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <rect width="512" height="512" rx="128" fill="url(#glow)"/>
-  <!-- Modern Stylized "F" -->
-  <path d="M160 140 H360 V200 H230 V250 H330 V310 H230 V400 H160 Z" fill="#ffffff" rx="12"/>
-  <!-- Vibrant Lime Accent Dot -->
-  <circle cx="390" cy="140" r="44" fill="#c8f36b"/>
-  <circle cx="390" cy="140" r="18" fill="#17211b" opacity="0.4"/>
+  <rect width="512" height="512" rx="128" fill="url(#clubrGlow)"/>
+  <!-- Stylized Modern "C" for Clubr -->
+  <path d="M360 190 C340 150, 290 130, 240 130 C165 130, 115 185, 115 256 C115 327, 165 382, 240 382 C290 382, 340 362, 360 322" fill="none" stroke="#ffffff" stroke-width="58" stroke-linecap="round"/>
+  <!-- Signature Vibrant Lime Accent Dot for Clubr -->
+  <circle cx="385" cy="170" r="44" fill="#c8f36b"/>
+  <circle cx="385" cy="170" r="18" fill="#17211b" opacity="0.35"/>
 </svg>

@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.3 - Pure 1-Click Google Sign-In (clubr.online)
-const CACHE_NAME = 'clubr-v4-3-pure-google-1click';
+// Clubr PWA Service Worker v4.4 - Clean Minimal Auth & Local Marketplace
+const CACHE_NAME = 'clubr-v4-4-clean-minimal-auth';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

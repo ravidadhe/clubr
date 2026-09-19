@@ -7,8 +7,8 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 
-<title>Clubr — India's Hyperlocal Marketplace | clubr.online</title>
-<meta name="description" content="Clubr.online — India's smartest community marketplace. Buy, sell, post city demands, and chat directly in-app across PAN India with zero fraud.">
+<title>Clubr — Hyperlocal Marketplace | clubr.online</title>
+<meta name="description" content="Clubr.online — Smart hyperlocal marketplace. Buy, sell, post demands, and chat directly in-app with verified users.">
 
 <!-- PWA & Favicon -->
 <link rel="manifest" href="manifest.json">
@@ -1404,7 +1404,6 @@ h1 {
       <div class="brand" onclick="setCity('All India')">
         clubr<i>•</i>
       </div>
-      <span class="pan-pill">PAN-INDIA</span>
     </div>
     <div class="top-right">
       <button class="loc-btn" onclick="openCityModal()">
@@ -1449,7 +1448,7 @@ h1 {
         <h1 id="heroTitle">What are you looking for today?</h1>
       </div>
       <div class="search">
-        <input id="search" placeholder="Search iPhone, Pulsar, Sofa, Laptop across India..." autocomplete="off">
+        <input id="search" placeholder="Search iPhone, Pulsar, Sofa, Laptop..." autocomplete="off">
         <button onclick="runSearch()">
           <span>Find</span> 🔍
         </button>
@@ -1535,8 +1534,8 @@ h1 {
   <div class="modal">
     <div class="modal-head">
       <div>
-        <h2>📍 Choose City (State-Wise India)</h2>
-        <span style="font-size:11px; color:var(--muted)">Select state or search any Indian town</span>
+        <h2>📍 Choose City</h2>
+        <span style="font-size:11px; color:var(--muted)">Select state or search your city</span>
       </div>
       <button class="close-btn" onclick="closeCityModal()">✕</button>
     </div>
@@ -1548,7 +1547,7 @@ h1 {
 
     <!-- Search Input -->
     <div class="field" style="margin-top:0">
-      <input id="citySearchInput" placeholder="🔍 Search any city, district, or state in India..." oninput="filterCityDirectory(this.value)">
+      <input id="citySearchInput" placeholder="🔍 Search any city, district, or state..." oninput="filterCityDirectory(this.value)">
     </div>
 
     <!-- State Filter Tabs Carousel -->
@@ -1581,11 +1580,11 @@ h1 {
 <!-- MODAL: PURE 1-CLICK GOOGLE SIGN-IN (POWERED BY FIREBASE)-->
 <!-- ======================================================= -->
 <div class="modal-bg" id="authModal" onclick="if(event.target===this)closeAuthModal()">
-  <div class="modal" style="max-width:440px; text-align:center">
+  <div class="modal" style="max-width:400px; text-align:center">
     <div class="modal-head" style="border-bottom:none; padding-bottom:0">
       <div style="text-align:left">
         <h2 id="authModalTitle" style="font-size:20px">Sign in to Clubr</h2>
-        <span style="font-size:12px; color:var(--muted)">India's Hyperlocal Marketplace · clubr.online</span>
+        <span style="font-size:12px; color:var(--muted)">clubr.online</span>
       </div>
       <button class="close-btn" onclick="closeAuthModal()">✕</button>
     </div>
@@ -1598,23 +1597,8 @@ h1 {
     <!-- Error Alert Box -->
     <div id="authErrorBox" style="display:none; background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:14px; text-align:left"></div>
 
-    <!-- Google 1-Click Action Card -->
-    <div style="background:#ffffff; border:1.5px solid var(--line); border-radius:18px; padding:28px 20px; margin:12px 0 16px 0; box-shadow:0 8px 24px rgba(0,0,0,0.04)">
-      <div style="width:60px; height:60px; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px auto">
-        <svg width="32" height="32" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          <path fill="none" d="M0 0h48v48H0z"/>
-        </svg>
-      </div>
-
-      <h3 style="font-size:18px; font-weight:800; color:var(--ink); margin-bottom:8px">1-Click Google Sign-In</h3>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:20px; line-height:1.5">
-        No password to remember. No mobile OTP needed.<br>Instant, 100% free secure login powered by Google.
-      </p>
-
+    <!-- Google 1-Click Action -->
+    <div style="margin:20px 0 10px 0">
       <button type="button" onclick="triggerGoogleSignIn()" id="googleSignInBtn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:12px; background:#ffffff; color:#1f2937; border:1.5px solid #d1d5db; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,0.06); transition:all 0.2s">
         <svg width="22" height="22" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -1625,10 +1609,6 @@ h1 {
         </svg>
         <span>Continue with Google</span>
       </button>
-    </div>
-
-    <div style="font-size:11px; color:var(--muted); line-height:1.5">
-      🛡️ After signing in, you can customize your contact phone, city, and bio anytime in your profile dashboard.
     </div>
   </div>
 </div>
@@ -1715,7 +1695,7 @@ h1 {
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
         <div class="field">
-          <label>City in India</label>
+          <label>City</label>
           <input id="sellCity" placeholder="e.g. Pune, Mumbai, Nagpur..." value="Pune" required>
         </div>
         <div class="field">
@@ -2443,8 +2423,9 @@ function openProfileModal() {
     avatarContainer.innerHTML = `<div style="width:50px; height:50px; background:var(--lime); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900">${currentUser.name.charAt(0).toUpperCase()}</div>`;
   }
 
-  const userMetaText = `📍 ${currentUser.city || 'India'} · ${currentUser.phone ? currentUser.phone : (currentUser.email || '')}`;
-  document.getElementById('profileCardMeta').textContent = userMetaText;
+  const cityMeta = currentUser.city ? `📍 ${currentUser.city}` : '📍 Member';
+  const contactMeta = currentUser.phone ? currentUser.phone : (currentUser.email || '');
+  document.getElementById('profileCardMeta').textContent = `${cityMeta} · ${contactMeta}`;
 
   // KYC Badge in profile header
   const badgeEl = document.getElementById('profileCardBadge');
@@ -2903,7 +2884,7 @@ function switchFeed(mode) {
     heroCard.style.display = 'flex';
     document.getElementById('feedTitle').textContent = "Fresh Listings Near You";
   } else {
-    heroTitle.textContent = currentCity === 'All India' ? "What does India want right now?" : `What does ${currentCity} want right now?`;
+    heroTitle.textContent = currentCity === 'All India' ? "What are people looking for right now?" : `What does ${currentCity} want right now?`;
     heroCard.style.display = 'none';
     document.getElementById('feedTitle').textContent = "Live Demands (Reverse Market)";
   }
@@ -3356,7 +3337,7 @@ function openModal(type) {
   document.getElementById('wantForm').style.display = (type === 'want') ? 'block' : 'none';
   document.getElementById('actionModalTitle').textContent = (type === 'sell') 
     ? 'Sell something on Clubr' 
-    : '📢 Tell India what you need';
+    : '📢 Post what you need';
 }
 function closeActionModal() {
   document.getElementById('actionModal').classList.remove('show');
@@ -3414,7 +3395,7 @@ function submitListing() {
   }
   closeActionModal();
   switchFeed('sell');
-  toast('🎉 Listing published live across India!');
+  toast('🎉 Listing published live!');
 
   document.getElementById('sellForm').reset();
   uploadedPhotoBase64 = '';

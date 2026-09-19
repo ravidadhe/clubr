@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.5 - Verified User Badge
-const CACHE_NAME = 'clubr-v4-5-verified-user-badge';
+// Clubr PWA Service Worker v4.6 - Anti-Scam Shield & Smart Offer System
+const CACHE_NAME = 'clubr-v4-6-anti-scam-offer-system';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.8 - Terms of Use & Liability Disclaimer
-const CACHE_NAME = 'clubr-v4-8-terms-liability-disclaimer';
+// Clubr PWA Service Worker v4.9 - Clean English Terms & Liability Disclaimer
+const CACHE_NAME = 'clubr-v4-9-english-terms-and-disclaimer';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

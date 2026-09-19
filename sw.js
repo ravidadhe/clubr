@@ -1,5 +1,5 @@
-// Clubr PWA Service Worker v4.7 - Zero-Scam Shield & Pure In-App Protection
-const CACHE_NAME = 'clubr-v4-7-zero-scam-shield';
+// Clubr PWA Service Worker v4.8 - Terms of Use & Liability Disclaimer
+const CACHE_NAME = 'clubr-v4-8-terms-liability-disclaimer';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

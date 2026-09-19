@@ -1,5 +1,5 @@
-// Findly PWA Service Worker v3.2.0 - PAN India & In-App Chat
-const CACHE_NAME = 'findly-v3-pan-india';
+// Clubr PWA Service Worker v3.9 - Real Authentication & KYC Pipeline
+const CACHE_NAME = 'clubr-v3-9-real-auth';
 const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon.svg'

@@ -1581,40 +1581,92 @@ h1 {
     </div>
 
     <!-- Notice -->
-    <div style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:14px" id="authReasonNotice">
+    <div style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:12px" id="authReasonNotice">
       🔒 <b>Login Required:</b> You must be signed in with a verified account to Buy, Sell, or Chat on Clubr.
     </div>
 
-    <div style="display:flex; border-bottom:1px solid var(--line); margin-bottom:14px">
+    <!-- Error Alert Box -->
+    <div id="authErrorBox" style="display:none; background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:12px"></div>
+
+    <div style="display:flex; border-bottom:1px solid var(--line); margin-bottom:14px" id="authTabHeader">
       <button class="profile-tab-btn active" id="authTabSignIn" onclick="switchAuthMode('signin')">Sign In</button>
       <button class="profile-tab-btn" id="authTabSignUp" onclick="switchAuthMode('signup')">Create Account</button>
     </div>
 
-    <form onsubmit="event.preventDefault(); submitAuth();">
-      <div class="field" id="authNameField" style="display:none">
-        <label>Your Full Legal Name</label>
-        <input id="authName" placeholder="e.g. Rahul Deshmukh">
-      </div>
-
+    <!-- 1. SIGN IN FORM -->
+    <form id="signInForm" onsubmit="event.preventDefault(); handleSignIn();">
       <div class="field">
-        <label>Mobile Number (For SMS Verification)</label>
-        <input id="authPhone" type="tel" placeholder="10-digit Mobile Number" pattern="[0-9]{10}" required>
+        <label>Mobile Number</label>
+        <input id="loginPhone" type="tel" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
       </div>
 
       <div class="field">
         <label>Account Password</label>
-        <input id="authPass" type="password" placeholder="••••••••" required>
+        <input id="loginPass" type="password" placeholder="••••••••" required>
       </div>
 
-      <div class="field" id="authCityField" style="display:none">
-        <label>Your City</label>
-        <input id="authCity" placeholder="e.g. Pune, Mumbai, Nagpur..." value="Pune">
-      </div>
-
-      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px" id="authSubmitBtn">
+      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px" id="signInBtn">
         Sign In →
       </button>
+
+      <div style="text-align:center; margin-top:14px; font-size:12px; color:var(--muted)">
+        Don't have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color:var(--ink); font-weight:700">Create Account</a>
+      </div>
     </form>
+
+    <!-- 2. SIGN UP FORM STEP 1: Details -->
+    <form id="signUpFormStep1" style="display:none" onsubmit="event.preventDefault(); handleSignUpStep1();">
+      <div class="field">
+        <label>Your Full Legal Name</label>
+        <input id="regName" placeholder="e.g. Rahul Deshmukh" required>
+      </div>
+
+      <div class="field">
+        <label>Mobile Number (For SMS Verification)</label>
+        <input id="regPhone" type="tel" placeholder="10-digit Mobile Number" pattern="[0-9]{10}" maxlength="10" required>
+      </div>
+
+      <div class="field">
+        <label>Your City</label>
+        <input id="regCity" placeholder="e.g. Pune, Mumbai, Nagpur, Yavatmal..." required>
+      </div>
+
+      <div class="field">
+        <label>Create Account Password <span class="hint">Min. 4 chars</span></label>
+        <input id="regPass" type="password" placeholder="••••••••" minlength="4" required>
+      </div>
+
+      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px" id="signUpStep1Btn">
+        Send SMS OTP & Proceed →
+      </button>
+
+      <div style="text-align:center; margin-top:14px; font-size:12px; color:var(--muted)">
+        Already have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signin')" style="color:var(--ink); font-weight:700">Sign In</a>
+      </div>
+    </form>
+
+    <!-- 3. SIGN UP FORM STEP 2: OTP VERIFICATION -->
+    <div id="signUpFormOtp" style="display:none">
+      <div style="background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:12px; border-radius:12px; font-size:12px; line-height:1.4; margin-bottom:14px">
+        📱 Verification code sent via SMS to <b>+91 <span id="otpTargetPhone"></span></b>.<br>
+        <span style="font-size:11px; opacity:0.85">Simulation: Your 4-digit code is <b id="otpDemoCodeDisplay" style="font-family:monospace; background:#fff; padding:1px 5px; border-radius:4px; font-size:12px"></b></span>
+      </div>
+
+      <div class="field">
+        <label>Enter 4-Digit SMS Code</label>
+        <input id="regOtpInput" type="tel" placeholder="e.g. 1234" maxlength="4" style="letter-spacing:6px; font-size:18px; font-weight:900; text-align:center" required>
+      </div>
+
+      <button type="button" onclick="verifyOtpAndCreateUser()" class="want-btn" style="background:#15803d; color:#fff; width:100%; padding:14px; margin-top:8px">
+        Verify & Complete Registration →
+      </button>
+
+      <div style="display:flex; justify-content:space-between; margin-top:14px; font-size:12px">
+        <a href="javascript:void(0)" onclick="backToSignUpDetails()" style="color:var(--muted)">← Edit Details</a>
+        <a href="javascript:void(0)" onclick="resendOtp()" style="color:var(--ink); font-weight:700">Resend SMS OTP</a>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1657,14 +1709,6 @@ h1 {
 
     <!-- Tab Contents -->
     <div id="profileTabContent" style="min-height:160px"></div>
-
-    <!-- SuperAdmin Direct Link -->
-    <div style="margin-top:20px; padding-top:14px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center">
-      <span style="font-size:11px; color:var(--muted)">Platform Administration</span>
-      <a href="superadmin.html" target="_blank" style="font-size:12px; font-weight:800; color:var(--ink); background:#eef7ed; border:1px solid #cce8cb; padding:6px 12px; border-radius:10px; text-decoration:none">
-        🔒 Open SuperAdmin Portal ↗
-      </a>
-    </div>
   </div>
 </div>
 
@@ -2179,6 +2223,7 @@ let activeCategory = 'All';
 let currentCity = 'All India';
 let activeSelectedState = 'All';
 let currentUser = null; // { id, name, phone, city, kycStatus, kycDocType, kycDocNumber }
+let registeredUsers = [];
 let authMode = 'signin';
 let uploadedPhotoBase64 = '';
 let uploadedKycPhotoBase64 = '';
@@ -2211,10 +2256,60 @@ function initData() {
       document.getElementById('currentCityText').textContent = currentCity;
     }
 
+    // Registered Users Database (Real Accounts System)
+    const savedUsers = localStorage.getItem('clubr_registered_users');
+    if (savedUsers) {
+      registeredUsers = JSON.parse(savedUsers);
+    } else {
+      registeredUsers = [
+        {
+          id: 'usr_rohan',
+          name: 'Rohan Deshmukh',
+          phone: '9823012345',
+          password: 'password123',
+          city: 'Pune',
+          kycStatus: 'verified',
+          kycDocType: 'Voter ID Card',
+          kycDocNumber: 'EPIC-MH29-88741',
+          registeredAt: '15/09/2026'
+        },
+        {
+          id: 'usr_pravin',
+          name: 'Pravin Joshi',
+          phone: '9823011223',
+          password: 'password123',
+          city: 'Nagpur',
+          kycStatus: 'pending',
+          kycDocType: 'Driving License',
+          kycDocNumber: 'DL-MH31-20180041234',
+          registeredAt: '17/09/2026'
+        }
+      ];
+      localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
+    }
+
+    // Purge legacy dummy sessions (e.g. Member / Verified Guest / u_current)
     const u = localStorage.getItem('clubr_current_user');
     if (u) {
-      currentUser = JSON.parse(u);
-      if (!currentUser.kycStatus) currentUser.kycStatus = 'none';
+      try {
+        const parsed = JSON.parse(u);
+        if (!parsed || parsed.name === 'Member' || parsed.name === 'Verified Guest' || parsed.id === 'u_current' || parsed.name === 'Clubr User') {
+          localStorage.removeItem('clubr_current_user');
+          currentUser = null;
+        } else {
+          // Re-sync with registeredUsers database to keep KYC and details latest
+          const matched = registeredUsers.find(x => x.phone === parsed.phone || x.id === parsed.id);
+          if (matched) {
+            currentUser = matched;
+          } else {
+            currentUser = parsed;
+          }
+          if (!currentUser.kycStatus) currentUser.kycStatus = 'none';
+        }
+      } catch(e) {
+        localStorage.removeItem('clubr_current_user');
+        currentUser = null;
+      }
     }
   } catch(e) {
     listings = defaultListings;
@@ -2271,7 +2366,9 @@ function updateCounts() {
   }
 }
 
-// User Auth Management (Guest Login Removed)
+// User Auth Management (Real Accounts Engine)
+let pendingRegistration = null;
+
 function updateUserUI() {
   const avatarEl = document.getElementById('userBtnAvatar');
   const labelEl = document.getElementById('userBtnLabel');
@@ -2293,6 +2390,8 @@ function handleUserBtnClick() {
 }
 
 function openAuthModal(reasonText) {
+  hideAuthError();
+  switchAuthMode('signin');
   if (reasonText) {
     document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> ${reasonText}`;
   } else {
@@ -2300,48 +2399,181 @@ function openAuthModal(reasonText) {
   }
   document.getElementById('authModal').classList.add('show');
 }
+
 function closeAuthModal() {
   document.getElementById('authModal').classList.remove('show');
+  hideAuthError();
+}
+
+function showAuthError(msg) {
+  const box = document.getElementById('authErrorBox');
+  box.innerHTML = msg;
+  box.style.display = 'block';
+}
+
+function hideAuthError() {
+  const box = document.getElementById('authErrorBox');
+  box.style.display = 'none';
+  box.innerHTML = '';
 }
 
 function switchAuthMode(mode) {
   authMode = mode;
-  document.getElementById('authTabSignIn').classList.toggle('active', mode === 'signin');
-  document.getElementById('authTabSignUp').classList.toggle('active', mode === 'signup');
-  document.getElementById('authNameField').style.display = mode === 'signup' ? 'block' : 'none';
-  document.getElementById('authCityField').style.display = mode === 'signup' ? 'block' : 'none';
-  document.getElementById('authModalTitle').textContent = mode === 'signup' ? 'Create Clubr Account' : 'Sign in to Clubr';
-  document.getElementById('authSubmitBtn').textContent = mode === 'signup' ? 'Create Account →' : 'Sign In →';
+  hideAuthError();
+  const isSignIn = (mode === 'signin');
+  document.getElementById('authTabSignIn').classList.toggle('active', isSignIn);
+  document.getElementById('authTabSignUp').classList.toggle('active', !isSignIn);
+
+  document.getElementById('signInForm').style.display = isSignIn ? 'block' : 'none';
+  document.getElementById('signUpFormStep1').style.display = !isSignIn ? 'block' : 'none';
+  document.getElementById('signUpFormOtp').style.display = 'none';
+
+  document.getElementById('authModalTitle').textContent = isSignIn ? 'Sign in to Clubr' : 'Create Clubr Account';
+
+  if (!isSignIn) {
+    document.getElementById('regCity').value = (currentCity === 'All India' ? 'Mumbai' : currentCity);
+  }
 }
 
-function submitAuth() {
-  const phone = document.getElementById('authPhone').value.trim();
-  const name = authMode === 'signup' 
-    ? (document.getElementById('authName').value.trim() || 'Clubr User') 
-    : (phone.includes('@') ? phone.split('@')[0] : 'Member');
-  const city = authMode === 'signup' 
-    ? (document.getElementById('authCity').value.trim() || currentCity) 
-    : (currentCity === 'All India' ? 'Mumbai' : currentCity);
+// REAL SIGN IN
+function handleSignIn() {
+  hideAuthError();
+  const phone = document.getElementById('loginPhone').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
 
-  currentUser = {
-    id: 'u_' + Date.now(),
-    name: name,
-    phone: phone,
-    city: city,
-    kycStatus: 'none',
-    kycDocType: '',
-    kycDocNumber: '',
-    kycDocPhoto: ''
-  };
+  if (!/^[6-9]\d{9}$/.test(phone)) {
+    showAuthError('⚠️ Please enter a valid 10-digit Indian mobile number.');
+    return;
+  }
 
+  // Look up registered user
+  const user = registeredUsers.find(x => x.phone === phone);
+  if (!user) {
+    showAuthError(`❌ No account registered for <b>+91 ${phone}</b>.<br><a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color:#991b1b; text-decoration:underline; font-weight:800; display:inline-block; margin-top:4px">Click here to Create Account →</a>`);
+    return;
+  }
+
+  if (user.password !== pass) {
+    showAuthError('❌ Incorrect password! Please check and try again.');
+    return;
+  }
+
+  // Successful Real Login
+  currentUser = user;
   saveData();
   updateUserUI();
   closeAuthModal();
-  toast(`Welcome ${name}! You are now logged in.`);
+  toast(`👋 Welcome back, ${currentUser.name}!`);
+}
+
+// REAL SIGN UP STEP 1: Details & OTP Trigger
+function handleSignUpStep1() {
+  hideAuthError();
+  const name = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const city = document.getElementById('regCity').value.trim();
+  const pass = document.getElementById('regPass').value.trim();
+
+  if (name.length < 2) {
+    showAuthError('⚠️ Please enter your full legal name.');
+    return;
+  }
+
+  if (!/^[6-9]\d{9}$/.test(phone)) {
+    showAuthError('⚠️ Please enter a valid 10-digit Indian mobile number (starts with 6, 7, 8, or 9).');
+    return;
+  }
+
+  if (pass.length < 4) {
+    showAuthError('⚠️ Password must be at least 4 characters long.');
+    return;
+  }
+
+  // Check if phone already registered
+  const existing = registeredUsers.find(x => x.phone === phone);
+  if (existing) {
+    showAuthError(`⚠️ An account already exists for <b>+91 ${phone}</b>.<br><a href="javascript:void(0)" onclick="switchAuthMode('signin')" style="color:#991b1b; text-decoration:underline; font-weight:800; display:inline-block; margin-top:4px">Switch to Sign In →</a>`);
+    return;
+  }
+
+  // Generate 4-Digit OTP Simulation
+  const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+  pendingRegistration = {
+    name,
+    phone,
+    city: city || 'Mumbai',
+    password: pass,
+    otp: generatedOtp
+  };
+
+  document.getElementById('signUpFormStep1').style.display = 'none';
+  document.getElementById('signUpFormOtp').style.display = 'block';
+  document.getElementById('otpTargetPhone').textContent = phone;
+  document.getElementById('otpDemoCodeDisplay').textContent = generatedOtp;
+  document.getElementById('regOtpInput').value = '';
+  document.getElementById('regOtpInput').focus();
+
+  toast(`💬 SMS OTP for Clubr Verification: ${generatedOtp}`);
+}
+
+// REAL SIGN UP STEP 2: Verify OTP and Create Account
+function verifyOtpAndCreateUser() {
+  hideAuthError();
+  if (!pendingRegistration) {
+    switchAuthMode('signup');
+    return;
+  }
+
+  const enteredOtp = document.getElementById('regOtpInput').value.trim();
+  if (enteredOtp !== pendingRegistration.otp) {
+    showAuthError(`❌ Invalid OTP code! Please enter the 4-digit code shown above (e.g. ${pendingRegistration.otp}).`);
+    return;
+  }
+
+  // Create real persistent user account
+  const newUser = {
+    id: 'usr_' + Date.now(),
+    name: pendingRegistration.name,
+    phone: pendingRegistration.phone,
+    city: pendingRegistration.city,
+    password: pendingRegistration.password,
+    kycStatus: 'none', // Strictly unverified until ID is submitted & approved by SuperAdmin
+    kycDocType: '',
+    kycDocNumber: '',
+    kycDocPhoto: '',
+    registeredAt: new Date().toLocaleDateString('en-IN')
+  };
+
+  registeredUsers.unshift(newUser);
+  localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
+
+  currentUser = newUser;
+  saveData();
+  updateUserUI();
+  closeAuthModal();
+  pendingRegistration = null;
+
+  toast(`🎉 Welcome ${newUser.name}! Account registered successfully.`);
+}
+
+function backToSignUpDetails() {
+  hideAuthError();
+  document.getElementById('signUpFormStep1').style.display = 'block';
+  document.getElementById('signUpFormOtp').style.display = 'none';
+}
+
+function resendOtp() {
+  if (!pendingRegistration) return;
+  const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
+  pendingRegistration.otp = newOtp;
+  document.getElementById('otpDemoCodeDisplay').textContent = newOtp;
+  hideAuthError();
+  toast(`💬 New SMS OTP sent: ${newOtp}`);
 }
 
 function logoutUser() {
   currentUser = null;
+  localStorage.removeItem('clubr_current_user');
   saveData();
   updateUserUI();
   closeProfileModal();
@@ -2577,6 +2809,15 @@ function submitKycDocument() {
   currentUser.kycDocNumber = docNum;
   currentUser.kycDocPhoto = uploadedKycPhotoBase64;
   saveData();
+
+  // Sync with registeredUsers
+  const uIdx = registeredUsers.findIndex(x => x.phone === currentUser.phone || x.id === currentUser.id);
+  if (uIdx !== -1) {
+    registeredUsers[uIdx].kycStatus = 'pending';
+    registeredUsers[uIdx].kycDocType = docType;
+    registeredUsers[uIdx].kycDocNumber = docNum;
+    localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
+  }
 
   toast('🛡️ Document submitted! SuperAdmin will review within 24h.');
   openProfileModal();

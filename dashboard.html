@@ -17,9 +17,9 @@
               lime: '#d4f738',
               limeHover: '#c1e626',
               dark: '#0f172a',
-              card: '#1e293b',
-              surface: '#090d16',
-              line: '#334155'
+              card: '#ffffff',
+              surface: '#f8f6f0',
+              line: '#e2e8f0'
             }
           },
           fontFamily: {
@@ -34,8 +34,8 @@
     /* Custom scrollbar and animations */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .chat-bubble-mine { background: #d4f738; color: #0f172a; border-radius: 18px 18px 4px 18px; }
-    .chat-bubble-theirs { background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 18px 18px 18px 4px; }
+    .chat-bubble-mine { background: #d4f738; color: #0f172a; border-radius: 18px 18px 4px 18px; font-weight: 600; }
+    .chat-bubble-theirs { background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
     @keyframes pulse-live {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(1.15); }
@@ -56,7 +56,7 @@
       background: #0f172a;
       color: #fff;
       border: 1px solid #d4f738;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       border-radius: 12px;
       padding: 12px 18px;
       font-size: 13px;
@@ -76,7 +76,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="firebase-config.js"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col selection:bg-lime-400 selection:text-slate-950">
+<body class="bg-[#f8f6f0] text-slate-900 min-h-screen font-sans antialiased flex flex-col selection:bg-lime-400 selection:text-slate-950">
 
   <!-- Toast Notification Container -->
   <div id="toastBox"></div>
@@ -84,7 +84,7 @@
   <!-- ======================================================== -->
   <!-- TOP NAVIGATION BAR                                       -->
   <!-- ======================================================== -->
-  <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-3.5 sticky top-0 z-40 w-full">
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 py-3.5 sticky top-0 z-40 w-full shadow-xs">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
       
       <!-- Brand & Page Title -->
@@ -95,17 +95,17 @@
           </div>
           <div class="flex flex-col leading-tight">
             <div class="flex items-center gap-2">
-              <span class="font-extrabold text-base tracking-tight text-white font-display">Clubr</span>
-              <span class="bg-lime-400/15 text-lime-400 border border-lime-400/30 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">Dashboard</span>
+              <span class="font-extrabold text-base tracking-tight text-slate-900 font-display">Clubr</span>
+              <span class="bg-lime-400/25 text-slate-900 border border-lime-500/30 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider">Dashboard</span>
             </div>
-            <span class="text-[11px] text-slate-400 font-medium whitespace-nowrap">Member Control Center</span>
+            <span class="text-[11px] text-slate-500 font-medium whitespace-nowrap">Member Control Center</span>
           </div>
         </a>
       </div>
 
       <!-- Center Link to Marketplace Feed -->
       <div class="hidden md:flex items-center">
-        <a href="index.html" class="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 px-4 py-2 rounded-xl transition">
+        <a href="index.html" class="flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-4 py-2 rounded-xl transition">
           <span>← Browse Marketplace Feed</span>
         </a>
       </div>
@@ -113,26 +113,26 @@
       <!-- Right User Actions -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         <!-- Post New Item CTA -->
-        <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm shadow-lime-400/20 whitespace-nowrap">
+        <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm shadow-lime-400/20 whitespace-nowrap">
           <span>＋</span>
           <span class="hidden sm:inline">Sell Item</span>
         </button>
 
         <!-- Post Demand CTA -->
-        <button onclick="openDemandModal()" class="bg-orange-500/15 hover:bg-orange-500/25 text-orange-400 border border-orange-500/30 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <button onclick="openDemandModal()" class="bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 text-xs font-extrabold px-3 py-2 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
           <span>📢</span>
           <span class="hidden sm:inline">Post Demand</span>
         </button>
 
         <!-- User Quick Profile Pill -->
-        <div id="topUserPill" class="hidden sm:flex items-center gap-2 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-medium">
+        <div id="topUserPill" class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-medium">
           <div id="topUserAvatar" class="w-6 h-6 rounded-full bg-lime-400 text-slate-950 font-black flex items-center justify-center text-xs overflow-hidden">U</div>
-          <span id="topUserName" class="font-bold text-white max-w-[100px] truncate">User</span>
-          <span id="topKycBadge" class="text-[10px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded font-bold">Unverified</span>
+          <span id="topUserName" class="font-bold text-slate-900 max-w-[100px] truncate">User</span>
+          <span id="topKycBadge" class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold">Unverified</span>
         </div>
 
         <!-- Sign Out -->
-        <button onclick="handleLogout()" title="Log out" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 px-3 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">
+        <button onclick="handleLogout()" title="Log out" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">
           <span>Exit 🚪</span>
         </button>
       </div>
@@ -144,19 +144,19 @@
   <!-- AUTH REQUIRED SCREEN (If Guest)                          -->
   <!-- ======================================================== -->
   <div id="authRequiredView" class="hidden flex-1 flex items-center justify-center p-6">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center shadow-2xl space-y-6">
+    <div class="max-w-md w-full bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-xl space-y-6">
       <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 text-slate-950 flex items-center justify-center font-black text-3xl mx-auto shadow-lg shadow-lime-400/25">
         C
       </div>
       <div>
-        <h2 class="text-2xl font-black text-white font-display">Sign In to Your Dashboard</h2>
-        <p class="text-sm text-slate-400 mt-2">
+        <h2 class="text-2xl font-black text-slate-900 font-display">Sign In to Your Dashboard</h2>
+        <p class="text-sm text-slate-500 mt-2 leading-relaxed">
           Manage your listings, chat directly with buyers, track active demands, and get your Gold Verified Seller badge.
         </p>
       </div>
 
       <div class="space-y-3">
-        <button onclick="triggerDashboardGoogleSignIn()" id="btnGoogleSignIn" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-3 shadow-md">
+        <button onclick="triggerDashboardGoogleSignIn()" id="btnGoogleSignIn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-3 shadow-md">
           <svg class="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -166,12 +166,12 @@
           <span>Continue with Google (1-Click)</span>
         </button>
 
-        <a href="index.html" class="block w-full text-xs font-semibold text-slate-400 hover:text-white py-2 transition">
+        <a href="index.html" class="block w-full text-xs font-semibold text-slate-500 hover:text-slate-900 py-2 transition">
           ← Return to Marketplace Feed
         </a>
       </div>
 
-      <div class="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500">
+      <div class="pt-4 border-t border-slate-100 text-[11px] text-slate-400">
         🔒 Powered by Google Firebase Secure Cloud Authentication
       </div>
     </div>
@@ -186,74 +186,74 @@
     <aside class="w-full lg:w-64 shrink-0 space-y-4">
       
       <!-- Profile Mini Card in Sidebar -->
-      <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-4 flex items-center gap-3">
-        <div id="sideUserAvatar" class="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-lg overflow-hidden border border-lime-400/40 shrink-0">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3 shadow-xs">
+        <div id="sideUserAvatar" class="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-lg overflow-hidden border border-lime-300 shrink-0">
           U
         </div>
         <div class="overflow-hidden leading-tight">
-          <b id="sideUserName" class="text-sm font-bold text-white block truncate">Member Name</b>
-          <span id="sideUserEmailOrPhone" class="text-[11px] text-slate-400 block truncate mt-0.5">user@gmail.com</span>
+          <b id="sideUserName" class="text-sm font-bold text-slate-900 block truncate">Member Name</b>
+          <span id="sideUserEmailOrPhone" class="text-[11px] text-slate-500 block truncate mt-0.5">user@gmail.com</span>
           <div id="sideUserKycBadge" class="mt-1.5 inline-block">
-            <span class="text-[10px] bg-slate-800 text-slate-300 font-bold px-2 py-0.5 rounded-md border border-slate-700">Unverified</span>
+            <span class="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded-md border border-slate-200">Unverified</span>
           </div>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
-      <nav class="flex lg:flex-col gap-1 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 overflow-x-auto no-scrollbar shrink-0">
-        <button onclick="switchTab('overview')" id="tabBtnOverview" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 whitespace-nowrap bg-lime-400 text-slate-950 shadow-sm">
+      <nav class="flex lg:flex-col gap-1 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-xs overflow-x-auto no-scrollbar shrink-0">
+        <button onclick="switchTab('overview')" id="tabBtnOverview" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 whitespace-nowrap bg-lime-400 text-slate-950 shadow-xs">
           <span>📊</span>
           <span>Overview</span>
         </button>
 
-        <button onclick="switchTab('listings')" id="tabBtnListings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+        <button onclick="switchTab('listings')" id="tabBtnListings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-600 hover:text-slate-900 hover:bg-slate-50">
           <div class="flex items-center gap-2.5">
             <span>🛍️</span>
             <span>My Listings</span>
           </div>
-          <span id="sideBadgeListings" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono">0</span>
+          <span id="sideBadgeListings" class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-mono font-bold">0</span>
         </button>
 
-        <button onclick="switchTab('messages')" id="tabBtnMessages" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+        <button onclick="switchTab('messages')" id="tabBtnMessages" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-600 hover:text-slate-900 hover:bg-slate-50">
           <div class="flex items-center gap-2.5">
             <span>💬</span>
             <span>Messages</span>
           </div>
-          <span id="sideBadgeMessages" class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">0</span>
+          <span id="sideBadgeMessages" class="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-mono font-bold">0</span>
         </button>
 
-        <button onclick="switchTab('demands')" id="tabBtnDemands" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+        <button onclick="switchTab('demands')" id="tabBtnDemands" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-600 hover:text-slate-900 hover:bg-slate-50">
           <div class="flex items-center gap-2.5">
             <span>📢</span>
             <span>My Demands</span>
           </div>
-          <span id="sideBadgeDemands" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono">0</span>
+          <span id="sideBadgeDemands" class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-mono font-bold">0</span>
         </button>
 
-        <button onclick="switchTab('kyc')" id="tabBtnKyc" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+        <button onclick="switchTab('kyc')" id="tabBtnKyc" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-600 hover:text-slate-900 hover:bg-slate-50">
           <div class="flex items-center gap-2.5">
             <span>🛡️</span>
             <span>KYC Verification</span>
           </div>
-          <span id="sideBadgeKyc" class="text-[10px] text-amber-400 font-bold">Verify</span>
+          <span id="sideBadgeKyc" class="text-[10px] text-amber-600 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">Verify</span>
         </button>
 
-        <button onclick="switchTab('settings')" id="tabBtnSettings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 whitespace-nowrap text-slate-400 hover:text-white">
+        <button onclick="switchTab('settings')" id="tabBtnSettings" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 whitespace-nowrap text-slate-600 hover:text-slate-900 hover:bg-slate-50">
           <span>⚙️</span>
           <span>Profile Settings</span>
         </button>
       </nav>
 
       <!-- Trust & Security Banner in Sidebar -->
-      <div class="hidden lg:block bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800/80 rounded-2xl p-4 text-xs space-y-2">
-        <div class="flex items-center gap-2 text-lime-400 font-bold text-xs">
+      <div class="hidden lg:block bg-white border border-slate-200 rounded-2xl p-4 text-xs space-y-2 shadow-xs">
+        <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs">
           <span>🛡️</span>
           <span>Clubr Trust Guarantee</span>
         </div>
-        <p class="text-slate-400 text-[11px] leading-relaxed">
+        <p class="text-slate-500 text-[11px] leading-relaxed">
           Zero middleman fees. Direct buyer chats with real phone/KYC verification.
         </p>
-        <a href="index.html#terms" class="text-[10px] text-slate-400 hover:text-white underline block pt-1">
+        <a href="index.html#terms" class="text-[10px] text-slate-600 hover:text-slate-950 underline block pt-1">
           Safety Tips & Guidelines
         </a>
       </div>
@@ -269,26 +269,26 @@
       <section id="paneOverview" class="space-y-6">
         
         <!-- Welcome Hero Banner -->
-        <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800/80 border border-slate-800 rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+        <div class="bg-gradient-to-br from-white via-slate-50 to-lime-50/40 border border-slate-200 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-sm">
           <div class="relative z-10 max-w-xl space-y-2">
-            <div class="inline-flex items-center gap-2 bg-lime-400/10 border border-lime-400/30 text-lime-400 px-3 py-1 rounded-full text-xs font-bold">
-              <span class="w-2 h-2 rounded-full bg-lime-400 live-dot"></span>
+            <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 live-dot"></span>
               <span>Account Active</span>
             </div>
-            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight font-display">
-              Welcome, <span id="heroUserName" class="text-lime-400">User</span>!
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-display">
+              Welcome, <span id="heroUserName" class="text-emerald-700">User</span>!
             </h1>
-            <p class="text-sm text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 leading-relaxed">
               Manage your posted listings, reply to interested buyers instantly, and unlock your Gold Verified badge.
             </p>
             <div class="flex flex-wrap gap-2.5 pt-2">
-              <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition shadow-md shadow-lime-400/20">
+              <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition shadow-sm shadow-lime-400/20">
                 ＋ Post an Item for Sale
               </button>
-              <button onclick="openDemandModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+              <button onclick="openDemandModal()" class="bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-xs">
                 📢 Broadcast a Demand
               </button>
-              <button onclick="switchTab('kyc')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+              <button onclick="switchTab('kyc')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-xs">
                 🛡️ Verify Profile
               </button>
             </div>
@@ -298,54 +298,54 @@
         <!-- 4 Key Telemetry Cards -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <!-- Stat 1: My Listings -->
-          <div onclick="switchTab('listings')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
-            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+          <div onclick="switchTab('listings')" class="bg-white border border-slate-200 hover:border-slate-300 p-4 sm:p-5 rounded-2xl transition cursor-pointer group shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-semibold mb-2">
               <span>My Listings</span>
               <span class="text-lg group-hover:scale-110 transition">🛍️</span>
             </div>
-            <div id="statListingsCount" class="text-2xl sm:text-3xl font-black text-white font-mono">0</div>
-            <div class="text-[11px] text-lime-400 font-medium mt-1">Live in marketplace →</div>
+            <div id="statListingsCount" class="text-2xl sm:text-3xl font-black text-slate-900 font-mono">0</div>
+            <div class="text-[11px] text-emerald-600 font-medium mt-1">Live in marketplace →</div>
           </div>
 
           <!-- Stat 2: Chats -->
-          <div onclick="switchTab('messages')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
-            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+          <div onclick="switchTab('messages')" class="bg-white border border-slate-200 hover:border-slate-300 p-4 sm:p-5 rounded-2xl transition cursor-pointer group shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-semibold mb-2">
               <span>Conversations</span>
               <span class="text-lg group-hover:scale-110 transition">💬</span>
             </div>
-            <div id="statChatsCount" class="text-2xl sm:text-3xl font-black text-white font-mono">0</div>
-            <div class="text-[11px] text-emerald-400 font-medium mt-1">Active chat threads →</div>
+            <div id="statChatsCount" class="text-2xl sm:text-3xl font-black text-slate-900 font-mono">0</div>
+            <div class="text-[11px] text-emerald-600 font-medium mt-1">Active chat threads →</div>
           </div>
 
           <!-- Stat 3: Demands -->
-          <div onclick="switchTab('demands')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
-            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+          <div onclick="switchTab('demands')" class="bg-white border border-slate-200 hover:border-slate-300 p-4 sm:p-5 rounded-2xl transition cursor-pointer group shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-semibold mb-2">
               <span>Buyer Demands</span>
               <span class="text-lg group-hover:scale-110 transition">📢</span>
             </div>
-            <div id="statDemandsCount" class="text-2xl sm:text-3xl font-black text-white font-mono">0</div>
-            <div class="text-[11px] text-orange-400 font-medium mt-1">Broadcasted items →</div>
+            <div id="statDemandsCount" class="text-2xl sm:text-3xl font-black text-slate-900 font-mono">0</div>
+            <div class="text-[11px] text-orange-600 font-medium mt-1">Broadcasted items →</div>
           </div>
 
           <!-- Stat 4: Verification Status -->
-          <div onclick="switchTab('kyc')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
-            <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+          <div onclick="switchTab('kyc')" class="bg-white border border-slate-200 hover:border-slate-300 p-4 sm:p-5 rounded-2xl transition cursor-pointer group shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-semibold mb-2">
               <span>KYC Trust</span>
               <span class="text-lg group-hover:scale-110 transition">🛡️</span>
             </div>
-            <div id="statKycText" class="text-base sm:text-lg font-black text-amber-400 truncate">Unverified</div>
-            <div class="text-[11px] text-slate-400 font-medium mt-1">Check status / Upload →</div>
+            <div id="statKycText" class="text-base sm:text-lg font-black text-amber-600 truncate">Unverified</div>
+            <div class="text-[11px] text-slate-500 font-medium mt-1">Check status / Upload →</div>
           </div>
         </div>
 
         <!-- Recent Listings Quick Widget -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-sm">
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="font-bold text-base text-white">Your Active Listings</h2>
-              <span class="text-xs text-slate-400">Quickly mark items as sold or delete completed deals</span>
+              <h2 class="font-bold text-base text-slate-900">Your Active Listings</h2>
+              <span class="text-xs text-slate-500">Quickly mark items as sold or delete completed deals</span>
             </div>
-            <button onclick="switchTab('listings')" class="text-xs text-lime-400 hover:underline font-semibold">
+            <button onclick="switchTab('listings')" class="text-xs text-emerald-700 hover:underline font-bold">
               View All (<span id="overviewListingsBadge">0</span>) →
             </button>
           </div>
@@ -363,10 +363,10 @@
       <section id="paneListings" class="hidden space-y-6">
         
         <!-- Header & Action Controls -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-2xl shadow-xs">
           <div>
-            <h2 class="text-xl font-black text-white font-display">Manage Your Listings</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Control items for sale, update pricing, mark items sold, or remove listings</p>
+            <h2 class="text-xl font-black text-slate-900 font-display">Manage Your Listings</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Control items for sale, update pricing, mark items sold, or remove listings</p>
           </div>
           <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm shadow-lime-400/20">
             <span>＋</span>
@@ -376,13 +376,13 @@
 
         <!-- Listings Filter Tabs -->
         <div class="flex items-center gap-2">
-          <button onclick="filterUserListings('all')" id="fltListingsAll" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-lime-400 text-slate-950">
+          <button onclick="filterUserListings('all')" id="fltListingsAll" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-lime-400 text-slate-950 shadow-xs">
             All Items (<span id="countFltAll">0</span>)
           </button>
-          <button onclick="filterUserListings('active')" id="fltListingsActive" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white bg-slate-900 border border-slate-800">
+          <button onclick="filterUserListings('active')" id="fltListingsActive" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:text-slate-900 bg-white border border-slate-200">
             Active (<span id="countFltActive">0</span>)
           </button>
-          <button onclick="filterUserListings('sold')" id="fltListingsSold" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white bg-slate-900 border border-slate-800">
+          <button onclick="filterUserListings('sold')" id="fltListingsSold" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:text-slate-900 bg-white border border-slate-200">
             Sold (<span id="countFltSold">0</span>)
           </button>
         </div>
@@ -399,84 +399,84 @@
       <!-- ======================================================== -->
       <section id="paneMessages" class="hidden space-y-4">
         
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center justify-between">
+        <div class="bg-white border border-slate-200 p-4 rounded-2xl flex items-center justify-between shadow-xs">
           <div>
-            <h2 class="text-lg font-black text-white font-display">In-App Chat & Inquiries</h2>
-            <p class="text-xs text-slate-400">Direct negotiations between buyers and sellers with zero middleman</p>
+            <h2 class="text-lg font-black text-slate-900 font-display">In-App Chat & Inquiries</h2>
+            <p class="text-xs text-slate-500">Direct negotiations between buyers and sellers with zero middleman</p>
           </div>
-          <span class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-300 font-mono">
+          <span class="text-xs bg-slate-100 border border-slate-200 px-3 py-1 rounded-full text-slate-700 font-mono font-bold">
             <span id="activeChatsHeaderCount">0</span> Threads
           </span>
         </div>
 
         <!-- Split Screen Chat Interface -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[550px] shadow-xl">
+        <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[550px] shadow-sm">
           
           <!-- Left Column: Conversation Thread List -->
-          <div id="chatThreadsColumn" class="md:col-span-5 border-r border-slate-800/80 flex flex-col bg-slate-950/50">
+          <div id="chatThreadsColumn" class="md:col-span-5 border-r border-slate-200 flex flex-col bg-slate-50/70">
             <!-- Search Thread -->
-            <div class="p-3 border-b border-slate-800">
-              <input id="chatSearchInput" oninput="filterChatThreads(this.value)" placeholder="🔍 Search conversations..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-lime-400">
+            <div class="p-3 border-b border-slate-200">
+              <input id="chatSearchInput" oninput="filterChatThreads(this.value)" placeholder="🔍 Search conversations..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400">
             </div>
 
             <!-- Thread List -->
-            <div id="chatThreadsList" class="flex-1 overflow-y-auto divide-y divide-slate-800/50 max-h-[480px]">
+            <div id="chatThreadsList" class="flex-1 overflow-y-auto divide-y divide-slate-200 max-h-[480px]">
               <!-- Rendered via renderChatThreads() -->
             </div>
           </div>
 
           <!-- Right Column: Active Conversation Stream -->
-          <div id="chatActiveColumn" class="md:col-span-7 flex flex-col bg-slate-900 min-h-[450px]">
+          <div id="chatActiveColumn" class="md:col-span-7 flex flex-col bg-white min-h-[450px]">
             <!-- Empty State when no chat selected -->
-            <div id="chatEmptyPlaceholder" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-500">
+            <div id="chatEmptyPlaceholder" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400">
               <span class="text-4xl mb-2">💬</span>
-              <b class="text-white text-sm">Select a conversation to start chatting</b>
-              <p class="text-xs text-slate-400 mt-1 max-w-xs">Chat directly with interested buyers, make counter offers, and close verified local deals.</p>
+              <b class="text-slate-800 text-sm">Select a conversation to start chatting</b>
+              <p class="text-xs text-slate-500 mt-1 max-w-xs leading-relaxed">Chat directly with interested buyers, make counter offers, and close verified local deals.</p>
             </div>
 
             <!-- Active Chat Box (Hidden until conversation clicked) -->
             <div id="chatActiveBox" class="hidden flex-1 flex flex-col h-full">
               <!-- Chat Head -->
-              <div class="p-3.5 px-4 border-b border-slate-800 bg-slate-900/90 flex items-center justify-between">
+              <div class="p-3.5 px-4 border-b border-slate-200 bg-white flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <button onclick="mobileBackToThreads()" class="md:hidden text-slate-400 hover:text-white text-sm font-bold pr-1">
+                  <button onclick="mobileBackToThreads()" class="md:hidden text-slate-500 hover:text-slate-800 text-sm font-bold pr-1">
                     ←
                   </button>
-                  <div id="chatActiveItemThumb" class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl overflow-hidden border border-slate-700 shrink-0">
+                  <div id="chatActiveItemThumb" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl overflow-hidden border border-slate-200 shrink-0">
                     📦
                   </div>
                   <div class="overflow-hidden leading-tight">
-                    <b id="chatActiveItemTitle" class="text-sm font-bold text-white block truncate">Product Name</b>
-                    <span id="chatActiveItemPrice" class="text-xs text-lime-400 font-mono font-bold block">₹0</span>
+                    <b id="chatActiveItemTitle" class="text-sm font-bold text-slate-900 block truncate">Product Name</b>
+                    <span id="chatActiveItemPrice" class="text-xs text-emerald-600 font-mono font-bold block">₹0</span>
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span id="chatActiveParticipant" class="text-xs text-slate-300 font-medium bg-slate-800 px-2.5 py-1 rounded-lg">Buyer</span>
+                  <span id="chatActiveParticipant" class="text-xs text-slate-700 font-medium bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">Buyer</span>
                 </div>
               </div>
 
               <!-- Quick Suggestion Chips -->
-              <div class="px-4 py-2 border-b border-slate-800/60 bg-slate-950/30 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 text-[11px]">
-                <button onclick="sendQuickChatMessage('Is this still available for immediate pickup?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition whitespace-nowrap">
+              <div class="px-4 py-2 border-b border-slate-200 bg-slate-50/50 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 text-[11px]">
+                <button onclick="sendQuickChatMessage('Is this still available for immediate pickup?')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
                   Is this still available?
                 </button>
-                <button onclick="sendQuickChatMessage('What is your best final price?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition whitespace-nowrap">
+                <button onclick="sendQuickChatMessage('What is your best final price?')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
                   Best final price?
                 </button>
-                <button onclick="sendQuickChatMessage('Can we meet today in person to verify?')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition whitespace-nowrap">
+                <button onclick="sendQuickChatMessage('Can we meet today in person to verify?')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
                   Can we meet today?
                 </button>
               </div>
 
               <!-- Message Stream -->
-              <div id="chatMessagesStream" class="flex-1 overflow-y-auto p-4 space-y-3 max-h-[350px]">
+              <div id="chatMessagesStream" class="flex-1 overflow-y-auto p-4 space-y-3 max-h-[350px] bg-slate-50/30">
                 <!-- Chat bubbles rendered dynamically -->
               </div>
 
               <!-- Chat Input Bar -->
-              <form onsubmit="event.preventDefault(); sendActiveChatMessage();" class="p-3 border-t border-slate-800 bg-slate-950/70 flex items-center gap-2">
-                <input id="chatMessageInput" placeholder="Type your message or offer..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400">
-                <button type="submit" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition shrink-0 shadow-sm">
+              <form onsubmit="event.preventDefault(); sendActiveChatMessage();" class="p-3 border-t border-slate-200 bg-white flex items-center gap-2">
+                <input id="chatMessageInput" placeholder="Type your message or offer..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400">
+                <button type="submit" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition shrink-0 shadow-xs">
                   Send ✉️
                 </button>
               </form>
@@ -493,12 +493,12 @@
       <!-- ======================================================== -->
       <section id="paneDemands" class="hidden space-y-6">
         
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-2xl shadow-xs">
           <div>
-            <h2 class="text-xl font-black text-white font-display">Your Broadcasted Requirements</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Looking to buy something? Sellers in your city will see your request and reach out</p>
+            <h2 class="text-xl font-black text-slate-900 font-display">Your Broadcasted Requirements</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Looking to buy something? Sellers in your city will see your request and reach out</p>
           </div>
-          <button onclick="openDemandModal()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm shadow-orange-500/20">
+          <button onclick="openDemandModal()" class="bg-orange-500 hover:bg-orange-400 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm shadow-orange-500/20">
             <span>📢</span>
             <span>Broadcast New Demand</span>
           </button>
@@ -516,15 +516,15 @@
       <section id="paneKyc" class="hidden space-y-6">
         
         <!-- Trust Status Card -->
-        <div id="kycStatusBanner" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
+        <div id="kycStatusBanner" class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
           <!-- Populated via renderKycPane() -->
         </div>
 
         <!-- Verification Form Card (Shown if unverified or rejected) -->
-        <div id="kycFormCard" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-          <div class="border-b border-slate-800 pb-4">
-            <h3 class="text-lg font-bold text-white">Submit Government ID for Gold Badge</h3>
-            <p class="text-xs text-slate-400 mt-1">
+        <div id="kycFormCard" class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+          <div class="border-b border-slate-100 pb-4">
+            <h3 class="text-lg font-bold text-slate-900">Submit Government ID for Gold Badge</h3>
+            <p class="text-xs text-slate-500 mt-1">
               Documents are processed securely under India's Digital Personal Data Protection (DPDP) Act 2023. SuperAdmin reviews proofs within 24 hours.
             </p>
           </div>
@@ -532,8 +532,8 @@
           <form onsubmit="event.preventDefault(); submitKycVerification();" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1.5">Government ID Type</label>
-                <select id="kycDocTypeSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-lime-400">
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Government ID Type</label>
+                <select id="kycDocTypeSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-medium">
                   <option value="Aadhaar Card (Masked/UIDAI)">Aadhaar Card (Last 4 digits visible)</option>
                   <option value="Driving License (Ministry of Road Transport)">Driving License</option>
                   <option value="Voter ID Card (Election Commission)">Voter ID Card</option>
@@ -542,32 +542,32 @@
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1.5">Document Number / Last 4 Digits</label>
-                <input id="kycDocNumberInput" placeholder="e.g. XXXX-XXXX-1234 or DL number" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-lime-400 font-mono">
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Document Number / Last 4 Digits</label>
+                <input id="kycDocNumberInput" placeholder="e.g. XXXX-XXXX-1234 or DL number" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-mono">
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1.5">Upload Photo of Government ID</label>
-              <div class="border-2 border-dashed border-slate-700 hover:border-lime-400/80 rounded-2xl p-6 text-center cursor-pointer bg-slate-950/60 transition" onclick="document.getElementById('kycPhotoFileInput').click()">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Upload Photo of Government ID</label>
+              <div class="border-2 border-dashed border-slate-200 hover:border-lime-500 rounded-2xl p-6 text-center cursor-pointer bg-slate-50/60 transition" onclick="document.getElementById('kycPhotoFileInput').click()">
                 <input type="file" id="kycPhotoFileInput" accept="image/*" class="hidden" onchange="handleKycPhotoSelected(this)">
                 <div id="kycUploadPrompt">
                   <span class="text-3xl block mb-2">📸</span>
-                  <b class="text-xs text-slate-200">Click to upload photo proof</b>
+                  <b class="text-xs text-slate-800">Click to upload photo proof</b>
                   <p class="text-[10px] text-slate-500 mt-1">PNG, JPG, or WEBP up to 5MB. Name and photo must be clearly legible.</p>
                 </div>
-                <img id="kycPhotoPreview" class="hidden max-h-48 mx-auto rounded-xl border border-lime-400 mt-2 object-contain">
+                <img id="kycPhotoPreview" class="hidden max-h-48 mx-auto rounded-xl border border-lime-500 mt-2 object-contain">
               </div>
             </div>
 
-            <div class="flex items-start gap-2.5 bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <input type="checkbox" id="kycConsentCheckbox" required class="mt-0.5 rounded border-slate-700 accent-lime-400 cursor-pointer">
-              <label for="kycConsentCheckbox" class="text-[11px] text-slate-300 leading-relaxed cursor-pointer">
+            <div class="flex items-start gap-2.5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <input type="checkbox" id="kycConsentCheckbox" required class="mt-0.5 rounded border-slate-300 accent-lime-500 cursor-pointer">
+              <label for="kycConsentCheckbox" class="text-[11px] text-slate-700 leading-relaxed cursor-pointer">
                 I hereby declare that this government identification document is authentic and belongs to me. I consent to Clubr verifying it exclusively for fraud prevention and conferring the Gold Verified Badge.
               </label>
             </div>
 
-            <button type="submit" id="btnSubmitKyc" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-lime-400/20">
+            <button type="submit" id="btnSubmitKyc" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-sm shadow-lime-400/20">
               Submit Document for Verification 🛡️
             </button>
           </form>
@@ -580,54 +580,66 @@
       <!-- ======================================================== -->
       <section id="paneSettings" class="hidden space-y-6">
         
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-          <div class="border-b border-slate-800 pb-4">
-            <h2 class="text-xl font-black text-white font-display">Profile & Account Settings</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Customize your marketplace presence and contact info</p>
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+          <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-xl font-black text-slate-900 font-display">Profile & Account Settings</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Customize your marketplace presence and contact info</p>
           </div>
 
           <form onsubmit="event.preventDefault(); saveProfileSettings();" class="space-y-4 max-w-xl">
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1.5">Full Name / Display Name</label>
-              <input id="settingsName" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400 font-semibold">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Full Name / Display Name</label>
+              <input id="settingsName" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1.5">Registered Email (Google Account)</label>
-              <input id="settingsEmail" readonly class="w-full bg-slate-950/60 border border-slate-800 text-slate-400 rounded-xl px-4 py-2.5 text-xs font-mono cursor-not-allowed">
-              <span class="text-[10px] text-slate-500 mt-1 block">Your email is verified via Google Sign-In and cannot be changed here.</span>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Registered Email (Google Account)</label>
+              <input id="settingsEmail" readonly class="w-full bg-slate-100 border border-slate-200 text-slate-500 rounded-xl px-4 py-2.5 text-xs font-mono cursor-not-allowed">
+              <span class="text-[10px] text-slate-400 mt-1 block">Your email is verified via Google Sign-In and cannot be changed here.</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1.5">Contact Phone Number (+91)</label>
-                <input id="settingsPhone" placeholder="10-digit mobile number" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400 font-mono">
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Contact Phone Number (+91)</label>
+                <input id="settingsPhone" placeholder="10-digit mobile number" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-mono">
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1.5">Primary City</label>
-                <input id="settingsCity" placeholder="e.g. Mumbai, Pune, Delhi" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400">
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Primary City</label>
+                <input id="settingsCity" placeholder="e.g. Mumbai, Pune, Delhi" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400">
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1.5">Bio / About Seller</label>
-              <textarea id="settingsBio" rows="3" placeholder="Brief note about yourself or the types of items you sell..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-lime-400"></textarea>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Bio / About Seller</label>
+              <textarea id="settingsBio" rows="3" placeholder="Brief note about yourself or the types of items you sell..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400"></textarea>
             </div>
 
-            <button type="submit" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-lime-400/20">
+            <button type="submit" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-sm shadow-lime-400/20">
               Save Profile Changes 💾
             </button>
           </form>
         </div>
 
         <!-- Danger Zone -->
-        <div class="bg-rose-950/20 border border-rose-900/40 rounded-3xl p-6 space-y-3">
-          <h3 class="text-sm font-bold text-rose-300">Session & Security</h3>
-          <p class="text-xs text-slate-400">Sign out of your account on this browser. Your listings and chats will remain safely stored in the cloud.</p>
-          <button onclick="handleLogout()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold px-4 py-2 rounded-xl transition">
-            Log Out Session 🚪
-          </button>
+        <div class="bg-rose-50/70 border border-rose-200 rounded-3xl p-6 space-y-4">
+          <div>
+            <h3 class="text-sm font-bold text-rose-800 flex items-center gap-1.5">
+              <span>⚠️</span> Account & Session Security
+            </h3>
+            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              Manage your active login session or permanently delete your Clubr profile, listings, and chat conversations.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <button onclick="handleLogout()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-2xs">
+              Log Out Session 🚪
+            </button>
+            <button onclick="deleteDashboardUserAccount()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-sm">
+              Delete Account Permanently 🗑️
+            </button>
+          </div>
         </div>
 
       </section>
@@ -639,30 +651,31 @@
   <!-- ======================================================== -->
   <!-- MODAL: FAST SELL ITEM WIZARD DIRECTLY IN DASHBOARD       -->
   <!-- ======================================================== -->
-  <div id="modalSell" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-800 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative">
-      <button onclick="closeSellModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+  <div id="modalSell" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border border-slate-200 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative">
+      <button onclick="closeSellModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
       <div>
-        <h3 class="text-xl font-black text-white font-display">＋ Post an Item for Sale</h3>
-        <p class="text-xs text-slate-400">Your item will be immediately published live across all cities</p>
+        <h3 class="text-xl font-black text-slate-900 font-display">＋ Post an Item for Sale</h3>
+        <p class="text-xs text-slate-500">Your item will be immediately published live across all cities</p>
       </div>
 
       <form onsubmit="event.preventDefault(); submitSellItem();" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Item Title *</label>
-          <input id="sellTitle" required placeholder="e.g. iPhone 13 128GB Midnight Blue" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Item Title *</label>
+          <input id="sellTitle" required placeholder="e.g. iPhone 13 128GB Midnight Blue" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Selling Price (₹) *</label>
-            <input id="sellPrice" type="number" required placeholder="e.g. 28000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400 font-mono">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Selling Price (₹) *</label>
+            <input id="sellPrice" type="number" required placeholder="e.g. 28000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-mono font-bold">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Category *</label>
-            <select id="sellCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-lime-400">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Category *</label>
+            <select id="sellCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
               <option value="Mobiles">📱 Mobiles & Tablets</option>
-              <option value="Vehicles">🚗 Cars & Bikes</option>
+              <option value="Bikes">🏍️ Bikes & Scooters</option>
+              <option value="Cars">🚗 Cars & Autos</option>
               <option value="Electronics">💻 Laptops & Tech</option>
               <option value="Appliances">📺 TV & Home Appliances</option>
               <option value="Furniture">🛋️ Furniture & Living</option>
@@ -671,32 +684,42 @@
           </div>
         </div>
 
+        <!-- State & City Cascading Dropdowns -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">City *</label>
-            <input id="sellCity" required placeholder="e.g. Mumbai" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400">
+            <label class="block text-xs font-bold text-slate-700 mb-1">State *</label>
+            <select id="sellStateSelect" onchange="populateSellCities(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
+              <!-- Populated dynamically -->
+            </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Locality / Area</label>
-            <input id="sellLocality" placeholder="e.g. Andheri West" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400">
+            <label class="block text-xs font-bold text-slate-700 mb-1">City *</label>
+            <select id="sellCitySelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
+              <!-- Populated dynamically -->
+            </select>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Description & Specs</label>
-          <textarea id="sellDesc" rows="3" placeholder="Condition, battery health, accessories included, reason for selling..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-lime-400"></textarea>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Locality / Area</label>
+          <input id="sellLocality" placeholder="e.g. Andheri West, Kothrud" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Upload Photo</label>
-          <div class="border border-dashed border-slate-700 hover:border-lime-400 rounded-xl p-4 text-center cursor-pointer bg-slate-950/60 transition" onclick="document.getElementById('sellPhotoInput').click()">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Description & Specs</label>
+          <textarea id="sellDesc" rows="3" placeholder="Condition, battery health, accessories included, reason for selling..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Upload Photo</label>
+          <div class="border border-dashed border-slate-200 hover:border-lime-500 rounded-xl p-4 text-center cursor-pointer bg-slate-50/60 transition" onclick="document.getElementById('sellPhotoInput').click()">
             <input type="file" id="sellPhotoInput" accept="image/*" class="hidden" onchange="handleSellPhotoSelected(this)">
-            <span id="sellPhotoPrompt" class="text-xs text-slate-400">📷 Tap to upload item photo (optional)</span>
+            <span id="sellPhotoPrompt" class="text-xs text-slate-500">📷 Tap to upload item photo (optional)</span>
             <img id="sellPhotoPreview" class="hidden max-h-32 mx-auto rounded-lg mt-2 object-contain border border-lime-400">
           </div>
         </div>
 
-        <button type="submit" class="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-xs py-3 rounded-xl transition shadow-md shadow-lime-400/20">
+        <button type="submit" class="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-xs py-3 rounded-xl transition shadow-sm shadow-lime-400/20">
           Publish Listing Live 🚀
         </button>
       </form>
@@ -706,31 +729,32 @@
   <!-- ======================================================== -->
   <!-- MODAL: BROADCAST BUYER DEMAND DIRECTLY IN DASHBOARD      -->
   <!-- ======================================================== -->
-  <div id="modalDemand" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-800 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative">
-      <button onclick="closeDemandModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+  <div id="modalDemand" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border border-slate-200 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative">
+      <button onclick="closeDemandModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
       <div>
-        <h3 class="text-xl font-black text-white font-display">📢 Broadcast a Requirement</h3>
-        <p class="text-xs text-slate-400">Tell local sellers what you are looking to purchase</p>
+        <h3 class="text-xl font-black text-slate-900 font-display">📢 Broadcast a Requirement</h3>
+        <p class="text-xs text-slate-500">Tell local sellers what you are looking to purchase</p>
       </div>
 
       <form onsubmit="event.preventDefault(); submitDemandItem();" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Item You Need *</label>
-          <input id="demandItem" required placeholder="e.g. Looking for used iPad 9th Gen or newer" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Item You Need *</label>
+          <input id="demandItem" required placeholder="e.g. Looking for used iPad 9th Gen or newer" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-semibold">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Your Budget *</label>
-            <input id="demandBudget" required placeholder="e.g. ₹15,000 - ₹20,000" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Your Budget *</label>
+            <input id="demandBudget" required placeholder="e.g. ₹15,000 - ₹20,000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-mono font-bold">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Category</label>
-            <select id="demandCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-orange-400">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Category</label>
+            <select id="demandCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-semibold">
               <option value="Mobiles">Mobiles & Tablets</option>
               <option value="Electronics">Laptops & Tech</option>
-              <option value="Vehicles">Cars & Bikes</option>
+              <option value="Bikes">Bikes & Scooters</option>
+              <option value="Cars">Cars & Autos</option>
               <option value="Appliances">Appliances</option>
               <option value="Furniture">Furniture</option>
               <option value="Others">Others</option>
@@ -738,27 +762,37 @@
           </div>
         </div>
 
+        <!-- State & City Cascading Dropdowns -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">City *</label>
-            <input id="demandCity" required placeholder="e.g. Mumbai" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400">
+            <label class="block text-xs font-bold text-slate-700 mb-1">State *</label>
+            <select id="demandStateSelect" onchange="populateDemandCities(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-semibold">
+              <!-- Populated dynamically -->
+            </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Buying Urgency</label>
-            <select id="demandUrgency" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-orange-400">
-              <option value="Urgent (Today/Tomorrow)">Urgent (1-2 days)</option>
-              <option value="Within this week">Within this week</option>
-              <option value="Casually looking">Casually looking</option>
+            <label class="block text-xs font-bold text-slate-700 mb-1">City *</label>
+            <select id="demandCitySelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-semibold">
+              <!-- Populated dynamically -->
             </select>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Details & Conditions Preferred</label>
-          <textarea id="demandDesc" rows="3" placeholder="Preferred color, condition, warranty requirements..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white outline-none focus:border-orange-400"></textarea>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Buying Urgency</label>
+          <select id="demandUrgency" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400 font-semibold">
+            <option value="Urgent (Today/Tomorrow)">Urgent (1-2 days)</option>
+            <option value="Within this week" selected>Within this week</option>
+            <option value="Casually looking">Casually looking</option>
+          </select>
         </div>
 
-        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-400 text-slate-950 font-black text-xs py-3 rounded-xl transition shadow-md shadow-orange-500/20">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Details & Conditions Preferred</label>
+          <textarea id="demandDesc" rows="3" placeholder="Preferred color, condition, warranty requirements..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-orange-400"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-400 text-white font-black text-xs py-3 rounded-xl transition shadow-sm shadow-orange-500/20">
           Broadcast Requirement 📢
         </button>
       </form>
@@ -769,6 +803,79 @@
   <!-- JAVASCRIPT LOGIC & DATA SYNCHRONIZATION                  -->
   <!-- ======================================================== -->
   <script>
+    // State-Wise Directory
+    const INDIA_STATE_DIRECTORY = {
+      "Maharashtra": [
+        "Mumbai", "Pune", "Nagpur", "Nashik", "Chhatrapati Sambhaji Nagar", "Thane", 
+        "Navi Mumbai", "Kolhapur", "Solapur", "Amravati", "Nanded", "Akola", 
+        "Yavatmal", "Chandrapur", "Dhule", "Jalgaon", "Latur", "Satara", "Sangli"
+      ],
+      "Delhi NCR": [
+        "New Delhi", "Noida", "Gurgaon (Gurugram)", "Ghaziabad", "Faridabad", "Greater Noida"
+      ],
+      "Karnataka": [
+        "Bengaluru", "Mysuru", "Hubballi-Dharwad", "Mangaluru", "Belagavi", 
+        "Davanagere", "Kalaburagi", "Udupi", "Shivamogga", "Ballari"
+      ],
+      "Gujarat": [
+        "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar", "Anand"
+      ],
+      "Telangana & AP": [
+        "Hyderabad", "Warangal", "Nizamabad", "Visakhapatnam", "Vijayawada", "Guntur", "Tirupati", "Nellore"
+      ],
+      "Tamil Nadu": [
+        "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Vellore", "Erode"
+      ],
+      "Uttar Pradesh": [
+        "Lucknow", "Kanpur", "Varanasi", "Agra", "Prayagraj", "Meerut", "Bareilly", "Aligarh", "Gorakhpur", "Jhansi"
+      ],
+      "Rajasthan": [
+        "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer", "Bhilwara", "Alwar"
+      ],
+      "Madhya Pradesh": [
+        "Indore", "Bhopal", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Dewas", "Satna"
+      ],
+      "West Bengal": [
+        "Kolkata", "Howrah", "Siliguri", "Durgapur", "Asansol", "Kharagpur"
+      ],
+      "Punjab & Haryana": [
+        "Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Panipat", "Ambala", "Karnal", "Faridabad"
+      ],
+      "Bihar & Jharkhand": [
+        "Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"
+      ],
+      "Kerala": [
+        "Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur", "Kollam", "Kannur"
+      ],
+      "Other States": [
+        "Bhubaneswar", "Cuttack", "Guwahati", "Silchar", "Dehradun", "Haridwar", "Raipur", "Goa (Panaji)", "Shimla"
+      ]
+    };
+
+    function getStateForCity(city) {
+      if (!city || city === 'All India') return 'Maharashtra';
+      for (const [st, cities] of Object.entries(INDIA_STATE_DIRECTORY)) {
+        if (cities.some(c => c.toLowerCase() === city.toLowerCase())) {
+          return st;
+        }
+      }
+      return 'Maharashtra';
+    }
+
+    function populateSellCities(state) {
+      const citySel = document.getElementById('sellCitySelect');
+      if (!citySel) return;
+      const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
+      citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    function populateDemandCities(state) {
+      const citySel = document.getElementById('demandCitySelect');
+      if (!citySel) return;
+      const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
+      citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
     // State management
     let currentUser = null;
     let allListings = [];
@@ -878,31 +985,31 @@
       const sideKycTabBadge = document.getElementById('sideBadgeKyc');
 
       if (isVerified) {
-        topBadge.className = 'text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30';
+        topBadge.className = 'text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200';
         topBadge.textContent = '🛡️ Verified';
 
-        sideBadge.innerHTML = `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-md border border-emerald-500/30">🛡️ Gold Verified</span>`;
-        statKyc.className = 'text-base sm:text-lg font-black text-emerald-400 truncate';
+        sideBadge.innerHTML = `<span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-md border border-emerald-200">🛡️ Gold Verified</span>`;
+        statKyc.className = 'text-base sm:text-lg font-black text-emerald-700 truncate';
         statKyc.textContent = '🛡️ Gold Verified';
-        sideKycTabBadge.className = 'text-[10px] text-emerald-400 font-bold';
+        sideKycTabBadge.className = 'text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200';
         sideKycTabBadge.textContent = 'Active ✅';
       } else if (isPending) {
-        topBadge.className = 'text-[10px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.5 rounded border border-amber-500/30';
+        topBadge.className = 'text-[10px] bg-amber-50 text-amber-700 font-bold px-1.5 py-0.5 rounded border border-amber-200';
         topBadge.textContent = '⏳ Under Review';
 
-        sideBadge.innerHTML = `<span class="text-[10px] bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-md border border-amber-500/30">⏳ Under Review</span>`;
-        statKyc.className = 'text-base sm:text-lg font-black text-amber-400 truncate';
+        sideBadge.innerHTML = `<span class="text-[10px] bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded-md border border-amber-200">⏳ Under Review</span>`;
+        statKyc.className = 'text-base sm:text-lg font-black text-amber-700 truncate';
         statKyc.textContent = '⏳ Under Review';
-        sideKycTabBadge.className = 'text-[10px] text-amber-400 font-bold';
+        sideKycTabBadge.className = 'text-[10px] text-amber-700 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200';
         sideKycTabBadge.textContent = 'In Review';
       } else {
-        topBadge.className = 'text-[10px] bg-slate-800 text-slate-400 font-bold px-1.5 py-0.5 rounded border border-slate-700';
+        topBadge.className = 'text-[10px] bg-slate-100 text-slate-600 font-bold px-1.5 py-0.5 rounded border border-slate-200';
         topBadge.textContent = '⚠️ Unverified';
 
-        sideBadge.innerHTML = `<span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-md border border-slate-700">⚠️ Unverified</span>`;
-        statKyc.className = 'text-base sm:text-lg font-black text-slate-400 truncate';
+        sideBadge.innerHTML = `<span class="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded-md border border-slate-200">⚠️ Unverified</span>`;
+        statKyc.className = 'text-base sm:text-lg font-black text-slate-600 truncate';
         statKyc.textContent = 'Unverified';
-        sideKycTabBadge.className = 'text-[10px] text-amber-400 font-bold';
+        sideKycTabBadge.className = 'text-[10px] text-amber-700 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200';
         sideKycTabBadge.textContent = 'Verify';
       }
     }
@@ -944,10 +1051,10 @@
 
         if (t === tabId) {
           pane.classList.remove('hidden');
-          btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap bg-lime-400 text-slate-950 shadow-sm';
+          btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap bg-lime-400 text-slate-950 shadow-xs';
         } else {
           pane.classList.add('hidden');
-          btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-400 hover:text-white';
+          btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2.5 whitespace-nowrap text-slate-600 hover:text-slate-900 hover:bg-slate-50';
         }
       });
 
@@ -972,11 +1079,11 @@
 
       if (myL.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-8 px-4 bg-slate-950/60 border border-dashed border-slate-800 rounded-2xl text-slate-400 space-y-2">
+          <div class="text-center py-8 px-4 bg-slate-50 border border-dashed border-slate-200 rounded-2xl text-slate-500 space-y-2">
             <span class="text-3xl block mb-1">📦</span>
-            <b class="text-sm text-white">No active listings posted yet</b>
-            <p class="text-xs text-slate-400 max-w-sm mx-auto">Post your phones, gadgets, bikes, or furniture directly to buyers in your city.</p>
-            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl transition mt-2">
+            <b class="text-sm text-slate-800">No active listings posted yet</b>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Post your phones, gadgets, bikes, or furniture directly to buyers in your city.</p>
+            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl transition mt-2 shadow-xs">
               ＋ Sell an Item on Clubr
             </button>
           </div>
@@ -987,31 +1094,31 @@
       // Show top 3 recent listings
       myL.slice(0, 3).forEach(item => {
         const itemThumb = item.photo 
-          ? `<img src="${item.photo}" class="w-12 h-12 rounded-xl object-cover border border-slate-700 shrink-0">`
-          : `<div class="w-12 h-12 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-xl shrink-0">${item.emoji || '📦'}</div>`;
+          ? `<img src="${item.photo}" class="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0">`
+          : `<div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center text-xl shrink-0 border border-slate-200">${item.emoji || '📦'}</div>`;
 
         const statusTag = item.isSold 
-          ? `<span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded-full">Sold</span>`
-          : `<span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>`;
+          ? `<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200">Sold</span>`
+          : `<span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">Active</span>`;
 
         container.insertAdjacentHTML('beforeend', `
-          <div class="flex items-center justify-between gap-3 bg-slate-950/60 border border-slate-800 p-3.5 rounded-2xl hover:border-slate-700 transition">
+          <div class="flex items-center justify-between gap-3 bg-slate-50/60 border border-slate-200 p-3.5 rounded-2xl hover:border-slate-300 transition">
             <div class="flex items-center gap-3 overflow-hidden">
               ${itemThumb}
               <div class="overflow-hidden">
                 <div class="flex items-center gap-2">
-                  <b class="text-xs font-bold text-white truncate">${escapeHtml(item.title)}</b>
+                  <b class="text-xs font-bold text-slate-900 truncate">${escapeHtml(item.title)}</b>
                   ${statusTag}
                 </div>
-                <div class="text-xs text-lime-400 font-mono font-bold mt-0.5">₹${Number(item.price).toLocaleString('en-IN')} · <span class="text-slate-400 font-sans font-normal text-[11px]">${escapeHtml(item.city || 'India')}</span></div>
+                <div class="text-xs text-emerald-700 font-mono font-bold mt-0.5">₹${Number(item.price).toLocaleString('en-IN')} · <span class="text-slate-500 font-sans font-normal text-[11px]">${escapeHtml(item.city || 'India')}</span></div>
               </div>
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-              <button onclick="toggleItemSold('${item.id}')" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+              <button onclick="toggleItemSold('${item.id}')" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition shadow-2xs">
                 ${item.isSold ? 'Re-List' : 'Mark Sold'}
               </button>
-              <button onclick="deleteListingFromDashboard('${item.id}')" class="text-[11px] font-bold px-2 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition">
+              <button onclick="deleteListingFromDashboard('${item.id}')" title="Delete Listing" class="text-[11px] font-bold px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition">
                 🗑️
               </button>
             </div>
@@ -1029,9 +1136,9 @@
         const btn = document.getElementById(`fltListings${t}`);
         if (!btn) return;
         if (t.toLowerCase() === type) {
-          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-lime-400 text-slate-950';
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-lime-400 text-slate-950 shadow-xs';
         } else {
-          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white bg-slate-900 border border-slate-800';
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:text-slate-900 bg-white border border-slate-200';
         }
       });
       renderMyListings();
@@ -1052,11 +1159,11 @@
 
       if (myL.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full text-center py-16 px-4 bg-slate-900/60 border border-dashed border-slate-800 rounded-3xl text-slate-400 space-y-3">
+          <div class="col-span-full text-center py-16 px-4 bg-white border border-dashed border-slate-200 rounded-3xl text-slate-500 space-y-3 shadow-xs">
             <span class="text-4xl block mb-1">🛍️</span>
-            <b class="text-base text-white">No listings found in this category</b>
-            <p class="text-xs text-slate-400 max-w-sm mx-auto">Click below to publish an item directly to verified local buyers.</p>
-            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-md shadow-lime-400/20">
+            <b class="text-base text-slate-900">No listings found in this category</b>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Click below to publish an item directly to verified local buyers.</p>
+            <button onclick="openSellModal()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-sm shadow-lime-400/20">
               ＋ Post an Item on Clubr
             </button>
           </div>
@@ -1067,45 +1174,45 @@
       myL.forEach(item => {
         const thumb = item.photo
           ? `<img src="${item.photo}" class="w-full h-44 object-cover">`
-          : `<div class="w-full h-44 bg-slate-800 flex items-center justify-center text-5xl text-slate-400">${item.emoji || '📦'}</div>`;
+          : `<div class="w-full h-44 bg-slate-100 flex items-center justify-center text-5xl text-slate-400">${item.emoji || '📦'}</div>`;
 
         const statusBadge = item.isSold 
-          ? `<span class="bg-slate-900/90 backdrop-blur-md text-slate-300 border border-slate-700 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">🏷️ SOLD</span>`
-          : `<span class="bg-emerald-500/90 backdrop-blur-md text-slate-950 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full">🟢 ACTIVE</span>`;
+          ? `<span class="bg-slate-900 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">🏷️ SOLD</span>`
+          : `<span class="bg-emerald-500 text-white font-extrabold text-[10px] px-2.5 py-0.5 rounded-full">🟢 ACTIVE</span>`;
 
         grid.insertAdjacentHTML('beforeend', `
-          <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl overflow-hidden transition flex flex-col justify-between group">
+          <div class="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl overflow-hidden transition flex flex-col justify-between group shadow-xs">
             <div>
               <div class="relative overflow-hidden">
                 ${thumb}
                 <div class="absolute top-3 left-3">
                   ${statusBadge}
                 </div>
-                <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-slate-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700">
+                <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
                   ${escapeHtml(item.cat || 'Item')}
                 </div>
               </div>
 
               <div class="p-4 space-y-2">
                 <div class="flex items-baseline justify-between gap-2">
-                  <span class="text-lg font-black text-white font-mono">₹${Number(item.price).toLocaleString('en-IN')}</span>
-                  <span class="text-[11px] text-slate-400">📍 ${escapeHtml(item.city || 'India')}</span>
+                  <span class="text-lg font-black text-slate-900 font-mono">₹${Number(item.price).toLocaleString('en-IN')}</span>
+                  <span class="text-[11px] text-slate-500">📍 ${escapeHtml(item.city || 'India')}</span>
                 </div>
-                <h4 class="font-bold text-sm text-slate-100 line-clamp-1 group-hover:text-lime-400 transition">${escapeHtml(item.title)}</h4>
-                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${escapeHtml(item.desc || 'No description provided')}</p>
+                <h4 class="font-bold text-sm text-slate-900 line-clamp-1 group-hover:text-emerald-700 transition">${escapeHtml(item.title)}</h4>
+                <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${escapeHtml(item.desc || 'No description provided')}</p>
               </div>
             </div>
 
-            <div class="p-4 pt-0 border-t border-slate-800/80 mt-2 flex items-center justify-between gap-2">
-              <button onclick="toggleItemSold('${item.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+            <div class="p-4 pt-0 border-t border-slate-100 mt-2 flex items-center justify-between gap-2">
+              <button onclick="toggleItemSold('${item.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
                 ${item.isSold ? 'Re-List Active' : 'Mark as Sold'}
               </button>
 
               <div class="flex items-center gap-1.5">
-                <a href="index.html" target="_blank" title="View on Feed" class="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                <a href="index.html" target="_blank" title="View on Feed" class="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
                   ↗
                 </a>
-                <button onclick="deleteListingFromDashboard('${item.id}')" title="Delete Listing" class="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition">
+                <button onclick="deleteListingFromDashboard('${item.id}')" title="Delete Listing" class="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition">
                   🗑️
                 </button>
               </div>
@@ -1122,7 +1229,6 @@
       item.isSold = !item.isSold;
       localStorage.setItem('findly_listings', JSON.stringify(allListings));
 
-      // Sync with cloud firestore
       if (firebaseDb) {
         firebaseDb.collection('listings').doc(id).set({ isSold: item.isSold }, { merge: true }).catch(()=>{});
       }
@@ -1139,7 +1245,6 @@
       allListings = allListings.filter(x => x.id !== id);
       localStorage.setItem('findly_listings', JSON.stringify(allListings));
 
-      // Sync cloud delete
       if (typeof clubrDeleteLiveListing === 'function') {
         clubrDeleteLiveListing(id);
       }
@@ -1153,6 +1258,21 @@
     // ========================================================
     // TAB 3: IN-APP MESSAGES & CHAT CENTER
     // ========================================================
+    function deleteChatThreadFromDashboard(key, e) {
+      if (e) e.stopPropagation();
+      if (!confirm('Are you sure you want to delete this chat conversation?')) return;
+      delete allChats[key];
+      localStorage.setItem('findly_chats', JSON.stringify(allChats));
+      if (currentActiveChatKey === key) {
+        currentActiveChatKey = null;
+        document.getElementById('chatActiveBox').classList.add('hidden');
+        document.getElementById('chatEmptyPlaceholder').classList.remove('hidden');
+      }
+      updateDashboardCounts();
+      renderChatThreads();
+      toast('Chat conversation deleted.');
+    }
+
     function renderChatThreads(query = '') {
       const container = document.getElementById('chatThreadsList');
       if (!container) return;
@@ -1162,10 +1282,10 @@
 
       if (threadKeys.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-12 px-4 text-slate-500">
+          <div class="text-center py-12 px-4 text-slate-400">
             <span class="text-3xl block mb-2">💬</span>
-            <b class="text-xs text-slate-400 block">No active chats yet</b>
-            <p class="text-[11px] text-slate-600 mt-1">Direct buyer messages will appear here.</p>
+            <b class="text-xs text-slate-600 block">No active chats yet</b>
+            <p class="text-[11px] text-slate-400 mt-1">Direct buyer messages will appear here.</p>
           </div>
         `;
         return;
@@ -1189,17 +1309,22 @@
         const isSelected = (currentActiveChatKey === k);
 
         container.insertAdjacentHTML('beforeend', `
-          <div onclick="openActiveChat('${k}')" class="p-3.5 px-4 cursor-pointer transition flex items-center justify-between gap-3 ${isSelected ? 'bg-lime-400/10 border-l-4 border-lime-400' : 'hover:bg-slate-900/80'}">
+          <div onclick="openActiveChat('${k}')" class="p-3.5 px-4 cursor-pointer transition flex items-center justify-between gap-3 ${isSelected ? 'bg-lime-500/15 border-l-4 border-lime-500' : 'hover:bg-slate-100/70'}">
             <div class="flex items-center gap-3 overflow-hidden">
-              <div class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-lg overflow-hidden shrink-0 border border-slate-700">
+              <div class="w-10 h-10 rounded-xl bg-white text-slate-700 flex items-center justify-center text-lg overflow-hidden shrink-0 border border-slate-200 shadow-2xs">
                 ${item.photo ? `<img src="${item.photo}" class="w-full h-full object-cover">` : (item.emoji || '💬')}
               </div>
               <div class="overflow-hidden">
-                <b class="text-xs font-bold text-white block truncate">${escapeHtml(item.title || item.item || 'Item')}</b>
-                <span class="text-[11px] text-slate-400 block truncate mt-0.5">${escapeHtml(lastMsg.text)}</span>
+                <b class="text-xs font-bold text-slate-900 block truncate">${escapeHtml(item.title || item.item || 'Item')}</b>
+                <span class="text-[11px] text-slate-500 block truncate mt-0.5">${escapeHtml(lastMsg.text)}</span>
               </div>
             </div>
-            <span class="text-[10px] text-slate-500 shrink-0 font-mono">${escapeHtml(lastMsg.time || '')}</span>
+            <div class="flex items-center gap-2 shrink-0" onclick="event.stopPropagation()">
+              <span class="text-[10px] text-slate-400 font-mono">${escapeHtml(lastMsg.time || '')}</span>
+              <button onclick="deleteChatThreadFromDashboard('${k}', event)" title="Delete Conversation" class="text-[11px] font-bold p-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 transition">
+                🗑️
+              </button>
+            </div>
           </div>
         `);
       });
@@ -1250,7 +1375,7 @@
       const msgs = allChats[currentActiveChatKey] || [];
 
       if (msgs.length === 0) {
-        stream.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">Conversation started. Send a message to start negotiation.</div>`;
+        stream.innerHTML = `<div class="text-center py-8 text-xs text-slate-400">Conversation started. Send a message to start negotiation.</div>`;
         return;
       }
 
@@ -1260,17 +1385,17 @@
         if (m.type === 'offer') {
           stream.insertAdjacentHTML('beforeend', `
             <div class="flex justify-center my-2">
-              <div class="bg-slate-950 border border-lime-400/40 p-3.5 rounded-2xl max-w-sm text-center shadow-lg">
-                <span class="text-xs text-lime-400 font-bold block mb-1">🤝 Price Offer Received</span>
-                <span class="text-xl font-black text-white font-mono">₹${Number(m.amount).toLocaleString('en-IN')}</span>
-                <span class="text-[10px] text-slate-400 block mt-1">Status: <b>${escapeHtml(m.status || 'Pending')}</b></span>
+              <div class="bg-white border border-lime-500 p-3.5 rounded-2xl max-w-sm text-center shadow-md">
+                <span class="text-xs text-emerald-700 font-bold block mb-1">🤝 Price Offer Received</span>
+                <span class="text-xl font-black text-slate-900 font-mono">₹${Number(m.amount).toLocaleString('en-IN')}</span>
+                <span class="text-[10px] text-slate-500 block mt-1">Status: <b>${escapeHtml(m.status || 'Pending')}</b></span>
               </div>
             </div>
           `);
         } else {
           stream.insertAdjacentHTML('beforeend', `
             <div class="flex ${isMine ? 'justify-end' : 'justify-start'}">
-              <div class="max-w-[78%] px-4 py-2.5 text-xs shadow-sm ${isMine ? 'chat-bubble-mine font-medium' : 'chat-bubble-theirs'}">
+              <div class="max-w-[78%] px-4 py-2.5 text-xs shadow-xs ${isMine ? 'chat-bubble-mine' : 'chat-bubble-theirs'}">
                 <p class="leading-relaxed break-words">${escapeHtml(m.text)}</p>
                 <span class="text-[9px] opacity-70 block text-right mt-1 font-mono">${escapeHtml(m.time || '')}</span>
               </div>
@@ -1300,7 +1425,6 @@
       allChats[currentActiveChatKey].push(newMsg);
       localStorage.setItem('findly_chats', JSON.stringify(allChats));
 
-      // RTDB sync if available
       if (firebaseRtdb) {
         firebaseRtdb.ref(`chats/${currentActiveChatKey}`).push(newMsg).catch(()=>{});
       }
@@ -1327,11 +1451,11 @@
 
       if (myW.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full text-center py-16 px-4 bg-slate-900/60 border border-dashed border-slate-800 rounded-3xl text-slate-400 space-y-3">
+          <div class="col-span-full text-center py-16 px-4 bg-white border border-dashed border-slate-200 rounded-3xl text-slate-500 space-y-3 shadow-xs">
             <span class="text-4xl block mb-1">📢</span>
-            <b class="text-base text-white">No buyer demands broadcasted yet</b>
-            <p class="text-xs text-slate-400 max-w-sm mx-auto">Can't find what you need on the feed? Broadcast your requirements to verified sellers.</p>
-            <button onclick="openDemandModal()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-md shadow-orange-500/20">
+            <b class="text-base text-slate-900">No buyer demands broadcasted yet</b>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Can't find what you need on the feed? Broadcast your requirements to verified sellers.</p>
+            <button onclick="openDemandModal()" class="bg-orange-500 hover:bg-orange-400 text-white text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-sm shadow-orange-500/20">
               📢 Broadcast a Demand
             </button>
           </div>
@@ -1341,22 +1465,22 @@
 
       myW.forEach(w => {
         grid.insertAdjacentHTML('beforeend', `
-          <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between gap-4">
+          <div class="bg-white border border-slate-200 p-5 rounded-2xl flex flex-col justify-between gap-4 shadow-xs">
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <span class="bg-orange-500/15 text-orange-400 border border-orange-500/30 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
+                <span class="bg-orange-50 text-orange-700 border border-orange-200 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
                   ${escapeHtml(w.cat || 'Demand')}
                 </span>
-                <span class="text-[11px] text-slate-400">📍 ${escapeHtml(w.city || 'India')}</span>
+                <span class="text-[11px] text-slate-500">📍 ${escapeHtml(w.city || 'India')}</span>
               </div>
-              <h4 class="font-bold text-base text-white">${escapeHtml(w.item)}</h4>
-              <p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(w.desc || 'Budget: ' + w.budget)}</p>
-              <div class="text-xs font-mono font-bold text-lime-400">Budget: ${escapeHtml(w.budget)}</div>
+              <h4 class="font-bold text-base text-slate-900">${escapeHtml(w.item)}</h4>
+              <p class="text-xs text-slate-500 leading-relaxed">${escapeHtml(w.desc || 'Budget: ' + w.budget)}</p>
+              <div class="text-xs font-mono font-bold text-emerald-700">Budget: ${escapeHtml(w.budget)}</div>
             </div>
 
-            <div class="flex items-center justify-between border-t border-slate-800 pt-3">
-              <span class="text-[10px] text-slate-500">${w.urgency || 'Active'}</span>
-              <button onclick="closeMyDemand('${w.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 transition">
+            <div class="flex items-center justify-between border-t border-slate-100 pt-3">
+              <span class="text-[10px] text-slate-400 font-medium">${w.urgency || 'Active'}</span>
+              <button onclick="closeMyDemand('${w.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition">
                 Close Demand ✕
               </button>
             </div>
@@ -1393,18 +1517,18 @@
       if (status === 'verified') {
         banner.innerHTML = `
           <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-3xl shrink-0">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center text-3xl shrink-0">
               🛡️
             </div>
             <div class="space-y-1">
               <div class="flex items-center gap-2">
-                <h3 class="text-xl font-black text-white font-display">Gold Verified Seller Status</h3>
-                <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Active</span>
+                <h3 class="text-xl font-black text-slate-900 font-display">Gold Verified Seller Status</h3>
+                <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Active</span>
               </div>
-              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
+              <p class="text-xs text-slate-600 leading-relaxed max-w-xl">
                 Congratulations! Your government identity has been verified by Clubr SuperAdmin. Your listings feature the Gold Trust Shield, giving buyers 100% confidence.
               </p>
-              <div class="pt-2 flex items-center gap-4 text-xs text-slate-400 font-mono">
+              <div class="pt-2 flex items-center gap-4 text-xs text-slate-500 font-mono">
                 <span>Verified ID: <b>${escapeHtml(currentUser.kycDocType || 'Govt Document')}</b></span>
                 <span>Badge: <b>Gold Trust Shield</b></span>
               </div>
@@ -1415,15 +1539,15 @@
       } else if (status === 'pending') {
         banner.innerHTML = `
           <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-3xl shrink-0">
+            <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center text-3xl shrink-0">
               ⏳
             </div>
             <div class="space-y-1">
               <div class="flex items-center gap-2">
-                <h3 class="text-xl font-black text-white font-display">Verification Under Review</h3>
-                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">In Review</span>
+                <h3 class="text-xl font-black text-slate-900 font-display">Verification Under Review</h3>
+                <span class="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">In Review</span>
               </div>
-              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
+              <p class="text-xs text-slate-600 leading-relaxed max-w-xl">
                 Your verification document has been securely submitted. The Clubr Command Center will review your proof within 24 hours. Your listings will automatically receive the Gold Shield upon approval.
               </p>
             </div>
@@ -1433,12 +1557,12 @@
       } else {
         banner.innerHTML = `
           <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-lime-400/20 text-lime-400 border border-lime-400/30 flex items-center justify-center text-3xl shrink-0">
+            <div class="w-14 h-14 rounded-2xl bg-lime-400/25 text-slate-950 border border-lime-400/40 flex items-center justify-center text-3xl shrink-0">
               🛡️
             </div>
             <div class="space-y-1">
-              <h3 class="text-xl font-black text-white font-display">Get Your Gold Verified Badge</h3>
-              <p class="text-xs text-slate-300 leading-relaxed max-w-xl">
+              <h3 class="text-xl font-black text-slate-900 font-display">Get Your Gold Verified Badge</h3>
+              <p class="text-xs text-slate-600 leading-relaxed max-w-xl">
                 Verified members enjoy 5x more buyer responses, guaranteed scam protection, and higher marketplace placement. Upload a masked Aadhaar or Government ID below to get certified.
               </p>
             </div>
@@ -1568,10 +1692,64 @@
       toast('✅ Profile changes saved successfully!');
     }
 
+    async function deleteDashboardUserAccount() {
+      if (!currentUser) return;
+      const confirmMsg = `Are you sure you want to permanently DELETE your Clubr account (${currentUser.name})?\n\nThis will permanently remove:\n• Your profile from Cloud Firestore\n• All your active marketplace listings & demands\n• All in-app chat conversations\n• Your Gold KYC Verification status\n\nThis action cannot be undone.`;
+      if (!confirm(confirmMsg)) return;
+
+      const targetId = currentUser.id;
+      const targetEmail = currentUser.email;
+      const targetPhone = currentUser.phone;
+      const targetName = currentUser.name;
+
+      // 1. Remove user listings locally
+      allListings = allListings.filter(x => x.sellerId !== targetId && x.seller !== targetName);
+      localStorage.setItem('findly_listings', JSON.stringify(allListings));
+
+      // 2. Remove user demands locally
+      allWants = allWants.filter(x => x.buyerId !== targetId && x.buyer !== targetName);
+      localStorage.setItem('findly_wants', JSON.stringify(allWants));
+
+      // 3. Remove user from registeredUsers
+      try {
+        let reg = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
+        reg = reg.filter(x => x.id !== targetId && (!targetEmail || x.email !== targetEmail) && (!targetPhone || x.phone !== targetPhone));
+        localStorage.setItem('clubr_registered_users', JSON.stringify(reg));
+      } catch(e) {}
+
+      // 4. Cloud Firestore deletion
+      if (typeof clubrDeleteLiveUser === 'function') {
+        clubrDeleteLiveUser(targetId, targetEmail, targetPhone, targetName);
+      }
+
+      // 5. Firebase Sign-Out
+      if (typeof clubrSignOut === 'function') {
+        await clubrSignOut();
+      }
+
+      // 6. Clear session
+      localStorage.removeItem('clubr_current_user');
+      currentUser = null;
+
+      alert('Your account, listings, and messages have been permanently deleted.');
+      window.location.href = 'index.html';
+    }
+
     // ========================================================
     // SELL & DEMAND MODALS
     // ========================================================
     function openSellModal() {
+      const targetCity = (currentUser && currentUser.city) ? currentUser.city : 'Pune';
+      const targetState = getStateForCity(targetCity);
+
+      const stateSel = document.getElementById('sellStateSelect');
+      if (stateSel) {
+        stateSel.innerHTML = Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === targetState ? ' selected' : ''}>${st}</option>`).join('');
+        populateSellCities(targetState);
+        const citySel = document.getElementById('sellCitySelect');
+        if (citySel) citySel.value = targetCity;
+      }
+
       document.getElementById('modalSell').classList.remove('hidden');
     }
     function closeSellModal() {
@@ -1597,12 +1775,12 @@
       const title = document.getElementById('sellTitle').value.trim();
       const price = Number(document.getElementById('sellPrice').value);
       const cat = document.getElementById('sellCategory').value;
-      const city = document.getElementById('sellCity').value.trim();
+      const city = (document.getElementById('sellCitySelect') ? document.getElementById('sellCitySelect').value : '') || (currentUser.city || 'Pune');
       const locality = document.getElementById('sellLocality').value.trim() || 'Local';
       const desc = document.getElementById('sellDesc').value.trim();
 
       const emojiMap = {
-        Mobiles: '📱', Vehicles: '🚗', Electronics: '💻', Appliances: '📺', Furniture: '🛋️', Others: '📦'
+        Mobiles: '📱', Bikes: '🏍️', Cars: '🚗', Electronics: '💻', Appliances: '📺', Furniture: '🛋️', Others: '📦'
       };
 
       const newListing = {
@@ -1639,6 +1817,17 @@
     }
 
     function openDemandModal() {
+      const targetCity = (currentUser && currentUser.city) ? currentUser.city : 'Pune';
+      const targetState = getStateForCity(targetCity);
+
+      const stateSel = document.getElementById('demandStateSelect');
+      if (stateSel) {
+        stateSel.innerHTML = Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === targetState ? ' selected' : ''}>${st}</option>`).join('');
+        populateDemandCities(targetState);
+        const citySel = document.getElementById('demandCitySelect');
+        if (citySel) citySel.value = targetCity;
+      }
+
       document.getElementById('modalDemand').classList.remove('hidden');
     }
     function closeDemandModal() {
@@ -1650,7 +1839,7 @@
       const item = document.getElementById('demandItem').value.trim();
       const budget = document.getElementById('demandBudget').value.trim();
       const cat = document.getElementById('demandCategory').value;
-      const city = document.getElementById('demandCity').value.trim();
+      const city = (document.getElementById('demandCitySelect') ? document.getElementById('demandCitySelect').value : '') || (currentUser.city || 'Pune');
       const urgency = document.getElementById('demandUrgency').value;
       const desc = document.getElementById('demandDesc').value.trim();
 

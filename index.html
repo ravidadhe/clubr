@@ -1803,6 +1803,22 @@ h1 {
       🎯 Auto-Detect My Location (GPS)
     </button>
 
+    <!-- State & City Dropdowns -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; background:#f8fafc; border:1px solid var(--line); border-radius:14px; padding:12px">
+      <div class="field" style="margin:0">
+        <label style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px; display:block">1. Select State</label>
+        <select id="stateDropdownSelect" onchange="onStateDropdownChanged(this.value)" style="width:100%; padding:9px 10px; border-radius:10px; border:1px solid var(--line); font-size:12px; background:var(--card); font-weight:700">
+          <option value="All">🇮🇳 All States</option>
+        </select>
+      </div>
+      <div class="field" style="margin:0">
+        <label style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px; display:block">2. Select City</label>
+        <select id="cityDropdownSelect" onchange="if(this.value) setCity(this.value)" style="width:100%; padding:9px 10px; border-radius:10px; border:1px solid var(--line); font-size:12px; background:var(--card); font-weight:700">
+          <option value="">-- Choose City --</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Search Input -->
     <div class="field" style="margin-top:0">
       <input id="citySearchInput" placeholder="🔍 Search any city, district, or state..." oninput="filterCityDirectory(this.value)">
@@ -1897,9 +1913,14 @@ h1 {
           <div style="font-size:12px; color:var(--muted); margin-top:2px;" id="profileCardMeta">📍 Pune · 9823000000</div>
         </div>
       </div>
-      <button onclick="logoutUser()" style="font-size:12px; font-weight:800; color:#ef4444; border:1px solid #fecaca; background:#fff; padding:6px 14px; border-radius:10px; cursor:pointer;">
-        Logout
-      </button>
+      <div style="display:flex; gap:6px; flex-wrap:wrap">
+        <button onclick="logoutUser()" style="font-size:12px; font-weight:800; color:#ef4444; border:1px solid #fecaca; background:#fff; padding:6px 14px; border-radius:10px; cursor:pointer;">
+          Logout
+        </button>
+        <button onclick="deleteUserAccount()" title="Delete Account Permanently" style="font-size:11px; font-weight:800; color:#991b1b; border:1px solid #fca5a5; background:#fee2e2; padding:6px 10px; border-radius:10px; cursor:pointer;">
+          Delete Account 🗑️
+        </button>
+      </div>
     </div>
 
     <!-- Quick Metrics Row -->
@@ -1984,13 +2005,22 @@ h1 {
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
         <div class="field">
-          <label>City</label>
-          <input id="sellCity" placeholder="e.g. Pune, Mumbai, Nagpur..." value="Pune" required>
+          <label>State</label>
+          <select id="sellStateSelect" onchange="populateSellCities(this.value)" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; background:var(--card)">
+            <!-- Populated dynamically -->
+          </select>
         </div>
         <div class="field">
-          <label>Locality / Area</label>
-          <input id="sellLocality" placeholder="e.g. Kothrud, Bandra..." value="Kothrud" required>
+          <label>City</label>
+          <select id="sellCitySelect" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; background:var(--card)">
+            <!-- Populated dynamically -->
+          </select>
         </div>
+      </div>
+
+      <div class="field">
+        <label>Locality / Area</label>
+        <input id="sellLocality" placeholder="e.g. Kothrud, Bandra, Andheri..." value="Local" required>
       </div>
 
       <div class="field">
@@ -2013,35 +2043,27 @@ h1 {
         </div>
       </div>
 
-      <!-- Photo Dropzone / Camera -->
       <div class="field">
-        <label>Upload Item Photo <span class="hint">Real photos get 5x more chats</span></label>
-        <div class="photo-picker" style="position:relative">
-          <input type="file" id="sellPhotoInput" accept="image/*" onchange="handlePhotoUpload(this)">
-          <div id="photoPrompt">📸 Click to choose photo or take camera snap</div>
-          <div id="photoPreviewContainer" style="display:none; position:relative; width:100%; text-align:center;">
-            <img id="photoPreview" class="photo-preview" style="max-height:160px; border-radius:12px; margin:0 auto; object-fit:contain;" alt="Preview">
-            <button type="button" onclick="clearPhotoUpload(event)" style="position:absolute; top:8px; right:8px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:28px; height:28px; font-weight:bold; cursor:pointer;">✕</button>
-          </div>
+        <label>Detailed Description</label>
+        <textarea id="sellDesc" placeholder="Describe specifications, condition, battery health, purchase bill details, warranty status..."></textarea>
+      </div>
+
+      <!-- Photo Upload with Preview -->
+      <div class="field">
+        <label>Add Item Photos</label>
+        <div class="photo-upload-box" onclick="document.getElementById('sellPhotoInput').click()">
+          <input type="file" id="sellPhotoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+          <div id="photoPrompt">📸 Tap to upload photos from camera or gallery</div>
+          <img id="photoPreview" class="photo-preview" alt="Preview">
         </div>
       </div>
 
-      <div class="field">
-        <label>A few useful details</label>
-        <textarea id="sellDesc" placeholder="Battery health, age, invoice date, reason for selling..."></textarea>
-      </div>
-
-      <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:8px; margin:10px 0 14px 0; font-size:11px; color:#166534;">
-        <span style="font-size:16px;">🔒</span>
-        <span><b>100% Privacy Protected:</b> Your phone number is kept private. Genuine buyers will contact you safely through Clubr In-App Chat.</span>
-      </div>
-
-      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:15px; margin-top:4px">
-        🚀 Post Listing Live
+      <button type="submit" class="want-btn" style="background:var(--lime); color:var(--ink); width:100%; padding:15px; margin-top:8px">
+        🚀 Publish Item Live
       </button>
     </form>
 
-    <!-- WANT FORM (Reverse Marketplace) -->
+    <!-- WANT FORM (Buyer Demand) -->
     <form id="wantForm" style="display:none" onsubmit="event.preventDefault(); submitWant();">
       <div class="field">
         <label>What item do you want to buy? <span class="hint">Specific model</span></label>
@@ -2068,13 +2090,22 @@ h1 {
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
         <div class="field">
-          <label>City</label>
-          <input id="wantCity" placeholder="e.g. Mumbai, Pune..." value="Mumbai" required>
+          <label>State</label>
+          <select id="wantStateSelect" onchange="populateWantCities(this.value)" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; background:var(--card)">
+            <!-- Populated dynamically -->
+          </select>
         </div>
         <div class="field">
-          <label>Locality</label>
-          <input id="wantLocality" placeholder="e.g. Andheri West..." value="Andheri West" required>
+          <label>City</label>
+          <select id="wantCitySelect" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; background:var(--card)">
+            <!-- Populated dynamically -->
+          </select>
         </div>
+      </div>
+
+      <div class="field">
+        <label>Locality</label>
+        <input id="wantLocality" placeholder="e.g. Andheri West..." value="Local" required>
       </div>
 
       <div class="field">
@@ -2914,6 +2945,48 @@ async function logoutUser() {
   toast('Logged out successfully.');
 }
 
+async function deleteUserAccount() {
+  if (!currentUser) return;
+  const confirmMsg = `Are you sure you want to permanently DELETE your Clubr account (${currentUser.name})?\n\nThis will permanently delete:\n• Your account profile from Cloud Firestore\n• All your marketplace listings and buyer demands\n• Your in-app chat history and verification badge\n\nThis action cannot be undone.`;
+  if (!confirm(confirmMsg)) return;
+
+  const targetId = currentUser.id;
+  const targetEmail = currentUser.email;
+  const targetPhone = currentUser.phone;
+  const targetName = currentUser.name;
+
+  // 1. Remove user listings
+  listings = listings.filter(x => x.sellerId !== targetId && x.seller !== targetName);
+  wants = wants.filter(x => x.buyerId !== targetId && x.buyer !== targetName);
+
+  // 2. Remove user from registeredUsers
+  registeredUsers = registeredUsers.filter(x => x.id !== targetId && (!targetEmail || x.email !== targetEmail) && (!targetPhone || x.phone !== targetPhone));
+  localStorage.setItem('clubr_registered_users', JSON.stringify(registeredUsers));
+
+  // 3. Clear session
+  localStorage.removeItem('clubr_current_user');
+  currentUser = null;
+
+  // 4. Save local state
+  saveData();
+
+  // 5. Cloud Firestore delete
+  if (typeof clubrDeleteLiveUser === 'function') {
+    clubrDeleteLiveUser(targetId, targetEmail, targetPhone, targetName);
+  }
+
+  // 6. Sign out
+  if (typeof clubrSignOut === 'function') {
+    await clubrSignOut();
+  }
+
+  closeProfileModal();
+  updateUserUI();
+  renderFeed();
+  alert('Your account and all associated listings have been permanently deleted.');
+  window.location.reload();
+}
+
 // User Profile Dashboard
 function openProfileModal() {
   if (!currentUser) return;
@@ -3347,8 +3420,71 @@ function renderCityDirectory(filterText = '') {
   }
 }
 
+function getStateForCity(city) {
+  if (!city || city === 'All India') return 'Maharashtra';
+  for (const [st, cities] of Object.entries(INDIA_STATE_DIRECTORY)) {
+    if (cities.some(c => c.toLowerCase() === city.toLowerCase())) {
+      return st;
+    }
+  }
+  return 'Maharashtra';
+}
+
+function initStateCityDropdowns() {
+  const stateSel = document.getElementById('stateDropdownSelect');
+  if (stateSel) {
+    stateSel.innerHTML = '<option value="All">🇮🇳 All States</option>' + 
+      Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === activeSelectedState ? ' selected' : ''}>${st}</option>`).join('');
+  }
+  populateCityDropdown(activeSelectedState || 'All');
+}
+
+function onStateDropdownChanged(state) {
+  activeSelectedState = state;
+  populateCityDropdown(state);
+  document.querySelectorAll('#cityModal .chips .chip').forEach(c => {
+    const txt = c.textContent.trim();
+    if (state === 'All' && txt.includes('All States')) c.classList.add('active');
+    else if (txt === state) c.classList.add('active');
+    else c.classList.remove('active');
+  });
+  const q = document.getElementById('citySearchInput')?.value || '';
+  renderCityDirectory(q);
+}
+
+function populateCityDropdown(state) {
+  const citySel = document.getElementById('cityDropdownSelect');
+  if (!citySel) return;
+  let cityList = [];
+  if (state === 'All') {
+    Object.values(INDIA_STATE_DIRECTORY).forEach(arr => cityList.push(...arr));
+  } else if (INDIA_STATE_DIRECTORY[state]) {
+    cityList = INDIA_STATE_DIRECTORY[state];
+  }
+  citySel.innerHTML = '<option value="">-- Choose City --</option>' + 
+    `<option value="All India"${currentCity === 'All India' ? ' selected' : ''}>🇮🇳 All India (Pan-India)</option>` +
+    cityList.map(c => `<option value="${c}"${c.toLowerCase() === currentCity.toLowerCase() ? ' selected' : ''}>${c}</option>`).join('');
+}
+
+function populateSellCities(state) {
+  const citySel = document.getElementById('sellCitySelect');
+  if (!citySel) return;
+  const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
+  citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function populateWantCities(state) {
+  const citySel = document.getElementById('wantCitySelect');
+  if (!citySel) return;
+  const list = INDIA_STATE_DIRECTORY[state] || Object.values(INDIA_STATE_DIRECTORY)[0];
+  citySel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
 function selectStateFilter(st, el) {
   activeSelectedState = st;
+  const stateSel = document.getElementById('stateDropdownSelect');
+  if (stateSel) stateSel.value = st;
+  populateCityDropdown(st);
   document.querySelectorAll('#cityModal .chips .chip').forEach(c => c.classList.remove('active'));
   if (el) el.classList.add('active');
   const q = document.getElementById('citySearchInput').value;
@@ -3360,6 +3496,8 @@ function filterCityDirectory(val) {
 }
 
 function openCityModal() {
+  initStateCityDropdowns();
+  renderCityDirectory();
   document.getElementById('cityModal').classList.add('show');
 }
 function closeCityModal() {
@@ -3425,7 +3563,64 @@ function filterCategory(cat, el) {
   renderFeed();
 }
 
-// Render Listings Feed with KYC Badges
+// Render Listings Feed with Prioritized City-First Display & KYC Badges
+function renderListingCard(container, item) {
+  const isSaved = savedItemIds.has(item.id);
+  const visualHtml = item.photo
+    ? `<div class="visual"><img src="${item.photo}" alt="${escapeHtml(item.title)}"><div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`
+    : `<div class="visual">${item.emoji || '📦'}<div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`;
+
+  const card = `
+    <article class="item" onclick="openItemDetail('${item.id}')">
+      ${visualHtml}
+      <div class="item-info">
+        <div>
+          <div class="item-title" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</div>
+          <div class="item-price-row">
+            <div class="item-price">₹${Number(item.price).toLocaleString('en-IN')}</div>
+            <span class="bhav-pill">🟢 Sahi Bhav</span>
+          </div>
+          <div class="item-meta">
+            <span>📍 ${escapeHtml(item.locality || 'Local')}, ${escapeHtml(item.city || 'India')}</span>
+            ${item.isKycVerified ? '<span style="color:#10b981; font-weight:800">🛡️ Verified</span>' : '<span style="color:#94a3b8">Basic</span>'}
+          </div>
+        </div>
+        <div class="item-actions" onclick="event.stopPropagation()">
+          <button class="btn-sm-view" onclick="openItemDetail('${item.id}')">Details</button>
+          <button class="btn-sm-chat" onclick="openInAppChat('${item.id}')">
+            <span>💬</span> Chat
+          </button>
+        </div>
+      </div>
+    </article>`;
+  container.insertAdjacentHTML('beforeend', card);
+}
+
+function renderDemandCard(container, w) {
+  const card = `
+    <div class="demand-card">
+      <div>
+        <div class="demand-header">
+          <div class="demand-buyer">
+            <div class="buyer-avatar">${(w.buyer || 'B').charAt(0).toUpperCase()}</div>
+            <div class="buyer-info">
+              <b>${escapeHtml(w.buyer || 'Buyer')}</b>
+              <span>📍 ${escapeHtml(w.locality || 'Local')}, ${escapeHtml(w.city || 'India')} · ${escapeHtml(w.time || '')}</span>
+            </div>
+          </div>
+          <span class="urgent-badge">${escapeHtml(w.urgency || 'Active')}</span>
+        </div>
+        <div class="demand-item">${escapeHtml(w.item)}</div>
+        <div class="demand-budget">Budget: ${escapeHtml(w.budget)}</div>
+        <p class="demand-desc">${escapeHtml(w.desc || 'No additional note provided.')}</p>
+      </div>
+      <button class="demand-cta" onclick="openBuyerChat('${w.id}')">
+        <span>💬</span> I Have This! Chat with Buyer
+      </button>
+    </div>`;
+  container.insertAdjacentHTML('beforeend', card);
+}
+
 function renderFeed() {
   const container = document.getElementById('feed');
   container.innerHTML = '';
@@ -3434,104 +3629,150 @@ function renderFeed() {
   if (currentMode === 'sell') {
     let filtered = listings.filter(item => {
       const matchCat = (activeCategory === 'All') || (item.cat === activeCategory);
-      const matchCity = (currentCity === 'All India') || (item.city.toLowerCase() === currentCity.toLowerCase());
-      const matchSearch = !searchQ || (item.title + ' ' + item.desc + ' ' + item.cat + ' ' + item.city + ' ' + item.locality).toLowerCase().includes(searchQ);
-      return matchCat && matchCity && matchSearch;
+      const matchSearch = !searchQ || (item.title + ' ' + (item.desc||'') + ' ' + (item.cat||'') + ' ' + (item.city||'') + ' ' + (item.locality||'')).toLowerCase().includes(searchQ);
+      return matchCat && matchSearch;
     });
 
-    document.getElementById('feedCount').textContent = `${filtered.length} items available`;
+    if (currentCity === 'All India') {
+      document.getElementById('feedCount').textContent = `${filtered.length} items available across India`;
 
-    if (filtered.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <h3>No listings found in ${currentCity}</h3>
-          <p>Be the first one to post a listing here or switch city!</p>
-          <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="openModal('sell')">
-            ＋ Post Item in ${currentCity}
-          </button>
-        </div>`;
-      return;
-    }
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No listings found</h3>
+            <p>Be the first one to post a listing here!</p>
+            <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="openModal('sell')">
+              ＋ Post Item
+            </button>
+          </div>`;
+        return;
+      }
 
-    filtered.forEach(item => {
-      const isSaved = savedItemIds.has(item.id);
-      const visualHtml = item.photo
-        ? `<div class="visual"><img src="${item.photo}" alt="${item.title}"><div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`
-        : `<div class="visual">${item.emoji || '📦'}<div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`;
+      filtered.forEach(item => renderListingCard(container, item));
+    } else {
+      const localItems = filtered.filter(item => (item.city || '').toLowerCase() === currentCity.toLowerCase());
+      const otherItems = filtered.filter(item => (item.city || '').toLowerCase() !== currentCity.toLowerCase());
 
-      const card = `
-        <article class="item" onclick="openItemDetail('${item.id}')">
-          ${visualHtml}
-          <div class="item-info">
-            <div>
-              <div class="item-title" title="${item.title}">${item.title}</div>
-              <div class="item-price-row">
-                <div class="item-price">₹${item.price.toLocaleString('en-IN')}</div>
-                <span class="bhav-pill">🟢 Sahi Bhav</span>
-              </div>
-              <div class="item-meta">
-                <span>📍 ${item.locality}, ${item.city}</span>
-                ${item.isKycVerified ? '<span style="color:#10b981; font-weight:800">🛡️ Verified</span>' : '<span style="color:#94a3b8">Basic</span>'}
-              </div>
-            </div>
-            <div class="item-actions" onclick="event.stopPropagation()">
-              <button class="btn-sm-view" onclick="openItemDetail('${item.id}')">Details</button>
-              <button class="btn-sm-chat" onclick="openInAppChat('${item.id}')">
-                <span>💬</span> Chat
+      document.getElementById('feedCount').textContent = `${localItems.length} in ${currentCity} · ${filtered.length} total across India`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No listings found</h3>
+            <p>Be the first one to post a listing here or switch city!</p>
+            <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="openModal('sell')">
+              ＋ Post Item in ${escapeHtml(currentCity)}
+            </button>
+          </div>`;
+        return;
+      }
+
+      // 1. Local Items section in chosen city
+      if (localItems.length > 0) {
+        container.insertAdjacentHTML('beforeend', `
+          <div style="grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; background:#ecfdf5; border:1px solid #a7f3d0; padding:10px 16px; border-radius:14px; margin-bottom:4px">
+            <span style="font-size:13px; font-weight:800; color:#065f46">📍 Verified Deals in ${escapeHtml(currentCity)} (${localItems.length})</span>
+            <span style="font-size:11px; font-weight:700; color:#047857; background:#d1fae5; padding:3px 8px; border-radius:8px">Local Pickup</span>
+          </div>
+        `);
+        localItems.forEach(item => renderListingCard(container, item));
+      } else {
+        container.insertAdjacentHTML('beforeend', `
+          <div style="grid-column:1/-1; background:#fffbeb; border:1px solid #fde68a; padding:14px 18px; border-radius:14px; text-align:center; margin-bottom:8px">
+            <b style="font-size:13px; color:#92400e; display:block">📍 No listings in ${escapeHtml(currentCity)} yet</b>
+            <span style="font-size:12px; color:#b45309">Showing verified items across India below. Be the first to sell in ${escapeHtml(currentCity)}!</span>
+            <div style="margin-top:8px">
+              <button class="want-btn" style="background:var(--ink); color:#fff; font-size:12px; padding:6px 14px; display:inline-flex" onclick="openModal('sell')">
+                ＋ Post Item in ${escapeHtml(currentCity)}
               </button>
             </div>
           </div>
-        </article>`;
-      container.insertAdjacentHTML('beforeend', card);
-    });
+        `);
+      }
 
-  } else {
-    // Demands
-    let filteredW = wants.filter(w => {
-      const matchCat = (activeCategory === 'All') || (w.cat === activeCategory);
-      const matchCity = (currentCity === 'All India') || (w.city.toLowerCase() === currentCity.toLowerCase());
-      const matchSearch = !searchQ || (w.item + ' ' + w.desc + ' ' + w.buyer + ' ' + w.city).toLowerCase().includes(searchQ);
-      return matchCat && matchCity && matchSearch;
-    });
-
-    document.getElementById('feedCount').textContent = `${filteredW.length} active demands`;
-
-    if (filteredW.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <h3>No requirements broadcasted in ${currentCity}</h3>
-          <p>Tell sellers what you need and let them chat with you!</p>
-          <button class="want-btn" style="background:var(--orange); color:#fff; display:inline-flex" onclick="openModal('want')">
-            ＋ Post Requirement
-          </button>
-        </div>`;
-      return;
+      // 2. Pan-India Items section
+      if (otherItems.length > 0) {
+        container.insertAdjacentHTML('beforeend', `
+          <div style="grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; background:#f8fafc; border:1px solid #e2e8f0; padding:10px 16px; border-radius:14px; margin:20px 0 6px 0">
+            <span style="font-size:13px; font-weight:800; color:#1e293b">🌐 More Items Across India (${otherItems.length})</span>
+            <span style="font-size:11px; font-weight:700; color:#64748b">Pan-India Availability</span>
+          </div>
+        `);
+        otherItems.forEach(item => renderListingCard(container, item));
+      }
     }
 
-    filteredW.forEach(w => {
-      const card = `
-        <div class="demand-card">
-          <div>
-            <div class="demand-header">
-              <div class="demand-buyer">
-                <div class="buyer-avatar">${w.buyer.charAt(0)}</div>
-                <div class="buyer-info">
-                  <b>${w.buyer}</b>
-                  <span>📍 ${w.locality}, ${w.city} · ${w.time}</span>
-                </div>
-              </div>
-              <span class="urgent-badge">${w.urgency}</span>
-            </div>
-            <div class="demand-item">${w.item}</div>
-            <div class="demand-budget">Budget: ${w.budget}</div>
-            <p class="demand-desc">${w.desc || 'No additional note provided.'}</p>
-          </div>
-          <button class="demand-cta" onclick="openBuyerChat('${w.id}')">
-            <span>💬</span> I Have This! Chat with Buyer
-          </button>
-        </div>`;
-      container.insertAdjacentHTML('beforeend', card);
+  } else {
+    // Demands (Reverse Market)
+    let filteredW = wants.filter(w => {
+      const matchCat = (activeCategory === 'All') || (w.cat === activeCategory);
+      const matchSearch = !searchQ || ((w.item||'') + ' ' + (w.desc||'') + ' ' + (w.buyer||'') + ' ' + (w.city||'')).toLowerCase().includes(searchQ);
+      return matchCat && matchSearch;
     });
+
+    if (currentCity === 'All India') {
+      document.getElementById('feedCount').textContent = `${filteredW.length} active demands across India`;
+
+      if (filteredW.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No requirements broadcasted yet</h3>
+            <p>Tell sellers what you need and let them chat with you!</p>
+            <button class="want-btn" style="background:var(--orange); color:#fff; display:inline-flex" onclick="openModal('want')">
+              ＋ Post Requirement
+            </button>
+          </div>`;
+        return;
+      }
+
+      filteredW.forEach(w => renderDemandCard(container, w));
+    } else {
+      const localDemands = filteredW.filter(w => (w.city || '').toLowerCase() === currentCity.toLowerCase());
+      const otherDemands = filteredW.filter(w => (w.city || '').toLowerCase() !== currentCity.toLowerCase());
+
+      document.getElementById('feedCount').textContent = `${localDemands.length} in ${currentCity} · ${filteredW.length} total across India`;
+
+      if (filteredW.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No requirements broadcasted in ${escapeHtml(currentCity)}</h3>
+            <p>Tell sellers what you need and let them chat with you!</p>
+            <button class="want-btn" style="background:var(--orange); color:#fff; display:inline-flex" onclick="openModal('want')">
+              ＋ Post Requirement in ${escapeHtml(currentCity)}
+            </button>
+          </div>`;
+        return;
+      }
+
+      // 1. Local demands
+      if (localDemands.length > 0) {
+        container.insertAdjacentHTML('beforeend', `
+          <div style="grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; background:#fff7ed; border:1px solid #fed7aa; padding:10px 16px; border-radius:14px; margin-bottom:4px">
+            <span style="font-size:13px; font-weight:800; color:#9a3412">📍 Local Buyer Demands in ${escapeHtml(currentCity)} (${localDemands.length})</span>
+            <span style="font-size:11px; font-weight:700; color:#c2410c; background:#ffedd5; padding:3px 8px; border-radius:8px">Sell Quickly</span>
+          </div>
+        `);
+        localDemands.forEach(w => renderDemandCard(container, w));
+      } else {
+        container.insertAdjacentHTML('beforeend', `
+          <div style="grid-column:1/-1; background:#fffbeb; border:1px solid #fde68a; padding:14px 18px; border-radius:14px; text-align:center; margin-bottom:8px">
+            <b style="font-size:13px; color:#92400e; display:block">📍 No buyer demands in ${escapeHtml(currentCity)} yet</b>
+            <span style="font-size:12px; color:#b45309">Showing buyer demands across India below.</span>
+          </div>
+        `);
+      }
+
+      // 2. Pan-India demands
+      if (otherDemands.length > 0) {
+        container.insertAdjacentHTML('beforeend', `
+          <div style="grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; background:#f8fafc; border:1px solid #e2e8f0; padding:10px 16px; border-radius:14px; margin:20px 0 6px 0">
+            <span style="font-size:13px; font-weight:800; color:#1e293b">🌐 More Buyer Demands Across India (${otherDemands.length})</span>
+            <span style="font-size:11px; font-weight:700; color:#64748b">Pan-India Buyers</span>
+          </div>
+        `);
+        otherDemands.forEach(w => renderDemandCard(container, w));
+      }
+    }
   }
 }
 
@@ -3694,29 +3935,76 @@ function openInAppChat(itemId) {
     return;
   }
 
-  const item = listings.find(x => x.id === itemId);
-  if (!item) return;
+  // 1. Search in listings
+  let item = listings.find(x => x.id === itemId);
+  let isDemand = false;
+
+  // 2. Search in demands if not in listings
+  if (!item) {
+    const w = wants.find(x => x.id === itemId);
+    if (w) {
+      item = {
+        id: w.id,
+        title: `Demand: ${w.item}`,
+        price: w.budget,
+        seller: w.buyer || 'Buyer',
+        isKycVerified: false,
+        emoji: '📢'
+      };
+      isDemand = true;
+    }
+  }
+
+  // 3. Fallback extraction from existing chat thread if item was deleted or custom deal
+  if (!item) {
+    const msgs = chatThreads[itemId] || [];
+    let fallbackTitle = 'Direct Deal';
+    if (msgs.length > 0) {
+      for (const m of msgs) {
+        if (m.text) {
+          const match = m.text.match(/interest in my (.*?)\./i) || m.text.match(/checking out my (.*?)\./i);
+          if (match && match[1]) {
+            fallbackTitle = match[1];
+            break;
+          }
+        }
+      }
+    }
+    item = {
+      id: itemId,
+      title: fallbackTitle,
+      price: 'Direct Deal',
+      seller: 'Clubr Member',
+      isKycVerified: false,
+      emoji: '📦'
+    };
+  }
 
   activeChatContext = {
     itemId: item.id,
-    itemTitle: item.title,
-    itemPrice: item.price,
+    itemTitle: item.title || 'Marketplace Item',
+    itemPrice: item.price || 'Direct Deal',
     sellerName: item.seller || 'Seller',
-    isVerified: item.isKycVerified,
+    isVerified: !!item.isKycVerified,
     itemEmoji: item.emoji || '📦'
   };
 
   document.getElementById('chatSellerName').textContent = activeChatContext.sellerName;
-  document.getElementById('chatSellerAvatar').textContent = activeChatContext.sellerName.charAt(0);
+  document.getElementById('chatSellerAvatar').textContent = (activeChatContext.sellerName || 'S').charAt(0).toUpperCase();
   document.getElementById('chatItemTitle').textContent = activeChatContext.itemTitle;
-  document.getElementById('chatItemPrice').textContent = `₹${activeChatContext.itemPrice.toLocaleString('en-IN')}`;
+  document.getElementById('chatItemPrice').textContent = (typeof activeChatContext.itemPrice === 'number' && activeChatContext.itemPrice > 0) 
+    ? `₹${activeChatContext.itemPrice.toLocaleString('en-IN')}` 
+    : String(activeChatContext.itemPrice);
   document.getElementById('chatItemEmoji').textContent = activeChatContext.itemEmoji;
   document.getElementById('chatSellerVerifiedPill').textContent = activeChatContext.isVerified ? '🛡️ Verified User' : '🟢 Active on Clubr';
 
-  const discount5 = Math.round(item.price * 0.95);
-  const discount10 = Math.round(item.price * 0.90);
-  document.getElementById('offerPill5').textContent = `Offer ₹${discount5.toLocaleString('en-IN')} (-5%)`;
-  document.getElementById('offerPill10').textContent = `Offer ₹${discount10.toLocaleString('en-IN')} (-10%)`;
+  const numPrice = Number(item.price) || 0;
+  const discount5 = Math.round(numPrice * 0.95);
+  const discount10 = Math.round(numPrice * 0.90);
+  const offerPill5 = document.getElementById('offerPill5');
+  const offerPill10 = document.getElementById('offerPill10');
+  if (offerPill5) offerPill5.textContent = numPrice > 0 ? `Offer ₹${discount5.toLocaleString('en-IN')} (-5%)` : 'Make Offer';
+  if (offerPill10) offerPill10.textContent = numPrice > 0 ? `Offer ₹${discount10.toLocaleString('en-IN')} (-10%)` : 'Fast Deal';
 
   if (!chatThreads[item.id]) {
     chatThreads[item.id] = [
@@ -3731,7 +4019,10 @@ function openInAppChat(itemId) {
 
   renderChatMessages();
   document.getElementById('chatModal').classList.add('show');
-  setTimeout(() => document.getElementById('chatInputText').focus(), 300);
+  setTimeout(() => {
+    const input = document.getElementById('chatInputText');
+    if (input) input.focus();
+  }, 300);
 }
 
 function openBuyerChat(wantId) {
@@ -4128,6 +4419,16 @@ function closeChatModal() {
 }
 
 // INBOX
+function deleteChatThread(threadKey, e) {
+  if (e) e.stopPropagation();
+  if (!confirm('Are you sure you want to delete this chat conversation?')) return;
+  delete chatThreads[threadKey];
+  saveData();
+  updateCounts();
+  openInboxModal();
+  toast('Chat conversation deleted.');
+}
+
 function openInboxModal() {
   if (!currentUser) {
     openAuthModal('Please sign in to view your in-app chat inbox');
@@ -4157,10 +4458,13 @@ function openInboxModal() {
             <span style="font-size:24px">${item.emoji || '💬'}</span>
             <div style="overflow:hidden">
               <b style="font-size:14px; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden">${item.title || item.item}</b>
-              <span style="font-size:12px; color:var(--muted); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:block">${lastMsg.text}</span>
+              <span style="font-size:12px; color:var(--muted); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:block">${escapeHtml(lastMsg.text)}</span>
             </div>
           </div>
-          <span style="font-size:11px; color:var(--muted); white-space:nowrap">${lastMsg.time}</span>
+          <div style="display:flex; align-items:center; gap:8px; flex-shrink:0" onclick="event.stopPropagation()">
+            <span style="font-size:11px; color:var(--muted); white-space:nowrap">${escapeHtml(lastMsg.time || '')}</span>
+            <button onclick="deleteChatThread('${k}', event)" title="Delete Conversation" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px;">🗑️</button>
+          </div>
         </div>
       `);
     });
@@ -4204,17 +4508,30 @@ function openModal(type) {
     ? 'Sell something on Clubr' 
     : '📢 Post what you need';
 
+  const targetCity = (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'Pune');
+  const targetState = getStateForCity(targetCity);
+
   if (type === 'sell') {
-    const userCity = (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'Pune');
-    const cityInput = document.getElementById('sellCity');
-    if (cityInput) cityInput.value = userCity;
+    const stateSel = document.getElementById('sellStateSelect');
+    if (stateSel) {
+      stateSel.innerHTML = Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === targetState ? ' selected' : ''}>${st}</option>`).join('');
+      populateSellCities(targetState);
+      const citySel = document.getElementById('sellCitySelect');
+      if (citySel) citySel.value = targetCity;
+    }
     const localityInput = document.getElementById('sellLocality');
     if (localityInput) localityInput.value = (currentUser && currentUser.locality) ? currentUser.locality : 'Local';
     selectSellCategory('Mobiles');
   } else {
-    const userCity = (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'Pune');
-    const wantCityInput = document.getElementById('wantCity');
-    if (wantCityInput) wantCityInput.value = userCity;
+    const wantStateSel = document.getElementById('wantStateSelect');
+    if (wantStateSel) {
+      wantStateSel.innerHTML = Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === targetState ? ' selected' : ''}>${st}</option>`).join('');
+      populateWantCities(targetState);
+      const wantCitySel = document.getElementById('wantCitySelect');
+      if (wantCitySel) wantCitySel.value = targetCity;
+    }
+    const wantLocalityInput = document.getElementById('wantLocality');
+    if (wantLocalityInput) wantLocalityInput.value = (currentUser && currentUser.locality) ? currentUser.locality : 'Local';
   }
 }
 function closeActionModal() {
@@ -4231,7 +4548,7 @@ function submitListing() {
   const price = Number(document.getElementById('sellPrice').value);
   const cat = document.getElementById('sellCat').value;
   const condition = document.getElementById('sellCondition').value;
-  const city = document.getElementById('sellCity').value.trim() || currentCity;
+  const city = (document.getElementById('sellCitySelect') && document.getElementById('sellCitySelect').value) ? document.getElementById('sellCitySelect').value : ((document.getElementById('sellCity') && document.getElementById('sellCity').value.trim()) || (currentCity !== 'All India' ? currentCity : 'Pune'));
   const locality = document.getElementById('sellLocality').value.trim() || 'Local';
   const desc = document.getElementById('sellDesc').value.trim();
 
@@ -4298,7 +4615,7 @@ function submitWant() {
   const budget = document.getElementById('wantBudget').value.trim();
   const cat = document.getElementById('wantCat').value;
   const urgency = document.getElementById('wantUrgency').value;
-  const city = document.getElementById('wantCity').value.trim() || currentCity;
+  const city = (document.getElementById('wantCitySelect') && document.getElementById('wantCitySelect').value) ? document.getElementById('wantCitySelect').value : ((document.getElementById('wantCity') && document.getElementById('wantCity').value.trim()) || (currentCity !== 'All India' ? currentCity : 'Pune'));
   const locality = document.getElementById('wantLocality').value.trim() || 'Local';
   const desc = document.getElementById('wantDesc').value.trim();
 

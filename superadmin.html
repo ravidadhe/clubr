@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clubr SuperAdmin — Live Traffic & Moderation Command Center</title>
+<title>Clubr SuperAdmin — Live Traffic, KYC & Moderation Command Center</title>
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
 
 <!-- Tailwind CSS -->
@@ -90,7 +90,7 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="font-extrabold text-base tracking-tight text-white">Clubr SuperAdmin</span>
-            <span class="bg-lime-400/10 text-lime-400 border border-lime-400/30 text-[10px] font-bold px-2 py-0.5 rounded-full">v3.5 LIVE</span>
+            <span class="bg-lime-400/10 text-lime-400 border border-lime-400/30 text-[10px] font-bold px-2 py-0.5 rounded-full">v3.6 LIVE</span>
           </div>
           <span class="text-xs text-slate-400">clubr.online Command Center</span>
         </div>
@@ -101,11 +101,14 @@
         <button onclick="switchTab('analytics')" id="navTabAnalytics" class="px-4 py-2 rounded-lg text-xs font-bold transition bg-lime-400 text-slate-950">
           📊 Live Traffic & Analytics
         </button>
+        <button onclick="switchTab('kyc')" id="navTabKyc" class="px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">
+          🛡️ KYC Approvals (<span id="adminKycCount">0</span>)
+        </button>
         <button onclick="switchTab('listings')" id="navTabListings" class="px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">
-          🛍️ Listings Manager (<span id="adminListingsCount">0</span>)
+          🛍️ Listings (<span id="adminListingsCount">0</span>)
         </button>
         <button onclick="switchTab('demands')" id="navTabDemands" class="px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">
-          📢 City Demands (<span id="adminDemandsCount">0</span>)
+          📢 Demands (<span id="adminDemandsCount">0</span>)
         </button>
         <button onclick="switchTab('broadcast')" id="navTabBroadcast" class="px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">
           📣 Global Broadcast
@@ -138,20 +141,17 @@
     <!-- TAB 1: REAL-TIME TRAFFIC & ANALYTICS                     -->
     <!-- ======================================================== -->
     <section id="tabAnalyticsSection" class="space-y-6">
-      
       <!-- Key Metric Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Live Users -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 relative overflow-hidden">
           <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Live Visitors Now</div>
           <div class="flex items-baseline gap-2">
             <span class="text-3xl font-black text-emerald-400 font-mono" id="statLiveUsers">44</span>
             <span class="text-xs text-emerald-500 font-bold">↑ Active sessions</span>
           </div>
-          <p class="text-xs text-slate-500 mt-2">Real-time pings across 14+ Indian states</p>
+          <p class="text-xs text-slate-500 mt-2">Real-time pings across Indian states</p>
         </div>
 
-        <!-- Today's Pageviews -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
           <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Today's Pageviews</div>
           <div class="flex items-baseline gap-2">
@@ -161,31 +161,27 @@
           <p class="text-xs text-slate-500 mt-2">Avg. 4.2 pageviews per visitor</p>
         </div>
 
-        <!-- In-App Chats Active -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
           <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">In-App Chat Deals</div>
           <div class="flex items-baseline gap-2">
             <span class="text-3xl font-black text-lime-400 font-mono" id="statChats">38</span>
             <span class="text-xs text-slate-400">Conversations</span>
           </div>
-          <p class="text-xs text-slate-500 mt-2">26 bargaining offers made today</p>
+          <p class="text-xs text-slate-500 mt-2">Zero WhatsApp drop-offs</p>
         </div>
 
-        <!-- Total Platform Listings -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Active Catalog Assets</div>
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">KYC Verified Ratio</div>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-black text-amber-400 font-mono" id="statTotalItems">12</span>
-            <span class="text-xs text-slate-400">Listings + Wants</span>
+            <span class="text-3xl font-black text-amber-400 font-mono" id="statKycRatio">62%</span>
+            <span class="text-xs text-slate-400">Verified Sellers</span>
           </div>
-          <p class="text-xs text-slate-500 mt-2">Zero fraud complaints recorded</p>
+          <p class="text-xs text-slate-500 mt-2">Zero fraud complaints</p>
         </div>
       </div>
 
-      <!-- State-Wise & City-Wise Traffic Distribution -->
+      <!-- State-Wise & Device Breakdown -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- State Traffic Breakdown (2 cols) -->
         <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
           <div class="flex items-center justify-between mb-4">
             <div>
@@ -195,8 +191,7 @@
             <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full font-mono">100% India Traffic</span>
           </div>
 
-          <div class="space-y-3.5" id="stateTrafficBars">
-            <!-- Maharashtra -->
+          <div class="space-y-3.5">
             <div>
               <div class="flex justify-between text-xs font-semibold mb-1">
                 <span>📍 Maharashtra (Mumbai, Pune, Nagpur, Yavatmal)</span>
@@ -207,7 +202,6 @@
               </div>
             </div>
 
-            <!-- Delhi NCR -->
             <div>
               <div class="flex justify-between text-xs font-semibold mb-1">
                 <span>📍 Delhi NCR (New Delhi, Noida, Gurgaon, Ghaziabad)</span>
@@ -218,7 +212,6 @@
               </div>
             </div>
 
-            <!-- Karnataka -->
             <div>
               <div class="flex justify-between text-xs font-semibold mb-1">
                 <span>📍 Karnataka (Bengaluru, Mysuru, Hubballi)</span>
@@ -229,10 +222,9 @@
               </div>
             </div>
 
-            <!-- Gujarat -->
             <div>
               <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Gujarat (Ahmedabad, Surat, Vadodara, Rajkot)</span>
+                <span>📍 Gujarat (Ahmedabad, Surat, Vadodara)</span>
                 <span class="text-lime-400 font-mono">10% (148 visitors)</span>
               </div>
               <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
@@ -240,10 +232,9 @@
               </div>
             </div>
 
-            <!-- Uttar Pradesh -->
             <div>
               <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Uttar Pradesh (Lucknow, Kanpur, Varanasi, Agra)</span>
+                <span>📍 Uttar Pradesh (Lucknow, Kanpur, Varanasi)</span>
                 <span class="text-lime-400 font-mono">8% (118 visitors)</span>
               </div>
               <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
@@ -251,10 +242,9 @@
               </div>
             </div>
 
-            <!-- Rajasthan & Others -->
             <div>
               <div class="flex justify-between text-xs font-semibold mb-1">
-                <span>📍 Rajasthan & Rest of India</span>
+                <span>📍 Rajasthan & Other States</span>
                 <span class="text-lime-400 font-mono">7% (106 visitors)</span>
               </div>
               <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
@@ -264,11 +254,10 @@
           </div>
         </div>
 
-        <!-- Device & Platform Breakdown (1 col) -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
           <div>
-            <h2 class="text-base font-bold text-white mb-1">Device & Platform Velocity</h2>
-            <p class="text-xs text-slate-400 mb-5">User entry hardware & install rates</p>
+            <h2 class="text-base font-bold text-white mb-1">Device Velocity & Security</h2>
+            <p class="text-xs text-slate-400 mb-5">Hardware split & KYC shield</p>
 
             <div class="space-y-4">
               <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
@@ -287,7 +276,7 @@
                   <span class="text-xl">💻</span>
                   <div>
                     <div class="text-xs font-bold text-white">Desktop / Laptop</div>
-                    <div class="text-[10px] text-slate-400">Chrome, Edge & Safari</div>
+                    <div class="text-[10px] text-slate-400">Chrome & Edge</div>
                   </div>
                 </div>
                 <span class="text-sm font-black text-slate-300 font-mono">16%</span>
@@ -295,32 +284,68 @@
 
               <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
                 <div class="flex items-center gap-3">
-                  <span class="text-xl">📲</span>
+                  <span class="text-xl">🛡️</span>
                   <div>
-                    <div class="text-xs font-bold text-white">PWA Home Screen Installs</div>
-                    <div class="text-[10px] text-slate-400">Standalone app mode</div>
+                    <div class="text-xs font-bold text-white">Legal DPDP Shield</div>
+                    <div class="text-[10px] text-slate-400">Masked ID Verification</div>
                   </div>
                 </div>
-                <span class="text-sm font-black text-emerald-400 font-mono">112</span>
+                <span class="text-xs font-bold text-emerald-400">Active</span>
               </div>
             </div>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
-            ⚡ CDN Caching: Active on cloudflare & clubr.online
+            ⚡ CDN Caching: Active on clubr.online
           </div>
         </div>
       </div>
     </section>
 
     <!-- ======================================================== -->
-    <!-- TAB 2: LISTINGS MODERATION                               -->
+    <!-- TAB 2: KYC DOCUMENT APPROVALS PIPELINE                   -->
+    <!-- ======================================================== -->
+    <section id="tabKycSection" class="space-y-4 hidden">
+      <div class="flex items-center justify-between bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+        <div>
+          <h2 class="text-base font-bold text-white">🛡️ Government ID KYC Verification Pipeline</h2>
+          <p class="text-xs text-slate-400">Review uploaded IDs (Voter ID, DL, Student ID) and grant Verified Citizen Badges</p>
+        </div>
+        <span class="text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-xl font-bold">
+          ⚖️ DPDP Act 2023 Compliant
+        </span>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3.5">Citizen Name</th>
+                <th class="p-3.5">Phone & City</th>
+                <th class="p-3.5">Document Type</th>
+                <th class="p-3.5">ID Number</th>
+                <th class="p-3.5">ID Photo Proof</th>
+                <th class="p-3.5">Submitted Date</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5 text-right">Moderation Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminKycTbody" class="divide-y divide-slate-800/60 font-medium">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: LISTINGS MODERATION                               -->
     <!-- ======================================================== -->
     <section id="tabListingsSection" class="space-y-4 hidden">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
         <div>
           <h2 class="text-base font-bold text-white">Live Listings Moderation</h2>
-          <p class="text-xs text-slate-400">Review, feature, or delete items across all Indian cities</p>
+          <p class="text-xs text-slate-400">Review items, check seller KYC status, or delete spam</p>
         </div>
         <div class="flex items-center gap-2">
           <input id="adminListingSearch" placeholder="Filter by title, city, or seller..." class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none w-64" oninput="renderAdminListings()">
@@ -330,7 +355,6 @@
         </div>
       </div>
 
-      <!-- Table -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
@@ -340,12 +364,11 @@
                 <th class="p-3.5">Category</th>
                 <th class="p-3.5">Price</th>
                 <th class="p-3.5">Location</th>
-                <th class="p-3.5">Trust Badges</th>
+                <th class="p-3.5">Seller Verification</th>
                 <th class="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody id="adminListingsTbody" class="divide-y divide-slate-800/60 font-medium">
-              <!-- Rendered dynamically -->
             </tbody>
           </table>
         </div>
@@ -353,13 +376,13 @@
     </section>
 
     <!-- ======================================================== -->
-    <!-- TAB 3: CITY DEMANDS MODERATION                           -->
+    <!-- TAB 4: CITY DEMANDS MODERATION                           -->
     <!-- ======================================================== -->
     <section id="tabDemandsSection" class="space-y-4 hidden">
       <div class="flex items-center justify-between bg-slate-900 border border-slate-800 p-4 rounded-2xl">
         <div>
           <h2 class="text-base font-bold text-white">Reverse Marketplace: City Demands</h2>
-          <p class="text-xs text-slate-400">Buyer broadcast requests across India</p>
+          <p class="text-xs text-slate-400">Buyer broadcast requirements across India</p>
         </div>
       </div>
 
@@ -377,7 +400,6 @@
               </tr>
             </thead>
             <tbody id="adminDemandsTbody" class="divide-y divide-slate-800/60 font-medium">
-              <!-- Rendered dynamically -->
             </tbody>
           </table>
         </div>
@@ -385,7 +407,7 @@
     </section>
 
     <!-- ======================================================== -->
-    <!-- TAB 4: GLOBAL BROADCAST ANNOUNCEMENT                     -->
+    <!-- TAB 5: GLOBAL BROADCAST ANNOUNCEMENT                     -->
     <!-- ======================================================== -->
     <section id="tabBroadcastSection" class="space-y-4 hidden">
       <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-2xl">
@@ -393,7 +415,7 @@
         <p class="text-xs text-slate-400 mb-4">This message will appear as a prominent alert banner at the top of the main marketplace for all visitors across India.</p>
 
         <div class="space-y-3">
-          <textarea id="broadcastInput" placeholder="e.g. 🎉 Diwali Super Sale! Free featured listings for all verified sellers this weekend across India." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white outline-none min-h-[90px]"></textarea>
+          <textarea id="broadcastInput" placeholder="e.g. 🎉 Festive Weekend! All KYC Verified sellers receive priority placement." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white outline-none min-h-[90px]"></textarea>
 
           <div class="flex items-center gap-3">
             <button onclick="publishBroadcast()" class="bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs transition">
@@ -411,12 +433,30 @@
   </main>
 </div>
 
+<!-- Document Photo Preview Modal -->
+<div id="docPreviewModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden" onclick="if(event.target===this)closeDocPreview()">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 max-w-lg w-full space-y-4 shadow-2xl">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <b class="text-sm font-bold text-white" id="previewModalTitle">ID Document Proof</b>
+      <button onclick="closeDocPreview()" class="text-slate-400 hover:text-white text-base">✕</button>
+    </div>
+    <div class="rounded-xl overflow-hidden bg-slate-950 flex items-center justify-center p-2 min-h-[220px]">
+      <img id="previewModalImg" src="" alt="ID Proof" class="max-h-[360px] w-auto object-contain rounded-lg">
+    </div>
+    <div class="text-[11px] text-slate-400">
+      ⚖️ Verified under Indian DPDP Act 2023. Stored confidentially for Clubr account integrity.
+    </div>
+  </div>
+</div>
+
 <!-- SuperAdmin Script -->
 <script>
 const MASTER_PASS = 'Atoz@R127';
 let adminUnlocked = false;
+let adminListings = [];
+let adminDemands = [];
+let adminKycRequests = [];
 
-// Check session
 function checkAuth() {
   if (sessionStorage.getItem('clubr_admin_auth') === 'true') {
     adminUnlocked = true;
@@ -449,10 +489,9 @@ function lockAdmin() {
   document.getElementById('adminLockScreen').classList.remove('hidden');
 }
 
-// Live Visitor Ping Simulation
 function startTrafficTicker() {
   setInterval(() => {
-    const delta = Math.floor(Math.random() * 5) - 2; // -2 to +2
+    const delta = Math.floor(Math.random() * 5) - 2;
     let current = parseInt(document.getElementById('liveVisitorsCount').textContent) || 44;
     current = Math.max(28, Math.min(85, current + delta));
     document.getElementById('liveVisitorsCount').textContent = current;
@@ -460,9 +499,8 @@ function startTrafficTicker() {
   }, 4000);
 }
 
-// Tab switcher
 function switchTab(tabId) {
-  const tabs = ['analytics', 'listings', 'demands', 'broadcast'];
+  const tabs = ['analytics', 'kyc', 'listings', 'demands', 'broadcast'];
   tabs.forEach(t => {
     const sec = document.getElementById(`tab${capitalize(t)}Section`);
     const btn = document.getElementById(`navTab${capitalize(t)}`);
@@ -475,6 +513,7 @@ function switchTab(tabId) {
     }
   });
 
+  if (tabId === 'kyc') renderAdminKyc();
   if (tabId === 'listings') renderAdminListings();
   if (tabId === 'demands') renderAdminDemands();
 }
@@ -483,10 +522,6 @@ function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-// Data Handling
-let adminListings = [];
-let adminDemands = [];
-
 function initAdminData() {
   try {
     const l = localStorage.getItem('findly_listings');
@@ -494,6 +529,40 @@ function initAdminData() {
 
     const w = localStorage.getItem('findly_wants');
     adminDemands = w ? JSON.parse(w) : [];
+
+    // Seed KYC Applications if empty
+    const savedKyc = localStorage.getItem('clubr_kyc_requests');
+    if (savedKyc) {
+      adminKycRequests = JSON.parse(savedKyc);
+    } else {
+      adminKycRequests = [
+        {
+          id: 'kyc_sample_1',
+          userId: 'u_rohan',
+          userName: 'Rohan Deshmukh',
+          userPhone: '9823012345',
+          userCity: 'Pune',
+          docType: 'Voter ID Card',
+          docNumber: 'EPIC-MH29-88741',
+          docPhoto: 'icons/icon.svg',
+          date: '19/09/2026',
+          status: 'verified'
+        },
+        {
+          id: 'kyc_sample_2',
+          userId: 'u_pravin',
+          userName: 'Pravin Joshi',
+          userPhone: '9823011223',
+          userCity: 'Nagpur',
+          docType: 'Driving License',
+          docNumber: 'DL-MH31-20180041234',
+          docPhoto: 'icons/icon.svg',
+          date: '19/09/2026',
+          status: 'pending'
+        }
+      ];
+      localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
+    }
 
     const chats = localStorage.getItem('findly_chats');
     const chatCount = chats ? Object.keys(JSON.parse(chats)).length : 38;
@@ -509,11 +578,130 @@ function initAdminData() {
     console.error(e);
   }
 
+  const pendingKycCount = adminKycRequests.filter(x => x.status === 'pending').length;
+  document.getElementById('adminKycCount').textContent = pendingKycCount;
   document.getElementById('adminListingsCount').textContent = adminListings.length;
   document.getElementById('adminDemandsCount').textContent = adminDemands.length;
-  document.getElementById('statTotalItems').textContent = adminListings.length + adminDemands.length;
 
   startTrafficTicker();
+}
+
+// Render KYC Approvals Table
+function renderAdminKyc() {
+  const tbody = document.getElementById('adminKycTbody');
+  tbody.innerHTML = '';
+
+  if (adminKycRequests.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-500">No KYC verification requests submitted yet.</td></tr>`;
+    return;
+  }
+
+  adminKycRequests.forEach(req => {
+    let statusPill = '';
+    if (req.status === 'verified') {
+      statusPill = `<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full text-[10px]">🛡️ Verified</span>`;
+    } else if (req.status === 'rejected') {
+      statusPill = `<span class="bg-rose-500/20 text-rose-300 font-bold px-2 py-0.5 rounded-full text-[10px]">❌ Rejected</span>`;
+    } else {
+      statusPill = `<span class="bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full text-[10px]">⏳ Pending Review</span>`;
+    }
+
+    const tr = `
+      <tr class="hover:bg-slate-800/40 transition">
+        <td class="p-3.5 font-bold text-white">${req.userName}</td>
+        <td class="p-3.5 text-slate-300">${req.userPhone} · 📍 ${req.userCity}</td>
+        <td class="p-3.5 text-slate-300">${req.docType}</td>
+        <td class="p-3.5 font-mono text-slate-400">${req.docNumber}</td>
+        <td class="p-3.5">
+          <button onclick="viewDocProof('${req.docPhoto}', '${req.userName}')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold px-2 py-1 rounded border border-slate-700">
+            👁️ Inspect Photo
+          </button>
+        </td>
+        <td class="p-3.5 text-slate-400">${req.date}</td>
+        <td class="p-3.5">${statusPill}</td>
+        <td class="p-3.5 text-right space-x-1.5">
+          ${req.status !== 'verified' ? `
+            <button onclick="adminApproveKyc('${req.id}')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg transition text-[11px] font-bold">
+              Approve ✅
+            </button>
+          ` : ''}
+          ${req.status !== 'rejected' ? `
+            <button onclick="adminRejectKyc('${req.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-lg transition text-[11px] font-bold">
+              Reject ✕
+            </button>
+          ` : ''}
+        </td>
+      </tr>`;
+    tbody.insertAdjacentHTML('beforeend', tr);
+  });
+}
+
+function viewDocProof(imgUrl, userName) {
+  document.getElementById('previewModalImg').src = imgUrl;
+  document.getElementById('previewModalTitle').textContent = `Document Proof: ${userName}`;
+  document.getElementById('docPreviewModal').classList.remove('hidden');
+}
+function closeDocPreview() {
+  document.getElementById('docPreviewModal').classList.add('hidden');
+}
+
+function adminApproveKyc(id) {
+  const req = adminKycRequests.find(x => x.id === id);
+  if (!req) return;
+
+  req.status = 'verified';
+  localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
+
+  // Sync to currentUser if logged in on this browser
+  try {
+    const cur = localStorage.getItem('clubr_current_user');
+    if (cur) {
+      const u = JSON.parse(cur);
+      if (u.id === req.userId || u.name === req.userName) {
+        u.kycStatus = 'verified';
+        localStorage.setItem('clubr_current_user', JSON.stringify(u));
+      }
+    }
+    // Update active listings of this seller to verified
+    let l = localStorage.getItem('findly_listings');
+    if (l) {
+      let items = JSON.parse(l);
+      items.forEach(it => {
+        if (it.sellerId === req.userId || it.seller === req.userName) {
+          it.isKycVerified = true;
+        }
+      });
+      localStorage.setItem('findly_listings', JSON.stringify(items));
+    }
+  } catch(e) {}
+
+  const pending = adminKycRequests.filter(x => x.status === 'pending').length;
+  document.getElementById('adminKycCount').textContent = pending;
+  renderAdminKyc();
+  alert(`✅ KYC Approved! ${req.userName} has been granted the Gold Verified Seller Badge on Clubr.`);
+}
+
+function adminRejectKyc(id) {
+  const req = adminKycRequests.find(x => x.id === id);
+  if (!req) return;
+
+  if (confirm(`Reject KYC for ${req.userName}?`)) {
+    req.status = 'rejected';
+    localStorage.setItem('clubr_kyc_requests', JSON.stringify(adminKycRequests));
+    try {
+      const cur = localStorage.getItem('clubr_current_user');
+      if (cur) {
+        const u = JSON.parse(cur);
+        if (u.id === req.userId) {
+          u.kycStatus = 'rejected';
+          localStorage.setItem('clubr_current_user', JSON.stringify(u));
+        }
+      }
+    } catch(e) {}
+    const pending = adminKycRequests.filter(x => x.status === 'pending').length;
+    document.getElementById('adminKycCount').textContent = pending;
+    renderAdminKyc();
+  }
 }
 
 // Render Listings Table
@@ -545,11 +733,7 @@ function renderAdminListings() {
         <td class="p-3.5 font-bold font-mono text-lime-400">₹${Number(item.price).toLocaleString('en-IN')}</td>
         <td class="p-3.5 text-slate-300">📍 ${item.locality}, ${item.city}</td>
         <td class="p-3.5">
-          <div class="flex gap-1 text-[10px]">
-            ${item.bill ? '<span class="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded">Bill</span>':''}
-            ${item.box ? '<span class="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded">Box</span>':''}
-            ${item.exchange ? '<span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded">Swap</span>':''}
-          </div>
+          ${item.isKycVerified ? '<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded text-[10px]">🛡️ KYC Verified</span>' : '<span class="text-slate-500 text-[10px]">Unverified</span>'}
         </td>
         <td class="p-3.5 text-right space-x-2">
           <button onclick="adminDeleteListing('${item.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-lg transition text-[11px] font-bold">
@@ -631,7 +815,6 @@ function exportListingsJSON() {
   dl.click();
 }
 
-// Run auth check on load
 checkAuth();
 </script>
 </body>

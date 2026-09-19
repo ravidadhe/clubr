@@ -622,6 +622,12 @@ h1 {
 .badge-tag.verified {
   background: #dcfce7;
   color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.badge-tag.unverified {
+  background: #f1f5f9;
+  color: #64748b;
 }
 
 .badge-tag.exchange {
@@ -1048,9 +1054,7 @@ h1 {
   font-weight: 900;
 }
 
-/* ========================================================= */
-/* IN-APP DIRECT CHAT MESSENGER                              */
-/* ========================================================= */
+/* In-App Chat Modal */
 .chat-modal-bg {
   display: none;
   position: fixed;
@@ -1264,6 +1268,7 @@ h1 {
   border-bottom: 2px solid transparent;
   color: var(--muted);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .profile-tab-btn.active {
@@ -1365,7 +1370,7 @@ h1 {
 <body>
 
 <div class="shell">
-  <!-- Global Broadcast Banner (Pushed by Admin from superadmin.html) -->
+  <!-- Global Broadcast Banner -->
   <div class="global-broadcast-banner" id="globalBroadcast">
     <div><b>📢 ANNOUNCEMENT:</b> <span id="broadcastText">Welcome to Clubr Marketplace!</span></div>
     <button onclick="dismissBroadcast()" style="color:#a0ada4; font-size:16px">✕</button>
@@ -1433,7 +1438,7 @@ h1 {
   <section class="hero" id="heroSection">
     <div class="hero-main">
       <div class="hero-sub">
-        <div class="eyebrow">⚡ Local Things · Real People · In-App Deals</div>
+        <div class="eyebrow">⚡ Verified Citizens · In-App Chat · Zero Scams</div>
         <h1 id="heroTitle">What are you looking for today?</h1>
       </div>
       <div class="search">
@@ -1448,7 +1453,7 @@ h1 {
       <div>
         <div class="eyebrow" style="color:#fff7ef">💡 Reverse Marketplace</div>
         <h2>Can't find it anywhere?</h2>
-        <p>Broadcast what you need across your state or city. Nearby sellers will chat directly with you inside Clubr!</p>
+        <p>Broadcast what you need across your state or city. Verified sellers will chat directly with you inside Clubr!</p>
       </div>
       <button class="want-btn" onclick="openModal('want')">
         ＋ Post what I want (Free)
@@ -1458,7 +1463,7 @@ h1 {
 
   <!-- Anti-Scam Trust Bar -->
   <aside class="trust-bar">
-    <div>🛡️ <b>Clubr Safety Shield:</b> Chat inside our site. Never pay advance token money or scan unknown QR codes.</div>
+    <div>🛡️ <b>Clubr Safety Shield:</b> Look for <b>"KYC Verified"</b> badge sellers. Never pay advance token money or scan unknown QR codes.</div>
     <span style="cursor:pointer; text-decoration:underline" onclick="toast('Always inspect goods in person before transferring money!')">Safe Meet Guide</span>
   </aside>
 
@@ -1490,7 +1495,7 @@ h1 {
   </section>
 </div>
 
-<!-- Desktop/Tablet Floating Action Button -->
+<!-- Floating Action Button -->
 <button class="fab" onclick="openModal('sell')">
   <span class="fab-icon">＋</span>
   <span>Sell on Clubr</span>
@@ -1557,22 +1562,27 @@ h1 {
       <button class="chip" onclick="selectStateFilter('Kerala', this)">Kerala</button>
     </div>
 
-    <!-- Cities Grid (Populated dynamically) -->
+    <!-- Cities Grid -->
     <div id="cityDirectoryGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:300px; overflow-y:auto"></div>
   </div>
 </div>
 
 <!-- ======================================================= -->
-<!-- MODAL: USER LOGIN & REGISTER MODAL                      -->
+<!-- MODAL: MANDATORY USER AUTH MODAL (GUEST REMOVED)        -->
 <!-- ======================================================= -->
 <div class="modal-bg" id="authModal" onclick="if(event.target===this)closeAuthModal()">
   <div class="modal" style="max-width:440px">
     <div class="modal-head">
       <div>
         <h2 id="authModalTitle">Sign in to Clubr</h2>
-        <span style="font-size:11px; color:var(--muted)">Manage your listings, chats & deals</span>
+        <span style="font-size:11px; color:var(--muted)">Verified accounts protect buyers & sellers</span>
       </div>
       <button class="close-btn" onclick="closeAuthModal()">✕</button>
+    </div>
+
+    <!-- Notice -->
+    <div style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:14px" id="authReasonNotice">
+      🔒 <b>Login Required:</b> You must be signed in with a verified account to Buy, Sell, or Chat on Clubr.
     </div>
 
     <div style="display:flex; border-bottom:1px solid var(--line); margin-bottom:14px">
@@ -1582,17 +1592,17 @@ h1 {
 
     <form onsubmit="event.preventDefault(); submitAuth();">
       <div class="field" id="authNameField" style="display:none">
-        <label>Your Full Name</label>
+        <label>Your Full Legal Name</label>
         <input id="authName" placeholder="e.g. Rahul Deshmukh">
       </div>
 
       <div class="field">
-        <label>Mobile Number or Email</label>
-        <input id="authPhone" placeholder="98XXXXXXXX or email" required>
+        <label>Mobile Number (For SMS Verification)</label>
+        <input id="authPhone" type="tel" placeholder="10-digit Mobile Number" pattern="[0-9]{10}" required>
       </div>
 
       <div class="field">
-        <label>Password</label>
+        <label>Account Password</label>
         <input id="authPass" type="password" placeholder="••••••••" required>
       </div>
 
@@ -1604,20 +1614,12 @@ h1 {
       <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin-top:8px" id="authSubmitBtn">
         Sign In →
       </button>
-
-      <div style="text-align:center; margin:14px 0 6px">
-        <span style="font-size:12px; color:var(--muted)">or continue instantly</span>
-      </div>
-
-      <button type="button" class="want-btn" style="background:#f0ede6; color:var(--ink); width:100%; padding:12px; margin:0" onclick="instantGuestLogin()">
-        ⚡ 1-Tap Quick Guest Login
-      </button>
     </form>
   </div>
 </div>
 
 <!-- ======================================================= -->
-<!-- MODAL: USER PROFILE DASHBOARD                           -->
+<!-- MODAL: USER PROFILE DASHBOARD WITH KYC VERIFICATION     -->
 <!-- ======================================================= -->
 <div class="modal-bg" id="profileModal" onclick="if(event.target===this)closeProfileModal()">
   <div class="modal">
@@ -1635,7 +1637,7 @@ h1 {
         <div>
           <div style="display:flex; align-items:center; gap:6px">
             <b style="font-size:17px" id="profileCardName">Rahul Deshmukh</b>
-            <span style="font-size:10px; background:#dcfce7; color:#15803d; font-weight:800; padding:2px 7px; border-radius:99px">Verified 🛡️</span>
+            <span id="profileCardBadge" style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:99px">Unverified ⚠️</span>
           </div>
           <span style="font-size:12px; color:var(--muted)" id="profileCardMeta">📍 Pune · 9823000000</span>
         </div>
@@ -1646,16 +1648,17 @@ h1 {
     </div>
 
     <!-- Dashboard Tabs -->
-    <div style="display:flex; border-bottom:1px solid var(--line); margin-bottom:14px; gap:4px">
+    <div style="display:flex; border-bottom:1px solid var(--line); margin-bottom:14px; gap:4px; overflow-x:auto">
       <button class="profile-tab-btn active" id="pTabListings" onclick="switchProfileTab('listings')">My Listings (<span id="userMyListingsCount">0</span>)</button>
       <button class="profile-tab-btn" id="pTabDemands" onclick="switchProfileTab('demands')">My Demands (<span id="userMyDemandsCount">0</span>)</button>
       <button class="profile-tab-btn" id="pTabChats" onclick="switchProfileTab('chats')">My Chats</button>
+      <button class="profile-tab-btn" id="pTabKyc" onclick="switchProfileTab('kyc')">🛡️ KYC Verification</button>
     </div>
 
     <!-- Tab Contents -->
     <div id="profileTabContent" style="min-height:160px"></div>
 
-    <!-- SuperAdmin Direct Link for Admin -->
+    <!-- SuperAdmin Direct Link -->
     <div style="margin-top:20px; padding-top:14px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center">
       <span style="font-size:11px; color:var(--muted)">Platform Administration</span>
       <a href="superadmin.html" target="_blank" style="font-size:12px; font-weight:800; color:var(--ink); background:#eef7ed; border:1px solid #cce8cb; padding:6px 12px; border-radius:10px; text-decoration:none">
@@ -1831,7 +1834,7 @@ h1 {
         <div class="chat-avatar" id="chatSellerAvatar">S</div>
         <div class="chat-user-info">
           <b id="chatSellerName">Seller</b>
-          <span>🟢 Active on Clubr</span>
+          <span id="chatSellerVerifiedPill">🟢 Active on Clubr</span>
         </div>
       </div>
       <button class="close-btn" onclick="closeChatModal()">✕</button>
@@ -1876,7 +1879,7 @@ h1 {
 </div>
 
 <!-- ======================================================= -->
-<!-- MODAL: INBOX (ACTIVE CONVERSATIONS)                     -->
+<!-- MODAL: INBOX                                            -->
 <!-- ======================================================= -->
 <div class="modal-bg" id="inboxModal" onclick="if(event.target===this)closeInboxModal()">
   <div class="modal">
@@ -1940,7 +1943,6 @@ function dismissPWA() {
   document.getElementById('pwaBanner').style.display = 'none';
 }
 
-// Check Global Broadcast Banner
 function checkBroadcastBanner() {
   const b = localStorage.getItem('clubr_broadcast_banner');
   const bannerEl = document.getElementById('globalBroadcast');
@@ -1955,7 +1957,7 @@ function dismissBroadcast() {
   document.getElementById('globalBroadcast').style.display = 'none';
 }
 
-// Comprehensive State-Wise India Cities Database
+// State-Wise Directory
 const INDIA_STATE_DIRECTORY = {
   "Maharashtra": [
     "Mumbai", "Pune", "Nagpur", "Nashik", "Chhatrapati Sambhaji Nagar", "Thane", 
@@ -2004,7 +2006,7 @@ const INDIA_STATE_DIRECTORY = {
   ]
 };
 
-// Seed Listings
+// Seed Listings (with KYC verified flags)
 const defaultListings = [
   {
     id: 'l1',
@@ -2018,6 +2020,7 @@ const defaultListings = [
     condition: 'Like New',
     seller: 'Rohan Deshmukh',
     sellerId: 'u_rohan',
+    isKycVerified: true,
     desc: 'Battery health 88%. Screen replaced with genuine display, flawless condition. Original cable and box available.',
     bill: true, box: true, owner: true, exchange: true, photo: '', time: '2 hours ago'
   },
@@ -2033,6 +2036,7 @@ const defaultListings = [
     condition: 'Good',
     seller: 'Amit Verma',
     sellerId: 'u_amit',
+    isKycVerified: true,
     desc: 'Only 14,200 km driven. Single owner, insurance active till Dec 2026. Serviced on time.',
     bill: true, box: false, owner: true, exchange: false, photo: '', time: '4 hours ago'
   },
@@ -2048,6 +2052,7 @@ const defaultListings = [
     condition: 'Like New',
     seller: 'Karthik Rao',
     sellerId: 'u_karthik',
+    isKycVerified: true,
     desc: 'Used for 9 months with tempered glass. Mint condition, Snapdragon 8 Gen 2, bill available.',
     bill: true, box: true, owner: true, exchange: true, photo: '', time: '5 hours ago'
   },
@@ -2063,6 +2068,7 @@ const defaultListings = [
     condition: 'Good',
     seller: 'Pravin Joshi',
     sellerId: 'u_pravin',
+    isKycVerified: false,
     desc: '2020 model, MH-31 registered. Brand new MRF rear tyre. Ready to ride, zero mechanical issues.',
     bill: false, box: false, owner: true, exchange: true, photo: '', time: '6 hours ago'
   },
@@ -2078,6 +2084,7 @@ const defaultListings = [
     condition: 'Good',
     seller: 'Neha Sharma',
     sellerId: 'u_neha',
+    isKycVerified: false,
     desc: 'Very comfortable high density foam sofa. Relocating to Bangalore so selling at distress price.',
     bill: false, box: false, owner: true, exchange: false, photo: '', time: '1 day ago'
   },
@@ -2093,6 +2100,7 @@ const defaultListings = [
     condition: 'Like New',
     seller: 'Suresh Reddy',
     sellerId: 'u_suresh',
+    isKycVerified: true,
     desc: 'Fast SSD, 16GB RAM upgrade, backlit keyboard, Windows 11 genuine. Ideal for students and IT work.',
     bill: true, box: true, owner: true, exchange: false, photo: '', time: '1 day ago'
   },
@@ -2108,6 +2116,7 @@ const defaultListings = [
     condition: 'Good',
     seller: 'Gaurav Kale',
     sellerId: 'u_gaurav',
+    isKycVerified: false,
     desc: 'WebOS with Netflix, YouTube, Prime. Crystal clear IPS panel, wall mount bracket included.',
     bill: true, box: false, owner: true, exchange: false, photo: '', time: '2 days ago'
   },
@@ -2123,6 +2132,7 @@ const defaultListings = [
     condition: 'Good',
     seller: 'Vikram Singh',
     sellerId: 'u_vikram',
+    isKycVerified: true,
     desc: 'Pure Sheesham wood with glass top. Heavy and sturdy. Buyer needs to arrange tempo transport.',
     bill: false, box: false, owner: true, exchange: false, photo: '', time: '2 days ago'
   }
@@ -2168,14 +2178,15 @@ let currentMode = 'sell';
 let activeCategory = 'All';
 let currentCity = 'All India';
 let activeSelectedState = 'All';
-let currentUser = null; // { id, name, phone, city }
+let currentUser = null; // { id, name, phone, city, kycStatus, kycDocType, kycDocNumber }
 let authMode = 'signin';
 let uploadedPhotoBase64 = '';
+let uploadedKycPhotoBase64 = '';
 
 // Init
 function initData() {
   try {
-    const APP_VER = 'clubr_v3_5_master';
+    const APP_VER = 'clubr_v3_6_kyc_enforced';
     if (localStorage.getItem('clubr_app_version') !== APP_VER) {
       localStorage.removeItem('findly_listings');
       localStorage.removeItem('findly_wants');
@@ -2203,6 +2214,7 @@ function initData() {
     const u = localStorage.getItem('clubr_current_user');
     if (u) {
       currentUser = JSON.parse(u);
+      if (!currentUser.kycStatus) currentUser.kycStatus = 'none';
     }
   } catch(e) {
     listings = defaultListings;
@@ -2259,7 +2271,7 @@ function updateCounts() {
   }
 }
 
-// User Auth Management
+// User Auth Management (Guest Login Removed)
 function updateUserUI() {
   const avatarEl = document.getElementById('userBtnAvatar');
   const labelEl = document.getElementById('userBtnLabel');
@@ -2276,11 +2288,16 @@ function handleUserBtnClick() {
   if (currentUser) {
     openProfileModal();
   } else {
-    openAuthModal();
+    openAuthModal('Sign in to access your profile & listings');
   }
 }
 
-function openAuthModal() {
+function openAuthModal(reasonText) {
+  if (reasonText) {
+    document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> ${reasonText}`;
+  } else {
+    document.getElementById('authReasonNotice').innerHTML = `🔒 <b>Login Required:</b> You must be signed in to Buy, Sell, or Chat on Clubr.`;
+  }
   document.getElementById('authModal').classList.add('show');
 }
 function closeAuthModal() {
@@ -2310,26 +2327,17 @@ function submitAuth() {
     id: 'u_' + Date.now(),
     name: name,
     phone: phone,
-    city: city
+    city: city,
+    kycStatus: 'none',
+    kycDocType: '',
+    kycDocNumber: '',
+    kycDocPhoto: ''
   };
 
   saveData();
   updateUserUI();
   closeAuthModal();
   toast(`Welcome ${name}! You are now logged in.`);
-}
-
-function instantGuestLogin() {
-  currentUser = {
-    id: 'u_guest_' + Math.floor(Math.random()*9000 + 1000),
-    name: 'Verified Guest',
-    phone: '9823001234',
-    city: currentCity === 'All India' ? 'Pune' : currentCity
-  };
-  saveData();
-  updateUserUI();
-  closeAuthModal();
-  toast('⚡ Guest account activated! You can now post & chat.');
 }
 
 function logoutUser() {
@@ -2347,6 +2355,26 @@ function openProfileModal() {
   document.getElementById('profileCardAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
   document.getElementById('profileCardMeta').textContent = `📍 ${currentUser.city} · ${currentUser.phone}`;
 
+  // KYC Badge in profile header
+  const badgeEl = document.getElementById('profileCardBadge');
+  if (currentUser.kycStatus === 'verified') {
+    badgeEl.textContent = '🛡️ KYC Verified Seller';
+    badgeEl.style.background = '#dcfce7';
+    badgeEl.style.color = '#15803d';
+  } else if (currentUser.kycStatus === 'pending') {
+    badgeEl.textContent = '⏳ KYC Under Review';
+    badgeEl.style.background = '#fef3c7';
+    badgeEl.style.color = '#b45309';
+  } else if (currentUser.kycStatus === 'rejected') {
+    badgeEl.textContent = '❌ KYC Rejected (Re-upload)';
+    badgeEl.style.background = '#fee2e2';
+    badgeEl.style.color = '#b91c1c';
+  } else {
+    badgeEl.textContent = '⚠️ Unverified Account';
+    badgeEl.style.background = '#f1f5f9';
+    badgeEl.style.color = '#64748b';
+  }
+
   const myL = listings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
   const myW = wants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
   document.getElementById('userMyListingsCount').textContent = myL.length;
@@ -2363,6 +2391,7 @@ function switchProfileTab(tab) {
   document.getElementById('pTabListings').classList.toggle('active', tab === 'listings');
   document.getElementById('pTabDemands').classList.toggle('active', tab === 'demands');
   document.getElementById('pTabChats').classList.toggle('active', tab === 'chats');
+  document.getElementById('pTabKyc').classList.toggle('active', tab === 'kyc');
 
   const content = document.getElementById('profileTabContent');
   content.innerHTML = '';
@@ -2410,7 +2439,147 @@ function switchProfileTab(tab) {
   } else if (tab === 'chats') {
     closeProfileModal();
     openInboxModal();
+  } else if (tab === 'kyc') {
+    renderKycTab(content);
   }
+}
+
+// KYC Verification Engine in Profile
+function renderKycTab(container) {
+  if (currentUser.kycStatus === 'verified') {
+    container.innerHTML = `
+      <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:16px; padding:20px; text-align:center">
+        <span style="font-size:36px">🛡️</span>
+        <h3 style="font-size:16px; color:#15803d; margin:6px 0">You are a KYC Verified Citizen!</h3>
+        <p style="font-size:12px; color:#166534; line-height:1.45">Your Government ID (${currentUser.kycDocType || 'Document'}) has been verified by Clubr Admin. Your listings now display the official <b>Gold Verified Badge</b>, giving you 5x higher buyer trust.</p>
+      </div>`;
+    return;
+  }
+
+  if (currentUser.kycStatus === 'pending') {
+    container.innerHTML = `
+      <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:16px; padding:20px; text-align:center">
+        <span style="font-size:36px">⏳</span>
+        <h3 style="font-size:16px; color:#b45309; margin:6px 0">KYC Under Admin Review</h3>
+        <p style="font-size:12px; color:#92400e; line-height:1.45">Your ID (${currentUser.kycDocType || 'Document'}) is currently being inspected by Clubr SuperAdmin. Once approved, the <b>Verified Badge</b> will be automatically activated on your account and listings within 24 hours.</p>
+      </div>`;
+    return;
+  }
+
+  // Not Verified / Rejected Form
+  container.innerHTML = `
+    <div style="background:#fdfbf7; border:1px solid var(--line); border-radius:16px; padding:18px">
+      <div style="margin-bottom:12px">
+        <b style="font-size:15px">Upload Government ID for Verified Badge 🛡️</b>
+        <p style="font-size:11px; color:var(--muted); line-height:1.4; margin-top:3px">
+          Verified sellers close deals 3x faster. Under Indian Law & DPDP Act 2023, your documents are kept strictly private and used ONLY for account identity validation.
+        </p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); submitKycDocument();">
+        <div class="field">
+          <label>Select ID Document Type</label>
+          <select id="kycDocType" required>
+            <option value="Voter ID Card">Voter ID Card (Safest & Recommended)</option>
+            <option value="Driving License">Driving License (DL)</option>
+            <option value="College / Student ID">College / Student ID / Work ID</option>
+            <option value="Masked Aadhaar">Masked Aadhaar (Last 4 Digits only)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Document ID Number <span class="hint">e.g. EPIC / DL number</span></label>
+          <input id="kycDocNumber" placeholder="Enter ID number..." required>
+        </div>
+
+        <div class="field">
+          <label>Upload Document Front Photo</label>
+          <div class="photo-picker">
+            <input type="file" id="kycPhotoInput" accept="image/*" onchange="handleKycPhotoUpload(this)" required>
+            <div id="kycPhotoPrompt">📄 Click to select ID photo or camera snap</div>
+            <img id="kycPhotoPreview" class="photo-preview" alt="ID Preview">
+          </div>
+        </div>
+
+        <!-- Legal Disclaimer & UIDAI Notice -->
+        <div style="background:#fef2f2; border:1px solid #fecaca; padding:10px 12px; border-radius:10px; font-size:11px; color:#991b1b; margin:10px 0; line-height:1.4">
+          ⚠️ <b>UIDAI Compliance Notice:</b> Do NOT upload unmasked Aadhaar cards. If uploading Aadhaar, ensure the first 8 digits are masked/hidden as per Indian law.
+        </div>
+
+        <div class="field" style="margin-bottom:14px">
+          <label class="trust-check-label" style="font-size:11px">
+            <input type="checkbox" id="kycConsent" required>
+            I voluntarily submit this ID for account verification under Clubr Terms & DPDP Act 2023.
+          </label>
+        </div>
+
+        <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:14px; margin:0">
+          🛡️ Submit Document for Verification
+        </button>
+      </form>
+    </div>
+  `;
+}
+
+function handleKycPhotoUpload(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedKycPhotoBase64 = e.target.result;
+      const prev = document.getElementById('kycPhotoPreview');
+      prev.src = uploadedKycPhotoBase64;
+      prev.style.display = 'block';
+      document.getElementById('kycPhotoPrompt').textContent = '✅ ID photo attached!';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function submitKycDocument() {
+  const docType = document.getElementById('kycDocType').value;
+  const docNum = document.getElementById('kycDocNumber').value.trim();
+  const consent = document.getElementById('kycConsent').checked;
+
+  if (!uploadedKycPhotoBase64) {
+    toast('⚠️ Please attach a photo of your ID document.');
+    return;
+  }
+  if (!consent) {
+    toast('⚠️ Please check the DPDP consent box to proceed.');
+    return;
+  }
+
+  // Save to KYC Requests
+  let requests = [];
+  try {
+    const saved = localStorage.getItem('clubr_kyc_requests');
+    if (saved) requests = JSON.parse(saved);
+  } catch(e) {}
+
+  const newReq = {
+    id: 'kyc_' + Date.now(),
+    userId: currentUser.id,
+    userName: currentUser.name,
+    userPhone: currentUser.phone,
+    userCity: currentUser.city,
+    docType: docType,
+    docNumber: docNum,
+    docPhoto: uploadedKycPhotoBase64,
+    date: new Date().toLocaleDateString('en-IN'),
+    status: 'pending'
+  };
+
+  requests.unshift(newReq);
+  localStorage.setItem('clubr_kyc_requests', JSON.stringify(requests));
+
+  currentUser.kycStatus = 'pending';
+  currentUser.kycDocType = docType;
+  currentUser.kycDocNumber = docNum;
+  currentUser.kycDocPhoto = uploadedKycPhotoBase64;
+  saveData();
+
+  toast('🛡️ Document submitted! SuperAdmin will review within 24h.');
+  openProfileModal();
 }
 
 function markAsSold(id) {
@@ -2445,7 +2614,6 @@ function renderCityDirectory(filterText = '') {
   container.innerHTML = '';
   const q = filterText.toLowerCase().trim();
 
-  // Always show "All India" as top button
   if (!q || 'all india'.includes(q)) {
     container.insertAdjacentHTML('beforeend', `
       <button class="chip" style="grid-column:1/-1; justify-content:center; background:${currentCity==='All India'?'var(--ink)':'var(--card)'}; color:${currentCity==='All India'?'#fff':'var(--ink)'}" onclick="setCity('All India')">
@@ -2480,7 +2648,6 @@ function renderCityDirectory(filterText = '') {
     });
   });
 
-  // If user searches a city not in presets, provide custom selector
   if (q && q.length > 1) {
     container.insertAdjacentHTML('beforeend', `
       <button class="chip" style="grid-column:1/-1; background:#eaf8d1; color:#2c4f03; font-weight:800" onclick="setCity('${capitalizeWords(q)}')">
@@ -2568,7 +2735,7 @@ function filterCategory(cat, el) {
   renderFeed();
 }
 
-// Render Listings Feed
+// Render Listings Feed with KYC Badges
 function renderFeed() {
   const container = document.getElementById('feed');
   container.innerHTML = '';
@@ -2614,7 +2781,7 @@ function renderFeed() {
               </div>
               <div class="item-meta">
                 <span>📍 ${item.locality}, ${item.city}</span>
-                <span style="color:#10b981; font-weight:700">Verified</span>
+                ${item.isKycVerified ? '<span style="color:#10b981; font-weight:800">🛡️ Verified</span>' : '<span style="color:#94a3b8">Basic</span>'}
               </div>
             </div>
             <div class="item-actions" onclick="event.stopPropagation()">
@@ -2679,7 +2846,12 @@ function renderFeed() {
 }
 
 function renderPills(item) {
-  let pills = `<span class="badge-tag deal">⚡ Deal</span>`;
+  let pills = '';
+  if (item.isKycVerified) {
+    pills += `<span class="badge-tag verified">🛡️ KYC Verified</span>`;
+  } else {
+    pills += `<span class="badge-tag unverified">Unverified Seller</span>`;
+  }
   if (item.bill && item.box) pills += `<span class="badge-tag verified">🧾 Bill+Box</span>`;
   if (item.exchange) pills += `<span class="badge-tag exchange">🔄 Exchange OK</span>`;
   return pills;
@@ -2732,7 +2904,7 @@ function openItemDetail(id) {
         <span style="font-size:11px; color:var(--muted); font-weight:700">ASKING PRICE</span>
         <div class="detail-price">₹${item.price.toLocaleString('en-IN')}</div>
       </div>
-      <span class="bhav-pill" style="font-size:12px; padding:6px 12px">🟢 Sahi Bhav Guaranteed</span>
+      ${item.isKycVerified ? '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#dcfce7; color:#15803d">🛡️ KYC Verified Seller</span>' : '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#f1f5f9; color:#64748b">Basic Seller</span>'}
     </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
@@ -2751,7 +2923,7 @@ function openItemDetail(id) {
     </div>
 
     <p style="font-size:13px; color:var(--ink); line-height:1.5; margin:12px 0; background:#fdfbf7; padding:12px; border-radius:12px; border:1px solid var(--line)">
-      <b>Seller:</b> ${item.seller || 'Verified Member'} · ${item.desc || 'No description provided.'}
+      <b>Seller:</b> ${item.seller || 'Member'} ${item.isKycVerified ? '(🛡️ Govt ID Verified)' : '(Unverified)'} · ${item.desc || 'No description provided.'}
     </p>
 
     <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
@@ -2761,7 +2933,7 @@ function openItemDetail(id) {
     </div>
 
     <div style="background:#fffbeb; border:1px solid #fde68a; color:#92400e; border-radius:12px; padding:10px 14px; font-size:11px; line-height:1.4; margin-top:14px">
-      🛡️ <b>Anti-Scam Shield:</b> Chat inside Clubr. Never scan QR codes or pay advance booking amounts online.
+      🛡️ <b>Anti-Scam Shield:</b> Always inspect products in person before transferring money. Never scan unknown QR codes.
     </div>
   `;
 
@@ -2771,8 +2943,13 @@ function closeDetailModal() {
   document.getElementById('detailModal').classList.remove('show');
 }
 
-// IN-APP DIRECT CHAT
+// IN-APP DIRECT CHAT WITH MANDATORY AUTH GATEKEEPER
 function openInAppChat(itemId) {
+  if (!currentUser) {
+    openAuthModal('Please sign in or create an account to chat with the seller!');
+    return;
+  }
+
   const item = listings.find(x => x.id === itemId);
   if (!item) return;
 
@@ -2781,6 +2958,7 @@ function openInAppChat(itemId) {
     itemTitle: item.title,
     itemPrice: item.price,
     sellerName: item.seller || 'Seller',
+    isVerified: item.isKycVerified,
     itemEmoji: item.emoji || '📦'
   };
 
@@ -2789,6 +2967,7 @@ function openInAppChat(itemId) {
   document.getElementById('chatItemTitle').textContent = activeChatContext.itemTitle;
   document.getElementById('chatItemPrice').textContent = `₹${activeChatContext.itemPrice.toLocaleString('en-IN')}`;
   document.getElementById('chatItemEmoji').textContent = activeChatContext.itemEmoji;
+  document.getElementById('chatSellerVerifiedPill').textContent = activeChatContext.isVerified ? '🛡️ KYC Verified' : '🟢 Active on Clubr';
 
   const discount5 = Math.round(item.price * 0.95);
   const discount10 = Math.round(item.price * 0.90);
@@ -2799,7 +2978,7 @@ function openInAppChat(itemId) {
     chatThreads[item.id] = [
       {
         sender: 'seller',
-        text: `Hi! Thanks for checking out my ${item.title}. How can I assist you?`,
+        text: `Hi ${currentUser.name}! Thanks for checking out my ${item.title}. How can I help you?`,
         time: 'Just now'
       }
     ];
@@ -2812,6 +2991,11 @@ function openInAppChat(itemId) {
 }
 
 function openBuyerChat(wantId) {
+  if (!currentUser) {
+    openAuthModal('Please sign in or create an account to contact this buyer!');
+    return;
+  }
+
   const w = wants.find(x => x.id === wantId);
   if (!w) return;
 
@@ -2833,7 +3017,7 @@ function openBuyerChat(wantId) {
     chatThreads[w.id] = [
       {
         sender: 'buyer',
-        text: `Hi! I am looking for ${w.item} in ${w.city}. Do you have one available?`,
+        text: `Hi ${currentUser.name}, I am looking for ${w.item} in ${w.city}. Do you have one available?`,
         time: 'Just now'
       }
     ];
@@ -2921,6 +3105,11 @@ function closeChatModal() {
 
 // INBOX
 function openInboxModal() {
+  if (!currentUser) {
+    openAuthModal('Please sign in to view your in-app chat inbox');
+    return;
+  }
+
   const container = document.getElementById('inboxList');
   container.innerHTML = '';
   const threadKeys = Object.keys(chatThreads);
@@ -2973,8 +3162,13 @@ function handlePhotoUpload(input) {
   }
 }
 
-// FORM SUBMISSION
+// FORM SUBMISSION WITH MANDATORY AUTH GATEKEEPER
 function openModal(type) {
+  if (!currentUser) {
+    openAuthModal(type === 'sell' ? 'Please sign in or register to post an item for sale!' : 'Please sign in or register to post a buyer requirement!');
+    return;
+  }
+
   document.getElementById('actionModal').classList.add('show');
   document.getElementById('sellForm').style.display = (type === 'sell') ? 'block' : 'none';
   document.getElementById('wantForm').style.display = (type === 'want') ? 'block' : 'none';
@@ -2987,6 +3181,11 @@ function closeActionModal() {
 }
 
 function submitListing() {
+  if (!currentUser) {
+    openAuthModal('Please sign in first');
+    return;
+  }
+
   const title = document.getElementById('sellTitle').value.trim();
   const price = Number(document.getElementById('sellPrice').value);
   const cat = document.getElementById('sellCat').value;
@@ -3014,8 +3213,9 @@ function submitListing() {
     city,
     locality,
     condition,
-    seller: currentUser ? currentUser.name : 'You',
-    sellerId: currentUser ? currentUser.id : 'u_current',
+    seller: currentUser.name,
+    sellerId: currentUser.id,
+    isKycVerified: (currentUser.kycStatus === 'verified'),
     desc,
     bill,
     box,
@@ -3038,6 +3238,11 @@ function submitListing() {
 }
 
 function submitWant() {
+  if (!currentUser) {
+    openAuthModal('Please sign in first');
+    return;
+  }
+
   const item = document.getElementById('wantItem').value.trim();
   const budget = document.getElementById('wantBudget').value.trim();
   const cat = document.getElementById('wantCat').value;
@@ -3048,8 +3253,8 @@ function submitWant() {
 
   const newWant = {
     id: 'w_' + Date.now(),
-    buyer: currentUser ? currentUser.name : 'You',
-    buyerId: currentUser ? currentUser.id : 'u_current',
+    buyer: currentUser.name,
+    buyerId: currentUser.id,
     item,
     budget,
     cat,

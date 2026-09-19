@@ -1,222 +1,2434 @@
 <!DOCTYPE html>
-<html lang="en" class="dark h-full">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Club.online — Scheduled Upgrade & Maintenance</title>
-  
-  <meta name="description" content="Club.online is currently undergoing a scheduled system upgrade. We are building a personalised interest and opportunity platform for ambitious youth. Back online shortly!" />
-  <meta property="og:title" content="Club.online — Scheduled Upgrade & Maintenance" />
-  <meta property="og:description" content="We are currently upgrading our platform. Back online shortly with verified opportunities, gigs, and free tools!" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://clubr.online" />
-  <meta name="theme-color" content="#07080e" />
-  
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Findly — Local Marketplace & City Demands</title>
+<meta name="description" content="Findly — Hyperlocal Marketplace for Yavatmal. Buy, sell, post city demands, bargain on WhatsApp, and discover verified local deals with zero fraud.">
 
-  <!-- Google Fonts: Space Grotesk & Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              bg: '#07080e',
-              surface: '#0f111a',
-              card: '#151724',
-              border: '#262a3d',
-              cyan: '#00f0ff',
-              emerald: '#10b981',
-              pink: '#ff2a85',
-              purple: '#9d4edd'
-            }
-          },
-          fontFamily: {
-            display: ['"Space Grotesk"', 'sans-serif'],
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
+<style>
+:root {
+  --ink: #17211b;
+  --muted: #6f7c74;
+  --paper: #f7f4ee;
+  --card: #ffffff;
+  --lime: #c8f36b;
+  --lime-dark: #82b01c;
+  --orange: #ff8a4c;
+  --orange-light: #fff2ea;
+  --line: #e5dfd5;
+  --dark: #1b261f;
+  --gold: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --wa: #25D366;
+  --wa-dark: #128C7E;
+  --radius: 20px;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #07080e;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      color: #f3f4f6;
-    }
-    .headline-font {
-      font-family: 'Space Grotesk', sans-serif;
-    }
-    
-    /* Glowing Ambient Background */
-    .glow-sphere {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      pointer-events: none;
-      opacity: 0.25;
-    }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
 
-    /* Glassmorphism Card */
-    .glass-card {
-      background: rgba(15, 17, 26, 0.8);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    }
-  </style>
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  line-height: 1.4;
+  padding-bottom: 90px;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+
+/* Container Shell */
+.shell {
+  max-width: 1180px;
+  margin: auto;
+  padding: 16px 20px 40px;
+}
+
+/* Header */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1.2px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.brand span {
+  color: var(--ink);
+}
+
+.brand i {
+  font-style: normal;
+  color: var(--lime-dark);
+}
+
+.brand-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  background: var(--lime);
+  color: var(--ink);
+  padding: 3px 8px;
+  border-radius: 99px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-left: 6px;
+}
+
+.top-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.loc-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 99px;
+  color: var(--ink);
+  transition: all 0.2s;
+}
+
+.loc-btn:hover {
+  background: #f0ebe1;
+}
+
+.circle-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.circle-btn:hover {
+  background: #f0ebe1;
+}
+
+.badge-count {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  background: var(--orange);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Feed Mode Switcher (Sellers vs Demands) */
+.feed-switch {
+  display: flex;
+  background: #e8e2d7;
+  padding: 4px;
+  border-radius: 14px;
+  margin-top: 18px;
+  gap: 4px;
+}
+
+.feed-switch-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 11px;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.feed-switch-btn.active {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.feed-switch-btn span.count-pill {
+  font-size: 11px;
+  background: var(--ink);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 99px;
+  margin-left: 6px;
+}
+
+.feed-switch-btn.active span.count-pill {
+  background: var(--lime-dark);
+  color: #fff;
+}
+
+/* Hero Section */
+.hero {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 16px;
+}
+
+.hero-main {
+  background: var(--dark);
+  color: #fff;
+  border-radius: 26px;
+  padding: 32px 30px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+}
+
+.hero-main:after {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: var(--lime);
+  opacity: 0.85;
+  right: -80px;
+  bottom: -100px;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.hero-sub {
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--lime);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+h1 {
+  font-size: 38px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  max-width: 540px;
+  margin: 10px 0 20px;
+  font-weight: 900;
+}
+
+.search {
+  display: flex;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 5px;
+  max-width: 540px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.search input {
+  border: 0;
+  outline: 0;
+  flex: 1;
+  padding: 12px 14px;
+  color: var(--ink);
+  background: transparent;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.search input::placeholder {
+  color: #9aa59e;
+  font-weight: 500;
+}
+
+.search button {
+  border: 0;
+  background: var(--lime);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 0 20px;
+  font-weight: 800;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.1s;
+}
+
+.search button:active {
+  transform: scale(0.96);
+}
+
+.want-card {
+  background: var(--orange);
+  color: #fff;
+  border-radius: 26px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+
+.want-card h2 {
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 8px 0;
+  letter-spacing: -0.8px;
+  font-weight: 900;
+  color: #2b1204;
+}
+
+.want-card p {
+  color: #55270d;
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.want-btn {
+  border: 0;
+  background: #ffffff;
+  color: #2b1204;
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: 800;
+  font-size: 14px;
+  margin-top: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.want-btn:hover {
+  background: #fff7ef;
+}
+
+/* Quick Scam Shield Bar */
+.trust-bar {
+  margin-top: 16px;
+  background: #eef7ed;
+  border: 1px solid #cce8cb;
+  padding: 10px 16px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #1e5a22;
+  font-weight: 600;
+}
+
+.trust-bar b {
+  color: #134417;
+}
+
+/* Category Chips */
+.section {
+  margin-top: 28px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.section-head h2 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-head span {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 9px 16px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.chip.active {
+  background: var(--ink);
+  color: #ffffff;
+  border-color: var(--ink);
+}
+
+/* Feeds Grid */
+.feed {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Item Card (Sell Feed) */
+.item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+.visual {
+  height: 180px;
+  background: #ece7de;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visual-pills {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 2;
+}
+
+.badge-tag {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  border-radius: 99px;
+  padding: 4px 9px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-tag.deal {
+  background: #d4f884;
+  color: #2e5206;
+}
+
+.badge-tag.verified {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge-tag.exchange {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.15s;
+}
+
+.fav-btn:active {
+  transform: scale(0.85);
+}
+
+.fav-btn.active {
+  color: #ef4444;
+}
+
+.item-info {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.item-title {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.item-price {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.bhav-pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.bhav-sahi {
+  background: #e8f9d2;
+  color: #487508;
+}
+
+.bhav-fair {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.item-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-actions {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.btn-sm-view {
+  background: #f0ede6;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px;
+  border-radius: 9px;
+  text-align: center;
+}
+
+.btn-sm-wa {
+  background: #e9f9ef;
+  color: #10873a;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px;
+  border-radius: 9px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* Demand Card (Wants Feed) */
+.demand-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 5px solid var(--orange);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.demand-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+}
+
+.demand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.demand-buyer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buyer-avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.buyer-info b {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.buyer-info span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.urgent-badge {
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.demand-item {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.demand-budget {
+  display: inline-block;
+  background: #fff6ee;
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.demand-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.45;
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.demand-cta {
+  background: var(--wa);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 11px 14px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+  transition: all 0.2s;
+}
+
+.demand-cta:hover {
+  background: var(--wa-dark);
+}
+
+/* Floating Action Button (FAB) */
+.fab {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  border: 0;
+  background: var(--ink);
+  color: #ffffff;
+  padding: 16px 22px;
+  border-radius: 99px;
+  font-size: 15px;
+  font-weight: 800;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.25);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab span.fab-icon {
+  background: var(--lime);
+  color: var(--ink);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+/* Bottom Navigation (Mobile) */
+.bottom {
+  display: none;
+}
+
+/* Modals */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-bg.show {
+  display: flex;
+}
+
+.modal {
+  width: min(640px, 100%);
+  background: var(--card);
+  border-radius: 28px 28px 0 0;
+  padding: 24px;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+  animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); }
+  to { transform: translateY(0); }
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.close-btn {
+  border: 0;
+  background: #f0ede6;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.field {
+  margin: 14px 0;
+}
+
+.field label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.field label span.hint {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #ffffff;
+  outline: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--ink);
+}
+
+.field textarea {
+  min-height: 75px;
+  resize: vertical;
+}
+
+/* Bhav Meter Interactive Component */
+.bhav-bar-box {
+  background: #f7f4ee;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bhav-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.bhav-desc {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Photo Upload Box */
+.photo-picker {
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  background: #fdfbf7;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.photo-picker:hover {
+  border-color: var(--ink);
+}
+
+.photo-picker input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.photo-preview {
+  display: none;
+  width: 100%;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-top: 10px;
+}
+
+/* Checkbox Pills */
+.trust-checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.trust-check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #faf7f2;
+  border: 1px solid var(--line);
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trust-check-label input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ink);
+}
+
+/* Detail Drawer / Modal Elements */
+.detail-img-box {
+  width: 100%;
+  height: 240px;
+  background: #eae5dc;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.detail-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-price-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.detail-price {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.bargain-box {
+  background: #f6f3eb;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 16px 0;
+}
+
+.bargain-title {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.bargain-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.bargain-pill {
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.2s;
+}
+
+.bargain-pill:hover {
+  background: var(--lime);
+  border-color: var(--lime-dark);
+}
+
+.safety-note {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 11px;
+  line-height: 1.4;
+  margin: 14px 0;
+}
+
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.btn-primary-wa {
+  background: var(--wa);
+  color: #fff;
+  padding: 15px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+}
+
+.btn-share-status {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 13px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 95px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 700;
+  display: none;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  animation: popUp 0.2s ease-out;
+}
+
+@keyframes popUp {
+  from { transform: translate(-50%, 10px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.toast.show {
+  display: block;
+}
+
+/* Canvas Poster Hidden Buffer */
+#posterCanvas {
+  display: none;
+}
+
+/* Empty State */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: 24px;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.empty-state p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* Media Queries */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .feed {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .shell {
+    padding: 12px 14px 110px;
+  }
+  .brand {
+    font-size: 24px;
+  }
+  .hero-main {
+    padding: 24px 20px;
+    border-radius: 22px;
+  }
+  h1 {
+    font-size: 28px;
+  }
+  .want-card {
+    padding: 22px 20px;
+    border-radius: 22px;
+  }
+  .want-card h2 {
+    font-size: 23px;
+  }
+  .feed {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .visual {
+    height: 140px;
+    font-size: 42px;
+  }
+  .item-info {
+    padding: 10px 12px 12px;
+  }
+  .item-title {
+    font-size: 13px;
+  }
+  .item-price {
+    font-size: 16px;
+  }
+  .fab {
+    display: none; /* Mobile bottom nav has Sell button */
+  }
+  .bottom {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    border-top: 1px solid var(--line);
+    z-index: 40;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+  }
+  .bottom-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+    gap: 3px;
+  }
+  .bottom-item.active {
+    color: var(--ink);
+  }
+  .bottom-item b {
+    font-size: 19px;
+    line-height: 1;
+  }
+  .bottom-sell-btn {
+    background: var(--ink);
+    color: var(--lime);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin-top: -16px;
+  }
+}
+</style>
 </head>
-<body class="h-full w-full relative flex items-center justify-center p-4 overflow-hidden bg-[#07080e]">
+<body>
 
-  <!-- Glowing Background Orbs -->
-  <div class="glow-sphere w-96 h-96 bg-cyan-500 top-1/4 -left-20 animate-pulse"></div>
-  <div class="glow-sphere w-96 h-96 bg-purple-600 bottom-1/4 -right-20 animate-pulse" style="animation-duration: 4s;"></div>
+<div class="shell">
+  <!-- Header -->
+  <header class="top">
+    <div class="brand">
+      find<span>ly</span><i>•</i>
+      <span class="brand-badge" id="cityBadge">Yavatmal</span>
+    </div>
+    <div class="top-right">
+      <button class="loc-btn" onclick="openLocalityModal()">
+        📍 <span id="currentLocText">Civil Lines</span> ▾
+      </button>
+      <button class="circle-btn" onclick="openSavedModal()" title="Saved Wishlist">
+        ♡
+        <span class="badge-count" id="savedCount" style="display:none">0</span>
+      </button>
+      <button class="circle-btn" onclick="toast('Findly Yavatmal v2.0 Live')">🔔</button>
+    </div>
+  </header>
 
-  <!-- Center Maintenance Card -->
-  <div class="glass-card rounded-3xl max-w-lg w-full p-8 sm:p-10 text-center space-y-6 relative z-10 border border-white/10">
+  <!-- Feed Mode Switcher (2-Way Reverse Marketplace) -->
+  <nav class="feed-switch">
+    <button class="feed-switch-btn active" id="tabSell" onclick="switchFeed('sell')">
+      🛍️ Fresh for Sale <span class="count-pill" id="sellBadgeCount">8</span>
+    </button>
+    <button class="feed-switch-btn" id="tabWant" onclick="switchFeed('want')">
+      📢 City Demands / Wants <span class="count-pill" id="wantBadgeCount">4</span>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="heroSection">
+    <div class="hero-main">
+      <div class="hero-sub">
+        <div class="eyebrow">⚡ Local Things · Real People · Instant Deals</div>
+        <h1 id="heroTitle">What are you looking for in Yavatmal?</h1>
+      </div>
+      <div class="search">
+        <input id="search" placeholder="Search iPhone, Pulsar, Sofa, AC..." autocomplete="off">
+        <button onclick="runSearch()">
+          <span>Find</span> 🔍
+        </button>
+      </div>
+    </div>
     
-    <!-- Brand Logo -->
-    <div class="inline-flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-xl shadow-cyan-500/20">
-        <span class="headline-font font-black text-2xl">C</span>
+    <div class="want-card" id="heroWantCard">
+      <div>
+        <div class="eyebrow" style="color:#fff7ef">💡 Reverse Marketplace</div>
+        <h2>Can't find it anywhere?</h2>
+        <p>Post your requirement and budget. Nearby sellers will message you directly on WhatsApp!</p>
       </div>
-      <div class="text-left">
-        <div class="headline-font font-black text-2xl tracking-wider text-white">
-          CLUB<span class="text-cyan-400">.ONLINE</span>
+      <button class="want-btn" onclick="openModal('want')">
+        ＋ Post what I want (Free)
+      </button>
+    </div>
+  </section>
+
+  <!-- Anti-Scam Trust Bar -->
+  <aside class="trust-bar">
+    <div>🛡️ <b>Findly Safety Shield:</b> No advance UPI payments. Meet safely at public spots (Bus Stand / Main Square).</div>
+    <span style="cursor:pointer; text-decoration:underline" onclick="toast('Always inspect goods before transferring money!')">Safety tips</span>
+  </aside>
+
+  <!-- Categories -->
+  <section class="section" id="catSection">
+    <div class="section-head">
+      <h2>Explore Categories</h2>
+      <span>Filter by interest</span>
+    </div>
+    <div class="chips">
+      <button class="chip active" onclick="filterCategory('All', this)">⚡ All</button>
+      <button class="chip" onclick="filterCategory('Mobiles', this)">📱 Mobiles & Tabs</button>
+      <button class="chip" onclick="filterCategory('Bikes', this)">🏍️ Bikes & Scooters</button>
+      <button class="chip" onclick="filterCategory('Cars', this)">🚗 Cars & Autos</button>
+      <button class="chip" onclick="filterCategory('Furniture', this)">🛋️ Home & Furniture</button>
+      <button class="chip" onclick="filterCategory('Electronics', this)">💻 Laptops & Gadgets</button>
+      <button class="chip" onclick="filterCategory('Appliances', this)">📺 Home Appliances</button>
+      <button class="chip" onclick="filterCategory('Others', this)">📦 Books & Fashion</button>
+    </div>
+  </section>
+
+  <!-- Dynamic Listing Feed -->
+  <section class="section">
+    <div class="section-head">
+      <h2 id="feedTitle">Fresh Listings Near You</h2>
+      <span id="feedCount">Showing results</span>
+    </div>
+    <div id="feed" class="feed"></div>
+  </section>
+</div>
+
+<!-- Desktop/Tablet Floating Action Button -->
+<button class="fab" onclick="openModal('sell')">
+  <span class="fab-icon">＋</span>
+  <span>Sell in Yavatmal</span>
+</button>
+
+<!-- Mobile Bottom Navigation Bar -->
+<nav class="bottom">
+  <button class="bottom-item active" onclick="switchFeed('sell'); window.scrollTo({top:0,behavior:'smooth'})">
+    <b>⌂</b>Home
+  </button>
+  <button class="bottom-item" onclick="switchFeed('want'); window.scrollTo({top:0,behavior:'smooth'})">
+    <b>📢</b>Demands
+  </button>
+  <button class="bottom-sell-btn" onclick="openModal('sell')" title="Sell Item">
+    ＋
+  </button>
+  <button class="bottom-item" onclick="openSavedModal()">
+    <b>♡</b>Saved
+  </button>
+  <button class="bottom-item" onclick="openLocalityModal()">
+    <b>📍</b>Area
+  </button>
+</nav>
+
+<!-- MODAL: Sell / Want Submission -->
+<div class="modal-bg" id="actionModal" onclick="if(event.target===this)closeActionModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="actionModalTitle">Sell something in Yavatmal</h2>
+      <button class="close-btn" onclick="closeActionModal()">✕</button>
+    </div>
+
+    <!-- SELL FORM -->
+    <form id="sellForm" onsubmit="event.preventDefault(); submitListing();">
+      <div class="field">
+        <label>Category</label>
+        <select id="sellCat" required>
+          <option value="Mobiles">📱 Mobiles & Tabs</option>
+          <option value="Bikes">🏍️ Bikes & Scooters</option>
+          <option value="Cars">🚗 Cars & Autos</option>
+          <option value="Furniture">🛋️ Home & Furniture</option>
+          <option value="Electronics">💻 Laptops & Gadgets</option>
+          <option value="Appliances">📺 Home Appliances</option>
+          <option value="Others">📦 Books & Fashion</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>What are you selling? <span class="hint">Brand + Model</span></label>
+        <input id="sellTitle" placeholder="e.g. iPhone 13 128GB Blue / Honda Activa 6G" required>
+      </div>
+
+      <div class="field">
+        <label>Selling Price (₹) <span class="hint">Fair price sells faster</span></label>
+        <input id="sellPrice" type="number" placeholder="₹ 24000" oninput="updateBhavMeter(this.value)" required>
+        
+        <!-- Live Bhav Meter Indicator -->
+        <div class="bhav-bar-box" id="bhavBar">
+          <div class="bhav-indicator" id="bhavDot"></div>
+          <span class="bhav-desc" id="bhavMsg">Enter price to see fair valuation feedback</span>
         </div>
-        <p class="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">v2.0 Platform Upgrade</p>
-      </div>
-    </div>
-
-    <!-- Status Badge -->
-    <div>
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold">
-        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-        <span>SCHEDULED UPGRADE & MAINTENANCE</span>
-      </div>
-    </div>
-
-    <!-- Main Message -->
-    <div class="space-y-2.5">
-      <h1 class="headline-font font-black text-2xl sm:text-3xl text-white leading-snug">
-        We're Upgrading for the Next Evolution.
-      </h1>
-      <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-md mx-auto">
-        Club.online is currently undergoing scheduled maintenance. We are fine-tuning our personalised interest and opportunity ecosystem across <span class="text-cyan-300 font-semibold">Tech</span>, <span class="text-emerald-400 font-semibold">Freelancing</span>, <span class="text-pink-400 font-semibold">Creative Media</span>, and <span class="text-purple-400 font-semibold">Gaming</span>.
-      </p>
-    </div>
-
-    <!-- Status Ticker Box -->
-    <div class="p-4 rounded-2xl bg-black/40 border border-white/10 text-left space-y-2">
-      <div class="flex items-center justify-between text-[11px] font-mono">
-        <span class="text-zinc-400">System Status:</span>
-        <span class="text-emerald-400 font-bold flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-          Under Development
-        </span>
-      </div>
-      <div class="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
-        <div class="h-full bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-600 w-3/4 rounded-full animate-pulse"></div>
-      </div>
-      <div class="flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-0.5">
-        <span>Architecture & Planning</span>
-        <span class="text-zinc-400">Coming Back Online Soon</span>
-      </div>
-    </div>
-
-    <!-- Notify / Contact Action -->
-    <div class="space-y-3 pt-2">
-      <p class="text-xs font-medium text-zinc-400">
-        Want to be notified first or have a question for the team?
-      </p>
-
-      <div class="flex flex-col sm:flex-row items-center gap-2">
-        <input 
-          type="email" 
-          id="notifyEmailInput" 
-          placeholder="Enter your email for early access..." 
-          class="w-full bg-zinc-900 border border-white/10 focus:border-cyan-400 focus:outline-none rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-500 transition-all text-center sm:text-left"
-        />
-        <button 
-          onclick="handleNotifySubmit()" 
-          class="w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-purple-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all shrink-0">
-          Notify Me
-        </button>
       </div>
 
-      <!-- WhatsApp Direct Connect Link -->
-      <div class="pt-2">
-        <button 
-          onclick="contactTeamWhatsApp()" 
-          class="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors">
-          <span>📲 Connect with the Team on WhatsApp →</span>
-        </button>
+      <div class="field">
+        <label>Item Condition</label>
+        <select id="sellCondition">
+          <option value="Like New">✨ Like New (Zero Scratches / Rarely Used)</option>
+          <option value="Good" selected>👍 Good (Well-maintained)</option>
+          <option value="Fair">👌 Fair (Minor wear and tear)</option>
+        </select>
       </div>
-    </div>
 
-    <!-- Footer Copyright -->
-    <div class="pt-4 border-t border-white/5 text-[11px] font-mono text-zinc-600">
-      © 2026 Club.online • All Rights Reserved
-    </div>
+      <div class="field">
+        <label>Locality in Yavatmal</label>
+        <select id="sellLocality">
+          <option value="Civil Lines">Civil Lines</option>
+          <option value="Bus Stand Road">Bus Stand Road</option>
+          <option value="Dhamangaon Road">Dhamangaon Road</option>
+          <option value="Lohara">Lohara</option>
+          <option value="Main Market">Main Market</option>
+          <option value="Wadgaon">Wadgaon</option>
+          <option value="Darwha Road">Darwha Road</option>
+        </select>
+      </div>
 
+      <div class="field">
+        <label>Your WhatsApp / Mobile Number <span class="hint">Buyers will direct message</span></label>
+        <input id="sellPhone" type="tel" placeholder="98XXXXXXXX" value="9823000000" required>
+      </div>
+
+      <!-- Trust Badges Checklist -->
+      <div class="field">
+        <label>Trust & Verification Badges <span class="hint">Gives 3x faster response</span></label>
+        <div class="trust-checklist">
+          <label class="trust-check-label">
+            <input type="checkbox" id="checkBill"> 🧾 Original Bill
+          </label>
+          <label class="trust-check-label">
+            <input type="checkbox" id="checkBox"> 📦 Box & Charger
+          </label>
+          <label class="trust-check-label">
+            <input type="checkbox" id="checkOwner"> 📄 1st Owner / RC
+          </label>
+          <label class="trust-check-label">
+            <input type="checkbox" id="checkExchange"> 🔄 Open for Exchange
+          </label>
+        </div>
+      </div>
+
+      <!-- Photo Upload -->
+      <div class="field">
+        <label>Upload Item Photo <span class="hint">Optional (Real photos get 5x more clicks)</span></label>
+        <div class="photo-picker">
+          <input type="file" id="sellPhotoInput" accept="image/*" onchange="handlePhotoUpload(this)">
+          <div id="photoPrompt">📸 Click to choose photo or take camera snap</div>
+          <img id="photoPreview" class="photo-preview" alt="Preview">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>A few useful details</label>
+        <textarea id="sellDesc" placeholder="Battery health, age of product, bill date, reason for selling..."></textarea>
+      </div>
+
+      <button type="submit" class="want-btn" style="background:var(--ink); color:#fff; width:100%; padding:15px; margin-top:8px">
+        🚀 Post Live Listing in Yavatmal
+      </button>
+    </form>
+
+    <!-- WANT FORM (Reverse Marketplace) -->
+    <form id="wantForm" style="display:none" onsubmit="event.preventDefault(); submitWant();">
+      <div class="field">
+        <label>What item do you want to buy? <span class="hint">Specific model or type</span></label>
+        <input id="wantItem" placeholder="e.g. Second-hand Activa 5G or 6G / iPhone 12 / Cooler" required>
+      </div>
+
+      <div class="field">
+        <label>Your Expected Budget (₹)</label>
+        <input id="wantBudget" placeholder="e.g. ₹ 20,000 - ₹ 25,000" required>
+      </div>
+
+      <div class="field">
+        <label>Category</label>
+        <select id="wantCat">
+          <option value="Mobiles">📱 Mobiles & Tabs</option>
+          <option value="Bikes">🏍️ Bikes & Scooters</option>
+          <option value="Cars">🚗 Cars & Autos</option>
+          <option value="Furniture">🛋️ Home & Furniture</option>
+          <option value="Electronics">💻 Laptops & Gadgets</option>
+          <option value="Appliances">📺 Home Appliances</option>
+          <option value="Others">📦 Books & Others</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>How soon do you need it?</label>
+        <select id="wantUrgency">
+          <option value="Urgent (Today / 24h)">🚨 Urgent (Within 24-48 Hours)</option>
+          <option value="Within 7 days" selected>📅 Within 7 days</option>
+          <option value="This month">⏳ Within this month</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Your Locality in Yavatmal</label>
+        <select id="wantLocality">
+          <option value="Civil Lines">Civil Lines</option>
+          <option value="Bus Stand Road">Bus Stand Road</option>
+          <option value="Dhamangaon Road">Dhamangaon Road</option>
+          <option value="Lohara">Lohara</option>
+          <option value="Main Market">Main Market</option>
+          <option value="Wadgaon">Wadgaon</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Your WhatsApp / Mobile Number <span class="hint">Sellers will contact you</span></label>
+        <input id="wantPhone" type="tel" placeholder="98XXXXXXXX" value="9823000000" required>
+      </div>
+
+      <div class="field">
+        <label>Any specific condition requirements?</label>
+        <textarea id="wantDesc" placeholder="e.g. Must have original bill, less than 20,000 km driven, mint condition only..."></textarea>
+      </div>
+
+      <button type="submit" class="want-btn" style="background:var(--orange); color:#fff; width:100%; padding:15px; margin-top:8px">
+        📢 Broadcast Requirement to Yavatmal
+      </button>
+    </form>
   </div>
+</div>
 
-  <!-- Toast Notification -->
-  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-3 rounded-2xl glass-card text-white font-bold text-xs shadow-2xl flex items-center gap-2 border border-white/15">
-    <span>✨</span>
-    <span id="toastMessage">You are on the VIP early access list!</span>
+<!-- MODAL: Full Item Detail View & WhatsApp Bargain -->
+<div class="modal-bg" id="detailModal" onclick="if(event.target===this)closeDetailModal()">
+  <div class="modal" id="detailContent"></div>
+</div>
+
+<!-- MODAL: Locality Switcher -->
+<div class="modal-bg" id="localityModal" onclick="if(event.target===this)closeLocalityModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>📍 Select Area in Yavatmal</h2>
+      <button class="close-btn" onclick="closeLocalityModal()">✕</button>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:14px">Choose your current locality to prioritize items near you:</p>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button class="chip" style="text-align:left; justify-content:flex-start; padding:12px 16px" onclick="setLocality('All Areas')">📍 All of Yavatmal (Default)</button>
+      <button class="chip" style="text-align:left; justify-content:flex-start; padding:12px 16px" onclick="setLocality('Civil Lines')">📍 Civil Lines & Collectorate</button>
+      <button class="chip" style="text-align:left; justify-content:flex-start; padding:12px 16px" onclick="setLocality('Bus Stand Road')">📍 Bus Stand Road & Subhash Chowk</button>
+      <button class="chip" style="text-align:left; justify-content:flex-start; padding:12px 16px" onclick="setLocality('Dhamangaon Road')">📍 Dhamangaon Road</button>
+      <button class="chip" style="text-align:left; justify-content:flex-start; padding:12px 16px" onclick="setLocality('Lohara')">📍 Lohara & MIDC Area</button>
+      <button class="chip" style="text-align:left; justify-content:flex-start; padding:12px 16px" onclick="setLocality('Wadgaon')">📍 Wadgaon Road</button>
+      <button class="chip" style="text-align:left; justify-content:flex-start; padding:12px 16px" onclick="setLocality('Main Market')">📍 Main Market / Gandhi Chowk</button>
+    </div>
   </div>
+</div>
 
-  <script>
-    function handleNotifySubmit() {
-      const input = document.getElementById('notifyEmailInput');
-      const val = input.value.trim();
-      if (!val || !val.includes('@')) {
-        showToast('Please enter a valid email address!');
-        return;
-      }
+<!-- MODAL: Saved Wishlist -->
+<div class="modal-bg" id="savedModal" onclick="if(event.target===this)closeSavedModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>♡ Saved Listings</h2>
+      <button class="close-btn" onclick="closeSavedModal()">✕</button>
+    </div>
+    <div id="savedFeed" style="display:flex; flex-direction:column; gap:12px"></div>
+  </div>
+</div>
 
-      // Save locally
-      try {
-        const saved = JSON.parse(localStorage.getItem('club_waitlist_emails') || '[]');
-        saved.push({ email: val, time: new Date().toISOString() });
-        localStorage.setItem('club_waitlist_emails', JSON.stringify(saved));
-      } catch (e) {}
+<!-- Hidden Canvas for WhatsApp Status Flyer Generation -->
+<canvas id="posterCanvas" width="1080" height="1920"></canvas>
 
-      input.value = '';
-      showToast('You are on the VIP early access list! 🚀');
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Core Application Logic -->
+<script>
+// Mock initial listings
+const defaultListings = [
+  {
+    id: 'l1',
+    title: 'iPhone 13 128GB Midnight',
+    price: 24500,
+    cat: 'Mobiles',
+    emoji: '📱',
+    distance: '2 km',
+    locality: 'Civil Lines',
+    condition: 'Like New',
+    deal: 'Great Deal',
+    phone: '9823012345',
+    desc: 'Battery health 88%. Screen replaced with genuine display, flawless condition. Original cable and box available.',
+    bill: true,
+    box: true,
+    owner: true,
+    exchange: true,
+    photo: '',
+    time: '2 hours ago'
+  },
+  {
+    id: 'l2',
+    title: 'Honda Activa 6G DLX 2021',
+    price: 68000,
+    cat: 'Bikes',
+    emoji: '🛵',
+    distance: '4 km',
+    locality: 'Bus Stand Road',
+    condition: 'Good',
+    deal: 'Verified RC',
+    phone: '9823054321',
+    desc: 'Only 14,200 km driven. Single owner, insurance active till Dec 2026. Serviced on time at authorised Honda service center.',
+    bill: true,
+    box: false,
+    owner: true,
+    exchange: false,
+    photo: '',
+    time: '4 hours ago'
+  },
+  {
+    id: 'l3',
+    title: 'Samsung Galaxy S23 5G 256GB',
+    price: 29000,
+    cat: 'Mobiles',
+    emoji: '📱',
+    distance: '3 km',
+    locality: 'Dhamangaon Road',
+    condition: 'Like New',
+    deal: 'Bhav Sahi',
+    phone: '9823098765',
+    desc: 'Used for 9 months with back cover and tempered glass. Absolutely mint, Snapdragon 8 Gen 2, bill available.',
+    bill: true,
+    box: true,
+    owner: true,
+    exchange: true,
+    photo: '',
+    time: '5 hours ago'
+  },
+  {
+    id: 'l4',
+    title: 'Bajaj Pulsar 150 Twin Disc',
+    price: 64000,
+    cat: 'Bikes',
+    emoji: '🏍️',
+    distance: '5 km',
+    locality: 'Lohara',
+    condition: 'Good',
+    deal: 'Verified',
+    phone: '9823011223',
+    desc: '2020 model, MH-29 registered. Brand new MRF rear tyre. Ready to ride, no mechanical issues.',
+    bill: false,
+    box: false,
+    owner: true,
+    exchange: true,
+    photo: '',
+    time: '6 hours ago'
+  },
+  {
+    id: 'l5',
+    title: '3-Seater L-Shape Fabric Sofa',
+    price: 8500,
+    cat: 'Furniture',
+    emoji: '🛋️',
+    distance: '1.5 km',
+    locality: 'Civil Lines',
+    condition: 'Good',
+    deal: 'Quick Sale',
+    phone: '9823033445',
+    desc: 'Very comfortable high density foam sofa. Relocating to Nagpur so selling at distress price.',
+    bill: false,
+    box: false,
+    owner: true,
+    exchange: false,
+    photo: '',
+    time: '1 day ago'
+  },
+  {
+    id: 'l6',
+    title: 'HP 15s Ryzen 5 Laptop (16GB/512GB)',
+    price: 23500,
+    cat: 'Electronics',
+    emoji: '💻',
+    distance: '3.5 km',
+    locality: 'Main Market',
+    condition: 'Like New',
+    deal: 'Top Value',
+    phone: '9823077889',
+    desc: 'Fast SSD, 16GB RAM upgrade, backlit keyboard, Windows 11 MS Office genuine. Ideal for students and office work.',
+    bill: true,
+    box: true,
+    owner: true,
+    exchange: false,
+    photo: '',
+    time: '1 day ago'
+  },
+  {
+    id: 'l7',
+    title: 'LG 43-inch Smart 4K Ultra HD TV',
+    price: 15500,
+    cat: 'Appliances',
+    emoji: '📺',
+    distance: '4 km',
+    locality: 'Wadgaon',
+    condition: 'Good',
+    deal: 'Great Deal',
+    phone: '9823066554',
+    desc: 'WebOS with Netflix, YouTube, Prime. Crystal clear IPS panel, wall mount bracket included.',
+    bill: true,
+    box: false,
+    owner: true,
+    exchange: false,
+    photo: '',
+    time: '2 days ago'
+  },
+  {
+    id: 'l8',
+    title: 'Solid Sheesham Wood Dining Table + 4 Chairs',
+    price: 11000,
+    cat: 'Furniture',
+    emoji: '🪑',
+    distance: '6 km',
+    locality: 'Civil Lines',
+    condition: 'Good',
+    deal: 'Solid Wood',
+    phone: '9823044332',
+    desc: 'Pure Sheesham wood with glass top. Heavy and sturdy. Buyer needs to arrange tempo transport from Civil lines.',
+    bill: false,
+    box: false,
+    owner: true,
+    exchange: false,
+    photo: '',
+    time: '2 days ago'
+  }
+];
+
+// Mock initial City Wants (Reverse Marketplace)
+const defaultWants = [
+  {
+    id: 'w1',
+    buyer: 'Rahul S.',
+    item: 'iPhone 13 or 14 (128GB)',
+    budget: '₹ 22,000 - ₹ 25,000',
+    cat: 'Mobiles',
+    urgency: 'Within 48 hours',
+    locality: 'Civil Lines',
+    phone: '9823012999',
+    desc: 'Looking for immediate buy in Yavatmal. Battery health 85%+ required. Original bill preferred.',
+    time: '1 hour ago'
+  },
+  {
+    id: 'w2',
+    buyer: 'Swapnil Deshmukh',
+    item: 'Honda Activa 5G or 6G',
+    budget: '₹ 45,000 - ₹ 55,000',
+    cat: 'Bikes',
+    urgency: 'Within 7 days',
+    locality: 'Bus Stand Road',
+    phone: '9823055888',
+    desc: 'Need for daily college commute. Only clean paper MH-29 registration bikes please. Cash ready.',
+    time: '3 hours ago'
+  },
+  {
+    id: 'w3',
+    buyer: 'Dr. Anjali M.',
+    item: 'Office Work Study Desk & Ergonomic Chair',
+    budget: '₹ 5,000 - ₹ 7,500',
+    cat: 'Furniture',
+    urgency: 'This week',
+    locality: 'Dhamangaon Road',
+    phone: '9823044777',
+    desc: 'Need sturdy wooden desk with drawers and rolling office chair in decent condition.',
+    time: '5 hours ago'
+  },
+  {
+    id: 'w4',
+    buyer: 'Amit V.',
+    item: 'Second Hand Window or Split AC (1.5 Ton)',
+    budget: '₹ 12,000 - ₹ 15,000',
+    cat: 'Appliances',
+    urgency: 'Within 7 days',
+    locality: 'Lohara',
+    phone: '9823033111',
+    desc: 'Copper coil only (Voltas, Daikin, or LG). Must be in working condition with remote.',
+    time: '1 day ago'
+  }
+];
+
+// State
+let listings = [];
+let wants = [];
+let savedItemIds = new Set();
+let currentMode = 'sell'; // 'sell' or 'want'
+let activeCategory = 'All';
+let currentArea = 'All Areas';
+let uploadedPhotoBase64 = '';
+
+// Initialize from LocalStorage
+function initData() {
+  try {
+    const savedL = localStorage.getItem('findly_listings');
+    listings = savedL ? JSON.parse(savedL) : defaultListings;
+
+    const savedW = localStorage.getItem('findly_wants');
+    wants = savedW ? JSON.parse(savedW) : defaultWants;
+
+    const savedS = localStorage.getItem('findly_saved');
+    if (savedS) {
+      savedItemIds = new Set(JSON.parse(savedS));
+    }
+  } catch(e) {
+    listings = defaultListings;
+    wants = defaultWants;
+  }
+  updateCounts();
+  renderFeed();
+}
+
+function saveData() {
+  try {
+    localStorage.setItem('findly_listings', JSON.stringify(listings));
+    localStorage.setItem('findly_wants', JSON.stringify(wants));
+    localStorage.setItem('findly_saved', JSON.stringify(Array.from(savedItemIds)));
+  } catch(e) {
+    console.error(e);
+  }
+  updateCounts();
+}
+
+function updateCounts() {
+  document.getElementById('sellBadgeCount').textContent = listings.length;
+  document.getElementById('wantBadgeCount').textContent = wants.length;
+  const sc = document.getElementById('savedCount');
+  if (savedItemIds.size > 0) {
+    sc.style.display = 'flex';
+    sc.textContent = savedItemIds.size;
+  } else {
+    sc.style.display = 'none';
+  }
+}
+
+// Switch Feed: Sell vs Want
+function switchFeed(mode) {
+  currentMode = mode;
+  document.getElementById('tabSell').classList.toggle('active', mode === 'sell');
+  document.getElementById('tabWant').classList.toggle('active', mode === 'want');
+
+  const heroTitle = document.getElementById('heroTitle');
+  const heroCard = document.getElementById('heroWantCard');
+  const catSec = document.getElementById('catSection');
+
+  if (mode === 'sell') {
+    heroTitle.textContent = "What are you looking for in Yavatmal?";
+    heroCard.style.display = 'flex';
+    catSec.style.display = 'block';
+    document.getElementById('feedTitle').textContent = "Fresh Listings Near You";
+  } else {
+    heroTitle.textContent = "What does Yavatmal want right now?";
+    heroCard.style.display = 'none';
+    catSec.style.display = 'block';
+    document.getElementById('feedTitle').textContent = "Live City Demands (Reverse Market)";
+  }
+  renderFeed();
+}
+
+// Filter by Category
+function filterCategory(cat, el) {
+  activeCategory = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderFeed();
+}
+
+// Render Feed
+function renderFeed() {
+  const container = document.getElementById('feed');
+  container.innerHTML = '';
+  const searchQ = document.getElementById('search').value.toLowerCase().trim();
+
+  if (currentMode === 'sell') {
+    let filtered = listings.filter(item => {
+      const matchCat = (activeCategory === 'All') || (item.cat === activeCategory);
+      const matchArea = (currentArea === 'All Areas') || (item.locality === currentArea);
+      const matchSearch = !searchQ || (item.title + ' ' + item.desc + ' ' + item.cat + ' ' + item.locality).toLowerCase().includes(searchQ);
+      return matchCat && matchArea && matchSearch;
+    });
+
+    document.getElementById('feedCount').textContent = `${filtered.length} items for sale`;
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <h3>No items found in this category</h3>
+          <p>Be the first one in Yavatmal to post this item!</p>
+          <button class="want-btn" style="background:var(--ink); color:#fff; display:inline-flex" onclick="openModal('sell')">
+            ＋ Post Your Item Now
+          </button>
+        </div>`;
+      return;
     }
 
-    function contactTeamWhatsApp() {
-      const text = `Hey! I was visiting Club.online and would love to stay updated on the upcoming launch!`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    filtered.forEach(item => {
+      const isSaved = savedItemIds.has(item.id);
+      const visualHtml = item.photo
+        ? `<div class="visual"><img src="${item.photo}" alt="${item.title}"><div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`
+        : `<div class="visual">${item.emoji || '📦'}<div class="visual-pills">${renderPills(item)}</div><button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`;
+
+      const card = `
+        <article class="item" onclick="openItemDetail('${item.id}')">
+          ${visualHtml}
+          <div class="item-info">
+            <div>
+              <div class="item-title" title="${item.title}">${item.title}</div>
+              <div class="item-price-row">
+                <div class="item-price">₹${item.price.toLocaleString('en-IN')}</div>
+                <span class="bhav-pill bhav-sahi">🟢 Sahi Bhav</span>
+              </div>
+              <div class="item-meta">
+                <span>📍 ${item.locality} · ${item.distance}</span>
+                <span style="color:#10b981; font-weight:700">Verified</span>
+              </div>
+            </div>
+            <div class="item-actions" onclick="event.stopPropagation()">
+              <button class="btn-sm-view" onclick="openItemDetail('${item.id}')">View Details</button>
+              <button class="btn-sm-wa" onclick="directWhatsApp('${item.id}')">
+                <span>💬</span> Chat
+              </button>
+            </div>
+          </div>
+        </article>`;
+      container.insertAdjacentHTML('beforeend', card);
+    });
+
+  } else {
+    // City Wants Feed
+    let filteredW = wants.filter(w => {
+      const matchCat = (activeCategory === 'All') || (w.cat === activeCategory);
+      const matchArea = (currentArea === 'All Areas') || (w.locality === currentArea);
+      const matchSearch = !searchQ || (w.item + ' ' + w.desc + ' ' + w.buyer).toLowerCase().includes(searchQ);
+      return matchCat && matchArea && matchSearch;
+    });
+
+    document.getElementById('feedCount').textContent = `${filteredW.length} active demands`;
+
+    if (filteredW.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <h3>No buyer requirements found</h3>
+          <p>Tell Yavatmal what you are looking for right now.</p>
+          <button class="want-btn" style="background:var(--orange); color:#fff; display:inline-flex" onclick="openModal('want')">
+            ＋ Post Your Demand Free
+          </button>
+        </div>`;
+      return;
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toastNotification');
-      document.getElementById('toastMessage').innerText = msg;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 3000);
-    }
-  </script>
+    filteredW.forEach(w => {
+      const card = `
+        <div class="demand-card">
+          <div>
+            <div class="demand-header">
+              <div class="demand-buyer">
+                <div class="buyer-avatar">${w.buyer.charAt(0)}</div>
+                <div class="buyer-info">
+                  <b>${w.buyer}</b>
+                  <span>📍 ${w.locality} · ${w.time}</span>
+                </div>
+              </div>
+              <span class="urgent-badge">${w.urgency}</span>
+            </div>
+            <div class="demand-item">${w.item}</div>
+            <div class="demand-budget">Budget: ${w.budget}</div>
+            <p class="demand-desc">${w.desc || 'No additional note provided. Contact buyer directly.'}</p>
+          </div>
+          <button class="demand-cta" onclick="chatWithBuyer('${w.id}')">
+            <span>💬</span> I Have This! Chat on WhatsApp
+          </button>
+        </div>`;
+      container.insertAdjacentHTML('beforeend', card);
+    });
+  }
+}
+
+function renderPills(item) {
+  let pills = `<span class="badge-tag deal">${item.deal || 'Verified'}</span>`;
+  if (item.bill && item.box) {
+    pills += `<span class="badge-tag verified">🧾 Bill+Box</span>`;
+  }
+  if (item.exchange) {
+    pills += `<span class="badge-tag exchange">🔄 Adla-Badli OK</span>`;
+  }
+  return pills;
+}
+
+// Search
+function runSearch() {
+  renderFeed();
+  const f = document.getElementById('feed');
+  window.scrollTo({ top: f.offsetTop - 80, behavior: 'smooth' });
+}
+document.getElementById('search').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runSearch();
+});
+
+// Toggle Save / Wishlist
+function toggleSave(id, e) {
+  if (e) e.stopPropagation();
+  if (savedItemIds.has(id)) {
+    savedItemIds.delete(id);
+    toast('Removed from saved');
+  } else {
+    savedItemIds.add(id);
+    toast('Added to saved items ❤️');
+  }
+  saveData();
+  renderFeed();
+}
+
+// Open Item Detail
+function openItemDetail(id) {
+  const item = listings.find(x => x.id === id);
+  if (!item) return;
+
+  const content = document.getElementById('detailContent');
+  const isSaved = savedItemIds.has(item.id);
+
+  const discount5 = Math.round(item.price * 0.95);
+  const discount10 = Math.round(item.price * 0.90);
+
+  content.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase">Category: ${item.cat} · ${item.locality}</span>
+        <h2>${item.title}</h2>
+      </div>
+      <button class="close-btn" onclick="closeDetailModal()">✕</button>
+    </div>
+
+    <div class="detail-img-box">
+      ${item.photo ? `<img src="${item.photo}" alt="${item.title}">` : item.emoji || '📦'}
+    </div>
+
+    <div class="detail-price-box">
+      <div>
+        <span style="font-size:11px; color:var(--muted); font-weight:700">ASKING PRICE</span>
+        <div class="detail-price">₹${item.price.toLocaleString('en-IN')}</div>
+      </div>
+      <span class="bhav-pill bhav-sahi" style="font-size:12px; padding:6px 12px">🟢 Sahi Bhav Guaranteed</span>
+    </div>
+
+    <!-- Trust Checklist Grid -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+      <div class="trust-check-label" style="background:${item.bill ? '#eefbf0':'#faf7f2'}">
+        ${item.bill ? '✅' : '❌'} Original Bill
+      </div>
+      <div class="trust-check-label" style="background:${item.box ? '#eefbf0':'#faf7f2'}">
+        ${item.box ? '✅' : '❌'} Box & Charger
+      </div>
+      <div class="trust-check-label" style="background:${item.owner ? '#eefbf0':'#faf7f2'}">
+        ${item.owner ? '✅' : '❌'} 1st Owner / RC
+      </div>
+      <div class="trust-check-label" style="background:${item.exchange ? '#fff8e6':'#faf7f2'}">
+        ${item.exchange ? '🔄 Open for Exchange' : '❌ Cash Sale Only'}
+      </div>
+    </div>
+
+    <p style="font-size:13px; color:var(--ink); line-height:1.5; margin:12px 0; background:#fdfbf7; padding:12px; border-radius:12px; border:1px solid var(--line)">
+      <b>Seller Notes:</b> ${item.desc || 'No description provided.'}
+    </p>
+
+    <!-- Quick Bargaining ("Make an Offer") -->
+    <div class="bargain-box">
+      <div class="bargain-title">⚡ Make an Instant Offer on WhatsApp</div>
+      <div class="bargain-pills">
+        <button class="bargain-pill" onclick="makeOffer('${item.id}', ${discount5})">Offer ₹${discount5.toLocaleString('en-IN')} (-5%)</button>
+        <button class="bargain-pill" onclick="makeOffer('${item.id}', ${discount10})">Offer ₹${discount10.toLocaleString('en-IN')} (-10%)</button>
+        <button class="bargain-pill" onclick="makeOffer('${item.id}', ${item.price})">Ask Best Price</button>
+      </div>
+    </div>
+
+    <!-- Safety Warning -->
+    <div class="safety-note">
+      🛡️ <b>Anti-Fraud Advice:</b> Never scan any QR code sent on WhatsApp or transfer money in advance. Inspect this item in person at a public location in Yavatmal before payment.
+    </div>
+
+    <div class="detail-actions">
+      <button class="btn-primary-wa" onclick="directWhatsApp('${item.id}')">
+        <span>💬</span> Chat on WhatsApp with Seller
+      </button>
+      <button class="btn-share-status" onclick="generateWhatsAppFlyer('${item.id}')">
+        <span>📲</span> Share to WhatsApp Status (Viral Poster)
+      </button>
+    </div>
+  `;
+
+  document.getElementById('detailModal').classList.add('show');
+}
+
+function closeDetailModal() {
+  document.getElementById('detailModal').classList.remove('show');
+}
+
+// WhatsApp Integration
+function directWhatsApp(id) {
+  const item = listings.find(x => x.id === id);
+  if (!item) return;
+  const msg = encodeURIComponent(`Hello! I saw your "${item.title}" listed for ₹${item.price.toLocaleString('en-IN')} on Findly (Yavatmal). Is it still available? I would like to inspect it.`);
+  window.open(`https://wa.me/91${item.phone}?text=${msg}`, '_blank');
+}
+
+function makeOffer(id, offerPrice) {
+  const item = listings.find(x => x.id === id);
+  if (!item) return;
+  const msg = encodeURIComponent(`Hello! I am interested in your "${item.title}" on Findly Yavatmal. The asking price is ₹${item.price.toLocaleString('en-IN')}. Would you be willing to close the deal for ₹${offerPrice.toLocaleString('en-IN')}? Let me know!`);
+  window.open(`https://wa.me/91${item.phone}?text=${msg}`, '_blank');
+}
+
+function chatWithBuyer(id) {
+  const w = wants.find(x => x.id === id);
+  if (!w) return;
+  const msg = encodeURIComponent(`Hi ${w.buyer}! I saw your requirement for "${w.item}" on Findly Yavatmal. I have this available in good condition within your budget (${w.budget}). Let's discuss!`);
+  window.open(`https://wa.me/91${w.phone}?text=${msg}`, '_blank');
+}
+
+// Smart WhatsApp Status Flyer Generator (Canvas API)
+function generateWhatsAppFlyer(id) {
+  const item = listings.find(x => x.id === id);
+  if (!item) return;
+
+  const canvas = document.getElementById('posterCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+  grad.addColorStop(0, '#17211b');
+  grad.addColorStop(1, '#25352c');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // Decorative Shapes
+  ctx.fillStyle = '#c8f36b';
+  ctx.beginPath();
+  ctx.arc(950, 200, 350, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Header Brand
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 64px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('findly•', 90, 150);
+
+  ctx.fillStyle = '#c8f36b';
+  ctx.font = 'bold 36px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('YAVATMAL HYPERLOCAL MARKET', 90, 220);
+
+  // Badge Pill
+  ctx.fillStyle = '#ff8a4c';
+  ctx.beginPath();
+  ctx.roundRect(90, 310, 420, 60, 30);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 32px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('⚡ FOR SALE IN YAVATMAL', 120, 352);
+
+  // White Card Container
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.roundRect(90, 420, 900, 1200, 40);
+  ctx.fill();
+
+  // Photo / Placeholder
+  ctx.fillStyle = '#f0ede6';
+  ctx.beginPath();
+  ctx.roundRect(140, 470, 800, 650, 30);
+  ctx.fill();
+
+  ctx.font = '160px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(item.emoji || '📱', 540, 850);
+  ctx.textAlign = 'left';
+
+  // Item Title
+  ctx.fillStyle = '#17211b';
+  ctx.font = '900 56px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText(item.title.substring(0, 25), 140, 1220);
+
+  // Locality
+  ctx.fillStyle = '#738078';
+  ctx.font = '600 36px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText(`📍 ${item.locality}, Yavatmal · ${item.condition}`, 140, 1280);
+
+  // Price Tag
+  ctx.fillStyle = '#17211b';
+  ctx.font = '900 78px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText(`₹${item.price.toLocaleString('en-IN')}`, 140, 1390);
+
+  // Green WhatsApp Button Banner on Poster
+  ctx.fillStyle = '#25D366';
+  ctx.beginPath();
+  ctx.roundRect(140, 1460, 800, 110, 25);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 40px "Plus Jakarta Sans", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`💬 WhatsApp Seller: ${item.phone}`, 540, 1530);
+  ctx.textAlign = 'left';
+
+  // Footer Tagline
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '400 34px "Plus Jakarta Sans", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Find local deals & post what you want on findly.online', 540, 1750);
+  ctx.textAlign = 'left';
+
+  // Export & Download
+  const link = document.createElement('a');
+  link.download = `Findly-${item.title.replace(/\s+/g,'-')}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  toast('WhatsApp Status Poster Downloaded! Post to your Status 📲');
+}
+
+// Live Bhav Meter Calculator
+function updateBhavMeter(val) {
+  const price = Number(val);
+  const dot = document.getElementById('bhavDot');
+  const msg = document.getElementById('bhavMsg');
+
+  if (!price || price <= 0) {
+    dot.style.background = '#94a3b8';
+    msg.textContent = 'Enter price to see fair valuation feedback';
+    return;
+  }
+
+  if (price < 1000) {
+    dot.style.background = '#10b981';
+    msg.innerHTML = '<span style="color:#10b981">🟢 Super Deal!</span> Likely to sell within 24 hours in Yavatmal.';
+  } else if (price >= 1000 && price <= 30000) {
+    dot.style.background = '#10b981';
+    msg.innerHTML = '<span style="color:#10b981">🟢 Fair Market Value!</span> 85% probability of quick buyer inquiry.';
+  } else if (price > 30000 && price <= 80000) {
+    dot.style.background = '#f59e0b';
+    msg.innerHTML = '<span style="color:#b45309">🟡 Moderate Demand.</span> Clear photos and bill will help close faster.';
+  } else {
+    dot.style.background = '#ef4444';
+    msg.innerHTML = '<span style="color:#dc2626">🔴 High Value Asset.</span> Make sure RC/Invoice proof is ready.';
+  }
+}
+
+// Photo Upload Handler
+function handlePhotoUpload(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedPhotoBase64 = e.target.result;
+      const preview = document.getElementById('photoPreview');
+      preview.src = uploadedPhotoBase64;
+      preview.style.display = 'block';
+      document.getElementById('photoPrompt').textContent = '✅ Photo loaded! Click to change.';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Modal Controllers
+function openModal(type) {
+  document.getElementById('actionModal').classList.add('show');
+  document.getElementById('sellForm').style.display = (type === 'sell') ? 'block' : 'none';
+  document.getElementById('wantForm').style.display = (type === 'want') ? 'block' : 'none';
+  document.getElementById('actionModalTitle').textContent = (type === 'sell') 
+    ? 'Sell something in Yavatmal' 
+    : '📢 Tell Yavatmal what you need';
+}
+
+function closeActionModal() {
+  document.getElementById('actionModal').classList.remove('show');
+}
+
+// Form Submission: Sell
+function submitListing() {
+  const title = document.getElementById('sellTitle').value.trim();
+  const price = Number(document.getElementById('sellPrice').value);
+  const cat = document.getElementById('sellCat').value;
+  const condition = document.getElementById('sellCondition').value;
+  const locality = document.getElementById('sellLocality').value;
+  const phone = document.getElementById('sellPhone').value.trim();
+  const desc = document.getElementById('sellDesc').value.trim();
+
+  const bill = document.getElementById('checkBill').checked;
+  const box = document.getElementById('checkBox').checked;
+  const owner = document.getElementById('checkOwner').checked;
+  const exchange = document.getElementById('checkExchange').checked;
+
+  const emojiMap = {
+    Mobiles: '📱',
+    Bikes: '🏍️',
+    Cars: '🚗',
+    Furniture: '🛋️',
+    Electronics: '💻',
+    Appliances: '📺',
+    Others: '📦'
+  };
+
+  const newListing = {
+    id: 'l_' + Date.now(),
+    title,
+    price,
+    cat,
+    emoji: emojiMap[cat] || '📦',
+    distance: 'Just now',
+    locality,
+    condition,
+    deal: 'Fresh Listing',
+    phone: phone || '9823000000',
+    desc,
+    bill,
+    box,
+    owner,
+    exchange,
+    photo: uploadedPhotoBase64,
+    time: 'Just now'
+  };
+
+  listings.unshift(newListing);
+  saveData();
+  closeActionModal();
+  switchFeed('sell');
+  toast('🎉 Listing published live in Yavatmal!');
+
+  // Reset form
+  document.getElementById('sellForm').reset();
+  uploadedPhotoBase64 = '';
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('photoPrompt').textContent = '📸 Click to choose photo or take camera snap';
+}
+
+// Form Submission: Want
+function submitWant() {
+  const item = document.getElementById('wantItem').value.trim();
+  const budget = document.getElementById('wantBudget').value.trim();
+  const cat = document.getElementById('wantCat').value;
+  const urgency = document.getElementById('wantUrgency').value;
+  const locality = document.getElementById('wantLocality').value;
+  const phone = document.getElementById('wantPhone').value.trim();
+  const desc = document.getElementById('wantDesc').value.trim();
+
+  const newWant = {
+    id: 'w_' + Date.now(),
+    buyer: 'You (Citizen)',
+    item,
+    budget,
+    cat,
+    urgency,
+    locality,
+    phone: phone || '9823000000',
+    desc,
+    time: 'Just now'
+  };
+
+  wants.unshift(newWant);
+  saveData();
+  closeActionModal();
+  switchFeed('want');
+  toast('📢 Requirement broadcasted to Yavatmal sellers!');
+  document.getElementById('wantForm').reset();
+}
+
+// Locality Modal
+function openLocalityModal() {
+  document.getElementById('localityModal').classList.add('show');
+}
+function closeLocalityModal() {
+  document.getElementById('localityModal').classList.remove('show');
+}
+function setLocality(loc) {
+  currentArea = loc;
+  document.getElementById('currentLocText').textContent = (loc === 'All Areas') ? 'Yavatmal' : loc;
+  closeLocalityModal();
+  toast(`Area set to: ${loc}`);
+  renderFeed();
+}
+
+// Saved Items Modal
+function openSavedModal() {
+  const container = document.getElementById('savedFeed');
+  container.innerHTML = '';
+  const savedItems = listings.filter(x => savedItemIds.has(x.id));
+
+  if (savedItems.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:30px 10px; color:var(--muted)">
+        <p style="font-size:32px; margin-bottom:8px">♡</p>
+        <b>No saved items yet</b>
+        <p style="font-size:12px; margin-top:4px">Tap the heart icon on any listing to save it here.</p>
+      </div>`;
+  } else {
+    savedItems.forEach(item => {
+      container.insertAdjacentHTML('beforeend', `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#f7f4ee; padding:12px; border-radius:14px; border:1px solid var(--line)">
+          <div style="display:flex; align-items:center; gap:10px">
+            <span style="font-size:24px">${item.emoji}</span>
+            <div>
+              <b style="font-size:14px; display:block">${item.title}</b>
+              <span style="font-size:12px; color:var(--muted)">₹${item.price.toLocaleString('en-IN')} · ${item.locality}</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:6px">
+            <button class="btn-sm-wa" style="padding:6px 10px" onclick="directWhatsApp('${item.id}')">💬</button>
+            <button class="close-btn" style="width:30px; height:30px; font-size:12px" onclick="toggleSave('${item.id}'); openSavedModal()">✕</button>
+          </div>
+        </div>
+      `);
+    });
+  }
+  document.getElementById('savedModal').classList.add('show');
+}
+function closeSavedModal() {
+  document.getElementById('savedModal').classList.remove('show');
+}
+
+// Toast
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// Boot
+initData();
+</script>
 </body>
 </html>

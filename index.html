@@ -1894,7 +1894,15 @@ h1 {
           <span id="chatSellerVerifiedPill">🟢 Active on Clubr</span>
         </div>
       </div>
-      <button class="close-btn" onclick="closeChatModal()">✕</button>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button type="button" onclick="openSafeTradeGuide()" title="Safe Trading Rules" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-size:11px; font-weight:800; padding:5px 10px; border-radius:99px; cursor:pointer; display:flex; align-items:center; gap:3px">
+          🛡️ Safe Rules
+        </button>
+        <button type="button" onclick="openReportFraudModal()" title="Report Fraud / Scam" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; font-size:11px; font-weight:800; padding:5px 10px; border-radius:99px; cursor:pointer; display:flex; align-items:center; gap:3px">
+          🚨 Report
+        </button>
+        <button class="close-btn" onclick="closeChatModal()">✕</button>
+      </div>
     </div>
 
     <!-- Mini Item Bar -->
@@ -1931,6 +1939,123 @@ h1 {
     <form class="chat-input-row" onsubmit="event.preventDefault(); sendChatMessage();">
       <input id="chatInputText" placeholder="Type message or counter-offer..." autocomplete="off">
       <button type="submit" class="send-btn">➤</button>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- MODAL: SAFE TRADE RULES (सुरक्षित लेन-देन नियम)          -->
+<!-- ======================================================= -->
+<div class="modal-bg" id="safeTradeModal" onclick="if(event.target===this)closeSafeTradeGuide()">
+  <div class="modal" style="max-width:540px; padding:24px">
+    <div class="modal-head" style="margin-bottom:16px">
+      <div>
+        <h2 style="font-size:18px; font-weight:900; color:var(--ink); display:flex; align-items:center; gap:8px">
+          🛡️ Safe Trade Rules <span style="font-size:12px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:6px; font-weight:800">100% Zero-Scam</span>
+        </h2>
+        <p style="font-size:12px; color:var(--muted); margin-top:2px">सुरक्षित खरीदारी और बिक्री के 5 सुनहरे नियम</p>
+      </div>
+      <button class="close-btn" onclick="closeSafeTradeGuide()">✕</button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:12px; max-height:65vh; overflow-y:auto; padding-right:4px">
+      <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:14px; padding:12px 14px">
+        <b style="color:#b91c1c; font-size:13px; display:flex; align-items:center; gap:6px">
+          🚫 1. पैसे लेने के लिए QR कोड कभी स्कैन न करें!
+        </b>
+        <p style="font-size:12px; color:#7f1d1d; margin-top:4px; line-height:1.45">
+          UPI से पैसे <b>पाने (Receive करने)</b> के लिए सिर्फ अपना मोबाइल नंबर या UPI ID दी जाती है। <b>कभी भी QR कोड स्कैन न करें और न ही अपना UPI PIN डालें।</b> PIN डालते ही पैसा आपके खाते से कट जाता है!
+        </p>
+      </div>
+
+      <div style="background:#fffbeb; border:1.5px solid #fef3c7; border-radius:14px; padding:12px 14px">
+        <b style="color:#b45309; font-size:13px; display:flex; align-items:center; gap:6px">
+          ✋ 2. बिना सामान देखे ₹1 भी एडवांस/टोकन न दें!
+        </b>
+        <p style="font-size:12px; color:#78350f; margin-top:4px; line-height:1.45">
+          सामान को अपनी आंखों से देखने, टेस्ट करने और हाथ में लेने से पहले किसी भी तरह की "बुकिंग राशि", "टोकन मनी", या "कूरियर फीस" कभी न भेजें।
+        </p>
+      </div>
+
+      <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:12px 14px">
+        <b style="color:#15803d; font-size:13px; display:flex; align-items:center; gap:6px">
+          📍 3. दिन के उजाले में सार्वजनिक जगह पर मिलें (Face-to-Face)
+        </b>
+        <p style="font-size:12px; color:#14532d; margin-top:4px; line-height:1.45">
+          हमेशा भीड़भाड़ वाली खुली सार्वजनिक जगह जैसे मेट्रो स्टेशन, मॉल, बस स्टैंड या पुलिस स्टेशन के पास ही मिलें। सुनसान या अनजान जगह पर कभी न जाएं।
+        </p>
+      </div>
+
+      <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:14px; padding:12px 14px">
+        <b style="color:#1d4ed8; font-size:13px; display:flex; align-items:center; gap:6px">
+          🪖 4. फर्जी फौजी / CISF / पुलिस आईडी से सावधान!
+        </b>
+        <p style="font-size:12px; color:#1e3a8a; margin-top:4px; line-height:1.45">
+          ठग अक्सर सेना या सीआईएसएफ की वर्दी वाली फर्जी आईडी दिखाते हैं और "ट्रांसफर हो गया, कूरियर चार्ज भेजो" का बहाना बनाते हैं। ऐसे दावों पर बिल्कुल भरोसा न करें।
+        </p>
+      </div>
+
+      <div style="background:#faf5ff; border:1.5px solid #e9d5ff; border-radius:14px; padding:12px 14px">
+        <b style="color:#7e22ce; font-size:13px; display:flex; align-items:center; gap:6px">
+          🔍 5. ओरिजिनल बिल, बॉक्स और IMEI चेक करें
+        </b>
+        <p style="font-size:12px; color:#581c87; margin-top:4px; line-height:1.45">
+          मोबाइल और इलेक्ट्रॉनिक्स का IMEI नंबर (*#06# डायल करके) बिल और बॉक्स से मैच करें। सभी पार्ट्स पूरी तरह जांचने के बाद ही पेमेंट करें।
+        </p>
+      </div>
+    </div>
+
+    <button type="button" onclick="closeSafeTradeGuide()" class="want-btn" style="background:var(--ink); color:#fff; width:100%; margin-top:16px; padding:12px">
+      ✅ समझ गया (Got It, Deal Safely)
+    </button>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- MODAL: REPORT FRAUD / SCAMMER (फ्रॉड रिपोर्ट)            -->
+<!-- ======================================================= -->
+<div class="modal-bg" id="reportFraudModal" onclick="if(event.target===this)closeReportFraudModal()">
+  <div class="modal" style="max-width:480px; padding:24px">
+    <div class="modal-head" style="margin-bottom:14px">
+      <div>
+        <h2 style="font-size:18px; font-weight:900; color:#dc2626; display:flex; align-items:center; gap:8px">
+          🚨 Report Fraud / Suspicious User
+        </h2>
+        <p style="font-size:12px; color:var(--muted); margin-top:2px">रिपोर्ट सीधे SuperAdmin को भेजी जाएगी</p>
+      </div>
+      <button class="close-btn" onclick="closeReportFraudModal()">✕</button>
+    </div>
+
+    <form onsubmit="event.preventDefault(); submitFraudReport();" style="display:flex; flex-direction:column; gap:12px">
+      <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:10px 14px; font-size:12px; color:#991b1b">
+        Reporting: <b id="reportTargetTitle">User / Listing</b>
+      </div>
+
+      <div class="field">
+        <label style="font-weight:700; font-size:12px">Select Fraud / Scam Reason *</label>
+        <select id="reportReasonSelect" required style="width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-family:inherit; font-size:13px; outline:none; background:#fff">
+          <option value="" disabled selected>Choose reason...</option>
+          <option value="qr_scan">💳 Asking to scan QR code or enter UPI PIN</option>
+          <option value="advance_token">💸 Demanding advance token money or courier fee</option>
+          <option value="army_impersonator">🪖 Impersonating Army / CISF / Govt Officer</option>
+          <option value="external_chat">📲 Forcing to chat on WhatsApp / outside Clubr</option>
+          <option value="fake_item">❌ Fake product / Unrealistic scam price</option>
+          <option value="abusive">⚠️ Abusive / Threatening behavior</option>
+          <option value="other">⚠️ Other fraudulent activity</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label style="font-weight:700; font-size:12px">Details / Evidence (Optional)</label>
+        <textarea id="reportDetailsInput" placeholder="Describe what happened (e.g. He sent a QR code asking to scan for payment)..." style="width:100%; min-height:80px; border:1px solid var(--line); border-radius:10px; padding:10px; font-family:inherit; font-size:13px; outline:none"></textarea>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:8px">
+        <button type="button" onclick="closeReportFraudModal()" style="flex:1; padding:12px; border:1px solid var(--line); border-radius:12px; background:#fff; font-weight:700; cursor:pointer">Cancel</button>
+        <button type="submit" style="flex:1.5; padding:12px; border:none; border-radius:12px; background:#dc2626; color:#fff; font-weight:800; cursor:pointer; box-shadow:0 4px 12px rgba(220,38,38,0.25)">
+          🚨 Submit Report
+        </button>
+      </div>
     </form>
   </div>
 </div>
@@ -2613,7 +2738,7 @@ function renderEditProfileTab(container) {
         </div>
 
         <div class="field">
-          <label>Contact Phone / WhatsApp <span class="hint">10 digits (for trade calls)</span></label>
+          <label>Contact Phone <span class="hint">10 digits (Private & Secure)</span></label>
           <input id="editProfilePhone" type="tel" placeholder="e.g. 9823012345" value="${escapeHtml(currentUser.phone || '')}" maxlength="10">
         </div>
 
@@ -3153,20 +3278,28 @@ function openItemDetail(id) {
     </div>
 
     <p style="font-size:13px; color:var(--ink); line-height:1.5; margin:12px 0; background:#fdfbf7; padding:12px; border-radius:12px; border:1px solid var(--line)">
-      <b>Seller:</b> ${item.seller || 'Member'} ${item.isKycVerified ? '(🛡️ Govt ID Verified)' : '(Unverified)'} · ${item.desc || 'No description provided.'}
+      <b>Seller:</b> ${item.seller || 'Member'} ${item.isKycVerified ? '(🛡️ Verified User)' : '(Unverified)'} · ${item.desc || 'No description provided.'}
     </p>
 
     <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
-      <button class="want-btn" style="background:var(--ink); color:#fff; width:100%; margin:0; padding:13px;" onclick="closeDetailModal(); openInAppChat('${item.id}')">
+      <button class="want-btn" style="background:var(--ink); color:#fff; width:100%; margin:0; padding:13px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:14px; font-weight:800;" onclick="closeDetailModal(); openInAppChat('${item.id}')">
         💬 Chat Directly with Seller (In-App)
       </button>
-      <button class="want-btn" style="background:#16a34a; color:#fff; width:100%; margin:0; padding:13px; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="connectOnWhatsApp('${item.id}')">
-        <span>📲 Chat on WhatsApp</span>
-      </button>
+      <div style="display:flex; gap:8px;">
+        <button type="button" onclick="openSafeTradeGuide()" style="flex:1; background:#fef3c7; color:#92400e; border:1px solid #fde68a; border-radius:10px; padding:9px 12px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px">
+          🛡️ Safe Trade Rules
+        </button>
+        <button type="button" onclick="openItemReportModal('${item.id}')" style="flex:1; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:10px; padding:9px 12px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px">
+          🚨 Report Listing
+        </button>
+      </div>
     </div>
 
-    <div style="background:#fffbeb; border:1px solid #fde68a; color:#92400e; border-radius:12px; padding:10px 14px; font-size:11px; line-height:1.4; margin-top:14px">
-      🛡️ <b>Anti-Scam Shield:</b> Always inspect products in person before transferring money. Never scan unknown QR codes.
+    <div style="background:#fffbeb; border:1px solid #fde68a; color:#92400e; border-radius:12px; padding:10px 14px; font-size:11px; line-height:1.4; margin-top:14px; display:flex; align-items:flex-start; gap:8px">
+      <span style="font-size:16px">🛡️</span>
+      <div>
+        <b>Clubr Anti-Scam Shield:</b> 100% In-App messaging. Never scan any QR code or send advance token money to receive payments. Meet face-to-face!
+      </div>
     </div>
   `;
 
@@ -3268,7 +3401,7 @@ function renderChatMessages() {
   // Persistent Anti-Scam Shield Banner
   stream.innerHTML = `
     <div class="chat-scam-shield-banner">
-      🛡️ <b>Anti-Scam Shield:</b> Never scan any QR code or send advance token money to receive payments. Inspect the item in person before making any payment.
+      🛡️ <b>Anti-Scam Shield Active:</b> 100% In-App Protection. Never scan QR codes or pay advance token money. Inspect the item in person before making any payment.
     </div>
   `;
 
@@ -3310,16 +3443,43 @@ function renderChatMessages() {
       </div>`;
     stream.insertAdjacentHTML('beforeend', bubble);
 
-    // Smart Scam Detector
+    // Multi-Vector Anti-Scam Shield
     const lower = (m.text || '').toLowerCase();
-    const scamTriggers = ['qr code', 'scan qr', 'qr', 'advance', 'token money', 'cisf', 'army officer', 'upi pin', 'google pay scan', 'phonepe scan', 'scanner'];
+
+    // Vector 1: Phone Number Sharing Guard
+    const phoneRegex = /(?:\+?91[\s-]?)?[6-9]\d{2}[\s-]?\d{3}[\s-]?\d{4}|\b[6-9]\d{9}\b/;
+    if (phoneRegex.test(m.text)) {
+      const phoneAlertCard = `
+        <div class="chat-scam-alert" style="background:#fffbeb; border:1.5px solid #fde68a; color:#92400e;">
+          🛡️ <b>Phone Privacy Guard:</b> Personal phone number detected. For your safety, never move to WhatsApp or external calls. Scammers move off-platform to execute fake QR code and advance payment fraud. Chat safely inside Clubr!
+        </div>`;
+      stream.insertAdjacentHTML('beforeend', phoneAlertCard);
+    }
+
+    // Vector 2: High-Risk Scam Triggers (QR code, token/advance money, army imposter, upi pin)
+    const scamTriggers = [
+      'qr code', 'scan qr', 'qr', 'scanner',
+      'advance', 'token money', 'token', 'courier advance', 'security deposit', 'delivery charge', 'booking amount',
+      'cisf', 'army officer', 'army transfer', 'military officer', 'army transport', 'military camp',
+      'upi pin', 'enter pin', 'google pay scan', 'phonepe scan', 'paytm scan'
+    ];
     const hasTrigger = scamTriggers.some(t => lower.includes(t));
     if (hasTrigger) {
       const alertCard = `
-        <div class="chat-scam-alert">
-          ⚠️ <b>Safety Alert:</b> Potential QR/Advance payment scam detected! Never scan any QR code or enter your UPI PIN to receive money.
+        <div class="chat-scam-alert" style="background:#fef2f2; border:1.5px solid #ef4444; color:#991b1b;">
+          🚨 <b>HIGH RISK SCAM ALERT:</b> This message mentions QR codes, advance token, UPI PIN, or Army claims!<br>
+          <b>IMPORTANT:</b> You NEVER need to scan a QR code or enter your UPI PIN to RECEIVE money. Never send advance token money before inspecting the product face-to-face!
         </div>`;
       stream.insertAdjacentHTML('beforeend', alertCard);
+    }
+
+    // Vector 3: Phishing / External URLs
+    if (/https?:\/\/|wa\.me|t\.me|bit\.ly/i.test(m.text)) {
+      const linkAlertCard = `
+        <div class="chat-scam-alert" style="background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b;">
+          ⚠️ <b>External Link Warning:</b> External web links detected. Beware of phishing links or fake payment portals.
+        </div>`;
+      stream.insertAdjacentHTML('beforeend', linkAlertCard);
     }
   });
   stream.scrollTop = stream.scrollHeight;
@@ -3368,6 +3528,12 @@ function sendChatMessage(presetText) {
   if (!presetText) input.value = '';
   saveData();
   renderChatMessages();
+
+  // Safety toast if sharing phone
+  const phoneRegex = /(?:\+?91[\s-]?)?[6-9]\d{2}[\s-]?\d{3}[\s-]?\d{4}|\b[6-9]\d{9}\b/;
+  if (phoneRegex.test(text)) {
+    toast('🛡️ Safety Reminder: Never move chats to WhatsApp. Stay safe inside Clubr!');
+  }
 
   // Simulated seller response
   setTimeout(() => {
@@ -3454,27 +3620,105 @@ function sendPromptOffer() {
   }
 }
 
-function connectOnWhatsApp(itemId) {
+// SAFE TRADE RULES MODAL
+function openSafeTradeGuide() {
+  document.getElementById('safeTradeModal').classList.add('show');
+}
+function closeSafeTradeGuide() {
+  document.getElementById('safeTradeModal').classList.remove('show');
+}
+
+// REPORT FRAUD / SCAM MODAL
+let activeReportContext = null;
+
+function openReportFraudModal() {
+  if (!activeChatContext) return;
+  activeReportContext = {
+    type: 'chat',
+    itemId: activeChatContext.itemId,
+    itemTitle: activeChatContext.itemTitle,
+    targetName: activeChatContext.sellerName,
+    reporterName: currentUser ? currentUser.name : 'Verified Member',
+    reporterId: currentUser ? currentUser.id : 'anon'
+  };
+  document.getElementById('reportTargetTitle').textContent = `${activeReportContext.targetName} (${activeReportContext.itemTitle})`;
+  document.getElementById('reportReasonSelect').value = '';
+  document.getElementById('reportDetailsInput').value = '';
+  document.getElementById('reportFraudModal').classList.add('show');
+}
+
+function openItemReportModal(itemId) {
   const item = listings.find(x => x.id === itemId);
   if (!item) return;
+  activeReportContext = {
+    type: 'listing',
+    itemId: item.id,
+    itemTitle: item.title,
+    targetName: item.seller || 'Seller',
+    reporterName: currentUser ? currentUser.name : 'Verified Member',
+    reporterId: currentUser ? currentUser.id : 'anon'
+  };
+  document.getElementById('reportTargetTitle').textContent = `${item.title} (Seller: ${item.seller || 'Member'})`;
+  document.getElementById('reportReasonSelect').value = '';
+  document.getElementById('reportDetailsInput').value = '';
+  document.getElementById('reportFraudModal').classList.add('show');
+}
 
-  let sellerPhone = '';
-  try {
-    const allUsers = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
-    const sellerUser = allUsers.find(u => u.id === item.sellerId || (u.name && u.name.toLowerCase() === (item.seller || '').toLowerCase()));
-    if (sellerUser && sellerUser.phone) sellerPhone = sellerUser.phone;
-  } catch(e) {}
+function closeReportFraudModal() {
+  document.getElementById('reportFraudModal').classList.remove('show');
+  activeReportContext = null;
+}
 
-  if (sellerPhone && sellerPhone.replace(/\D/g, '').length === 10) {
-    const clean = sellerPhone.replace(/\D/g, '');
-    const priceText = item.price ? ` (₹${Number(item.price).toLocaleString('en-IN')})` : '';
-    const msg = encodeURIComponent(`Hi ${item.seller || 'there'}, I saw your listing "${item.title}"${priceText} on Clubr.online. Is it still available?`);
-    window.open(`https://wa.me/91${clean}?text=${msg}`, '_blank');
-  } else {
-    closeDetailModal();
-    openInAppChat(itemId);
-    toast('📱 Seller prefers In-App Chat. Chat opened!');
+function submitFraudReport() {
+  if (!activeReportContext) return;
+  const reasonVal = document.getElementById('reportReasonSelect').value;
+  const detailsVal = document.getElementById('reportDetailsInput').value.trim();
+
+  if (!reasonVal) {
+    alert('Please select a reason for reporting.');
+    return;
   }
+
+  const reasonLabels = {
+    'qr_scan': '💳 Asking to scan QR code / UPI PIN',
+    'advance_token': '💸 Demanding advance token money / courier fee',
+    'army_impersonator': '🪖 Impersonating Army / CISF officer',
+    'external_chat': '📲 Forcing to chat on WhatsApp / outside Clubr',
+    'fake_item': '❌ Fake product / Unrealistic scam price',
+    'abusive': '⚠️ Abusive / Threatening behavior',
+    'other': '⚠️ Other fraudulent activity'
+  };
+
+  const reportObj = {
+    id: 'rep_' + Date.now(),
+    date: new Date().toLocaleDateString('en-IN') + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    reportedUser: activeReportContext.targetName,
+    reportedItemId: activeReportContext.itemId,
+    reportedItemTitle: activeReportContext.itemTitle,
+    reporterName: activeReportContext.reporterName,
+    reporterId: activeReportContext.reporterId,
+    reasonCode: reasonVal,
+    reasonText: reasonLabels[reasonVal] || reasonVal,
+    details: detailsVal || 'No additional details provided.',
+    status: 'pending'
+  };
+
+  let reports = [];
+  try {
+    reports = JSON.parse(localStorage.getItem('clubr_fraud_reports') || '[]');
+  } catch(e) { reports = []; }
+
+  reports.unshift(reportObj);
+  localStorage.setItem('clubr_fraud_reports', JSON.stringify(reports));
+
+  closeReportFraudModal();
+  toast('🚨 Report submitted to SuperAdmin. Account flagged for security review.');
+}
+
+function connectOnWhatsApp(itemId) {
+  closeDetailModal();
+  openInAppChat(itemId);
+  toast('🛡️ WhatsApp disabled for scam safety. Chatting securely inside Clubr!');
 }
 
 function closeChatModal() {

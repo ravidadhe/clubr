@@ -123,6 +123,9 @@
         <button onclick="switchTab('broadcast')" id="navTabBroadcast" class="px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">
           📣 Global Broadcast
         </button>
+        <button onclick="switchTab('reports')" id="navTabReports" class="px-4 py-2 rounded-lg text-xs font-bold transition text-rose-400 hover:text-white">
+          🚨 Fraud Reports (<span id="adminReportsCount">0</span>)
+        </button>
       </nav>
     </div>
 
@@ -478,6 +481,70 @@
         </div>
       </div>
     </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 7: FRAUD REPORTS & ANTI-SCAM MODERATION             -->
+    <!-- ======================================================== -->
+    <section id="tabReportsSection" class="space-y-6 hidden">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+            🚨 Fraud Reports & Anti-Scam Shield
+            <span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold px-2.5 py-0.5 rounded-full" id="reportsBadge">Live Queue</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Real-time scam reports filed by buyers and sellers across Clubr</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="clearResolvedReports()" class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-2 rounded-xl transition">
+            Clear Resolved
+          </button>
+          <button onclick="seedSampleReportsIfEmpty()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold px-3 py-2 rounded-xl transition">
+            Test Safety Shield
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Incident Reports</div>
+          <div class="text-2xl font-black text-white font-mono" id="statTotalReports">0</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">High-Risk Scams (QR / Advance)</div>
+          <div class="text-2xl font-black text-rose-400 font-mono" id="statHighRiskScams">0</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Anti-Scam Defense Rate</div>
+          <div class="text-2xl font-black text-emerald-400 font-mono">100% Protected</div>
+        </div>
+      </div>
+
+      <!-- Reports Table -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+          <h3 class="font-bold text-sm text-white">Live Incident Moderation Queue</h3>
+          <span class="text-xs text-slate-400">Sorted by newest first</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/70 uppercase tracking-wider text-slate-400 font-semibold border-b border-slate-800">
+              <tr>
+                <th class="p-3.5">Reported User / Item</th>
+                <th class="p-3.5">Scam Category</th>
+                <th class="p-3.5">Evidence / Details</th>
+                <th class="p-3.5">Reported By</th>
+                <th class="p-3.5">Date & Time</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5 text-right">Moderation Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminReportsTbody" class="divide-y divide-slate-800/60 font-medium">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -505,6 +572,7 @@ let adminListings = [];
 let adminDemands = [];
 let adminKycRequests = [];
 let adminUsers = [];
+let adminReports = [];
 
 function checkAuth() {
   if (sessionStorage.getItem('clubr_admin_auth') === 'true') {
@@ -549,16 +617,20 @@ function startTrafficTicker() {
 }
 
 function switchTab(tabId) {
-  const tabs = ['analytics', 'kyc', 'users', 'listings', 'demands', 'broadcast'];
+  const tabs = ['analytics', 'kyc', 'users', 'listings', 'demands', 'broadcast', 'reports'];
   tabs.forEach(t => {
     const sec = document.getElementById(`tab${capitalize(t)}Section`);
     const btn = document.getElementById(`navTab${capitalize(t)}`);
     if (t === tabId) {
       sec.classList.remove('hidden');
-      btn.className = 'px-4 py-2 rounded-lg text-xs font-bold transition bg-lime-400 text-slate-950';
+      btn.className = (t === 'reports') 
+        ? 'px-4 py-2 rounded-lg text-xs font-bold transition bg-rose-500 text-white shadow-lg shadow-rose-500/30'
+        : 'px-4 py-2 rounded-lg text-xs font-bold transition bg-lime-400 text-slate-950';
     } else {
       sec.classList.add('hidden');
-      btn.className = 'px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white';
+      btn.className = (t === 'reports')
+        ? 'px-4 py-2 rounded-lg text-xs font-bold transition text-rose-400 hover:text-white'
+        : 'px-4 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white';
     }
   });
 
@@ -566,6 +638,7 @@ function switchTab(tabId) {
   if (tabId === 'users') renderAdminUsers();
   if (tabId === 'listings') renderAdminListings();
   if (tabId === 'demands') renderAdminDemands();
+  if (tabId === 'reports') renderAdminReports();
 }
 
 function capitalize(s) {
@@ -687,6 +760,16 @@ function initAdminData() {
   document.getElementById('adminUsersCount').textContent = adminUsers.length;
   document.getElementById('adminListingsCount').textContent = adminListings.length;
   document.getElementById('adminDemandsCount').textContent = adminDemands.length;
+
+  // Load Fraud Reports
+  try {
+    const rep = localStorage.getItem('clubr_fraud_reports');
+    adminReports = rep ? JSON.parse(rep) : [];
+  } catch(e) { adminReports = []; }
+
+  const pendingReportsCount = adminReports.filter(x => x.status === 'pending').length;
+  const repBadge = document.getElementById('adminReportsCount');
+  if (repBadge) repBadge.textContent = pendingReportsCount;
 
   startTrafficTicker();
 }
@@ -1111,6 +1194,190 @@ function exportListingsJSON() {
   dl.setAttribute("href", dataStr);
   dl.setAttribute("download", `Clubr-Listings-${Date.now()}.json`);
   dl.click();
+}
+
+// ========================================================
+// FRAUD REPORTS & ANTI-SCAM MODERATION COMMANDS
+// ========================================================
+function renderAdminReports() {
+  const tbody = document.getElementById('adminReportsTbody');
+  tbody.innerHTML = '';
+
+  const total = adminReports.length;
+  const highRisk = adminReports.filter(r => r.reasonCode === 'qr_scan' || r.reasonCode === 'advance_token' || r.reasonCode === 'army_impersonator').length;
+  const pendingCount = adminReports.filter(r => r.status === 'pending').length;
+
+  document.getElementById('statTotalReports').textContent = total;
+  document.getElementById('statHighRiskScams').textContent = highRisk;
+  const repBadge = document.getElementById('adminReportsCount');
+  if (repBadge) repBadge.textContent = pendingCount;
+
+  if (adminReports.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="p-8 text-center text-slate-500">
+          <div class="text-2xl mb-2">🛡️</div>
+          <div class="font-bold text-slate-400">Zero Pending Fraud Reports</div>
+          <p class="text-[11px] text-slate-600 mt-1">Platform is clean. The Anti-Scam Shield is actively protecting trades.</p>
+        </td>
+      </tr>`;
+    return;
+  }
+
+  adminReports.forEach(rep => {
+    let statusPill = '';
+    if (rep.status === 'resolved') {
+      statusPill = `<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2.5 py-0.5 rounded-full text-[10px]">✅ Resolved</span>`;
+    } else if (rep.status === 'banned') {
+      statusPill = `<span class="bg-rose-500/20 text-rose-300 font-bold px-2.5 py-0.5 rounded-full text-[10px]">⛔ User Banned</span>`;
+    } else {
+      statusPill = `<span class="bg-amber-500/20 text-amber-300 font-bold px-2.5 py-0.5 rounded-full text-[10px]">🚨 Needs Action</span>`;
+    }
+
+    const tr = `
+      <tr class="hover:bg-slate-800/40 transition">
+        <td class="p-3.5">
+          <div class="font-bold text-white">${escapeAdminHtml(rep.reportedUser)}</div>
+          <div class="text-[10px] text-slate-500 font-mono">Item: ${escapeAdminHtml(rep.reportedItemTitle || 'Chat Direct')}</div>
+        </td>
+        <td class="p-3.5">
+          <span class="bg-rose-500/15 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[11px] font-semibold">
+            ${escapeAdminHtml(rep.reasonText || rep.reasonCode)}
+          </span>
+        </td>
+        <td class="p-3.5 text-slate-300 max-w-xs truncate" title="${escapeAdminHtml(rep.details || '')}">
+          ${escapeAdminHtml(rep.details || 'No extra notes')}
+        </td>
+        <td class="p-3.5 text-slate-400">
+          ${escapeAdminHtml(rep.reporterName || 'Anonymous')}
+        </td>
+        <td class="p-3.5 text-slate-400 font-mono text-[11px]">
+          ${rep.date || 'Today'}
+        </td>
+        <td class="p-3.5">
+          ${statusPill}
+        </td>
+        <td class="p-3.5 text-right space-x-1.5 whitespace-nowrap">
+          ${rep.status === 'pending' ? `
+            <button onclick="adminBanReportedUser('${rep.reportedUser}', '${rep.id}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 px-2 py-1 rounded-lg transition text-[11px] font-bold">
+              ⛔ Ban User
+            </button>
+            ${rep.reportedItemId ? `
+              <button onclick="adminDeleteReportedItem('${rep.reportedItemId}', '${rep.id}')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-1 rounded-lg transition text-[11px] font-bold">
+                🗑️ Del Item
+              </button>
+            ` : ''}
+            <button onclick="adminResolveReport('${rep.id}')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-1 rounded-lg transition text-[11px] font-bold">
+              ✅ Resolve
+            </button>
+          ` : `
+            <button onclick="adminDeleteSingleReport('${rep.id}')" class="text-slate-500 hover:text-slate-300 text-[11px] px-2 py-1">
+              Dismiss ✕
+            </button>
+          `}
+        </td>
+      </tr>`;
+    tbody.insertAdjacentHTML('beforeend', tr);
+  });
+}
+
+function escapeAdminHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function adminBanReportedUser(userName, reportId) {
+  if (confirm(`Are you sure you want to permanently BAN user "${userName}" from Clubr? All active listings from this user will be removed.`)) {
+    // 1. Remove user listings
+    adminListings = adminListings.filter(x => (x.seller || '').toLowerCase() !== userName.toLowerCase());
+    localStorage.setItem('findly_listings', JSON.stringify(adminListings));
+
+    // 2. Remove user registered account if found
+    adminUsers = adminUsers.filter(x => (x.name || '').toLowerCase() !== userName.toLowerCase());
+    localStorage.setItem('clubr_registered_users', JSON.stringify(adminUsers));
+
+    // 3. Mark report as banned
+    const rep = adminReports.find(x => x.id === reportId);
+    if (rep) rep.status = 'banned';
+    localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+
+    renderAdminReports();
+    document.getElementById('adminListingsCount').textContent = adminListings.length;
+    document.getElementById('adminUsersCount').textContent = adminUsers.length;
+    alert(`⛔ User "${userName}" has been banned and their listings removed.`);
+  }
+}
+
+function adminDeleteReportedItem(itemId, reportId) {
+  if (confirm(`Remove the reported listing from Clubr?`)) {
+    adminListings = adminListings.filter(x => x.id !== itemId);
+    localStorage.setItem('findly_listings', JSON.stringify(adminListings));
+
+    const rep = adminReports.find(x => x.id === reportId);
+    if (rep) rep.status = 'resolved';
+    localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+
+    renderAdminReports();
+    document.getElementById('adminListingsCount').textContent = adminListings.length;
+    alert(`Listing removed and report marked resolved.`);
+  }
+}
+
+function adminResolveReport(reportId) {
+  const rep = adminReports.find(x => x.id === reportId);
+  if (rep) {
+    rep.status = 'resolved';
+    localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+    renderAdminReports();
+  }
+}
+
+function adminDeleteSingleReport(reportId) {
+  adminReports = adminReports.filter(x => x.id !== reportId);
+  localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+  renderAdminReports();
+}
+
+function clearResolvedReports() {
+  adminReports = adminReports.filter(x => x.status === 'pending');
+  localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+  renderAdminReports();
+}
+
+function seedSampleReportsIfEmpty() {
+  const sampleReports = [
+    {
+      id: 'rep_sample_1',
+      date: new Date().toLocaleDateString('en-IN') + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      reportedUser: 'Sunil Verma (Fake Army Officer)',
+      reportedItemId: 'p1',
+      reportedItemTitle: 'Royal Enfield Classic 350',
+      reporterName: 'Amit Sharma (Buyer)',
+      reporterId: 'u_buyer_1',
+      reasonCode: 'army_impersonator',
+      reasonText: '🪖 Impersonating Army / CISF officer',
+      details: 'Seller sent an ID card claiming army transfer to Pune military base. Demanded ₹1,500 advance courier charge via UPI before delivery.',
+      status: 'pending'
+    },
+    {
+      id: 'rep_sample_2',
+      date: new Date().toLocaleDateString('en-IN') + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      reportedUser: 'Rajesh Kumar',
+      reportedItemId: 'p2',
+      reportedItemTitle: 'iPhone 13 128GB Blue',
+      reporterName: 'Pooja R. (Seller)',
+      reporterId: 'u_seller_2',
+      reasonCode: 'qr_scan',
+      reasonText: '💳 Asking to scan QR code / UPI PIN',
+      details: 'Buyer sent a PhonePe QR code in chat telling me to scan it and enter my UPI PIN to receive ₹28,000 payment.',
+      status: 'pending'
+    }
+  ];
+
+  adminReports = sampleReports.concat(adminReports);
+  localStorage.setItem('clubr_fraud_reports', JSON.stringify(adminReports));
+  renderAdminReports();
+  alert('🛡️ Loaded 2 sample scam incident reports to test SuperAdmin moderation.');
 }
 
 checkAuth();

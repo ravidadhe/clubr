@@ -1365,18 +1365,27 @@ h1 {
   line-height: 1.45;
 }
 
-.chat-msg.buyer {
-  align-self: flex-end;
-  background: var(--ink);
+.chat-msg.seller {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
   color: #ffffff;
+  border: 1px solid #059669;
+  box-shadow: 0 4px 14px rgba(6,78,59,0.2);
+}
+
+.chat-msg.buyer {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+}
+
+.chat-msg.mine {
+  align-self: flex-end;
   border-bottom-right-radius: 4px;
 }
 
-.chat-msg.seller {
+.chat-msg.theirs {
   align-self: flex-start;
-  background: #ffffff;
-  color: var(--ink);
-  border: 1px solid var(--line);
   border-bottom-left-radius: 4px;
 }
 
@@ -5195,7 +5204,7 @@ function openInAppChat(itemId) {
         saveData();
         renderChatMessages();
       }
-    });
+    }, currentUser ? currentUser.id : null);
   }
 
   renderChatMessages();
@@ -5262,7 +5271,23 @@ function renderChatMessages() {
     </div>
   `;
 
-  const messages = chatThreads[activeChatContext.itemId] || [];
+  if (!activeChatContext) return;
+  const itemId = activeChatContext.itemId;
+
+  let cutoff = 0;
+  if (currentUser && currentUser.id) {
+    try {
+      cutoff = Number(localStorage.getItem(`clubr_cutoff_${currentUser.id}_${itemId}`)) || 0;
+    } catch(e) {}
+  }
+
+  let messages = chatThreads[itemId] || [];
+  if (cutoff > 0) {
+    messages = messages.filter(m => (m.timestamp || 0) > cutoff);
+  }
+
+  const item = listings.find(x => x.id === itemId) || wants.find(x => x.id === itemId) || {};
+
   messages.forEach(m => {
     if (m.type === 'offer') {
       let actionButtons = '';
@@ -5294,25 +5319,49 @@ function renderChatMessages() {
 
     const isMine = !!(currentUser && (
       (m.senderId && String(m.senderId) === String(currentUser.id)) ||
-      (m.sender && m.sender === currentUser.name) ||
-      (m.sender === 'You')
+      (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
+      (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+      (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
     ));
 
-    const senderDisplayName = isMine
-      ? 'You'
-      : (m.senderName || m.sender || (activeChatContext ? activeChatContext.otherPartyName : 'User'));
-    const senderDisplayCity = isMine
-      ? ((currentUser && currentUser.city) ? currentUser.city : '')
-      : (m.senderCity || (activeChatContext ? activeChatContext.otherPartyCity : ''));
+    // Determine if sender is Seller or Buyer
+    let isSeller = false;
+    if (m.senderRole) {
+      isSeller = (m.senderRole === 'seller');
+    } else if (item.buyerId || item.buyer) {
+      const isDemandBuyer = (item.buyerId && m.senderId && String(m.senderId) === String(item.buyerId)) ||
+                            (item.buyer && m.senderName && m.senderName.trim().toLowerCase() === item.buyer.trim().toLowerCase());
+      isSeller = !isDemandBuyer;
+    } else {
+      isSeller = !!(
+        (item.sellerId && m.senderId && String(m.senderId) === String(item.sellerId)) ||
+        (item.seller && m.senderName && m.senderName.trim().toLowerCase() === item.seller.trim().toLowerCase()) ||
+        (item.seller && m.sender && m.sender.trim().toLowerCase() === item.seller.trim().toLowerCase())
+      );
+    }
+
+    const roleLabel = isSeller ? 'SELLER' : 'BUYER';
+    const roleIcon = isSeller ? '🛡️' : '👤';
+    const senderRawName = isMine ? 'You' : (m.senderName || m.sender || (isSeller ? 'Seller' : 'Buyer'));
+    const senderDisplayCity = isMine ? ((currentUser && currentUser.city) ? currentUser.city : '') : (m.senderCity || (activeChatContext ? activeChatContext.otherPartyCity : ''));
+
+    const roleClass = isSeller ? 'seller' : 'buyer';
+    const positionClass = isMine ? 'mine' : 'theirs';
+    const pillBg = isSeller ? 'background:#a7f3d0; color:#064e3b;' : 'background:#dbeafe; color:#1e40af;';
+    const timeColor = isSeller ? 'color:#a7f3d0;' : 'color:#64748b;';
+    const textStyle = isSeller ? 'color:#ffffff;' : 'color:#0f172a;';
 
     const bubble = `
-      <div class="chat-msg ${isMine ? 'buyer' : 'seller'}">
-        <div style="font-size:11px; font-weight:800; margin-bottom:4px; opacity:0.88; display:flex; align-items:center; gap:5px;">
-          <span>${escapeHtml(senderDisplayName)}</span>
-          ${senderDisplayCity ? `<span style="font-size:10px; font-weight:600; opacity:0.75;">(📍 ${escapeHtml(senderDisplayCity)})</span>` : ''}
+      <div class="chat-msg ${roleClass} ${positionClass}">
+        <div style="font-size:10px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; justify-content:space-between; gap:6px; border-bottom:1px solid ${isSeller ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}; padding-bottom:3px;">
+          <div style="display:flex; align-items:center; gap:4px;">
+            <span style="${pillBg} font-weight:900; padding:1px 6px; border-radius:4px; font-size:9px; text-transform:uppercase;">${roleIcon} ${roleLabel}</span>
+            <span style="font-weight:700; ${isSeller ? 'color:#ffffff;' : 'color:#0f172a;'}">${escapeHtml(senderRawName)}</span>
+          </div>
+          ${senderDisplayCity ? `<span style="font-size:10px; font-weight:600; opacity:0.8;">📍 ${escapeHtml(senderDisplayCity)}</span>` : ''}
         </div>
-        <div style="font-size:13px; line-height:1.45;">${escapeHtml(m.text)}</div>
-        <div class="msg-time" style="font-size:10px; opacity:0.7; margin-top:4px;">${escapeHtml(m.time || '')}</div>
+        <div style="font-size:13px; line-height:1.45; font-weight:500; ${textStyle}">${escapeHtml(m.text)}</div>
+        <div class="msg-time" style="font-size:10px; ${timeColor} margin-top:4px;">${escapeHtml(m.time || '')}</div>
       </div>`;
     stream.insertAdjacentHTML('beforeend', bubble);
 
@@ -5409,16 +5458,18 @@ function sendChatMessage(presetText) {
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const userCity = (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'India');
 
+  const isOwner = listings.some(l => l.id === activeChatContext.itemId && isListingOwnedByUser(l, currentUser));
   const newMsg = {
     id: 'msg_' + Date.now(),
     itemId: activeChatContext.itemId,
     itemTitle: activeChatContext.itemTitle || 'Marketplace Item',
     itemEmoji: activeChatContext.itemEmoji || '📦',
     itemPrice: activeChatContext.itemPrice || '',
-    sender: currentUser ? currentUser.name : 'Buyer',
-    senderName: currentUser ? currentUser.name : 'Buyer',
+    sender: currentUser ? currentUser.name : (isOwner ? 'Seller' : 'Buyer'),
+    senderName: currentUser ? currentUser.name : (isOwner ? 'Seller' : 'Buyer'),
     senderCity: userCity,
-    senderId: currentUser ? currentUser.id : 'usr_buyer',
+    senderId: currentUser ? currentUser.id : (isOwner ? 'usr_seller' : 'usr_buyer'),
+    senderRole: isOwner ? 'seller' : 'buyer',
     senderEmail: currentUser ? (currentUser.email || '') : '',
     receiverId: activeChatContext.receiverId || '',
     receiverName: activeChatContext.receiverName || '',
@@ -6087,20 +6138,29 @@ function closeInboxModal() {
 async function deleteChatThread(threadKey, e) {
   if (e) e.stopPropagation();
   if (!threadKey) return;
-  if (!confirm('Are you sure you want to permanently delete this chat conversation? All messages will be cleared.')) return;
+  if (!confirm('Are you sure you want to clear your chat history for this conversation? (Your copy will be cleared without affecting the other person).')) return;
 
-  // 1. Clear local memory and storage
+  const now = Date.now();
+
+  // 1. Store cutoff for this user
+  if (currentUser && currentUser.id) {
+    try {
+      localStorage.setItem(`clubr_cutoff_${currentUser.id}_${threadKey}`, String(now));
+    } catch(e) {}
+  }
+
+  // 2. Clear local memory and storage
   delete chatThreads[threadKey];
   saveData();
 
-  // 2. Remove all notifications for this item
+  // 3. Remove all notifications for this item
   if (typeof getUserNotifications === 'function' && typeof saveUserNotifications === 'function') {
     let notifs = getUserNotifications();
     notifs = notifs.filter(n => n.itemId !== threadKey);
     saveUserNotifications(notifs);
   }
 
-  // 3. If chat modal is currently open for this item, close it and reset
+  // 4. If chat modal is currently open for this item, close it and reset
   const chatModal = document.getElementById('chatModal');
   if (chatModal && chatModal.classList.contains('show') && activeChatContext && activeChatContext.itemId === threadKey) {
     if (window.activeChatListenerUnsub) {
@@ -6112,8 +6172,10 @@ async function deleteChatThread(threadKey, e) {
     closeChatModal();
   }
 
-  // 4. Permanently wipe thread and messages from Firebase RTDB
-  if (typeof clubrDeleteChatThread === 'function') {
+  // 5. Update Firebase RTDB for this user only ("Delete for Me")
+  if (typeof clubrDeleteChatThreadForUser === 'function') {
+    await clubrDeleteChatThreadForUser(threadKey, currentUser ? currentUser.id : null);
+  } else if (typeof clubrDeleteChatThread === 'function') {
     await clubrDeleteChatThread(threadKey, currentUser ? currentUser.id : null);
   }
 
@@ -6121,7 +6183,7 @@ async function deleteChatThread(threadKey, e) {
   if (typeof renderNotifications === 'function') {
     renderNotifications(currentNotifFilter);
   }
-  toast('Chat conversation permanently deleted.');
+  toast('Chat history cleared for your account.');
 }
 
 function deleteActiveInAppChat() {

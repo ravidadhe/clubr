@@ -33,9 +33,18 @@
   <style>
     /* Custom scrollbar and animations */
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .chat-bubble-mine { background: #d4f738; color: #0f172a; border-radius: 18px 18px 4px 18px; font-weight: 600; }
-    .chat-bubble-theirs { background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+    .chat-bubble-seller {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      color: #ffffff;
+      border: 1px solid #059669;
+      box-shadow: 0 4px 14px rgba(6,78,59,0.22);
+    }
+    .chat-bubble-buyer {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    }
     @keyframes pulse-live {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(1.15); }
@@ -1537,13 +1546,22 @@
     async function deleteChatThreadFromDashboard(key, e) {
       if (e) e.stopPropagation();
       if (!key) return;
-      if (!confirm('Are you sure you want to permanently delete this chat conversation? All messages will be cleared.')) return;
+      if (!confirm('Are you sure you want to clear your chat history for this conversation? (Your copy will be deleted without affecting the other person).')) return;
 
-      // 1. Clear local memory and storage
+      const now = Date.now();
+
+      // 1. Store cutoff for this user
+      if (currentUser && currentUser.id) {
+        try {
+          localStorage.setItem(`clubr_cutoff_${currentUser.id}_${key}`, String(now));
+        } catch(e) {}
+      }
+
+      // 2. Clear local memory and storage
       delete allChats[key];
       localStorage.setItem('findly_chats', JSON.stringify(allChats));
 
-      // 2. If this chat is currently open, reset active chat pane
+      // 3. If this chat is currently open, reset active chat pane
       if (currentActiveChatKey === key) {
         currentActiveChatKey = null;
         if (window.dashboardActiveChatUnsub) {
@@ -1554,14 +1572,16 @@
         document.getElementById('chatEmptyPlaceholder').classList.remove('hidden');
       }
 
-      // 3. Permanently wipe thread and messages from Firebase RTDB
-      if (typeof clubrDeleteChatThread === 'function') {
+      // 4. Update Firebase RTDB for this user only ("Delete for Me")
+      if (typeof clubrDeleteChatThreadForUser === 'function') {
+        await clubrDeleteChatThreadForUser(key, currentUser ? currentUser.id : null);
+      } else if (typeof clubrDeleteChatThread === 'function') {
         await clubrDeleteChatThread(key, currentUser ? currentUser.id : null);
       }
 
       updateDashboardCounts();
       renderChatThreads();
-      toast('Chat conversation permanently deleted.');
+      toast('Chat history cleared for your account.');
     }
 
     function renderChatThreads(query = '') {
@@ -1704,7 +1724,7 @@
             localStorage.setItem('findly_chats', JSON.stringify(allChats));
             renderChatMessagesStream();
           }
-        });
+        }, currentUser ? currentUser.id : null);
       }
 
       // Render Messages
@@ -1726,7 +1746,19 @@
       if (!stream || !currentActiveChatKey) return;
       stream.innerHTML = '';
 
-      const msgs = allChats[currentActiveChatKey] || [];
+      const item = allListings.find(x => x.id === currentActiveChatKey) || allWants.find(x => x.id === currentActiveChatKey) || {};
+
+      let cutoff = 0;
+      if (currentUser && currentUser.id) {
+        try {
+          cutoff = Number(localStorage.getItem(`clubr_cutoff_${currentUser.id}_${currentActiveChatKey}`)) || 0;
+        } catch(e) {}
+      }
+
+      let msgs = allChats[currentActiveChatKey] || [];
+      if (cutoff > 0) {
+        msgs = msgs.filter(m => (m.timestamp || 0) > cutoff);
+      }
 
       if (msgs.length === 0) {
         stream.innerHTML = `<div class="text-center py-8 text-xs text-slate-400">Conversation started. Send a message to start negotiation.</div>`;
@@ -1736,12 +1768,31 @@
       msgs.forEach(m => {
         const isMine = !!(currentUser && (
           (m.senderId && String(m.senderId) === String(currentUser.id)) ||
-          (m.sender && m.sender === currentUser.name) ||
-          (m.sender === 'You')
+          (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
+          (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+          (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
         ));
 
-        const senderDisplayName = isMine ? 'You' : (m.senderName || m.sender || 'Member');
-        const senderDisplayCity = isMine ? (currentUser.city || '') : (m.senderCity || '');
+        // Determine if sender is Seller or Buyer
+        let isSeller = false;
+        if (m.senderRole) {
+          isSeller = (m.senderRole === 'seller');
+        } else if (item.buyerId || item.buyer) {
+          const isDemandBuyer = (item.buyerId && m.senderId && String(m.senderId) === String(item.buyerId)) ||
+                                (item.buyer && m.senderName && m.senderName.trim().toLowerCase() === item.buyer.trim().toLowerCase());
+          isSeller = !isDemandBuyer;
+        } else {
+          isSeller = !!(
+            (item.sellerId && m.senderId && String(m.senderId) === String(item.sellerId)) ||
+            (item.seller && m.senderName && m.senderName.trim().toLowerCase() === item.seller.trim().toLowerCase()) ||
+            (item.seller && m.sender && m.sender.trim().toLowerCase() === item.seller.trim().toLowerCase())
+          );
+        }
+
+        const roleLabel = isSeller ? 'SELLER' : 'BUYER';
+        const roleIcon = isSeller ? '🛡️' : '👤';
+        const senderRawName = isMine ? 'You' : (m.senderName || m.sender || (isSeller ? 'Seller' : 'Buyer'));
+        const senderCity = isMine ? (currentUser.city || '') : (m.senderCity || '');
 
         if (m.type === 'offer') {
           stream.insertAdjacentHTML('beforeend', `
@@ -1754,15 +1805,25 @@
             </div>
           `);
         } else {
+          // Seller is emerald green, Buyer is crisp white/slate
+          const bubbleClass = isSeller ? 'chat-bubble-seller' : 'chat-bubble-buyer';
+          const alignClass = isMine ? 'justify-end' : 'justify-start';
+          const cornerClass = isMine ? 'rounded-2xl rounded-br-xs' : 'rounded-2xl rounded-bl-xs';
+          const pillBg = isSeller ? 'bg-emerald-300 text-emerald-950' : 'bg-blue-100 text-blue-900';
+          const timeColor = isSeller ? 'text-emerald-200' : 'text-slate-400';
+
           stream.insertAdjacentHTML('beforeend', `
-            <div class="flex ${isMine ? 'justify-end' : 'justify-start'}">
-              <div class="max-w-[78%] px-4 py-2.5 text-xs shadow-xs ${isMine ? 'chat-bubble-mine' : 'chat-bubble-theirs'}">
-                <div class="text-[10px] font-extrabold mb-1 opacity-80 flex items-center gap-1.5">
-                  <span>${escapeHtml(senderDisplayName)}</span>
-                  ${senderDisplayCity ? `<span class="font-semibold opacity-75">📍 ${escapeHtml(senderDisplayCity)}</span>` : ''}
+            <div class="flex ${alignClass}">
+              <div class="max-w-[78%] px-4 py-2.5 text-xs shadow-xs ${bubbleClass} ${cornerClass}">
+                <div class="text-[10px] font-extrabold mb-1.5 flex items-center justify-between gap-3 border-b border-white/20 pb-1">
+                  <div class="flex items-center gap-1.5">
+                    <span class="${pillBg} font-black px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider">${roleIcon} ${roleLabel}</span>
+                    <span class="font-bold">${escapeHtml(senderRawName)}</span>
+                  </div>
+                  ${senderCity ? `<span class="font-semibold text-[10px] opacity-85">📍 ${escapeHtml(senderCity)}</span>` : ''}
                 </div>
-                <p class="leading-relaxed break-words">${escapeHtml(m.text)}</p>
-                <span class="text-[9px] opacity-70 block text-right mt-1 font-mono">${escapeHtml(m.time || '')}</span>
+                <p class="leading-relaxed break-words font-medium">${escapeHtml(m.text)}</p>
+                <span class="text-[9px] ${timeColor} block text-right mt-1 font-mono">${escapeHtml(m.time || '')}</span>
               </div>
             </div>
           `);
@@ -1782,6 +1843,8 @@
       }
 
       const item = allListings.find(x => x.id === currentActiveChatKey) || allWants.find(x => x.id === currentActiveChatKey) || {};
+      const isOwner = isListingOwnedByUser(item, currentUser);
+
       let receiverId = '';
       let receiverName = '';
       let receiverCity = '';
@@ -1812,6 +1875,7 @@
         senderName: currentUser.name,
         senderCity: currentUser.city || 'India',
         senderId: currentUser.id,
+        senderRole: isOwner ? 'seller' : 'buyer',
         senderEmail: currentUser.email || '',
         receiverId: receiverId,
         receiverName: receiverName,

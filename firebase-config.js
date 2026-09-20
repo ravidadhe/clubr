@@ -897,14 +897,34 @@ async function clubrSendChatMessage(messageData) {
 /**
  * Listen for live messages in a specific item chat thread
  */
-function clubrListenThreadMessages(itemId, callback) {
+function clubrListenThreadMessages(itemId, callback, userId = null) {
   if (!firebaseRtdb || !itemId || typeof callback !== 'function') return () => {};
   const ref = firebaseRtdb.ref(`chats/${itemId}`);
-  const handler = (snapshot) => {
+  const handler = async (snapshot) => {
     const val = snapshot.val();
     if (val && typeof val === 'object') {
-      const msgs = Object.values(val);
+      let msgs = Object.values(val);
       msgs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+      if (userId) {
+        let cutoff = 0;
+        try {
+          cutoff = Number(localStorage.getItem(`clubr_cutoff_${userId}_${itemId}`)) || 0;
+        } catch(e) {}
+        if (!cutoff) {
+          try {
+            const cutSnap = await firebaseRtdb.ref(`user_thread_cutoffs/${userId}/${itemId}`).once('value');
+            cutoff = Number(cutSnap.val()) || 0;
+            if (cutoff) {
+              try { localStorage.setItem(`clubr_cutoff_${userId}_${itemId}`, cutoff); } catch(e){}
+            }
+          } catch(e) {}
+        }
+        if (cutoff > 0) {
+          msgs = msgs.filter(m => (m.timestamp || 0) > cutoff);
+        }
+      }
+
       callback(msgs);
     } else {
       callback([]);
@@ -967,49 +987,32 @@ async function clubrClearEntireUserInbox(userId) {
 }
 
 /**
- * Permanently delete / wipe a chat thread and all its messages from RTDB
- * Ensures old messages never reload when opening the same chat again
+ * Delete chat history for a specific user ("Delete for Me")
+ * Ensures this user's chat history is wiped without affecting the other participant's chat
  */
-async function clubrDeleteChatThread(itemId, userId) {
-  if (!firebaseRtdb || !itemId) return;
+async function clubrDeleteChatThreadForUser(itemId, userId) {
+  if (!firebaseRtdb || !itemId || !userId) return;
+  const now = Date.now();
   try {
-    // 1. Gather all participants to clean their user_threads & user_inbox
-    const participants = new Set();
-    if (userId) participants.add(String(userId));
-
-    try {
-      const snap = await firebaseRtdb.ref(`chats/${itemId}`).once('value');
-      const val = snap.val();
-      if (val && typeof val === 'object') {
-        Object.values(val).forEach(m => {
-          if (m && m.senderId) participants.add(String(m.senderId));
-          if (m && m.receiverId) participants.add(String(m.receiverId));
-        });
-      }
-    } catch(e) {}
-
-    // 2. Perform atomic deletion in Firebase RTDB
     const updates = {};
-    updates[`chats/${itemId}`] = null;
-    participants.forEach(pId => {
-      updates[`user_threads/${pId}/${itemId}`] = null;
-    });
-
+    // 1. Remove this thread from this user's active thread list
+    updates[`user_threads/${userId}/${itemId}`] = null;
+    // 2. Record the cutoff timestamp so older messages are ignored for this user
+    updates[`user_thread_cutoffs/${userId}/${itemId}`] = now;
+    // 3. Update RTDB atomically
     await firebaseRtdb.ref().update(updates);
-
-    // 3. Clear inbox entries for all participants for this itemId
-    for (const pId of participants) {
-      await clubrClearUserInboxForItem(pId, itemId);
-    }
+    // 4. Clear this user's pending inbox messages for this item
+    await clubrClearUserInboxForItem(userId, itemId);
+    // 5. Store in localStorage as well
+    try { localStorage.setItem(`clubr_cutoff_${userId}_${itemId}`, String(now)); } catch(e){}
   } catch(err) {
-    console.warn('[Clubr RTDB Delete Chat Error]', err.message);
-    try {
-      await firebaseRtdb.ref(`chats/${itemId}`).remove();
-      if (userId) {
-        await firebaseRtdb.ref(`user_threads/${userId}/${itemId}`).remove();
-        await clubrClearUserInboxForItem(userId, itemId);
-      }
-    } catch(e) {}
+    console.warn('[Clubr RTDB Delete Chat For User Error]', err.message);
+  }
+}
+
+async function clubrDeleteChatThread(itemId, userId) {
+  if (userId) {
+    return clubrDeleteChatThreadForUser(itemId, userId);
   }
 }
 
@@ -1019,6 +1022,15 @@ async function clubrDeleteChatThread(itemId, userId) {
 async function clubrSyncUserChatsFromCloud(userId, userListings = []) {
   if (!firebaseRtdb || !userId) return {};
   const restoredChats = {};
+
+  // Fetch all cutoffs for this user
+  let cutoffs = {};
+  try {
+    const cutSnap = await firebaseRtdb.ref(`user_thread_cutoffs/${userId}`).once('value');
+    if (cutSnap.val() && typeof cutSnap.val() === 'object') {
+      cutoffs = cutSnap.val();
+    }
+  } catch(e) {}
   
   // 1. Check user_threads
   try {
@@ -1030,9 +1042,15 @@ async function clubrSyncUserChatsFromCloud(userId, userListings = []) {
           const chatSnap = await firebaseRtdb.ref(`chats/${itemId}`).once('value');
           const msgsVal = chatSnap.val();
           if (msgsVal && typeof msgsVal === 'object') {
-            const list = Object.values(msgsVal);
+            let list = Object.values(msgsVal);
             list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-            restoredChats[itemId] = list;
+            const cutoff = Number(cutoffs[itemId]) || Number(localStorage.getItem(`clubr_cutoff_${userId}_${itemId}`)) || 0;
+            if (cutoff > 0) {
+              list = list.filter(m => (m.timestamp || 0) > cutoff);
+            }
+            if (list.length > 0) {
+              restoredChats[itemId] = list;
+            }
           }
         } catch(e) {}
       }
@@ -1044,11 +1062,15 @@ async function clubrSyncUserChatsFromCloud(userId, userListings = []) {
     for (const item of userListings) {
       if (item && item.id && !restoredChats[item.id]) {
         try {
+          const cutoff = Number(cutoffs[item.id]) || Number(localStorage.getItem(`clubr_cutoff_${userId}_${item.id}`)) || 0;
           const chatSnap = await firebaseRtdb.ref(`chats/${item.id}`).once('value');
           const msgsVal = chatSnap.val();
           if (msgsVal && typeof msgsVal === 'object') {
-            const list = Object.values(msgsVal);
+            let list = Object.values(msgsVal);
             list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            if (cutoff > 0) {
+              list = list.filter(m => (m.timestamp || 0) > cutoff);
+            }
             if (list.length > 0) {
               restoredChats[item.id] = list;
             }
@@ -1065,6 +1087,8 @@ async function clubrSyncUserChatsFromCloud(userId, userListings = []) {
     if (inboxVal && typeof inboxVal === 'object') {
       for (const m of Object.values(inboxVal)) {
         if (m && m.itemId) {
+          const cutoff = Number(cutoffs[m.itemId]) || Number(localStorage.getItem(`clubr_cutoff_${userId}_${m.itemId}`)) || 0;
+          if (cutoff > 0 && (m.timestamp || 0) <= cutoff) continue;
           if (!restoredChats[m.itemId]) restoredChats[m.itemId] = [];
           if (!restoredChats[m.itemId].some(x => x.id === m.id)) {
             restoredChats[m.itemId].push(m);

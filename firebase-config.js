@@ -418,13 +418,19 @@ async function clubrPublishFraudReport(report) {
 // LIVE CLOUD FETCH & QUERY METHODS (RTDB Primary)
 // ========================================================
 async function clubrFetchLiveListings() {
+  let deletedIds = new Set();
+  try {
+    const d = JSON.parse(localStorage.getItem('clubr_deleted_listing_ids') || '[]');
+    deletedIds = new Set(d);
+  } catch(e) {}
+
   if (firebaseRtdb) {
     try {
       const rtdbSnap = await firebaseRtdb.ref('listings').once('value');
       const val = rtdbSnap.val();
       if (val && typeof val === 'object') {
         const items = Object.keys(val)
-          .filter(k => !CLUBR_BLOCKED_DUMMY_IDS.has(k))
+          .filter(k => !CLUBR_BLOCKED_DUMMY_IDS.has(k) && !deletedIds.has(k))
           .map(k => ({ ...val[k], id: k }));
         // Newest listings first
         return items.reverse();
@@ -441,7 +447,7 @@ async function clubrFetchLiveListings() {
       if (!snapshot.empty) {
         const items = [];
         snapshot.forEach(doc => {
-          if (!CLUBR_BLOCKED_DUMMY_IDS.has(doc.id)) {
+          if (!CLUBR_BLOCKED_DUMMY_IDS.has(doc.id) && !deletedIds.has(doc.id)) {
             items.push({ ...doc.data(), id: doc.id });
           }
         });
@@ -534,13 +540,37 @@ async function clubrFetchLiveFraudReports() {
   return [];
 }
 
+async function clubrUpdateListingSoldStatus(listingId, isSold) {
+  if (!listingId) return;
+  if (firebaseRtdb) {
+    try {
+      await firebaseRtdb.ref('listings/' + listingId).update({ isSold: !!isSold });
+    } catch(e) {
+      console.warn('[RTDB Update isSold]', e);
+    }
+  }
+  if (firebaseDb) {
+    firebaseDb.collection('listings').doc(listingId).set({ isSold: !!isSold }, { merge: true }).catch(() => {});
+  }
+}
+
 // ========================================================
 // LIVE CLOUD DELETE / MODERATION METHODS
 // ========================================================
 async function clubrDeleteLiveListing(listingId) {
+  if (!listingId) return;
+  try {
+    const deleted = JSON.parse(localStorage.getItem('clubr_deleted_listing_ids') || '[]');
+    if (!deleted.includes(listingId)) {
+      deleted.push(listingId);
+      localStorage.setItem('clubr_deleted_listing_ids', JSON.stringify(deleted));
+    }
+  } catch(e) {}
+
   if (firebaseRtdb) {
     try {
       await firebaseRtdb.ref('listings/' + listingId).remove();
+      await firebaseRtdb.ref('deleted_listings/' + listingId).set({ timestamp: Date.now() });
     } catch(e) {}
   }
   if (firebaseDb) {
@@ -1125,4 +1155,11 @@ function clubrPlayNotificationChime() {
     osc.start(now);
     osc.stop(now + 0.36);
   } catch(e) {}
+}
+
+if (typeof window !== 'undefined') {
+  window.clubrUpdateListingSoldStatus = clubrUpdateListingSoldStatus;
+  window.clubrDeleteLiveListing = clubrDeleteLiveListing;
+  window.clubrFetchLiveListings = clubrFetchLiveListings;
+  window.clubrPublishListing = clubrPublishListing;
 }

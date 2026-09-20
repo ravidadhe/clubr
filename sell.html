@@ -576,12 +576,100 @@
       setupDragAndDrop();
       initSiteSettings();
 
-      // Check if URL specifies demand mode
+      // Check if URL specifies edit mode or demand mode
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('type') === 'demand' || urlParams.get('mode') === 'demand') {
+      const editId = urlParams.get('edit') || urlParams.get('id');
+      if (editId) {
+        initEditListingMode(editId);
+      } else if (urlParams.get('type') === 'demand' || urlParams.get('mode') === 'demand') {
         switchSellMode('demand');
       }
     });
+
+    async function initEditListingMode(editId) {
+      window.editingListingId = editId;
+
+      // 1. Hide mode switcher
+      const modeSwitcher = document.getElementById('tabModeSell')?.parentElement?.parentElement;
+      if (modeSwitcher) modeSwitcher.style.display = 'none';
+
+      // 2. Update Header & Titles
+      const mainTitle = document.getElementById('pageMainTitle');
+      const mainSubtitle = document.getElementById('pageMainSubtitle');
+      if (mainTitle) mainTitle.innerHTML = '✏️ Edit Listing Details';
+      if (mainSubtitle) mainSubtitle.textContent = 'Update photos, price, description or location. Changes reflect live instantly.';
+
+      const promoBanner = document.getElementById('sellPromoBanner');
+      if (promoBanner) promoBanner.style.display = 'none';
+
+      const btnPublish = document.getElementById('btnPublishListing');
+      if (btnPublish) {
+        btnPublish.innerHTML = '💾 Save Changes & Update Post';
+        btnPublish.className = 'w-full sm:w-auto bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-sm px-8 py-3.5 rounded-2xl transition shadow-md shadow-lime-400/25 shrink-0';
+      }
+
+      // 3. Find item in local storage or cloud
+      let item = null;
+      try {
+        const l = JSON.parse(localStorage.getItem('findly_listings') || '[]');
+        item = l.find(x => x.id === editId);
+      } catch(e) {}
+
+      if (!item && typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+        try {
+          const snap = await firebaseRtdb.ref('listings/' + editId).once('value');
+          if (snap.exists()) item = { ...snap.val(), id: editId };
+        } catch(e) {}
+      }
+      if (!item && typeof firebaseDb !== 'undefined' && firebaseDb) {
+        try {
+          const doc = await firebaseDb.collection('listings').doc(editId).get();
+          if (doc.exists) item = { ...doc.data(), id: doc.id };
+        } catch(e) {}
+      }
+
+      if (!item) {
+        toast('⚠️ Listing details not found. Creating new listing.');
+        return;
+      }
+
+      // 4. Pre-populate Fields
+      if (item.cat) selectPageCategory(item.cat);
+      if (item.title) document.getElementById('itemTitle').value = item.title;
+      if (item.price) document.getElementById('itemPrice').value = item.price;
+      if (item.condition && document.getElementById('itemCondition')) document.getElementById('itemCondition').value = item.condition;
+      if (item.state && document.getElementById('listingStateSelect')) document.getElementById('listingStateSelect').value = item.state;
+      if (item.city && document.getElementById('listingCityInput')) document.getElementById('listingCityInput').value = item.city;
+      if (item.locality && document.getElementById('listingLocality')) document.getElementById('listingLocality').value = item.locality;
+      if (item.desc && document.getElementById('itemDesc')) document.getElementById('itemDesc').value = item.desc;
+      if ((item.sellerPhone || item.phone) && document.getElementById('sellerPhoneInput')) {
+        document.getElementById('sellerPhoneInput').value = String(item.sellerPhone || item.phone).replace(/^\+91/, '');
+      }
+      if (item.whatsapp && document.getElementById('sellerWhatsappInput')) {
+        document.getElementById('sellerWhatsappInput').value = item.whatsapp;
+      }
+
+      // 5. Pre-populate Photos (Multi-images support)
+      if (Array.isArray(item.photos) && item.photos.length > 0) {
+        uploadedPhotos = [...item.photos];
+      } else if (item.photo) {
+        uploadedPhotos = [item.photo];
+      } else {
+        uploadedPhotos = [];
+      }
+      renderPhotosGrid();
+
+      // 6. Checkpoints restoration
+      if (item.badges && typeof item.badges === 'object') {
+        Object.keys(item.badges).forEach(k => {
+          const el = document.getElementById('check_' + k);
+          if (el) el.checked = !!item.badges[k];
+        });
+      }
+
+      updateSellLocationBadge();
+      toast(`✏️ Loaded "${item.title || 'listing'}" for editing`);
+    }
 
     function initCurrentUser() {
       try {
@@ -1385,6 +1473,68 @@
 
       const btn = document.getElementById('btnPublishListing');
 
+      // Safe photo payload: cap to 6 photos max to stay well within Firestore doc limits
+      const safePhotos = (uploadedPhotos || []).slice(0, 6);
+
+      // Handle Edit Mode (Update existing listing without re-charging)
+      if (window.editingListingId) {
+        btn.innerHTML = 'Saving Changes... ⏳';
+        btn.disabled = true;
+
+        let localListings = [];
+        try {
+          const l = localStorage.getItem('findly_listings');
+          if (l) localListings = JSON.parse(l);
+        } catch(e) {}
+
+        let existingItem = localListings.find(x => x.id === window.editingListingId);
+        if (!existingItem) {
+          existingItem = { id: window.editingListingId };
+          localListings.unshift(existingItem);
+        }
+
+        existingItem.title = title;
+        existingItem.price = price;
+        existingItem.cat = cat;
+        existingItem.emoji = emojiMap[cat] || '📦';
+        existingItem.state = state;
+        existingItem.city = city;
+        existingItem.locality = locality;
+        existingItem.condition = condition;
+        existingItem.desc = desc;
+        existingItem.badges = badges;
+        existingItem.bill = !!(badges.bill || badges.rc || badges.material || badges.condition || badges.directOwner || badges.directHire || badges.verifiedPro || badges.brandNew || badges.vaccinated);
+        existingItem.box = !!(badges.box || badges.insurance || badges.remote || badges.packaging || badges.bachelorOk || badges.immediateJoin || badges.doorstep || badges.originalBrand || badges.dewormed);
+        existingItem.owner = !!(badges.warranty || badges.service || badges.tested || badges.proof || badges.lowDeposit || badges.freshersWelcome || badges.serviceWarranty || badges.dryCleaned || badges.friendlyTrained);
+        existingItem.exchange = !!(badges.exchange || badges.negotiable || badges.parkingWater || badges.dailyIncentive || badges.transparentRates || badges.sizeTag || badges.ethicalAdoption);
+        existingItem.photo = safePhotos[0] || existingItem.photo || '';
+        existingItem.photos = safePhotos;
+        if (sellerPhone) {
+          existingItem.sellerPhone = sellerPhone;
+          existingItem.phone = sellerPhone;
+        }
+        const whatsappInput = document.getElementById('sellerWhatsappInput');
+        if (whatsappInput) existingItem.whatsapp = whatsappInput.value.trim();
+        existingItem.updatedAt = Date.now();
+
+        localStorage.setItem('findly_listings', JSON.stringify(localListings));
+
+        if (typeof clubrPublishListing === 'function') {
+          try {
+            await clubrPublishListing(existingItem);
+          } catch(e) {}
+        } else {
+          if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) firebaseRtdb.ref('listings/' + window.editingListingId).set(existingItem).catch(()=>{});
+          if (typeof firebaseDb !== 'undefined' && firebaseDb) firebaseDb.collection('listings').doc(window.editingListingId).set(existingItem, { merge: true }).catch(()=>{});
+        }
+
+        toast('🎉 Listing updated successfully!');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html?tab=listings';
+        }, 600);
+        return;
+      }
+
       // Check Monetization / Razorpay Gate
       if (siteChargingEnabled) {
         btn.disabled = false;
@@ -1401,9 +1551,6 @@
         btn.innerHTML = 'Publishing Live... ⏳';
         btn.disabled = true;
       }
-
-      // Safe photo payload: cap to 6 photos max to stay well within Firestore doc limits
-      const safePhotos = (uploadedPhotos || []).slice(0, 6);
 
       const newListing = {
         id: 'l_' + Date.now(),

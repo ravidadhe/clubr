@@ -825,6 +825,33 @@
   </div>
 
   <!-- ======================================================== -->
+  <!-- MODAL: DASHBOARD PRODUCT MULTI-IMAGE GALLERY LIGHTBOX    -->
+  <!-- ======================================================== -->
+  <div id="modalDashboardGallery" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4" onclick="if(event.target===this)closeDashboardGallery()">
+    <div class="relative max-w-2xl w-full flex flex-col items-center gap-3">
+      <button onclick="closeDashboardGallery()" class="absolute -top-10 right-0 text-white/80 hover:text-white text-2xl font-bold transition cursor-pointer">✕</button>
+
+      <div class="relative w-full max-h-[70vh] flex items-center justify-center bg-black/40 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+        <img id="dashboardGalleryActiveImg" src="" class="max-h-[68vh] w-auto max-w-full object-contain rounded-xl select-none">
+
+        <button id="btnGalleryPrev" onclick="navigateDashboardGallery(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-lg font-black transition border border-white/20 shadow-lg cursor-pointer">‹</button>
+        <button id="btnGalleryNext" onclick="navigateDashboardGallery(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-lg font-black transition border border-white/20 shadow-lg cursor-pointer">›</button>
+
+        <div id="dashboardGalleryCounter" class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white text-xs font-mono font-bold px-3 py-1 rounded-full border border-white/20">
+          1 / 1
+        </div>
+      </div>
+
+      <div class="w-full flex items-center justify-between gap-3 bg-white/10 backdrop-blur-md p-2.5 rounded-2xl border border-white/15">
+        <div id="dashboardGalleryThumbnails" class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 py-0.5"></div>
+        <button id="btnGalleryEditListing" onclick="" class="bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-black px-4 py-2 rounded-xl transition shrink-0 flex items-center gap-1 shadow-sm cursor-pointer">
+          ✏️ Edit Photos & Post
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
   <!-- MODAL: BROADCAST BUYER DEMAND DIRECTLY IN DASHBOARD      -->
   <!-- ======================================================== -->
   <div id="modalDemand" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -1150,11 +1177,11 @@
         const urlParams = new URLSearchParams(window.location.search);
         const tabParam = urlParams.get('tab');
         const editParam = urlParams.get('edit');
-        if (tabParam) switchTab(tabParam);
         if (editParam) {
-          switchTab('listings');
-          setTimeout(() => openEditListingModal(editParam), 250);
+          window.location.href = `sell.html?edit=${encodeURIComponent(editParam)}`;
+          return;
         }
+        if (tabParam) switchTab(tabParam);
       } catch(e) {}
     }
 
@@ -1351,7 +1378,7 @@
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-              <button onclick="openEditListingModal('${item.id}')" title="Edit Listing" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-lime-100 hover:bg-lime-200 text-lime-900 border border-lime-300 transition shadow-2xs">
+              <button onclick="window.location.href='sell.html?edit=${encodeURIComponent(item.id)}'" title="Edit Listing" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-lime-100 hover:bg-lime-200 text-lime-900 border border-lime-300 transition shadow-2xs cursor-pointer">
                 ✏️ Edit
               </button>
               <button onclick="toggleItemSold('${item.id}')" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition shadow-2xs">
@@ -1431,10 +1458,17 @@
                   ${escapeHtml(item.cat || 'Item')}
                 </div>
                 ${(item.photos && item.photos.length > 1) ? `
-                  <div class="absolute bottom-2 right-2 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                    📷 ${item.photos.length}
-                  </div>` : ''}
+                  <button type="button" onclick="openDashboardGallery('${item.id}', 0); event.stopPropagation();" class="absolute bottom-2 right-2 bg-slate-900/85 hover:bg-slate-950 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-md transition cursor-pointer">
+                    📷 ${item.photos.length} Photos
+                  </button>` : ''}
               </div>
+
+              ${(item.photos && item.photos.length > 1) ? `
+                <div class="px-3 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar border-b border-slate-100 bg-slate-50/70">
+                  ${item.photos.map((p, idx) => `
+                    <img src="${p}" onclick="openDashboardGallery('${item.id}', ${idx})" class="w-11 h-11 rounded-lg object-cover border border-slate-200 hover:border-lime-500 hover:scale-105 cursor-pointer shrink-0 transition" title="View photo ${idx + 1}">
+                  `).join('')}
+                </div>` : ''}
 
               <div class="p-4 space-y-2">
                 <div class="flex items-baseline justify-between gap-2">
@@ -1457,10 +1491,10 @@
 
             <div class="p-4 pt-0 border-t border-slate-100 mt-2 flex items-center justify-between gap-2">
               <div class="flex items-center gap-1.5">
-                <button onclick="openEditListingModal('${item.id}')" title="Edit Listing" class="text-xs font-black px-3 py-1.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 transition flex items-center gap-1 shadow-2xs">
+                <button onclick="window.location.href='sell.html?edit=${encodeURIComponent(item.id)}'" title="Edit Listing" class="text-xs font-black px-3 py-1.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 transition flex items-center gap-1 shadow-2xs cursor-pointer">
                   ✏️ Edit
                 </button>
-                <button onclick="toggleItemSold('${item.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                <button onclick="toggleItemSold('${item.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer">
                   ${item.isSold ? 'Re-List' : 'Mark Sold'}
                 </button>
               </div>
@@ -1514,22 +1548,41 @@
       item.isSold = !item.isSold;
       localStorage.setItem('findly_listings', JSON.stringify(allListings));
 
-      if (firebaseDb) {
-        firebaseDb.collection('listings').doc(id).set({ isSold: item.isSold }, { merge: true }).catch(()=>{});
+      // Sync to BOTH RTDB and Firestore
+      if (typeof clubrUpdateListingSoldStatus === 'function') {
+        clubrUpdateListingSoldStatus(id, item.isSold);
+      } else {
+        if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+          firebaseRtdb.ref('listings/' + id).update({ isSold: item.isSold }).catch(()=>{});
+        }
+        if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+          firebaseDb.collection('listings').doc(id).set({ isSold: item.isSold }, { merge: true }).catch(()=>{});
+        }
       }
 
       updateDashboardCounts();
       renderOverviewTab();
       renderMyListings();
-      toast(item.isSold ? '🎉 Item marked as SOLD!' : '🟢 Item restored to Active!');
+      toast(item.isSold ? '🏷️ Item marked as SOLD!' : '🟢 Item restored to Active!');
     }
 
     function deleteListingFromDashboard(id) {
       if (!confirm('Are you sure you want to permanently delete this listing?')) return;
 
+      // 1. Record in tombstone deleted IDs
+      try {
+        const del = JSON.parse(localStorage.getItem('clubr_deleted_listing_ids') || '[]');
+        if (!del.includes(id)) {
+          del.push(id);
+          localStorage.setItem('clubr_deleted_listing_ids', JSON.stringify(del));
+        }
+      } catch(e) {}
+
+      // 2. Remove locally
       allListings = allListings.filter(x => x.id !== id);
       localStorage.setItem('findly_listings', JSON.stringify(allListings));
 
+      // 3. Delete from cloud
       if (typeof clubrDeleteLiveListing === 'function') {
         clubrDeleteLiveListing(id);
       }
@@ -2525,20 +2578,37 @@
     // HELPERS & BACKGROUND LIVE CLOUD SYNC
     // ========================================================
     function syncCloudData() {
+      let deletedIds = new Set();
+      try {
+        const d = JSON.parse(localStorage.getItem('clubr_deleted_listing_ids') || '[]');
+        deletedIds = new Set(d);
+      } catch(e) {}
+
+      // Purge any deleted listings from allListings
+      allListings = allListings.filter(x => !deletedIds.has(x.id));
+      localStorage.setItem('findly_listings', JSON.stringify(allListings));
+
       if (typeof clubrFetchLiveListings === 'function') {
         clubrFetchLiveListings().then(cloudL => {
           if (cloudL && Array.isArray(cloudL)) {
-            const cleanCloud = cloudL.filter(c => c && c.id && !BLOCKED_DUMMY_IDS.has(c.id));
+            const cleanCloud = cloudL.filter(c => c && c.id && !BLOCKED_DUMMY_IDS.has(c.id) && !deletedIds.has(c.id));
             const cloudMap = new Map();
             cleanCloud.forEach(c => {
               if (c && c.id) cloudMap.set(c.id, c);
             });
-            const localOnly = allListings.filter(l => l && l.id && !cloudMap.has(l.id) && !BLOCKED_DUMMY_IDS.has(l.id));
+            const localOnly = allListings.filter(l => l && l.id && !cloudMap.has(l.id) && !BLOCKED_DUMMY_IDS.has(l.id) && !deletedIds.has(l.id));
             if (localOnly.length > 0 && typeof clubrPublishListing === 'function') {
               localOnly.forEach(l => {
-                if (!BLOCKED_DUMMY_IDS.has(l.id)) clubrPublishListing(l).catch(() => {});
+                if (!BLOCKED_DUMMY_IDS.has(l.id) && !deletedIds.has(l.id)) clubrPublishListing(l).catch(() => {});
               });
             }
+            // Preserve local isSold if cloud is stale
+            cleanCloud.forEach(c => {
+              const local = allListings.find(l => l.id === c.id);
+              if (local && local.isSold !== undefined && c.isSold === undefined) {
+                c.isSold = local.isSold;
+              }
+            });
             allListings = [...localOnly, ...cleanCloud];
             localStorage.setItem('findly_listings', JSON.stringify(allListings));
             updateDashboardCounts();
@@ -2608,9 +2678,95 @@
       setTimeout(() => {
         div.style.opacity = '0';
         div.style.transition = 'opacity 0.3s';
-        setTimeout(() => div.remove(), 300);
-      }, 3500);
+    // ========================================================
+    // DASHBOARD MULTI-IMAGE LIGHTBOX GALLERY
+    // ========================================================
+    let currentGalleryPhotos = [];
+    let currentGalleryIndex = 0;
+    let currentGalleryItemId = null;
+
+    function openDashboardGallery(itemId, startIndex) {
+      const item = allListings.find(x => x.id === itemId);
+      if (!item) return;
+
+      currentGalleryItemId = itemId;
+      currentGalleryPhotos = (Array.isArray(item.photos) && item.photos.length > 0) 
+        ? item.photos 
+        : (item.photo ? [item.photo] : []);
+
+      if (currentGalleryPhotos.length === 0) {
+        toast('No photos available for this listing.');
+        return;
+      }
+
+      currentGalleryIndex = Math.max(0, Math.min(startIndex || 0, currentGalleryPhotos.length - 1));
+
+      const modal = document.getElementById('modalDashboardGallery');
+      const editBtn = document.getElementById('btnGalleryEditListing');
+      if (editBtn) {
+        editBtn.onclick = () => {
+          closeDashboardGallery();
+          window.location.href = `sell.html?edit=${encodeURIComponent(itemId)}`;
+        };
+      }
+
+      renderDashboardGalleryView();
+      if (modal) modal.classList.remove('hidden');
     }
+
+    function renderDashboardGalleryView() {
+      const activeImg = document.getElementById('dashboardGalleryActiveImg');
+      const counter = document.getElementById('dashboardGalleryCounter');
+      const thumbs = document.getElementById('dashboardGalleryThumbnails');
+      const prevBtn = document.getElementById('btnGalleryPrev');
+      const nextBtn = document.getElementById('btnGalleryNext');
+
+      if (!activeImg || currentGalleryPhotos.length === 0) return;
+
+      activeImg.src = currentGalleryPhotos[currentGalleryIndex];
+      if (counter) counter.textContent = `Photo ${currentGalleryIndex + 1} of ${currentGalleryPhotos.length}`;
+
+      if (prevBtn && nextBtn) {
+        if (currentGalleryPhotos.length <= 1) {
+          prevBtn.classList.add('hidden');
+          nextBtn.classList.add('hidden');
+        } else {
+          prevBtn.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        }
+      }
+
+      if (thumbs) {
+        thumbs.innerHTML = currentGalleryPhotos.map((p, idx) => `
+          <img src="${p}" onclick="setDashboardGalleryIndex(${idx})" class="w-11 h-11 rounded-lg object-cover cursor-pointer border-2 transition shrink-0 ${idx === currentGalleryIndex ? 'border-lime-400 scale-105 shadow-md' : 'border-white/20 opacity-70 hover:opacity-100'}" title="Photo ${idx+1}">
+        `).join('');
+      }
+    }
+
+    function navigateDashboardGallery(step) {
+      if (currentGalleryPhotos.length <= 1) return;
+      currentGalleryIndex = (currentGalleryIndex + step + currentGalleryPhotos.length) % currentGalleryPhotos.length;
+      renderDashboardGalleryView();
+    }
+
+    function setDashboardGalleryIndex(idx) {
+      currentGalleryIndex = idx;
+      renderDashboardGalleryView();
+    }
+
+    function closeDashboardGallery() {
+      const modal = document.getElementById('modalDashboardGallery');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('modalDashboardGallery');
+      if (modal && !modal.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeDashboardGallery();
+        if (e.key === 'ArrowLeft') navigateDashboardGallery(-1);
+        if (e.key === 'ArrowRight') navigateDashboardGallery(1);
+      }
+    });
   </script>
 </body>
 </html>

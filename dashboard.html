@@ -44,8 +44,8 @@
     /* Toast styles */
     #toastBox {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      top: 20px;
+      right: 20px;
       z-index: 9999;
       pointer-events: none;
       display: flex;
@@ -53,18 +53,18 @@
       gap: 8px;
     }
     .toast-msg {
-      background: #0f172a;
-      color: #fff;
-      border: 1px solid #d4f738;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      background: #064e3b;
+      color: #ecfdf5;
+      border: 1px solid #34d399;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
       border-radius: 12px;
-      padding: 12px 18px;
+      padding: 10px 16px;
       font-size: 13px;
-      font-weight: 600;
-      animation: slideUp 0.25s ease-out;
+      font-weight: 700;
+      animation: slideDown 0.25s ease-out;
     }
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
+    @keyframes slideDown {
+      from { transform: translateY(-16px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
   </style>

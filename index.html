@@ -5611,46 +5611,46 @@ function getNotificationStorageKey() {
   return 'clubr_user_notifications_' + (currentUser && currentUser.id ? currentUser.id : 'guest');
 }
 
-function getDefaultClubrNotifications() {
-  const userName = currentUser ? currentUser.name : 'Member';
-  return [
-    {
-      id: 'notif_sys_welcome',
-      type: 'clubr',
-      title: 'Welcome to Clubr Official! 🎉',
-      senderName: 'Clubr Official',
-      senderCity: 'India',
-      body: 'Welcome ' + userName + '! You have unlimited 100% free listing access. Buy, sell, and post demands safely in your city.',
-      time: 'Today',
-      timestamp: Date.now() - 3600000,
-      read: false,
-      actionType: 'none'
-    },
-    {
-      id: 'notif_sys_shield',
-      type: 'clubr',
-      title: 'Clubr Safety Shield Active 🛡️',
-      senderName: 'Clubr Security',
-      senderCity: 'Official',
-      body: 'Always use in-app chat for trade communication. Never pay token advance money or scan unknown payment QR codes.',
-      time: 'Today',
-      timestamp: Date.now() - 7200000,
-      read: true,
-      actionType: 'none'
-    }
-  ];
-}
-
 function getUserNotifications() {
   if (!currentUser) return [];
   const key = getNotificationStorageKey();
   try {
     const raw = localStorage.getItem(key);
-    let list = raw ? JSON.parse(raw) : null;
-    if (!Array.isArray(list) || list.length === 0) {
-      list = getDefaultClubrNotifications();
+    let list = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(list)) list = [];
+
+    // Purge any old fake dummy notifications
+    const cleanList = list.filter(n => n && n.id !== 'notif_sys_welcome' && n.id !== 'notif_sys_shield');
+    if (cleanList.length !== list.length) {
+      list = cleanList;
       localStorage.setItem(key, JSON.stringify(list));
     }
+
+    // Sync active admin broadcast announcement ONLY IF published by admin and not deleted
+    const adminBanner = localStorage.getItem('clubr_broadcast_banner');
+    if (adminBanner && adminBanner.trim()) {
+      const bannerId = 'notif_admin_' + adminBanner.trim().slice(0, 30).replace(/\W/g, '_');
+      let deletedAdmin = [];
+      try {
+        deletedAdmin = JSON.parse(localStorage.getItem('clubr_deleted_admin_notifs') || '[]');
+      } catch(e){}
+      if (!deletedAdmin.includes(bannerId) && !list.some(n => n.id === bannerId)) {
+        list.unshift({
+          id: bannerId,
+          type: 'clubr',
+          title: 'Official Announcement',
+          senderName: 'Clubr Official',
+          senderCity: 'Platform Admin',
+          body: adminBanner.trim(),
+          time: 'Active',
+          timestamp: Date.now(),
+          read: false,
+          actionType: 'none'
+        });
+        localStorage.setItem(key, JSON.stringify(list));
+      }
+    }
+
     return list;
   } catch(e) {
     return [];
@@ -5916,10 +5916,30 @@ function markAllNotificationsRead() {
 }
 
 function deleteNotification(notifId, e) {
-  if (e) e.stopPropagation();
-  let list = getUserNotifications();
-  list = list.filter(n => n.id !== notifId);
-  saveUserNotifications(list);
+  if (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  if (!notifId) return;
+
+  if (notifId.startsWith('notif_admin_')) {
+    try {
+      let deletedAdmin = JSON.parse(localStorage.getItem('clubr_deleted_admin_notifs') || '[]');
+      if (!deletedAdmin.includes(notifId)) {
+        deletedAdmin.push(notifId);
+        localStorage.setItem('clubr_deleted_admin_notifs', JSON.stringify(deletedAdmin));
+      }
+    } catch(err) {}
+  }
+
+  const key = getNotificationStorageKey();
+  try {
+    let rawList = JSON.parse(localStorage.getItem(key) || '[]');
+    let updated = rawList.filter(n => n && n.id !== notifId);
+    localStorage.setItem(key, JSON.stringify(updated));
+  } catch(err) {}
+
+  updateCounts();
   renderNotifications(currentNotifFilter);
   toast('Notification removed.');
 }

@@ -939,6 +939,33 @@ function clubrClearUserInboxMessage(userId, msgId) {
   firebaseRtdb.ref(`user_inbox/${userId}/${msgId}`).remove().catch(()=>{});
 }
 
+async function clubrClearUserInboxForItem(userId, itemId) {
+  if (!firebaseRtdb || !userId || !itemId) return;
+  try {
+    const snap = await firebaseRtdb.ref(`user_inbox/${userId}`).once('value');
+    const val = snap.val();
+    if (val && typeof val === 'object') {
+      const updates = {};
+      Object.keys(val).forEach(msgKey => {
+        if (val[msgKey] && val[msgKey].itemId === itemId) {
+          updates[`user_inbox/${userId}/${msgKey}`] = null;
+        }
+      });
+      if (Object.keys(updates).length > 0) {
+        await firebaseRtdb.ref().update(updates);
+      }
+    }
+    firebaseRtdb.ref(`user_threads/${userId}/${itemId}/unread`).set(false).catch(()=>{});
+  } catch(e) {}
+}
+
+async function clubrClearEntireUserInbox(userId) {
+  if (!firebaseRtdb || !userId) return;
+  try {
+    await firebaseRtdb.ref(`user_inbox/${userId}`).remove();
+  } catch(e) {}
+}
+
 /**
  * Fetch all chat threads for a user from cloud (for mobile/dashboard restoration)
  */

@@ -1712,6 +1712,167 @@ h1 {
     gap: 8px;
   }
 }
+
+/* Marketing Dynamic Promotional Banners */
+.mkt-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.mkt-strip-free {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+.mkt-strip-paid {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+.mkt-strip-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mkt-tag {
+  background: #10b981;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+}
+.mkt-tag-paid {
+  background: #f59e0b;
+  color: #0f172a;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+}
+.mkt-strip-cta {
+  background: #047857;
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.mkt-strip-cta-paid {
+  background: #d97706;
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.mkt-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px;
+  border-radius: 24px;
+  margin: 24px 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  transition: all 0.3s ease;
+}
+.mkt-card-free {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfccb 100%);
+  border: 1px solid #d9f99d;
+  color: #14532d;
+}
+.mkt-card-paid {
+  background: linear-gradient(135deg, #fffbeb 0%, #ffedd5 100%);
+  border: 1px solid #fed7aa;
+  color: #7c2d12;
+}
+.mkt-card-left {
+  max-width: 680px;
+}
+.mkt-badge-free {
+  display: inline-block;
+  background: #15803d;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.mkt-badge-paid {
+  display: inline-block;
+  background: #ea580c;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.mkt-card h3 {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+.mkt-card p {
+  font-size: 13px;
+  opacity: 0.88;
+  line-height: 1.5;
+}
+.mkt-btn-free {
+  background: #15803d;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 22px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(21,128,61,0.25);
+  transition: transform 0.2s;
+}
+.mkt-btn-paid {
+  background: #ea580c;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 22px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(234,88,12,0.25);
+  transition: transform 0.2s;
+}
+@media (max-width: 640px) {
+  .mkt-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 20px;
+  }
+  .mkt-btn-free, .mkt-btn-paid {
+    width: 100%;
+    text-align: center;
+  }
+}
 </style>
 </head>
 <body>
@@ -1736,6 +1897,15 @@ h1 {
       <button class="btn-install" onclick="installPWA()">Install</button>
       <button class="btn-dismiss" onclick="dismissPWA()">✕</button>
     </div>
+  </div>
+
+  <!-- Dynamic Top Promotional Marketing Strip -->
+  <div id="mktTopStrip" class="mkt-strip mkt-strip-free">
+    <div class="mkt-strip-content">
+      <span class="mkt-tag">100% FREE</span>
+      <span>🎉 <b>Unlimited Free Postings Active!</b> Zero fees, zero commission · Sell directly in your city!</span>
+    </div>
+    <a href="sell" class="mkt-strip-cta">Sell Free →</a>
   </div>
 
   <!-- Header -->
@@ -1789,7 +1959,7 @@ h1 {
   <section class="hero" id="heroSection">
     <div class="hero-main">
       <div class="hero-sub">
-        <div class="eyebrow">⚡ Verified Users · In-App Chat · Zero Scams</div>
+        <div class="eyebrow" id="mktHeroBadge">⚡ Verified Users · In-App Chat · Zero Scams</div>
         <h1 id="heroTitle">What are you looking for today?</h1>
       </div>
       <div class="search">
@@ -1840,6 +2010,16 @@ h1 {
       <button class="chip" onclick="filterCategory('Others', this)">📦 Others</button>
     </div>
   </section>
+
+  <!-- Dynamic Mid-Page High-Impact Marketing Card -->
+  <div id="mktMidBanner" class="mkt-card mkt-card-free">
+    <div class="mkt-card-left">
+      <div class="mkt-badge-free">100% FREE LAUNCH OFFER</div>
+      <h3>Why pay ₹200+ on other apps? Clubr is 100% Free!</h3>
+      <p>Post unlimited phones, bikes, furniture, cars, properties and jobs. Zero middleman fees, direct chats only.</p>
+    </div>
+    <a href="sell" class="mkt-btn-free">List an Item Free 🚀</a>
+  </div>
 
   <!-- Dynamic Listing Feed -->
   <section class="section">
@@ -5104,8 +5284,136 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// =====================================================
+// DYNAMIC SITWIDE PROMOTIONAL MARKETING ENGINE
+// Listens to Firebase siteSettings in real-time
+// Automatically toggles between Free & Paid marketing
+// =====================================================
+let currentSiteSettings = {
+  chargingEnabled: false,
+  pricePerListing: 10,
+  razorpayKeyId: 'rzp_live_TbY2N6nITgRQbx'
+};
+
+function initMarketingEngine() {
+  if (typeof clubrListenSiteSettings === 'function') {
+    clubrListenSiteSettings((settings) => {
+      currentSiteSettings = settings;
+      renderMarketingBanners(settings);
+    });
+  } else if (typeof clubrGetSiteSettings === 'function') {
+    clubrGetSiteSettings().then((settings) => {
+      currentSiteSettings = settings;
+      renderMarketingBanners(settings);
+    });
+  } else {
+    try {
+      const s = localStorage.getItem('clubr_site_settings');
+      if (s) {
+        currentSiteSettings = JSON.parse(s);
+        renderMarketingBanners(currentSiteSettings);
+      }
+    } catch(e) {}
+  }
+}
+
+function renderMarketingBanners(settings) {
+  if (!settings) return;
+  const isPaid = settings.chargingEnabled === true;
+  const price = Number(settings.pricePerListing) || 10;
+
+  // 1. Top Strip Banner
+  const topStrip = document.getElementById('mktTopStrip');
+  if (topStrip) {
+    if (!isPaid) {
+      topStrip.className = 'mkt-strip mkt-strip-free';
+      topStrip.innerHTML = `
+        <div class="mkt-strip-content">
+          <span class="mkt-tag">100% FREE</span>
+          <span>🎉 <b>Unlimited Free Postings Active!</b> Zero fees, zero commission · Sell directly in your city!</span>
+        </div>
+        <a href="sell" class="mkt-strip-cta">Sell Free →</a>
+      `;
+    } else {
+      topStrip.className = 'mkt-strip mkt-strip-paid';
+      topStrip.innerHTML = `
+        <div class="mkt-strip-content">
+          <span class="mkt-tag-paid">PREMIUM</span>
+          <span>⚡ <b>Reach 10,000+ Buyers in your City</b> for just ₹${price}/post/month! Zero middleman commissions.</span>
+        </div>
+        <a href="sell" class="mkt-strip-cta-paid">Post Verified Ad (₹${price}) →</a>
+      `;
+    }
+  }
+
+  // 2. Hero Search Eyebrow Badge
+  const heroBadge = document.getElementById('mktHeroBadge');
+  if (heroBadge) {
+    if (!isPaid) {
+      heroBadge.innerHTML = `🎁 <b>Zero Listing Fees</b> · Unlimited Free Posts · Direct In-App Chat`;
+    } else {
+      heroBadge.innerHTML = `⚡ <b>Hyperlocal Verified Ads</b> · Starting ₹${price}/Month · In-App Chat`;
+    }
+  }
+
+  // 3. Hero Want Card CTA
+  const heroWantBtn = document.querySelector('#heroWantCard .want-btn');
+  if (heroWantBtn) {
+    heroWantBtn.innerHTML = isPaid ? '＋ Post what I want' : '＋ Post what I want (Free)';
+  }
+
+  // 4. Mid-Page High-Converting Marketing Banner
+  const midBanner = document.getElementById('mktMidBanner');
+  if (midBanner) {
+    if (!isPaid) {
+      midBanner.className = 'mkt-card mkt-card-free';
+      midBanner.innerHTML = `
+        <div class="mkt-card-left">
+          <div class="mkt-badge-free">100% FREE LAUNCH OFFER</div>
+          <h3>Why pay ₹200+ on other apps? Clubr is 100% Free!</h3>
+          <p>Post unlimited phones, bikes, furniture, cars, properties and jobs. Zero middleman fees, direct chats only.</p>
+        </div>
+        <a href="sell" class="mkt-btn-free">List an Item Free 🚀</a>
+      `;
+    } else {
+      midBanner.className = 'mkt-card mkt-card-paid';
+      midBanner.innerHTML = `
+        <div class="mkt-card-left">
+          <div class="mkt-badge-paid">VERIFIED LOCAL REACH</div>
+          <h3>Supercharge Your Sales with Clubr Verified Listings</h3>
+          <p>Reach active genuine buyers right in your neighbourhood for only ₹${price} for a whole month.</p>
+        </div>
+        <a href="sell" class="mkt-btn-paid">Post Verified Ad for ₹${price} ⚡</a>
+      `;
+    }
+  }
+
+  // 5. Header Sell Button
+  const navSellBtn = document.querySelector('.nav-sell-btn');
+  if (navSellBtn) {
+    navSellBtn.innerHTML = isPaid ? `<span>＋</span> <span>Sell (₹${price})</span>` : `<span>＋</span> <span>Sell (Free)</span>`;
+  }
+
+  // 6. Floating Action Button
+  const fabBtn = document.querySelector('.fab');
+  if (fabBtn) {
+    fabBtn.innerHTML = isPaid ? `<span class="fab-icon">＋</span><span>Sell (₹${price})</span>` : `<span class="fab-icon">＋</span><span>Sell Free</span>`;
+  }
+
+  // 7. Trust Bar Subtext
+  const trustBar = document.querySelector('.trust-bar');
+  if (trustBar) {
+    const shieldBadge = isPaid 
+      ? `⚡ <b>Clubr Verified Trade:</b> Paid listings filtered for authenticity. Always inspect goods in person.`
+      : `🛡️ <b>Clubr Safety Shield:</b> 100% Free Peer-to-Peer Trading. Look for verified badge sellers.`;
+    const trustDiv = trustBar.querySelector('div');
+    if (trustDiv) trustDiv.innerHTML = shieldBadge;
+  }
+}
+
 // Boot
 initData();
+initMarketingEngine();
 </script>
 </body>
 </html>

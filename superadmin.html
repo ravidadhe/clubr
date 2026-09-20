@@ -131,6 +131,9 @@
         <button onclick="switchTab('reports')" id="navTabReports" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-rose-400 hover:text-white shrink-0">
           🚨 Reports (<span id="adminReportsCount">0</span>)
         </button>
+        <button onclick="switchTab('monetize')" id="navTabMonetize" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-amber-400 hover:text-white shrink-0">
+          💰 Monetize
+        </button>
       </nav>
 
       <!-- Right Controls (Never Wraps) -->
@@ -515,6 +518,160 @@
         </div>
       </div>
     </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 8: MONETIZATION & PROMOTIONAL MARKETING CONTROL      -->
+    <!-- ======================================================== -->
+    <section id="tabMonetizeSection" class="space-y-6 hidden">
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-3xl p-6">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl font-black text-white">💰 Monetization & Advertising Command</h2>
+            <span id="monetizeStatusBadge" class="px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              🟢 FREE POSTING ACTIVE
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1 max-w-2xl">
+            Control listing fees, Razorpay gateway integration, and toggle automatic marketing banners across clubr.online.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="saveAdminMonetizeSettings()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition shadow-lg shadow-amber-400/20 flex items-center gap-1.5">
+            <span>💾</span> Save & Broadcast Settings
+          </button>
+        </div>
+      </div>
+
+      <!-- Monetization Control Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Main Toggle & Price Configuration -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>⚡</span> Listing Charges Master Switch
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              When turned <b>OFF</b>, all users enjoy unlimited free listings, and the website displays promotional banners marketing 100% free posting. When turned <b>ON</b>, free marketing shuts down automatically and paid posting ads take over sitewide!
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <button type="button" id="btnModeFree" onclick="setMonetizeMode(false)" class="p-4 rounded-xl border-2 text-left transition flex flex-col justify-between gap-2 bg-emerald-950/40 border-emerald-500 text-white">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black uppercase tracking-wider text-emerald-400">🟢 FREE MODE (Active)</span>
+                  <span class="text-lg">🎁</span>
+                </div>
+                <div class="text-sm font-bold">100% Unlimited Free Postings</div>
+                <div class="text-[11px] text-slate-400">Promotes zero fees to acquire mass buyers and sellers.</div>
+              </button>
+
+              <button type="button" id="btnModePaid" onclick="setMonetizeMode(true)" class="p-4 rounded-xl border text-left transition flex flex-col justify-between gap-2 bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black uppercase tracking-wider text-amber-400">⚡ PAID MODE</span>
+                  <span class="text-lg">💳</span>
+                </div>
+                <div class="text-sm font-bold text-white">Pay-Per-Post Gate (Razorpay)</div>
+                <div class="text-[11px] text-slate-400">Requires users to pay fee before listing goes live.</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Price & Gateway Config Form -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>⚙️</span> Listing Fee & Razorpay Gateway Setup
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                  Fee Per Listing (₹ / Month)
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-3 text-slate-400 font-bold text-sm">₹</span>
+                  <input type="number" id="inputPricePerListing" min="1" max="9999" value="10" class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl pl-8 pr-4 py-2.5 text-sm text-white font-mono outline-none">
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Default is ₹10. You can change to ₹5, ₹20, etc. anytime.</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                  Razorpay Key ID (Live)
+                </label>
+                <input type="text" id="inputRazorpayKeyId" value="rzp_live_TbY2N6nITgRQbx" placeholder="rzp_live_..." class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-4 py-2.5 text-sm text-white font-mono outline-none">
+                <p class="text-[11px] text-slate-500 mt-1">Key ID used to initialize Razorpay checkout.</p>
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between border-t border-slate-800/80 text-xs">
+              <span class="text-slate-400">Settings automatically sync to Firebase Realtime Database in real time.</span>
+              <button onclick="saveAdminMonetizeSettings()" class="text-amber-400 hover:text-amber-300 font-bold">Apply Changes →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Marketing Banners Preview -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                <span>📢</span> Active Sitewide Advertising
+              </h3>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Auto-Updated</span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Users on <b>index.html</b> and <b>sell.html</b> will see these exact professional advertising badges:
+            </p>
+
+            <div class="space-y-2.5 pt-1">
+              <!-- Banner 1 Preview -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+                <div class="text-[10px] font-bold uppercase text-slate-500 mb-1">1. Top Navigation Promo Badge</div>
+                <div id="previewBadgeTop" class="text-xs font-extrabold text-emerald-400 flex items-center gap-1.5">
+                  🎉 100% Free Listings Active · Zero Commission Ever!
+                </div>
+              </div>
+
+              <!-- Banner 2 Preview -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+                <div class="text-[10px] font-bold uppercase text-slate-500 mb-1">2. Hero Banner Headline</div>
+                <div id="previewHeroText" class="text-xs font-bold text-white">
+                  Sell anything in your city without paying a single rupee.
+                </div>
+              </div>
+
+              <!-- Banner 3 Preview -->
+              <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+                <div class="text-[10px] font-bold uppercase text-slate-500 mb-1">3. Sell Page Callout</div>
+                <div id="previewSellCallout" class="text-xs font-bold text-emerald-300">
+                  ⚡ Limited Period Launch Offer: Unlimited Free Ad Postings
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Revenue Stats Card -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+              <span>💳</span> Transaction & Payment Records
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                <div class="text-[10px] text-slate-400 uppercase font-bold">Total Collected</div>
+                <div class="text-xl font-black text-amber-400 font-mono" id="statTotalRevenue">₹0</div>
+              </div>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                <div class="text-[10px] text-slate-400 uppercase font-bold">Paid Listings</div>
+                <div class="text-xl font-black text-white font-mono" id="statPaidCount">0</div>
+              </div>
+            </div>
+            <div id="monetizeRecentPayments" class="text-xs text-slate-400 text-center py-2">
+              No transactions recorded yet.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -700,7 +857,7 @@ function renderRealStateShare() {
 }
 
 function switchTab(tabId) {
-  const tabs = ['analytics', 'kyc', 'users', 'listings', 'demands', 'broadcast', 'reports'];
+  const tabs = ['analytics', 'kyc', 'users', 'listings', 'demands', 'broadcast', 'reports', 'monetize'];
   tabs.forEach(t => {
     const sec = document.getElementById(`tab${capitalize(t)}Section`);
     const btn = document.getElementById(`navTab${capitalize(t)}`);
@@ -709,11 +866,15 @@ function switchTab(tabId) {
       sec.classList.remove('hidden');
       btn.className = (t === 'reports') 
         ? 'px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-rose-500 text-white shadow-sm shrink-0'
+        : (t === 'monetize')
+        ? 'px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-amber-400 text-slate-950 shadow-sm shrink-0'
         : 'px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-lime-400 text-slate-950 shadow-sm shrink-0';
     } else {
       sec.classList.add('hidden');
       btn.className = (t === 'reports')
         ? 'px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-rose-400 hover:text-white shrink-0'
+        : (t === 'monetize')
+        ? 'px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-amber-400 hover:text-white shrink-0'
         : 'px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0';
     }
   });
@@ -723,6 +884,7 @@ function switchTab(tabId) {
   if (tabId === 'listings') renderAdminListings();
   if (tabId === 'demands') renderAdminDemands();
   if (tabId === 'reports') renderAdminReports();
+  if (tabId === 'monetize') renderAdminMonetize();
 }
 
 function capitalize(s) {
@@ -887,6 +1049,7 @@ function initAdminData() {
   if (repBadge) repBadge.textContent = pendingReportsCount;
 
   initLiveAnalytics();
+  if (typeof initAdminMonetize === 'function') initAdminMonetize();
 }
 
 // Render KYC Approvals Table
@@ -1643,6 +1806,192 @@ function seedSampleReportsIfEmpty() {
   renderAdminReports();
   alert('🛡️ Loaded 2 sample scam incident reports to test SuperAdmin moderation.');
 }
+
+// ========================================================
+// TAB 8: MONETIZATION & PROMOTIONAL MARKETING LOGIC
+// ========================================================
+let adminChargingMode = false;
+let adminListingPrice = 10;
+let adminRazorpayKey = 'rzp_live_TbY2N6nITgRQbx';
+
+function initAdminMonetize() {
+  if (typeof clubrListenSiteSettings === 'function') {
+    clubrListenSiteSettings((settings) => {
+      adminChargingMode = settings.chargingEnabled === true;
+      adminListingPrice = Number(settings.pricePerListing) || 10;
+      adminRazorpayKey = settings.razorpayKeyId || 'rzp_live_TbY2N6nITgRQbx';
+      syncMonetizeFields();
+    });
+  } else if (typeof clubrGetSiteSettings === 'function') {
+    clubrGetSiteSettings().then(settings => {
+      adminChargingMode = settings.chargingEnabled === true;
+      adminListingPrice = Number(settings.pricePerListing) || 10;
+      adminRazorpayKey = settings.razorpayKeyId || 'rzp_live_TbY2N6nITgRQbx';
+      syncMonetizeFields();
+    });
+  }
+  fetchAdminPayments();
+}
+
+function syncMonetizeFields() {
+  const inputPrice = document.getElementById('inputPricePerListing');
+  const inputKey = document.getElementById('inputRazorpayKeyId');
+  if (inputPrice && (!inputPrice.value || inputPrice.value === '10')) inputPrice.value = adminListingPrice;
+  if (inputKey && !inputKey.value) inputKey.value = adminRazorpayKey;
+  updateMonetizeModeUI();
+}
+
+function setMonetizeMode(enable) {
+  adminChargingMode = enable;
+  updateMonetizeModeUI();
+}
+
+function updateMonetizeModeUI() {
+  const badge = document.getElementById('monetizeStatusBadge');
+  const btnFree = document.getElementById('btnModeFree');
+  const btnPaid = document.getElementById('btnModePaid');
+  const previewTop = document.getElementById('previewBadgeTop');
+  const previewHero = document.getElementById('previewHeroText');
+  const previewSell = document.getElementById('previewSellCallout');
+
+  const curPrice = document.getElementById('inputPricePerListing') ? (document.getElementById('inputPricePerListing').value || adminListingPrice) : adminListingPrice;
+
+  if (!adminChargingMode) {
+    if (badge) {
+      badge.className = 'px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+      badge.textContent = '🟢 FREE POSTING ACTIVE';
+    }
+    if (btnFree) {
+      btnFree.className = 'p-4 rounded-xl border-2 text-left transition flex flex-col justify-between gap-2 bg-emerald-950/40 border-emerald-500 text-white';
+    }
+    if (btnPaid) {
+      btnPaid.className = 'p-4 rounded-xl border text-left transition flex flex-col justify-between gap-2 bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white';
+    }
+    if (previewTop) {
+      previewTop.className = 'text-xs font-extrabold text-emerald-400 flex items-center gap-1.5';
+      previewTop.textContent = '🎉 100% Free Listings Active · Zero Commission Ever!';
+    }
+    if (previewHero) {
+      previewHero.textContent = 'Sell anything in your city without paying a single rupee. Zero limits, instant chat.';
+    }
+    if (previewSell) {
+      previewSell.className = 'text-xs font-bold text-emerald-300';
+      previewSell.textContent = '⚡ Limited Period Launch Offer: Unlimited Free Ad Postings!';
+    }
+  } else {
+    if (badge) {
+      badge.className = 'px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30';
+      badge.textContent = `⚡ CHARGING ACTIVE (₹${curPrice}/POST)`;
+    }
+    if (btnFree) {
+      btnFree.className = 'p-4 rounded-xl border text-left transition flex flex-col justify-between gap-2 bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white';
+    }
+    if (btnPaid) {
+      btnPaid.className = 'p-4 rounded-xl border-2 text-left transition flex flex-col justify-between gap-2 bg-amber-950/40 border-amber-500 text-white';
+    }
+    if (previewTop) {
+      previewTop.className = 'text-xs font-extrabold text-amber-400 flex items-center gap-1.5';
+      previewTop.textContent = `⚡ Premium Verified Listings Active · ₹${curPrice}/Post/Month with Direct Buyer Reach!`;
+    }
+    if (previewHero) {
+      previewHero.textContent = `Get guaranteed verified buyer reach in your city · Only ₹${curPrice} per listing for 30 days!`;
+    }
+    if (previewSell) {
+      previewSell.className = 'text-xs font-bold text-amber-300';
+      previewSell.textContent = `⚡ Verified Listing Fee: ₹${curPrice}/month via Razorpay. Zero hidden commissions!`;
+    }
+  }
+}
+
+async function saveAdminMonetizeSettings() {
+  const priceInput = document.getElementById('inputPricePerListing');
+  const keyInput = document.getElementById('inputRazorpayKeyId');
+  const price = priceInput ? (parseInt(priceInput.value, 10) || 10) : adminListingPrice;
+  const keyId = keyInput ? (keyInput.value.trim() || adminRazorpayKey) : adminRazorpayKey;
+
+  adminListingPrice = price;
+  adminRazorpayKey = keyId;
+
+  const payload = {
+    chargingEnabled: adminChargingMode === true,
+    pricePerListing: adminListingPrice,
+    razorpayKeyId: adminRazorpayKey
+  };
+
+  let saved = false;
+  if (typeof clubrSaveSiteSettings === 'function') {
+    saved = await clubrSaveSiteSettings(payload);
+  }
+
+  localStorage.setItem('clubr_site_settings', JSON.stringify(payload));
+  updateMonetizeModeUI();
+
+  if (saved) {
+    alert(`✅ Monetization settings updated live!\n\nMode: ${adminChargingMode ? 'PAID (Charging Enabled)' : 'FREE (Unlimited Postings)'}\nFee: ₹${adminListingPrice}/listing\nAll site promotional banners have automatically updated across clubr.online.`);
+  } else {
+    alert(`⚡ Settings saved locally! (Mode: ${adminChargingMode ? 'PAID' : 'FREE'}, Price: ₹${adminListingPrice})`);
+  }
+}
+
+function renderAdminMonetize() {
+  updateMonetizeModeUI();
+  fetchAdminPayments();
+}
+
+async function fetchAdminPayments() {
+  const container = document.getElementById('monetizeRecentPayments');
+  const totalRevEl = document.getElementById('statTotalRevenue');
+  const paidCountEl = document.getElementById('statPaidCount');
+
+  let payments = [];
+  if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+    try {
+      const snap = await firebaseDb.collection('payments').orderBy('createdAt', 'desc').limit(20).get();
+      snap.forEach(doc => {
+        payments.push({ id: doc.id, ...doc.data() });
+      });
+    } catch(e) {
+      console.warn('[Payments fetch error]', e);
+    }
+  }
+
+  if (payments.length > 0) {
+    const total = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+    if (totalRevEl) totalRevEl.textContent = `₹${total}`;
+    if (paidCountEl) paidCountEl.textContent = payments.length;
+
+    if (container) {
+      container.className = 'divide-y divide-slate-800/80 text-left';
+      container.innerHTML = payments.map(p => `
+        <div class="py-2.5 flex items-center justify-between text-xs">
+          <div>
+            <div class="font-bold text-white">${escapeAdminHtml(p.listingTitle || 'Listing Fee')}</div>
+            <div class="text-[10px] text-slate-400">${escapeAdminHtml(p.userName || 'User')} • ${escapeAdminHtml(p.razorpayPaymentId || 'PayId')}</div>
+          </div>
+          <div class="text-right">
+            <span class="font-bold text-emerald-400 font-mono">+₹${p.amount || 10}</span>
+            <div class="text-[10px] text-slate-500">${p.timestamp ? new Date(p.timestamp).toLocaleDateString('en-IN') : 'Recent'}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  } else {
+    if (totalRevEl) totalRevEl.textContent = '₹0';
+    if (paidCountEl) paidCountEl.textContent = '0';
+    if (container) {
+      container.className = 'text-xs text-slate-400 text-center py-2';
+      container.textContent = 'No transactions recorded yet.';
+    }
+  }
+}
+
+// Live update preview on price change
+document.addEventListener('DOMContentLoaded', () => {
+  const priceInp = document.getElementById('inputPricePerListing');
+  if (priceInp) {
+    priceInp.addEventListener('input', updateMonetizeModeUI);
+  }
+});
 
 checkAuth();
 </script>

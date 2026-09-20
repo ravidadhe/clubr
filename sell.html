@@ -6,7 +6,15 @@
   <title>Sell an Item · Clubr - Fast & Direct Peer-to-Peer Marketplace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Google Firebase Compat SDK & Config -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -126,7 +134,19 @@
       </p>
     </div>
 
-    <!-- Auth Alert If Guest (small banner) -->
+    <!-- Dynamic Promotional Marketing Banner (Auto-updated via Firebase Site Settings) -->
+    <div id="sellPromoBanner" class="p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-emerald-50 border-emerald-200">
+      <div class="flex items-center gap-2.5">
+        <span class="text-xl" id="sellPromoIcon">🎉</span>
+        <div>
+          <div class="text-xs sm:text-sm font-black text-emerald-950" id="sellPromoTitle">100% Free & Unlimited Postings Active!</div>
+          <div class="text-[11px] text-emerald-800" id="sellPromoDesc">Post as many items as you want. Zero platform charges, zero middleman cut.</div>
+        </div>
+      </div>
+      <span class="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-200/80 text-emerald-900 shrink-0" id="sellPromoBadge">
+        FREE TIER
+      </span>
+    </div>
     <div id="guestAuthNotice" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
       <div class="space-y-0.5">
         <b class="text-xs sm:text-sm text-amber-900 font-bold flex items-center gap-1.5">
@@ -535,6 +555,9 @@
     let uploadedPhotos = []; // Array of up to 10 base64 strings
     let activeCat = 'Mobiles';
     let activeMode = 'sell'; // 'sell' or 'demand'
+    let siteChargingEnabled = false;
+    let siteListingPrice = 10;
+    let siteRazorpayKeyId = 'rzp_live_TbY2N6nITgRQbx';
 
     document.addEventListener('DOMContentLoaded', () => {
       initCurrentUser();
@@ -542,6 +565,7 @@
       initLocationDropdowns();
       renderCheckpoints('Mobiles');
       setupDragAndDrop();
+      initSiteSettings();
 
       // Check if URL specifies demand mode
       const urlParams = new URLSearchParams(window.location.search);
@@ -1153,7 +1177,9 @@
         if (descHint) descHint.textContent = 'Describe usage, battery health, purchase date, warranty or any minor flaws';
         if (itemDescInput) itemDescInput.placeholder = "Mention RAM/Storage, how long you've used it, included accessories, reason for selling...";
 
-        if (btnPublish) btnPublish.innerHTML = 'Publish Listing Live 🚀';
+        if (btnPublish) {
+          updateSellPromotionsUI();
+        }
       }
     }
 
@@ -1289,8 +1315,23 @@
       };
 
       const btn = document.getElementById('btnPublishListing');
-      btn.innerHTML = 'Publishing Live... ⏳';
-      btn.disabled = true;
+
+      // Check Monetization / Razorpay Gate
+      if (siteChargingEnabled) {
+        btn.disabled = false;
+        btn.innerHTML = `Pay ₹${siteListingPrice} & Publish Listing 🚀`;
+        const paymentOk = await triggerRazorpayPayment(title, siteListingPrice);
+        if (!paymentOk) {
+          btn.disabled = false;
+          updateSellPromotionsUI();
+          return;
+        }
+        btn.innerHTML = 'Payment Received! Publishing Live... ⏳';
+        btn.disabled = true;
+      } else {
+        btn.innerHTML = 'Publishing Live... ⏳';
+        btn.disabled = true;
+      }
 
       const newListing = {
         id: 'l_' + Date.now(),
@@ -1350,6 +1391,141 @@
         div.style.transition = 'opacity 0.3s';
         setTimeout(() => div.remove(), 300);
       }, 3000);
+    }
+
+    // ========================================================
+    // DYNAMIC MONETIZATION & PROMOTION LOGIC
+    // ========================================================
+    function initSiteSettings() {
+      if (typeof clubrListenSiteSettings === 'function') {
+        clubrListenSiteSettings(applySiteSettings);
+      } else if (typeof clubrGetSiteSettings === 'function') {
+        clubrGetSiteSettings().then(applySiteSettings);
+      } else {
+        // Local fallback
+        try {
+          const s = localStorage.getItem('clubr_site_settings');
+          if (s) applySiteSettings(JSON.parse(s));
+        } catch(e) {}
+      }
+    }
+
+    function applySiteSettings(settings) {
+      if (!settings) return;
+      siteChargingEnabled = settings.chargingEnabled === true;
+      siteListingPrice = Number(settings.pricePerListing) || 10;
+      siteRazorpayKeyId = settings.razorpayKeyId || 'rzp_live_TbY2N6nITgRQbx';
+      updateSellPromotionsUI();
+    }
+
+    function updateSellPromotionsUI() {
+      const banner = document.getElementById('sellPromoBanner');
+      const icon = document.getElementById('sellPromoIcon');
+      const title = document.getElementById('sellPromoTitle');
+      const desc = document.getElementById('sellPromoDesc');
+      const badge = document.getElementById('sellPromoBadge');
+      const btnPublish = document.getElementById('btnPublishListing');
+
+      if (!siteChargingEnabled) {
+        // Free Mode Active
+        if (banner) banner.className = 'p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-emerald-50 border-emerald-200';
+        if (icon) icon.textContent = '🎉';
+        if (title) {
+          title.className = 'text-xs sm:text-sm font-black text-emerald-950';
+          title.textContent = '100% Free & Unlimited Postings Active!';
+        }
+        if (desc) {
+          desc.className = 'text-[11px] text-emerald-800';
+          desc.textContent = 'Post as many items as you want. Zero platform charges, zero middleman cut.';
+        }
+        if (badge) {
+          badge.className = 'px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-200/80 text-emerald-900 shrink-0';
+          badge.textContent = 'FREE TIER';
+        }
+        if (btnPublish && activeMode === 'sell') {
+          btnPublish.className = 'w-full sm:w-auto bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-sm px-8 py-3.5 rounded-2xl transition shadow-md shadow-lime-400/25 shrink-0';
+          btnPublish.innerHTML = 'Publish Listing Live 🚀 (100% Free)';
+        }
+      } else {
+        // Paid Mode Active
+        if (banner) banner.className = 'p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-gradient-to-r from-amber-50 to-orange-50 border-amber-300 shadow-sm';
+        if (icon) icon.textContent = '⚡';
+        if (title) {
+          title.className = 'text-xs sm:text-sm font-black text-amber-950';
+          title.textContent = `Verified Listing Plan: ₹${siteListingPrice}/Post for 30 Days`;
+        }
+        if (desc) {
+          desc.className = 'text-[11px] text-amber-800';
+          desc.textContent = `Reach 10,000+ local buyers in your city. Direct chat negotiations with 0% sales commission!`;
+        }
+        if (badge) {
+          badge.className = 'px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 shrink-0';
+          badge.textContent = `₹${siteListingPrice} / 30 DAYS`;
+        }
+        if (btnPublish && activeMode === 'sell') {
+          btnPublish.className = 'w-full sm:w-auto bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm px-8 py-3.5 rounded-2xl transition shadow-md shadow-amber-400/25 shrink-0';
+          btnPublish.innerHTML = `Pay ₹${siteListingPrice} & Publish Listing 🚀`;
+        }
+      }
+    }
+
+    function triggerRazorpayPayment(title, amountRupees) {
+      return new Promise((resolve) => {
+        if (typeof Razorpay === 'undefined') {
+          alert('Razorpay payment gateway is loading. Please check your internet connection.');
+          resolve(false);
+          return;
+        }
+
+        const options = {
+          key: siteRazorpayKeyId || 'rzp_live_TbY2N6nITgRQbx',
+          amount: (amountRupees || 10) * 100, // Amount in paise
+          currency: 'INR',
+          name: 'Clubr Hyperlocal Marketplace',
+          description: `Listing Fee (30 Days): ${title ? title.substring(0, 30) : 'Item'}`,
+          image: 'icons/icon.svg',
+          prefill: {
+            name: currentUser ? currentUser.name : '',
+            email: currentUser ? currentUser.email : '',
+            contact: currentUser ? (currentUser.phone || '') : ''
+          },
+          theme: {
+            color: '#17211b'
+          },
+          handler: function (response) {
+            if (typeof clubrRecordPayment === 'function') {
+              clubrRecordPayment({
+                userId: currentUser ? currentUser.id : '',
+                userName: currentUser ? currentUser.name : '',
+                userEmail: currentUser ? currentUser.email : '',
+                amount: amountRupees || 10,
+                listingTitle: title,
+                razorpayPaymentId: response.razorpay_payment_id || '',
+                razorpayOrderId: response.razorpay_order_id || ''
+              });
+            }
+            resolve(true);
+          },
+          modal: {
+            ondismiss: function() {
+              alert('⚠️ Payment cancelled. Listing was not published.');
+              resolve(false);
+            }
+          }
+        };
+
+        try {
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function (response) {
+            alert('⚠️ Payment failed: ' + ((response.error && response.error.description) || 'Transaction unsuccessful'));
+            resolve(false);
+          });
+          rzp.open();
+        } catch(e) {
+          alert('⚠️ Razorpay initialization error: ' + e.message);
+          resolve(false);
+        }
+      });
     }
   </script>
 </body>

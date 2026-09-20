@@ -692,3 +692,75 @@ if (typeof window !== 'undefined' && firebaseAuth) {
     });
   });
 }
+
+// =====================================================
+// SITE SETTINGS — Monetization Control
+// Admin se ON/OFF karo charging mode
+// Firebase RTDB: siteSettings/chargingEnabled, pricePerListing, razorpayKeyId
+// =====================================================
+
+window.clubrListenSiteSettings = function(callback) {
+  if (!firebaseRtdb) {
+    callback({ chargingEnabled: false, pricePerListing: 10, razorpayKeyId: '' });
+    return;
+  }
+  firebaseRtdb.ref('siteSettings').on('value', (snap) => {
+    const data = snap.val() || {};
+    callback({
+      chargingEnabled: data.chargingEnabled === true,
+      pricePerListing: data.pricePerListing || 10,
+      razorpayKeyId: data.razorpayKeyId || ''
+    });
+  });
+};
+
+window.clubrGetSiteSettings = async function() {
+  if (!firebaseRtdb) return { chargingEnabled: false, pricePerListing: 10, razorpayKeyId: '' };
+  try {
+    const snap = await firebaseRtdb.ref('siteSettings').once('value');
+    const data = snap.val() || {};
+    return {
+      chargingEnabled: data.chargingEnabled === true,
+      pricePerListing: data.pricePerListing || 10,
+      razorpayKeyId: data.razorpayKeyId || ''
+    };
+  } catch(e) {
+    return { chargingEnabled: false, pricePerListing: 10, razorpayKeyId: '' };
+  }
+};
+
+window.clubrSaveSiteSettings = async function(settings) {
+  if (!firebaseRtdb) return false;
+  try {
+    await firebaseRtdb.ref('siteSettings').set({
+      chargingEnabled: settings.chargingEnabled === true,
+      pricePerListing: Number(settings.pricePerListing) || 10,
+      razorpayKeyId: settings.razorpayKeyId || '',
+      updatedAt: Date.now()
+    });
+    return true;
+  } catch(e) {
+    console.warn('[Clubr Settings Save]', e.message);
+    return false;
+  }
+};
+
+window.clubrRecordPayment = async function(paymentData) {
+  if (!firebaseDb) return;
+  try {
+    await firebaseDb.collection('payments').add({
+      userId: paymentData.userId || '',
+      userName: paymentData.userName || '',
+      userEmail: paymentData.userEmail || '',
+      amount: paymentData.amount || 0,
+      listingTitle: paymentData.listingTitle || '',
+      razorpayPaymentId: paymentData.razorpayPaymentId || '',
+      razorpayOrderId: paymentData.razorpayOrderId || '',
+      status: 'success',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      timestamp: Date.now()
+    });
+  } catch(e) {
+    console.warn('[Clubr Payment Record]', e.message);
+  }
+};

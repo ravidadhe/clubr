@@ -3028,7 +3028,16 @@ function initData() {
     if (savedS) savedItemIds = new Set(JSON.parse(savedS));
 
     const savedC = localStorage.getItem('findly_chats');
-    if (savedC) chatThreads = JSON.parse(savedC);
+    if (savedC) {
+      chatThreads = JSON.parse(savedC);
+      Object.keys(chatThreads).forEach(k => {
+        const msgs = chatThreads[k];
+        if (Array.isArray(msgs) && msgs.some(m => m.text && m.text.includes('When would you like to inspect it?'))) {
+          delete chatThreads[k];
+        }
+      });
+      localStorage.setItem('findly_chats', JSON.stringify(chatThreads));
+    }
 
     const savedCity = localStorage.getItem('findly_current_city');
     if (savedCity) {
@@ -4134,13 +4143,24 @@ function renderListingCard(container, item) {
 
   const visualHtml = `<div class="visual" style="position:relative;">${visualInner}${soldOverlay}</div>`;
 
+  const isMine = !!(currentUser && (
+    (item.sellerId && item.sellerId === currentUser.id) ||
+    (item.sellerPhone && currentUser.phone && item.sellerPhone === currentUser.phone) ||
+    (item.seller && currentUser.name && item.seller.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
+  ));
+
   const chatButtonHtml = isSold
     ? `<button class="btn-sm-chat" disabled style="opacity:0.55; cursor:not-allowed; background:#94a3b8; color:#fff;" title="Item is already sold">
         <span>🏷️</span> Sold
        </button>`
-    : `<button class="btn-sm-chat" onclick="openInAppChat('${item.id}')">
-        <span>💬</span> Chat
-       </button>`;
+    : (isMine
+        ? `<button class="btn-sm-chat" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; cursor:default;" onclick="toast('ℹ️ This is your listing. View buyer messages in your Dashboard!'); event.stopPropagation();">
+            <span>👤</span> Your Item
+           </button>`
+        : `<button class="btn-sm-chat" onclick="openInAppChat('${item.id}')">
+            <span>💬</span> Chat
+           </button>`
+      );
 
   const statusPillHtml = isSold
     ? `<span class="bhav-pill" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">🏷️ Sold Out</span>`
@@ -4489,6 +4509,11 @@ function openItemDetail(id) {
   if (!item) return;
 
   const isSold = !!item.isSold;
+  const isMine = !!(currentUser && (
+    (item.sellerId && item.sellerId === currentUser.id) ||
+    (item.sellerPhone && currentUser.phone && item.sellerPhone === currentUser.phone) ||
+    (item.seller && currentUser.name && item.seller.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
+  ));
 
   // Increment views counter
   item.views = (item.views || 0) + 1;
@@ -4645,6 +4670,14 @@ function openItemDetail(id) {
         <button class="want-btn" disabled style="background:#94a3b8; color:#fff; width:100%; margin:0; padding:13px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:14px; font-weight:800; cursor:not-allowed; opacity:0.85;">
           🏷️ This Item is SOLD OUT (Deals Closed)
         </button>
+      ` : (isMine ? `
+        <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:14px; padding:14px 18px; text-align:center;">
+          <span style="color:#15803d; font-weight:800; font-size:14px; display:block;">👤 You are the seller of this listing</span>
+          <p style="color:#166534; font-size:12px; margin-top:4px;">Manage this listing, view analytics, or reply to buyer messages in your Member Dashboard.</p>
+          <button type="button" onclick="closeDetailModal(); window.location.href='dashboard.html'" style="margin-top:10px; background:#15803d; color:#fff; font-size:12px; font-weight:800; padding:8px 18px; border-radius:10px; border:none; cursor:pointer;">
+            Open Seller Dashboard →
+          </button>
+        </div>
       ` : `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <button type="button" class="want-btn" style="background:#22c55e; color:#fff; margin:0; padding:13px 10px; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; font-weight:800; border-radius:14px; border:none; box-shadow:0 4px 12px rgba(34,197,94,0.3); cursor:pointer;" onclick="openSellerWhatsApp('${item.id}')">
@@ -4654,7 +4687,7 @@ function openItemDetail(id) {
             <span>💬</span> In-App Chat
           </button>
         </div>
-      `}
+      `)}
       <div style="display:flex; gap:8px;">
         <button type="button" onclick="openSafeTradeGuide()" style="flex:1; background:#fef3c7; color:#92400e; border:1px solid #fde68a; border-radius:10px; padding:9px 12px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px">
           🛡️ Safe Trade Rules
@@ -4693,6 +4726,16 @@ function openInAppChat(itemId) {
   // 1. Search in listings
   let item = listings.find(x => x.id === itemId);
   let isDemand = false;
+
+  if (item && currentUser) {
+    const isOwner = (item.sellerId && item.sellerId === currentUser.id) ||
+                    (item.sellerPhone && currentUser.phone && item.sellerPhone === currentUser.phone) ||
+                    (item.seller && currentUser.name && item.seller.trim().toLowerCase() === currentUser.name.trim().toLowerCase());
+    if (isOwner) {
+      toast('ℹ️ This is your own listing. You cannot chat with yourself.');
+      return;
+    }
+  }
 
   // 2. Search in demands if not in listings
   if (!item) {
@@ -4762,13 +4805,7 @@ function openInAppChat(itemId) {
   if (offerPill10) offerPill10.textContent = numPrice > 0 ? `Offer ₹${discount10.toLocaleString('en-IN')} (-10%)` : 'Fast Deal';
 
   if (!chatThreads[item.id]) {
-    chatThreads[item.id] = [
-      {
-        sender: 'seller',
-        text: `Hi ${currentUser.name}! Thanks for checking out my ${item.title}. How can I help you?`,
-        time: 'Just now'
-      }
-    ];
+    chatThreads[item.id] = [];
     saveData();
   }
 
@@ -4946,41 +4983,29 @@ function sendChatMessage(presetText) {
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  chatThreads[activeChatContext.itemId].push({
+  const newMsg = {
     id: 'msg_' + Date.now(),
-    sender: 'buyer',
+    sender: currentUser ? currentUser.name : 'Buyer',
+    senderId: currentUser ? currentUser.id : 'usr_buyer',
     text: text,
     time: timeStr
-  });
+  };
+
+  chatThreads[activeChatContext.itemId].push(newMsg);
 
   if (!presetText) input.value = '';
   saveData();
   renderChatMessages();
+
+  if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+    firebaseRtdb.ref(`chats/${activeChatContext.itemId}`).push(newMsg).catch(()=>{});
+  }
 
   // Safety toast if sharing phone
   const phoneRegex = /(?:\+?91[\s-]?)?[6-9]\d{2}[\s-]?\d{3}[\s-]?\d{4}|\b[6-9]\d{9}\b/;
   if (phoneRegex.test(text)) {
     toast('🛡️ Safety Reminder: Never move chats to WhatsApp. Stay safe inside Clubr!');
   }
-
-  // Simulated seller response
-  setTimeout(() => {
-    const replies = [
-      "Yes, it is available in great condition! When would you like to inspect it?",
-      "Original bill and box are ready with me. Let me know when you can meet.",
-      "I can offer a small discount if you collect it today!",
-      "Sure, sounds fair. Let's arrange a safe public meeting spot."
-    ];
-    const replyText = replies[Math.floor(Math.random() * replies.length)];
-    chatThreads[activeChatContext.itemId].push({
-      id: 'msg_' + Date.now(),
-      sender: 'seller',
-      text: replyText,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    });
-    saveData();
-    renderChatMessages();
-  }, 1200);
 }
 
 function sendQuickOffer(percent) {

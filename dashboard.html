@@ -972,6 +972,13 @@
       try {
         const c = localStorage.getItem('findly_chats');
         allChats = c ? JSON.parse(c) : {};
+        Object.keys(allChats).forEach(k => {
+          const msgs = allChats[k];
+          if (Array.isArray(msgs) && msgs.some(m => m.text && m.text.includes('When would you like to inspect it?'))) {
+            delete allChats[k];
+          }
+        });
+        localStorage.setItem('findly_chats', JSON.stringify(allChats));
       } catch(e) { allChats = {}; }
 
       // Check auth state

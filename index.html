@@ -4992,48 +4992,10 @@ function openInAppChat(itemId) {
   let item = listings.find(x => x.id === itemId);
   let isDemand = false;
 
-  if (item && currentUser) {
-    const isOwner = isListingOwnedByUser(item, currentUser);
-    if (isOwner) {
-      const msgs = chatThreads[itemId] || [];
-      const hasOtherParty = msgs.some(m => {
-        if (!m) return false;
-        const isMe = (m.senderId && currentUser.id && String(m.senderId) === String(currentUser.id)) ||
-                     (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
-                     (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
-                     (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
-                     (m.sender === 'You');
-        return !isMe;
-      });
-
-      if (!hasOtherParty) {
-        alert('ℹ️ This is your own listing.\n\nInterested buyers will chat with you here once they send a message on your item.');
-        return;
-      }
-    }
-  }
-
   // 2. Search in demands if not in listings
   if (!item) {
     const w = wants.find(x => x.id === itemId);
     if (w) {
-      if (currentUser && isDemandOwnedByUser(w, currentUser)) {
-        const msgs = chatThreads[itemId] || [];
-        const hasOtherParty = msgs.some(m => {
-          if (!m) return false;
-          const isMe = (m.senderId && currentUser.id && String(m.senderId) === String(currentUser.id)) ||
-                       (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
-                       (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
-                       (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
-                       (m.sender === 'You');
-          return !isMe;
-        });
-
-        if (!hasOtherParty) {
-          alert('ℹ️ This is your own requirement.\n\nSellers who have this item will message you here directly.');
-          return;
-        }
-      }
       item = {
         id: w.id,
         title: `Demand: ${w.item}`,
@@ -5078,12 +5040,13 @@ function openInAppChat(itemId) {
   let targetReceiverName = '';
   let targetReceiverCity = '';
 
-  if (item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
+  const isOwner = isListingOwnedByUser(item, currentUser);
+  if (!isOwner && item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
     targetReceiverId = item.sellerId;
     targetReceiverName = item.seller || 'Seller';
     const regU = registeredUsers.find(u => u.id === item.sellerId);
     targetReceiverCity = (regU && regU.city) ? regU.city : (item.city || 'India');
-  } else if (isDemand && item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
+  } else if (!isOwner && isDemand && item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
     targetReceiverId = item.sellerId;
     targetReceiverName = item.seller || 'Buyer';
     targetReceiverCity = item.city || 'India';
@@ -5103,7 +5066,7 @@ function openInAppChat(itemId) {
       targetReceiverName = otherMsg.senderName || otherMsg.sender || 'Interested Buyer';
       targetReceiverCity = otherMsg.senderCity || (registeredUsers.find(u => u.id === otherMsg.senderId)?.city) || item.city || 'India';
     } else {
-      targetReceiverName = 'Clubr Member';
+      targetReceiverName = isOwner ? 'Interested Buyer' : (item.seller || 'Clubr Member');
       targetReceiverCity = item.city || 'India';
     }
   }

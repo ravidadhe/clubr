@@ -1544,6 +1544,95 @@ h1 {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Multi-Category Notification Center Styles */
+.notif-tab {
+  padding: 8px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: #f7f4ee;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.notif-tab:hover {
+  background: #ede8df;
+  color: var(--ink);
+}
+.notif-tab.active {
+  background: var(--ink);
+  color: #ffffff;
+  border-color: var(--ink);
+}
+.notif-tab-count {
+  background: rgba(0,0,0,0.08);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 99px;
+}
+.notif-tab.active .notif-tab-count {
+  background: rgba(255,255,255,0.25);
+  color: #ffffff;
+}
+.notif-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+.notif-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  transform: translateY(-1px);
+}
+.notif-card.unread {
+  background: #fffdfa;
+  border-color: #fde68a;
+  border-left: 4px solid #f59e0b;
+}
+.notif-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  flex-shrink: 0;
+}
+.notif-icon-message {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.notif-icon-offer {
+  background: #fef3c7;
+  color: #b45309;
+}
+.notif-icon-clubr {
+  background: #ecfdf5;
+  color: #047857;
+}
+.notif-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
 /* Empty State */
 .empty-state {
   grid-column: 1 / -1;
@@ -1925,10 +2014,10 @@ h1 {
         📍 <span id="currentCityText">All India</span> ▾
       </button>
       
-      <!-- In-App Chats -->
-      <button class="circle-btn" onclick="openInboxModal()" title="In-App Messages">
-        💬
-        <span class="badge-count" id="inboxBadgeCount" style="display:none">0</span>
+      <!-- Notification Center (Messages, Offers, Clubr Updates) -->
+      <button class="circle-btn" id="navNotifBtn" onclick="openNotificationModal()" title="Notifications & Messages">
+        🔔
+        <span class="badge-count" id="notifBadgeCount" style="display:none">0</span>
       </button>
 
       <!-- Wishlist -->
@@ -2078,8 +2167,8 @@ h1 {
   <button class="bottom-sell-btn" onclick="window.location.href='sell'" title="Sell Item">
     ＋
   </button>
-  <button class="bottom-item" onclick="openInboxModal()">
-    <b>💬</b>Chats
+  <button class="bottom-item" onclick="openNotificationModal()">
+    <b>🔔</b>Alerts
     <span class="badge-count" id="bottomChatCount" style="display:none">0</span>
   </button>
   <button class="bottom-item" onclick="handleUserBtnClick()">
@@ -2769,15 +2858,41 @@ h1 {
 </div>
 
 <!-- ======================================================= -->
-<!-- MODAL: INBOX                                            -->
+<!-- MODAL: NOTIFICATION CENTER (MESSAGES, OFFERS, CLUBR)    -->
 <!-- ======================================================= -->
-<div class="modal-bg" id="inboxModal" onclick="if(event.target===this)closeInboxModal()">
-  <div class="modal">
-    <div class="modal-head">
-      <h2>💬 In-App Messages</h2>
-      <button class="close-btn" onclick="closeInboxModal()">✕</button>
+<div class="modal-bg" id="notificationModal" onclick="if(event.target===this)closeNotificationModal()">
+  <div class="modal" style="max-width:540px; padding:20px; border-radius:22px; max-height:88vh; display:flex; flex-direction:column;">
+    <!-- Modal Header -->
+    <div class="modal-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--line);">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:20px;">🔔</span>
+        <h2 style="font-size:18px; margin:0; font-weight:900;">Notification Box</h2>
+        <span id="notifUnreadBadge" style="background:#fef3c7; color:#b45309; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px; display:none;">0 unread</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button type="button" onclick="markAllNotificationsRead()" style="font-size:12px; font-weight:800; color:#2563eb; background:none; border:none; cursor:pointer; padding:4px 6px;">✓✓ Mark all read</button>
+        <button class="close-btn" onclick="closeNotificationModal()">✕</button>
+      </div>
     </div>
-    <div id="inboxList" style="display:flex; flex-direction:column; gap:10px"></div>
+
+    <!-- Category Filter Tabs -->
+    <div class="notif-tabs" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:12px; border-bottom:1px solid var(--line); -webkit-overflow-scrolling:touch;">
+      <button class="notif-tab active" data-tab="all" onclick="filterNotificationTab('all')">
+        ⚡ All <span class="notif-tab-count" id="notifTabCountAll">0</span>
+      </button>
+      <button class="notif-tab" data-tab="message" onclick="filterNotificationTab('message')">
+        💬 Messages <span class="notif-tab-count" id="notifTabCountMessage">0</span>
+      </button>
+      <button class="notif-tab" data-tab="offer" onclick="filterNotificationTab('offer')">
+        🏷️ Offers <span class="notif-tab-count" id="notifTabCountOffer">0</span>
+      </button>
+      <button class="notif-tab" data-tab="clubr" onclick="filterNotificationTab('clubr')">
+        🛡️ Clubr Updates <span class="notif-tab-count" id="notifTabCountClubr">0</span>
+      </button>
+    </div>
+
+    <!-- Notification Feed Stream -->
+    <div id="notificationList" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; max-height:460px; padding-right:4px;"></div>
   </div>
 </div>
 
@@ -3232,20 +3347,21 @@ function updateCounts() {
     }
   }
 
-  const ibc = document.getElementById('inboxBadgeCount');
+  const nbc = document.getElementById('notifBadgeCount') || document.getElementById('inboxBadgeCount');
   const bcc = document.getElementById('bottomChatCount');
-  const chatCount = currentUser ? Object.keys(chatThreads).length : 0;
-  if (currentUser && chatCount > 0) {
-    if (ibc) {
-      ibc.style.display = 'flex';
-      ibc.textContent = chatCount;
+  const unreadNotifs = typeof getUnreadNotificationCount === 'function' ? getUnreadNotificationCount() : 0;
+  if (currentUser && unreadNotifs > 0) {
+    const disp = unreadNotifs > 99 ? '99+' : unreadNotifs;
+    if (nbc) {
+      nbc.style.display = 'flex';
+      nbc.textContent = disp;
     }
     if (bcc) {
       bcc.style.display = 'flex';
-      bcc.textContent = chatCount;
+      bcc.textContent = disp;
     }
   } else {
-    if (ibc) ibc.style.display = 'none';
+    if (nbc) nbc.style.display = 'none';
     if (bcc) bcc.style.display = 'none';
   }
 }
@@ -3359,7 +3475,26 @@ function initGlobalChatInboxListener() {
         updateCounts();
       }
 
-      // 2. If chat modal is currently open for this specific item, the thread listener renders it
+      // 2. Add to Notification Box
+      if (typeof addNotification === 'function') {
+        const isOffer = incomingMsg.type === 'offer' || (incomingMsg.text && (incomingMsg.text.toLowerCase().includes('offer') || incomingMsg.text.toLowerCase().includes('offered')));
+        addNotification({
+          id: 'notif_msg_' + (incomingMsg.id || Date.now()),
+          type: isOffer ? 'offer' : 'message',
+          title: isOffer ? `🏷️ Offer on ${incomingMsg.itemTitle || 'Your Listing'}` : `💬 ${incomingMsg.senderName || 'Interested Buyer'}`,
+          senderName: incomingMsg.senderName || 'Clubr User',
+          senderCity: incomingMsg.senderCity || 'India',
+          body: incomingMsg.text,
+          itemId: incomingMsg.itemId,
+          itemTitle: incomingMsg.itemTitle || 'Marketplace Item',
+          time: incomingMsg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          timestamp: incomingMsg.timestamp || Date.now(),
+          read: false,
+          actionType: 'chat'
+        });
+      }
+
+      // 3. If chat modal is currently open for this specific item, the thread listener renders it
       const modal = document.getElementById('chatModal');
       const isChatModalOpen = modal && modal.classList.contains('show');
       if (isChatModalOpen && activeChatContext && activeChatContext.itemId === incomingMsg.itemId) {
@@ -3367,7 +3502,7 @@ function initGlobalChatInboxListener() {
         return;
       }
 
-      // 3. Otherwise, show real-time interactive Notification Banner!
+      // 4. Otherwise, show real-time interactive Notification Banner!
       showIncomingChatNotification(incomingMsg);
     });
   }
@@ -4993,6 +5128,9 @@ function openInAppChat(itemId) {
   }
 
   renderChatMessages();
+  if (typeof markNotificationsForItemAsRead === 'function') {
+    markNotificationsForItemAsRead(itemId);
+  }
   document.getElementById('chatModal').classList.add('show');
   setTimeout(() => {
     const input = document.getElementById('chatInputText');
@@ -5432,61 +5570,352 @@ function closeChatModal() {
   activeChatContext = null;
 }
 
-// INBOX
+// =======================================================
+// MULTI-CATEGORY NOTIFICATION CENTER (MESSAGES, OFFERS, CLUBR)
+// =======================================================
+let currentNotifFilter = 'all';
+
+function getNotificationStorageKey() {
+  return 'clubr_user_notifications_' + (currentUser && currentUser.id ? currentUser.id : 'guest');
+}
+
+function getDefaultClubrNotifications() {
+  const userName = currentUser ? currentUser.name : 'Member';
+  return [
+    {
+      id: 'notif_sys_welcome',
+      type: 'clubr',
+      title: 'Welcome to Clubr Official! 🎉',
+      senderName: 'Clubr Official',
+      senderCity: 'India',
+      body: 'Welcome ' + userName + '! You have unlimited 100% free listing access. Buy, sell, and post demands safely in your city.',
+      time: 'Today',
+      timestamp: Date.now() - 3600000,
+      read: false,
+      actionType: 'none'
+    },
+    {
+      id: 'notif_sys_shield',
+      type: 'clubr',
+      title: 'Clubr Safety Shield Active 🛡️',
+      senderName: 'Clubr Security',
+      senderCity: 'Official',
+      body: 'Always use in-app chat for trade communication. Never pay token advance money or scan unknown payment QR codes.',
+      time: 'Today',
+      timestamp: Date.now() - 7200000,
+      read: true,
+      actionType: 'none'
+    }
+  ];
+}
+
+function getUserNotifications() {
+  if (!currentUser) return [];
+  const key = getNotificationStorageKey();
+  try {
+    const raw = localStorage.getItem(key);
+    let list = raw ? JSON.parse(raw) : null;
+    if (!Array.isArray(list) || list.length === 0) {
+      list = getDefaultClubrNotifications();
+      localStorage.setItem(key, JSON.stringify(list));
+    }
+    return list;
+  } catch(e) {
+    return [];
+  }
+}
+
+function saveUserNotifications(list) {
+  if (!currentUser) return;
+  const key = getNotificationStorageKey();
+  try {
+    localStorage.setItem(key, JSON.stringify(list));
+  } catch(e) {}
+  updateCounts();
+}
+
+function getUnreadNotificationCount() {
+  if (!currentUser) return 0;
+  const list = getUserNotifications();
+  return list.filter(n => !n.read).length;
+}
+
+function addNotification(notifData) {
+  if (!currentUser || !notifData) return;
+  const list = getUserNotifications();
+  if (notifData.id && list.some(n => n.id === notifData.id)) return;
+
+  const newNotif = {
+    id: notifData.id || ('notif_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
+    type: notifData.type || 'message', // 'message' | 'offer' | 'clubr'
+    title: notifData.title || 'New Notification',
+    senderName: notifData.senderName || 'Clubr User',
+    senderCity: notifData.senderCity || 'India',
+    body: notifData.body || '',
+    itemId: notifData.itemId || '',
+    itemTitle: notifData.itemTitle || '',
+    time: notifData.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    timestamp: notifData.timestamp || Date.now(),
+    read: !!notifData.read,
+    actionType: notifData.actionType || (notifData.itemId ? 'chat' : 'none')
+  };
+
+  list.unshift(newNotif);
+  if (list.length > 80) list.length = 80;
+  saveUserNotifications(list);
+
+  const modal = document.getElementById('notificationModal');
+  if (modal && modal.classList.contains('show')) {
+    renderNotifications(currentNotifFilter);
+  }
+}
+
+function syncNotificationsFromChats() {
+  if (!currentUser || !chatThreads) return;
+  const list = getUserNotifications();
+  let addedAny = false;
+
+  Object.keys(chatThreads).forEach(itemId => {
+    const msgs = chatThreads[itemId];
+    if (!Array.isArray(msgs) || msgs.length === 0) return;
+    const lastMsg = msgs[msgs.length - 1];
+    if (!lastMsg) return;
+
+    const isMine = lastMsg.senderId && currentUser.id && String(lastMsg.senderId) === String(currentUser.id);
+    if (!isMine) {
+      const notifId = 'notif_chat_' + (lastMsg.id || (itemId + '_' + lastMsg.timestamp));
+      if (!list.some(n => n.id === notifId)) {
+        const isOffer = lastMsg.type === 'offer' || (lastMsg.text && (lastMsg.text.toLowerCase().includes('offer') || lastMsg.text.toLowerCase().includes('offered')));
+        const item = listings.find(x => x.id === itemId) || wants.find(x => x.id === itemId) || { title: 'Direct Deal' };
+        list.unshift({
+          id: notifId,
+          type: isOffer ? 'offer' : 'message',
+          title: isOffer ? `Offer on ${item.title || item.item || 'Item'}` : (item.title || item.item || 'Item Message'),
+          senderName: lastMsg.senderName || lastMsg.sender || 'Member',
+          senderCity: lastMsg.senderCity || 'India',
+          body: lastMsg.text || 'Sent you a message',
+          itemId: itemId,
+          itemTitle: item.title || item.item || 'Marketplace Item',
+          time: lastMsg.time || 'Recent',
+          timestamp: lastMsg.timestamp || Date.now(),
+          read: false,
+          actionType: 'chat'
+        });
+        addedAny = true;
+      }
+    }
+  });
+
+  if (addedAny) {
+    if (list.length > 80) list.length = 80;
+    saveUserNotifications(list);
+  }
+}
+
+function filterNotificationTab(tab) {
+  currentNotifFilter = tab;
+  document.querySelectorAll('.notif-tab').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+  });
+  renderNotifications(tab);
+}
+
+function renderNotifications(tab) {
+  if (!currentUser) return;
+  const targetTab = tab || currentNotifFilter || 'all';
+  syncNotificationsFromChats();
+  const allNotifs = getUserNotifications();
+  const container = document.getElementById('notificationList');
+  if (!container) return;
+  container.innerHTML = '';
+
+  // Tab counts
+  const allCount = allNotifs.length;
+  const msgCount = allNotifs.filter(n => n.type === 'message').length;
+  const offerCount = allNotifs.filter(n => n.type === 'offer').length;
+  const clubrCount = allNotifs.filter(n => n.type === 'clubr').length;
+  const unreadCount = allNotifs.filter(n => !n.read).length;
+
+  const countAllEl = document.getElementById('notifTabCountAll');
+  if (countAllEl) countAllEl.textContent = allCount;
+  const countMsgEl = document.getElementById('notifTabCountMessage');
+  if (countMsgEl) countMsgEl.textContent = msgCount;
+  const countOfferEl = document.getElementById('notifTabCountOffer');
+  if (countOfferEl) countOfferEl.textContent = offerCount;
+  const countClubrEl = document.getElementById('notifTabCountClubr');
+  if (countClubrEl) countClubrEl.textContent = clubrCount;
+
+  const unreadBadgeEl = document.getElementById('notifUnreadBadge');
+  if (unreadBadgeEl) {
+    if (unreadCount > 0) {
+      unreadBadgeEl.style.display = 'inline-block';
+      unreadBadgeEl.textContent = `${unreadCount} unread`;
+    } else {
+      unreadBadgeEl.style.display = 'none';
+    }
+  }
+
+  // Filter list
+  const filtered = allNotifs.filter(n => {
+    if (targetTab === 'all') return true;
+    return n.type === targetTab;
+  });
+
+  if (filtered.length === 0) {
+    let emptyIcon = '🔔';
+    let emptyTitle = 'No notifications yet';
+    let emptySubtitle = 'All your messages, offers, and clubr updates will appear here.';
+    if (targetTab === 'message') {
+      emptyIcon = '💬';
+      emptyTitle = 'No new messages';
+      emptySubtitle = 'Direct chat messages from buyers and sellers will show up here.';
+    } else if (targetTab === 'offer') {
+      emptyIcon = '🏷️';
+      emptyTitle = 'No active offers';
+      emptySubtitle = 'When buyers send price offers or discounts, you will see them here.';
+    } else if (targetTab === 'clubr') {
+      emptyIcon = '🛡️';
+      emptyTitle = 'No platform alerts';
+      emptySubtitle = 'Clubr safety tips, verification news, and updates will be listed here.';
+    }
+
+    container.innerHTML = `
+      <div style="text-align:center; padding:45px 16px; color:var(--muted); background:#faf8f5; border-radius:18px; border:1px dashed var(--line);">
+        <div style="font-size:38px; margin-bottom:10px;">${emptyIcon}</div>
+        <b style="font-size:15px; color:var(--ink); display:block; margin-bottom:4px;">${emptyTitle}</b>
+        <p style="font-size:12px; max-width:320px; margin:0 auto; line-height:1.45;">${emptySubtitle}</p>
+      </div>`;
+    return;
+  }
+
+  filtered.forEach(n => {
+    let iconEmoji = '💬';
+    let iconClass = 'notif-icon-message';
+    let typeTag = '💬 Message';
+    let typeTagBg = '#e0f2fe';
+    let typeTagColor = '#0369a1';
+
+    if (n.type === 'offer') {
+      iconEmoji = '🏷️';
+      iconClass = 'notif-icon-offer';
+      typeTag = '🏷️ Deal Offer';
+      typeTagBg = '#fef3c7';
+      typeTagColor = '#b45309';
+    } else if (n.type === 'clubr') {
+      iconEmoji = '🛡️';
+      iconClass = 'notif-icon-clubr';
+      typeTag = '⚡ Clubr Official';
+      typeTagBg = '#ecfdf5';
+      typeTagColor = '#047857';
+    }
+
+    const card = `
+      <div class="notif-card ${!n.read ? 'unread' : ''}" onclick="handleNotificationClick('${n.id}')">
+        <div class="notif-icon-wrap ${iconClass}">
+          ${iconEmoji}
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:3px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; min-width:0;">
+              <span style="font-size:10px; font-weight:800; background:${typeTagBg}; color:${typeTagColor}; padding:2px 7px; border-radius:99px;">${typeTag}</span>
+              <b style="font-size:13px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(n.senderName || n.title)}</b>
+              ${n.senderCity ? `<span style="font-size:11px; color:var(--muted); font-weight:600;">(📍 ${escapeHtml(n.senderCity)})</span>` : ''}
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+              <span style="font-size:10px; color:var(--muted);">${escapeHtml(n.time || '')}</span>
+              ${!n.read ? '<span class="notif-unread-dot" title="Unread"></span>' : ''}
+            </div>
+          </div>
+          ${n.itemTitle ? `<div style="font-size:11px; font-weight:700; color:#475569; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">📦 ${escapeHtml(n.itemTitle)}</div>` : ''}
+          <div style="font-size:12px; color:#334155; line-height:1.4; word-break:break-word;">
+            ${escapeHtml(n.body || '')}
+          </div>
+        </div>
+        <div style="flex-shrink:0;" onclick="event.stopPropagation()">
+          <button type="button" onclick="deleteNotification('${n.id}', event)" title="Delete" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px; opacity:0.8; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">🗑️</button>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', card);
+  });
+}
+
+function handleNotificationClick(notifId) {
+  const list = getUserNotifications();
+  const notif = list.find(n => n.id === notifId);
+  if (!notif) return;
+
+  notif.read = true;
+  saveUserNotifications(list);
+  closeNotificationModal();
+
+  if ((notif.actionType === 'chat' || notif.type === 'message' || notif.type === 'offer') && notif.itemId) {
+    openInAppChat(notif.itemId);
+  } else if (notif.actionType === 'listing' && notif.itemId) {
+    openDetail(notif.itemId);
+  }
+}
+
+function markAllNotificationsRead() {
+  const list = getUserNotifications();
+  list.forEach(n => { n.read = true; });
+  saveUserNotifications(list);
+  renderNotifications(currentNotifFilter);
+  toast('All notifications marked as read.');
+}
+
+function deleteNotification(notifId, e) {
+  if (e) e.stopPropagation();
+  let list = getUserNotifications();
+  list = list.filter(n => n.id !== notifId);
+  saveUserNotifications(list);
+  renderNotifications(currentNotifFilter);
+  toast('Notification removed.');
+}
+
+function markNotificationsForItemAsRead(itemId) {
+  if (!itemId) return;
+  const list = getUserNotifications();
+  let changed = false;
+  list.forEach(n => {
+    if (n.itemId === itemId && !n.read) {
+      n.read = true;
+      changed = true;
+    }
+  });
+  if (changed) saveUserNotifications(list);
+}
+
+function openNotificationModal() {
+  if (!currentUser) {
+    openAuthModal('Please sign in to view your notifications');
+    return;
+  }
+  renderNotifications(currentNotifFilter);
+  const modal = document.getElementById('notificationModal');
+  if (modal) modal.classList.add('show');
+}
+
+function closeNotificationModal() {
+  const modal = document.getElementById('notificationModal');
+  if (modal) modal.classList.remove('show');
+}
+
+// Aliases for backward-compatibility
+function openInboxModal() {
+  openNotificationModal();
+}
+function closeInboxModal() {
+  closeNotificationModal();
+}
 function deleteChatThread(threadKey, e) {
   if (e) e.stopPropagation();
   if (!confirm('Are you sure you want to delete this chat conversation?')) return;
   delete chatThreads[threadKey];
   saveData();
   updateCounts();
-  openInboxModal();
+  renderNotifications(currentNotifFilter);
   toast('Chat conversation deleted.');
-}
-
-function openInboxModal() {
-  if (!currentUser) {
-    openAuthModal('Please sign in to view your in-app chat inbox');
-    return;
-  }
-
-  const container = document.getElementById('inboxList');
-  container.innerHTML = '';
-  const threadKeys = Object.keys(chatThreads);
-
-  if (threadKeys.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:center; padding:35px 10px; color:var(--muted)">
-        <p style="font-size:32px; margin-bottom:8px">💬</p>
-        <b>No active messages yet</b>
-        <p style="font-size:12px; margin-top:4px">Tap "Chat" on any listing to start direct in-app conversation.</p>
-      </div>`;
-  } else {
-    threadKeys.forEach(k => {
-      const msgs = chatThreads[k];
-      const lastMsg = msgs[msgs.length - 1] || { text: 'Conversation started', time: '' };
-      const item = listings.find(x => x.id === k) || wants.find(x => x.id === k) || { title: 'Direct Deal', emoji: '📦' };
-
-      container.insertAdjacentHTML('beforeend', `
-        <div style="display:flex; justify-content:space-between; align-items:center; background:#f7f4ee; padding:12px 16px; border-radius:14px; border:1px solid var(--line); cursor:pointer" onclick="closeInboxModal(); openInAppChat('${k}')">
-          <div style="display:flex; align-items:center; gap:12px; overflow:hidden">
-            <span style="font-size:24px">${item.emoji || '💬'}</span>
-            <div style="overflow:hidden">
-              <b style="font-size:14px; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden">${item.title || item.item}</b>
-              <span style="font-size:12px; color:var(--muted); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:block">${escapeHtml(lastMsg.text)}</span>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px; flex-shrink:0" onclick="event.stopPropagation()">
-            <span style="font-size:11px; color:var(--muted); white-space:nowrap">${escapeHtml(lastMsg.time || '')}</span>
-            <button onclick="deleteChatThread('${k}', event)" title="Delete Conversation" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px;">🗑️</button>
-          </div>
-        </div>
-      `);
-    });
-  }
-  document.getElementById('inboxModal').classList.add('show');
-}
-function closeInboxModal() {
-  document.getElementById('inboxModal').classList.remove('show');
 }
 
 // PHOTO UPLOAD

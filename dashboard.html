@@ -1311,7 +1311,7 @@
                   <b class="text-xs font-bold text-slate-900 truncate">${escapeHtml(item.title)}</b>
                   ${statusTag}
                 </div>
-                <div class="text-xs text-emerald-700 font-mono font-bold mt-0.5">₹${Number(item.price).toLocaleString('en-IN')} · <span class="text-slate-500 font-sans font-normal text-[11px]">${escapeHtml(item.city || 'India')}</span></div>
+                <div class="text-xs text-emerald-700 font-mono font-bold mt-0.5">₹${Number(item.price).toLocaleString('en-IN')} · <span class="text-slate-500 font-sans font-normal text-[11px]">${escapeHtml(item.city || 'India')}</span> · <span class="text-slate-700 font-bold text-[11px] font-sans">👁️ ${item.views || 0} Views</span></div>
               </div>
             </div>
 

@@ -4509,9 +4509,6 @@ function renderListingCard(container, item) {
           </div>
           <div class="item-meta">
             <span>📍 ${escapeHtml(item.locality || 'Local')}, ${escapeHtml(item.city || 'India')}</span>
-            <span style="display:inline-flex; align-items:center; gap:3px; color:var(--muted); font-size:11px; font-weight:700">
-              👁️ ${viewsCount}
-            </span>
           </div>
         </div>
         <div class="item-actions" onclick="event.stopPropagation()">
@@ -4845,6 +4842,13 @@ function openItemDetail(id) {
   // Increment views counter
   item.views = (item.views || 0) + 1;
   saveData();
+  if (typeof firebaseDb !== 'undefined' && firebaseDb && typeof firebase !== 'undefined' && firebase.firestore) {
+    try {
+      firebaseDb.collection('listings').doc(item.id).set({
+        views: firebase.firestore.FieldValue.increment(1)
+      }, { merge: true }).catch(() => {});
+    } catch(e) {}
+  }
 
   const content = document.getElementById('detailContent');
   const specs = CATEGORY_SPECS[item.cat] || CATEGORY_SPECS['Others'];
@@ -4939,7 +4943,7 @@ function openItemDetail(id) {
     <!-- Social Stats & Quick Actions Bar (Views, Likes, Share) -->
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background:#f8fafc; border:1.5px solid #e2e8f0; padding:10px 14px; border-radius:14px; margin:12px 0;">
       <div style="display:flex; align-items:center; gap:12px; font-size:12px; font-weight:700; color:#475569;">
-        <span style="display:flex; align-items:center; gap:4px">👁️ <b>${item.views || 1}</b> Views</span>
+        ${isMine ? `<a href="dashboard.html?tab=listings" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:800; color:#065f46; background:#ecfdf5; border:1px solid #6ee7b7; padding:3px 8px; border-radius:8px; text-decoration:none;" title="Only visible to you as the seller · Manage in Dashboard">👁️ <b>${item.views || 1}</b> Views (Private)</a>` : ''}
         <button onclick="toggleSave('${item.id}'); openItemDetail('${item.id}')" style="display:flex; align-items:center; gap:4px; background:none; border:none; color:${savedItemIds.has(item.id)?'#ef4444':'#64748b'}; font-weight:800; cursor:pointer; font-size:12px;">
           ${savedItemIds.has(item.id) ? '❤️ Saved' : '🤍 Save'} (${item.likes || (savedItemIds.has(item.id) ? 1 : 0)})
         </button>

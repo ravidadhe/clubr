@@ -1692,9 +1692,30 @@
       const item = allListings.find(x => x.id === threadKey) || allWants.find(x => x.id === threadKey) || { title: 'Marketplace Deal', price: 0, emoji: '📦' };
 
       const msgs = allChats[threadKey] || [];
-      const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
-      let otherName = otherMsg ? (otherMsg.senderName || otherMsg.sender) : (item.seller && String(item.sellerId) !== String(currentUser.id) ? item.seller : (item.buyer || 'Buyer'));
-      let otherCity = otherMsg ? (otherMsg.senderCity || item.city || '') : (item.city || 'India');
+      const sellerCity = item.sellerCity || item.city || (currentUser && currentUser.city) || 'India';
+      const sellerName = item.seller || (currentUser && currentUser.name) || 'Seller';
+
+      const buyerMsg = msgs.slice().reverse().find(m => {
+        if (!m) return false;
+        const textLower = (m.text || '').toLowerCase().trim();
+        const isBuyerText = textLower.includes('best final price') || 
+                            textLower.includes('is this still available') || 
+                            textLower.includes('is this available') || 
+                            textLower.includes('can we meet today') || 
+                            textLower.includes('where can we meet') || 
+                            textLower.includes('original bill hai') ||
+                            textLower.includes('interested in this') ||
+                            m.type === 'offer';
+        return m.senderRole === 'buyer' || isBuyerText || (m.senderName && m.senderName !== sellerName);
+      });
+
+      let otherName = (buyerMsg && buyerMsg.senderName && buyerMsg.senderName !== sellerName && buyerMsg.senderName !== 'You') 
+        ? buyerMsg.senderName 
+        : (item.buyer || 'Interested Buyer');
+
+      let otherCity = (buyerMsg && buyerMsg.senderCity && buyerMsg.senderCity !== sellerCity) 
+        ? buyerMsg.senderCity 
+        : 'Buyer Location';
 
       document.getElementById('chatEmptyPlaceholder').classList.add('hidden');
       document.getElementById('chatActiveBox').classList.remove('hidden');
@@ -1802,8 +1823,29 @@
 
         const roleLabel = isSeller ? 'SELLER' : 'BUYER';
         const roleIcon = isSeller ? '🛡️' : '👤';
-        const senderRawName = isMine ? 'You' : (m.senderName || m.sender || (isSeller ? 'Seller' : 'Buyer'));
-        const senderCity = isMine ? (currentUser.city || '') : (m.senderCity || '');
+
+        const sellerName = item.seller || (currentUser && currentUser.name) || 'Seller';
+        const sellerCity = item.sellerCity || item.city || (currentUser && currentUser.city) || 'India';
+
+        // Buyer details: never default to seller's name or city, and never show confusing "You"
+        let buyerName = (m.senderName && m.senderName !== sellerName && m.senderName !== 'You') 
+          ? m.senderName 
+          : ((m.sender && m.sender !== sellerName && m.sender !== 'You') ? m.sender : (item.buyer || 'Interested Buyer'));
+
+        let buyerCity = (m.senderCity && m.senderCity !== sellerCity) 
+          ? m.senderCity 
+          : (m.buyerCity || 'Buyer Location');
+
+        let senderDisplayName = '';
+        let senderDisplayCity = '';
+
+        if (isSeller) {
+          senderDisplayName = `${sellerName} (You)`;
+          senderDisplayCity = sellerCity;
+        } else {
+          senderDisplayName = buyerName;
+          senderDisplayCity = buyerCity;
+        }
 
         if (m.type === 'offer') {
           stream.insertAdjacentHTML('beforeend', `
@@ -1829,9 +1871,9 @@
                 <div class="text-[10px] font-extrabold mb-1.5 flex items-center justify-between gap-3 border-b border-white/20 pb-1">
                   <div class="flex items-center gap-1.5">
                     <span class="${pillBg} font-black px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider">${roleIcon} ${roleLabel}</span>
-                    <span class="font-bold">${escapeHtml(senderRawName)}</span>
+                    <span class="font-bold">${escapeHtml(senderDisplayName)}</span>
                   </div>
-                  ${senderCity ? `<span class="font-semibold text-[10px] opacity-85">📍 ${escapeHtml(senderCity)}</span>` : ''}
+                  ${senderDisplayCity ? `<span class="font-semibold text-[10px] opacity-85">📍 ${escapeHtml(senderDisplayCity)}</span>` : ''}
                 </div>
                 <p class="leading-relaxed break-words font-medium">${escapeHtml(m.text)}</p>
                 <span class="text-[9px] ${timeColor} block text-right mt-1 font-mono">${escapeHtml(m.time || '')}</span>
@@ -1877,20 +1919,23 @@
         }
       }
 
+      const sellerCity = item.sellerCity || item.city || currentUser.city || 'India';
+      const sellerName = item.seller || currentUser.name || 'Seller';
+
       const newMsg = {
         id: 'msg_' + Date.now(),
         itemId: currentActiveChatKey,
         itemTitle: item.title || item.item || 'Marketplace Item',
         itemEmoji: item.photo ? '' : (item.emoji || '💬'),
-        sender: currentUser.name,
-        senderName: currentUser.name,
-        senderCity: currentUser.city || 'India',
+        sender: isOwner ? sellerName : currentUser.name,
+        senderName: isOwner ? sellerName : currentUser.name,
+        senderCity: isOwner ? sellerCity : (currentUser.city || 'India'),
         senderId: currentUser.id,
         senderRole: isOwner ? 'seller' : 'buyer',
         senderEmail: currentUser.email || '',
         receiverId: receiverId,
         receiverName: receiverName,
-        receiverCity: receiverCity,
+        receiverCity: receiverCity && receiverCity !== sellerCity ? receiverCity : 'Buyer Location',
         text: text,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()

@@ -92,7 +92,7 @@
         <a href="index.html" class="text-xs font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition">
           ← Cancel & Return
         </a>
-        <div id="headerUserPill" class="hidden sm:flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-800">
+        <div id="headerUserPill" class="hidden" style="align-items:center; gap:8px; background:#f1f5f9; border:1px solid #e2e8f0; padding:6px 12px; border-radius:12px; font-size:12px; font-weight:600; color:#1e293b;">
           <span id="headerUserName">User</span>
         </div>
       </div>
@@ -527,14 +527,14 @@
       }
 
       if (currentUser) {
-        // Logged in — show name, hide guest notice, hide block overlay
-        document.getElementById('headerUserPill').classList.remove('hidden');
+        // Logged in — show name pill, hide guest notice, hide block overlay
+        document.getElementById('headerUserPill').style.display = 'flex';
         document.getElementById('headerUserName').textContent = currentUser.name.split(' ')[0];
         document.getElementById('guestAuthNotice').classList.add('hidden');
         document.getElementById('sellAuthGate').style.display = 'none';
       } else {
-        // NOT logged in — show block overlay, hide form
-        document.getElementById('headerUserPill').classList.add('hidden');
+        // NOT logged in — hide pill, show gate
+        document.getElementById('headerUserPill').style.display = 'none';
         document.getElementById('guestAuthNotice').classList.remove('hidden');
         document.getElementById('sellAuthGate').style.display = 'flex';
         document.getElementById('fullSellForm').style.display = 'none';

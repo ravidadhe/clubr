@@ -967,6 +967,53 @@ async function clubrClearEntireUserInbox(userId) {
 }
 
 /**
+ * Permanently delete / wipe a chat thread and all its messages from RTDB
+ * Ensures old messages never reload when opening the same chat again
+ */
+async function clubrDeleteChatThread(itemId, userId) {
+  if (!firebaseRtdb || !itemId) return;
+  try {
+    // 1. Gather all participants to clean their user_threads & user_inbox
+    const participants = new Set();
+    if (userId) participants.add(String(userId));
+
+    try {
+      const snap = await firebaseRtdb.ref(`chats/${itemId}`).once('value');
+      const val = snap.val();
+      if (val && typeof val === 'object') {
+        Object.values(val).forEach(m => {
+          if (m && m.senderId) participants.add(String(m.senderId));
+          if (m && m.receiverId) participants.add(String(m.receiverId));
+        });
+      }
+    } catch(e) {}
+
+    // 2. Perform atomic deletion in Firebase RTDB
+    const updates = {};
+    updates[`chats/${itemId}`] = null;
+    participants.forEach(pId => {
+      updates[`user_threads/${pId}/${itemId}`] = null;
+    });
+
+    await firebaseRtdb.ref().update(updates);
+
+    // 3. Clear inbox entries for all participants for this itemId
+    for (const pId of participants) {
+      await clubrClearUserInboxForItem(pId, itemId);
+    }
+  } catch(err) {
+    console.warn('[Clubr RTDB Delete Chat Error]', err.message);
+    try {
+      await firebaseRtdb.ref(`chats/${itemId}`).remove();
+      if (userId) {
+        await firebaseRtdb.ref(`user_threads/${userId}/${itemId}`).remove();
+        await clubrClearUserInboxForItem(userId, itemId);
+      }
+    } catch(e) {}
+  }
+}
+
+/**
  * Fetch all chat threads for a user from cloud (for mobile/dashboard restoration)
  */
 async function clubrSyncUserChatsFromCloud(userId, userListings = []) {

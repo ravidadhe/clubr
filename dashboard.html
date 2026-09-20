@@ -453,6 +453,9 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <span id="chatActiveParticipant" class="text-xs text-slate-700 font-medium bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">Buyer</span>
+                  <button type="button" onclick="deleteChatThreadFromDashboard(currentActiveChatKey, event)" title="Delete Conversation" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition flex items-center gap-1 cursor-pointer">
+                    🗑️ Delete Chat
+                  </button>
                 </div>
               </div>
 
@@ -1531,19 +1534,34 @@
     // ========================================================
     // TAB 3: IN-APP MESSAGES & CHAT CENTER
     // ========================================================
-    function deleteChatThreadFromDashboard(key, e) {
+    async function deleteChatThreadFromDashboard(key, e) {
       if (e) e.stopPropagation();
-      if (!confirm('Are you sure you want to delete this chat conversation?')) return;
+      if (!key) return;
+      if (!confirm('Are you sure you want to permanently delete this chat conversation? All messages will be cleared.')) return;
+
+      // 1. Clear local memory and storage
       delete allChats[key];
       localStorage.setItem('findly_chats', JSON.stringify(allChats));
+
+      // 2. If this chat is currently open, reset active chat pane
       if (currentActiveChatKey === key) {
         currentActiveChatKey = null;
+        if (window.dashboardActiveChatUnsub) {
+          window.dashboardActiveChatUnsub();
+          window.dashboardActiveChatUnsub = null;
+        }
         document.getElementById('chatActiveBox').classList.add('hidden');
         document.getElementById('chatEmptyPlaceholder').classList.remove('hidden');
       }
+
+      // 3. Permanently wipe thread and messages from Firebase RTDB
+      if (typeof clubrDeleteChatThread === 'function') {
+        await clubrDeleteChatThread(key, currentUser ? currentUser.id : null);
+      }
+
       updateDashboardCounts();
       renderChatThreads();
-      toast('Chat conversation deleted.');
+      toast('Chat conversation permanently deleted.');
     }
 
     function renderChatThreads(query = '') {

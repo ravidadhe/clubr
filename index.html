@@ -2614,6 +2614,9 @@ h1 {
         <button type="button" onclick="openReportFraudModal()" title="Report Fraud / Scam" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; font-size:11px; font-weight:800; padding:5px 10px; border-radius:99px; cursor:pointer; display:flex; align-items:center; gap:3px">
           🚨 Report
         </button>
+        <button type="button" onclick="deleteActiveInAppChat()" title="Delete Chat History" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; font-size:11px; font-weight:800; padding:5px 10px; border-radius:99px; cursor:pointer; display:flex; align-items:center; gap:3px">
+          🗑️ Clear
+        </button>
         <button class="close-btn" onclick="closeChatModal()">✕</button>
       </div>
     </div>
@@ -6081,14 +6084,49 @@ function openInboxModal() {
 function closeInboxModal() {
   closeNotificationModal();
 }
-function deleteChatThread(threadKey, e) {
+async function deleteChatThread(threadKey, e) {
   if (e) e.stopPropagation();
-  if (!confirm('Are you sure you want to delete this chat conversation?')) return;
+  if (!threadKey) return;
+  if (!confirm('Are you sure you want to permanently delete this chat conversation? All messages will be cleared.')) return;
+
+  // 1. Clear local memory and storage
   delete chatThreads[threadKey];
   saveData();
+
+  // 2. Remove all notifications for this item
+  if (typeof getUserNotifications === 'function' && typeof saveUserNotifications === 'function') {
+    let notifs = getUserNotifications();
+    notifs = notifs.filter(n => n.itemId !== threadKey);
+    saveUserNotifications(notifs);
+  }
+
+  // 3. If chat modal is currently open for this item, close it and reset
+  const chatModal = document.getElementById('chatModal');
+  if (chatModal && chatModal.classList.contains('show') && activeChatContext && activeChatContext.itemId === threadKey) {
+    if (window.activeChatListenerUnsub) {
+      window.activeChatListenerUnsub();
+      window.activeChatListenerUnsub = null;
+    }
+    chatThreads[threadKey] = [];
+    renderChatMessages();
+    closeChatModal();
+  }
+
+  // 4. Permanently wipe thread and messages from Firebase RTDB
+  if (typeof clubrDeleteChatThread === 'function') {
+    await clubrDeleteChatThread(threadKey, currentUser ? currentUser.id : null);
+  }
+
   updateCounts();
-  renderNotifications(currentNotifFilter);
-  toast('Chat conversation deleted.');
+  if (typeof renderNotifications === 'function') {
+    renderNotifications(currentNotifFilter);
+  }
+  toast('Chat conversation permanently deleted.');
+}
+
+function deleteActiveInAppChat() {
+  if (!activeChatContext || !activeChatContext.itemId) return;
+  deleteChatThread(activeChatContext.itemId);
 }
 
 // PHOTO UPLOAD

@@ -92,67 +92,68 @@
   <!-- Top Navigation -->
   <!-- Top Navigation Header -->
   <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-3 sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-6">
-      
-      <!-- Brand & Platform Identity (Always One Clean Line, Fixed Alignment) -->
-      <div class="flex items-center gap-3 shrink-0">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shadow-lime-400/20 shrink-0 border border-lime-300/40">
-          C
-        </div>
-        <div class="flex flex-col justify-center leading-tight">
-          <div class="flex items-center gap-2">
-            <span class="font-extrabold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">Clubr SuperAdmin</span>
-            <span class="bg-lime-400/15 text-lime-400 border border-lime-400/30 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">v3.6 LIVE</span>
+    <div class="max-w-7xl mx-auto space-y-2.5">
+      <!-- ROW 1: Brand & Identity (Left) + Status & Controls (Right) -->
+      <div class="flex items-center justify-between gap-3">
+        <!-- Brand & Platform Identity -->
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md shadow-lime-400/20 shrink-0 border border-lime-300/40">
+            C
           </div>
-          <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium whitespace-nowrap">clubr.online Command Center</span>
+          <div class="flex flex-col justify-center leading-tight">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">Clubr SuperAdmin</span>
+              <span class="bg-lime-400/15 text-lime-400 border border-lime-400/30 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">v3.6 LIVE</span>
+            </div>
+            <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium whitespace-nowrap">clubr.online Command Center</span>
+          </div>
+        </div>
+
+        <!-- Right Controls (Never Gets Cut Off) -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0 whitespace-nowrap">
+          <!-- Pulsating Live Traffic Badge -->
+          <div class="flex items-center gap-1.5 sm:gap-2 bg-emerald-500/10 border border-emerald-500/30 px-2.5 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-emerald-400 whitespace-nowrap shrink-0">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot shrink-0"></span>
+            <span><span id="liveVisitorsCount" class="font-mono">1</span> Online Now</span>
+          </div>
+
+          <a href="index.html" target="_blank" class="text-xs text-slate-300 hover:text-white transition flex items-center gap-1 bg-slate-800/90 hover:bg-slate-700 px-3 py-1.5 rounded-xl border border-slate-700 font-semibold whitespace-nowrap shrink-0">
+            <span>Open Site</span> ↗
+          </a>
+
+          <button onclick="lockAdmin()" class="text-xs text-rose-400 hover:text-rose-300 font-bold bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 px-3 py-1.5 rounded-xl transition whitespace-nowrap shrink-0">
+            Lock 🔒
+          </button>
         </div>
       </div>
 
-      <!-- Navigation Tabs (Sleek Segments, Compact, Never Wraps) -->
-      <nav class="flex items-center gap-1 bg-slate-950/90 p-1 sm:p-1.5 rounded-2xl border border-slate-800 shadow-inner shrink-0 overflow-x-auto no-scrollbar">
-        <button onclick="switchTab('analytics')" id="navTabAnalytics" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-lime-400 text-slate-950 shadow-sm shrink-0">
+      <!-- ROW 2: Navigation Tabs (Clean, Spacious, Full-Width) -->
+      <nav class="flex items-center gap-1.5 bg-slate-950/90 p-1.5 rounded-2xl border border-slate-800 shadow-inner overflow-x-auto no-scrollbar w-full">
+        <button onclick="switchTab('analytics')" id="navTabAnalytics" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-lime-400 text-slate-950 shadow-sm shrink-0">
           📊 Analytics
         </button>
-        <button onclick="switchTab('kyc')" id="navTabKyc" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
+        <button onclick="switchTab('kyc')" id="navTabKyc" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
           🛡️ KYC (<span id="adminKycCount">0</span>)
         </button>
-        <button onclick="switchTab('users')" id="navTabUsers" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
+        <button onclick="switchTab('users')" id="navTabUsers" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
           👥 Users (<span id="adminUsersCount">0</span>)
         </button>
-        <button onclick="switchTab('listings')" id="navTabListings" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
+        <button onclick="switchTab('listings')" id="navTabListings" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
           🛍️ Listings (<span id="adminListingsCount">0</span>)
         </button>
-        <button onclick="switchTab('demands')" id="navTabDemands" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
+        <button onclick="switchTab('demands')" id="navTabDemands" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
           📢 Demands (<span id="adminDemandsCount">0</span>)
         </button>
-        <button onclick="switchTab('broadcast')" id="navTabBroadcast" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
+        <button onclick="switchTab('broadcast')" id="navTabBroadcast" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white shrink-0">
           📣 Broadcast
         </button>
-        <button onclick="switchTab('reports')" id="navTabReports" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-rose-400 hover:text-white shrink-0">
+        <button onclick="switchTab('reports')" id="navTabReports" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-rose-400 hover:text-white shrink-0">
           🚨 Reports (<span id="adminReportsCount">0</span>)
         </button>
-        <button onclick="switchTab('monetize')" id="navTabMonetize" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-amber-400 hover:text-white shrink-0">
+        <button onclick="switchTab('monetize')" id="navTabMonetize" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap text-amber-400 hover:text-white shrink-0">
           💰 Monetize
         </button>
       </nav>
-
-      <!-- Right Controls (Never Wraps) -->
-      <div class="flex items-center gap-2 sm:gap-3 shrink-0 whitespace-nowrap">
-        <!-- Pulsating Live Traffic Badge -->
-        <div class="flex items-center gap-1.5 sm:gap-2 bg-emerald-500/10 border border-emerald-500/30 px-2.5 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold text-emerald-400 whitespace-nowrap shrink-0">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot shrink-0"></span>
-          <span><span id="liveVisitorsCount" class="font-mono">1</span> Online Now</span>
-        </div>
-
-        <a href="index.html" target="_blank" class="text-xs text-slate-300 hover:text-white transition flex items-center gap-1 bg-slate-800/90 hover:bg-slate-700 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-700 font-semibold whitespace-nowrap shrink-0">
-          <span>Open Site</span> ↗
-        </a>
-
-        <button onclick="lockAdmin()" class="text-xs text-rose-400 hover:text-rose-300 font-bold bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 px-2.5 sm:px-3 py-1.5 rounded-xl transition whitespace-nowrap shrink-0">
-          Lock 🔒
-        </button>
-      </div>
-
     </div>
   </header>
 
@@ -570,7 +571,7 @@
                   <span class="text-xs font-black uppercase tracking-wider text-amber-400">⚡ PAID MODE</span>
                   <span class="text-lg">💳</span>
                 </div>
-                <div class="text-sm font-bold text-white">Pay-Per-Post Gate (Razorpay)</div>
+                <div class="text-sm font-bold text-white">Pay-Per-Post Gate (Secure Online Payment)</div>
                 <div class="text-[11px] text-slate-400">Requires users to pay fee before listing goes live.</div>
               </button>
             </div>
@@ -579,7 +580,7 @@
           <!-- Price & Gateway Config Form -->
           <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <span>⚙️</span> Listing Fee & Razorpay Gateway Setup
+              <span>⚙️</span> Listing Fee & Online Payment Setup
             </h3>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -596,10 +597,10 @@
 
               <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  Razorpay Key ID (Live)
+                  Payment Gateway Live Key ID
                 </label>
                 <input type="text" id="inputRazorpayKeyId" value="rzp_live_TbY2N6nITgRQbx" placeholder="rzp_live_..." class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl px-4 py-2.5 text-sm text-white font-mono outline-none">
-                <p class="text-[11px] text-slate-500 mt-1">Key ID used to initialize Razorpay checkout.</p>
+                <p class="text-[11px] text-slate-500 mt-1">Live Key ID used to initialize secure payment checkout.</p>
               </div>
             </div>
 
@@ -1898,7 +1899,7 @@ function updateMonetizeModeUI() {
     }
     if (previewSell) {
       previewSell.className = 'text-xs font-bold text-amber-300';
-      previewSell.textContent = `⚡ Verified Listing Fee: ₹${curPrice}/month via Razorpay. Zero hidden commissions!`;
+      previewSell.textContent = `⚡ Verified Listing Fee: ₹${curPrice}/month with 100% secure online payment. Zero hidden commissions!`;
     }
   }
 }

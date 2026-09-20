@@ -1763,7 +1763,7 @@ h1 {
       </button>
 
       <!-- Sell CTA Button -->
-      <a href="sell.html" class="nav-sell-btn" style="background:#d4f738; color:#0f172a; border:1px solid #c1e626; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(212,247,56,0.25);">
+      <a href="sell" class="nav-sell-btn" style="background:#d4f738; color:#0f172a; border:1px solid #c1e626; border-radius:99px; padding:6px 14px; font-size:12px; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(212,247,56,0.25);">
         <span>＋</span> <span>Sell</span>
       </a>
 
@@ -1890,7 +1890,7 @@ h1 {
   <button class="bottom-item" onclick="switchFeed('want'); window.scrollTo({top:0,behavior:'smooth'})">
     <b>📢</b>Demands
   </button>
-  <button class="bottom-sell-btn" onclick="window.location.href='sell.html'" title="Sell Item">
+  <button class="bottom-sell-btn" onclick="window.location.href='sell'" title="Sell Item">
     ＋
   </button>
   <button class="bottom-item" onclick="openInboxModal()">
@@ -2616,6 +2616,12 @@ h1 {
 <!-- APPLICATION LOGIC & DATA SYSTEM                          -->
 <!-- ======================================================== -->
 <script>
+// Clean URL: Automatically strip .html from browser address bar
+if (window.location && window.location.pathname && window.location.pathname.endsWith('.html')) {
+  const cleanPath = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+  window.history.replaceState(null, '', (cleanPath || '/') + (window.location.search || '') + (window.location.hash || ''));
+}
+
 // PWA Service Worker
 let deferredPrompt = null;
 if ('serviceWorker' in navigator) {
@@ -3042,7 +3048,7 @@ function updateUserUI() {
 
 function handleUserBtnClick() {
   if (currentUser) {
-    window.location.href = 'dashboard.html';
+    window.location.href = 'dashboard';
   } else {
     // Not logged in – show sign‑in modal
     openAuthModal();

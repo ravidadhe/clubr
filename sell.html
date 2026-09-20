@@ -1034,7 +1034,7 @@
       filesToProcess.forEach(file => {
         if (!file.type.startsWith('image/')) return;
 
-        compressImageFile(file, 1000, 0.72, (base64) => {
+        compressImageFile(file, 800, 0.65, (base64) => {
           uploadedPhotos.push(base64);
           processedCount++;
           if (processedCount === filesToProcess.length) {
@@ -1268,15 +1268,22 @@
       localStorage.setItem('findly_wants', JSON.stringify(localWants));
       localStorage.setItem('findly_current_city', city);
 
-      // 2. Sync to Cloud Firestore
+      // 2. Sync to Cloud Firestore & RTDB
+      btn.innerHTML = 'Broadcasting Requirement... ⏳';
+      btn.disabled = true;
+
       if (typeof clubrPublishDemand === 'function') {
-        clubrPublishDemand(newDemand);
+        try {
+          await clubrPublishDemand(newDemand);
+        } catch(err) {
+          console.warn('[Demand Sync Warning]', err);
+        }
       }
 
       toast('📢 Requirement broadcasted live across your city!');
       setTimeout(() => {
-        window.location.href = './#demands';
-      }, 900);
+        window.location.href = 'index.html#demands';
+      }, 500);
     }
 
     // Submit Listing
@@ -1361,6 +1368,9 @@
         sellerPhone = currentUser.phone;
       }
 
+      // Safe photo payload: cap to 6 photos max to stay well within Firestore doc limits
+      const safePhotos = (uploadedPhotos || []).slice(0, 6);
+
       const newListing = {
         id: 'l_' + Date.now(),
         title,
@@ -1371,19 +1381,19 @@
         city,
         locality,
         condition,
-        seller: currentUser.name,
-        sellerId: currentUser.id,
+        seller: (currentUser && currentUser.name) ? currentUser.name : 'Clubr Member',
+        sellerId: (currentUser && currentUser.id) ? currentUser.id : ('usr_' + Date.now()),
         phone: sellerPhone,
         isSold: false,
-        isKycVerified: (currentUser.kycStatus === 'verified'),
+        isKycVerified: !!(currentUser && currentUser.kycStatus === 'verified'),
         desc,
         badges,
         bill: !!(badges.bill || badges.rc || badges.material || badges.condition || badges.directOwner || badges.directHire || badges.verifiedPro || badges.brandNew || badges.vaccinated),
         box: !!(badges.box || badges.insurance || badges.remote || badges.packaging || badges.bachelorOk || badges.immediateJoin || badges.doorstep || badges.originalBrand || badges.dewormed),
         owner: !!(badges.warranty || badges.service || badges.tested || badges.proof || badges.lowDeposit || badges.freshersWelcome || badges.serviceWarranty || badges.dryCleaned || badges.friendlyTrained),
         exchange: !!(badges.exchange || badges.negotiable || badges.parkingWater || badges.dailyIncentive || badges.transparentRates || badges.sizeTag || badges.ethicalAdoption),
-        photo: uploadedPhotos[0] || '',       // Primary Cover photo for backward compatibility
-        photos: uploadedPhotos,                // Array of up to 10 photos!
+        photo: safePhotos[0] || '',
+        photos: safePhotos,
         time: 'Just now'
       };
 
@@ -1399,15 +1409,22 @@
       // Also set the current city to the listing city so user immediately sees it
       localStorage.setItem('findly_current_city', city);
 
-      // 5. Sync to Cloud Firestore
+      // 5. Sync to Cloud Firestore & RTDB (Awaited with progress feedback)
+      btn.innerHTML = 'Publishing to Cloud Network... ⏳';
+      btn.disabled = true;
+
       if (typeof clubrPublishListing === 'function') {
-        clubrPublishListing(newListing);
+        try {
+          await clubrPublishListing(newListing);
+        } catch(err) {
+          console.warn('[Listing Sync Warning]', err);
+        }
       }
 
       toast('🎉 Listing published live across India!');
       setTimeout(() => {
         window.location.href = 'index.html';
-      }, 800);
+      }, 500);
     }
 
     function toast(msg) {

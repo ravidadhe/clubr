@@ -3014,11 +3014,7 @@ function clearPhotoUpload(e) {
 function initData() {
   try {
     const APP_VER = 'clubr_v5_live_data_dynamic_specs';
-    if (localStorage.getItem('clubr_app_version') !== APP_VER) {
-      localStorage.removeItem('findly_listings');
-      localStorage.removeItem('findly_wants');
-      localStorage.setItem('clubr_app_version', APP_VER);
-    }
+    localStorage.setItem('clubr_app_version', APP_VER);
 
     const savedL = localStorage.getItem('findly_listings');
     listings = savedL ? JSON.parse(savedL) : [];
@@ -3076,11 +3072,24 @@ function initData() {
       localStorage.removeItem('findly_saved');
     }
 
-    // Live Sync from Cloud Firestore
+    // Live Sync from Cloud Firestore & RTDB with Non-Destructive Merge
     if (typeof clubrFetchLiveListings === 'function') {
       clubrFetchLiveListings().then(cloudListings => {
         if (cloudListings && Array.isArray(cloudListings)) {
-          listings = cloudListings;
+          const cloudMap = new Map();
+          cloudListings.forEach(c => {
+            if (c && c.id) cloudMap.set(c.id, c);
+          });
+          // Local listings that have not synced to cloud yet
+          const localOnly = listings.filter(l => l && l.id && !cloudMap.has(l.id));
+
+          // If local items exist that are missing from cloud, push them in background
+          if (localOnly.length > 0 && typeof clubrPublishListing === 'function') {
+            localOnly.forEach(l => clubrPublishListing(l).catch(() => {}));
+          }
+
+          // Combine so user's newly posted items are NEVER wiped out
+          listings = [...localOnly, ...cloudListings];
           localStorage.setItem('findly_listings', JSON.stringify(listings));
           updateCounts();
           renderFeed();
@@ -3090,7 +3099,15 @@ function initData() {
     if (typeof clubrFetchLiveDemands === 'function') {
       clubrFetchLiveDemands().then(cloudDemands => {
         if (cloudDemands && Array.isArray(cloudDemands)) {
-          wants = cloudDemands;
+          const cloudMap = new Map();
+          cloudDemands.forEach(w => {
+            if (w && w.id) cloudMap.set(w.id, w);
+          });
+          const localOnlyW = wants.filter(w => w && w.id && !cloudMap.has(w.id));
+          if (localOnlyW.length > 0 && typeof clubrPublishDemand === 'function') {
+            localOnlyW.forEach(w => clubrPublishDemand(w).catch(() => {}));
+          }
+          wants = [...localOnlyW, ...cloudDemands];
           localStorage.setItem('findly_wants', JSON.stringify(wants));
           updateCounts();
           renderFeed();
@@ -5316,9 +5333,11 @@ function submitListing() {
     city,
     locality,
     condition,
-    seller: currentUser.name,
-    sellerId: currentUser.id,
-    isKycVerified: (currentUser.kycStatus === 'verified'),
+    seller: (currentUser && currentUser.name) ? currentUser.name : 'Clubr Member',
+    sellerId: (currentUser && currentUser.id) ? currentUser.id : ('usr_' + Date.now()),
+    phone: (currentUser && currentUser.phone) ? currentUser.phone : '',
+    isSold: false,
+    isKycVerified: !!(currentUser && currentUser.kycStatus === 'verified'),
     desc,
     badges,
     bill: !!(badges.bill || badges.rc || badges.material || badges.condition || badges.directOwner || badges.directHire || badges.verifiedPro || badges.brandNew || badges.vaccinated),
@@ -5326,13 +5345,14 @@ function submitListing() {
     owner: !!(badges.warranty || badges.service || badges.tested || badges.proof || badges.lowDeposit || badges.freshersWelcome || badges.serviceWarranty || badges.dryCleaned || badges.friendlyTrained),
     exchange: !!(badges.exchange || badges.negotiable || badges.parkingWater || badges.dailyIncentive || badges.transparentRates || badges.sizeTag || badges.ethicalAdoption),
     photo: uploadedPhotoBase64,
+    photos: uploadedPhotoBase64 ? [uploadedPhotoBase64] : [],
     time: 'Just now'
   };
 
   listings.unshift(newListing);
   saveData();
   if (typeof clubrPublishListing === 'function') {
-    clubrPublishListing(newListing);
+    clubrPublishListing(newListing).catch(e => console.warn('[Publish Warning]', e));
   }
   closeActionModal();
   switchFeed('sell');
@@ -5342,7 +5362,7 @@ function submitListing() {
   clearPhotoUpload();
 }
 
-function submitWant() {
+async function submitWant() {
   if (!currentUser) {
     openAuthModal('Please sign in first');
     return;
@@ -5358,8 +5378,8 @@ function submitWant() {
 
   const newWant = {
     id: 'w_' + Date.now(),
-    buyer: currentUser.name,
-    buyerId: currentUser.id,
+    buyer: (currentUser && currentUser.name) ? currentUser.name : 'Buyer',
+    buyerId: (currentUser && currentUser.id) ? currentUser.id : ('usr_' + Date.now()),
     item,
     budget,
     cat,
@@ -5373,7 +5393,7 @@ function submitWant() {
   wants.unshift(newWant);
   saveData();
   if (typeof clubrPublishDemand === 'function') {
-    clubrPublishDemand(newWant);
+    clubrPublishDemand(newWant).catch(e => console.warn('[Demand Publish Warning]', e));
   }
   closeActionModal();
   switchFeed('want');

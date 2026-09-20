@@ -318,58 +318,85 @@ async function clubrUpdateUserProfile(userId, updates) {
   } catch(e) {}
 }
 
+// Helper to sanitize objects for Firestore (removes undefined fields which cause Firestore to reject)
+function sanitizeForFirestore(obj) {
+  try {
+    return JSON.parse(JSON.stringify(obj, (k, v) => v === undefined ? null : v));
+  } catch(e) {
+    return obj;
+  }
+}
+
 // ========================================================
 // CLOUD PUBLISH METHODS
 // ========================================================
 async function clubrPublishListing(listing) {
+  if (!listing || !listing.id) return { success: false, error: 'Invalid listing object' };
+  const safeDoc = sanitizeForFirestore(listing);
+  let savedFirestore = false;
+
   if (firebaseDb) {
     try {
-      await firebaseDb.collection('listings').doc(listing.id).set(listing);
+      await firebaseDb.collection('listings').doc(listing.id).set(safeDoc);
+      savedFirestore = true;
+      console.log('[Clubr Cloud] ✅ Listing published to Firestore:', listing.id);
     } catch(e) {
-      console.warn('[Firestore Listing Publish]', e.message);
+      console.warn('[Firestore Listing Publish Warning]', e.message);
     }
   }
   if (firebaseRtdb) {
     try {
-      firebaseRtdb.ref('listings/' + listing.id).set(listing);
+      await firebaseRtdb.ref('listings/' + listing.id).set(safeDoc);
+      console.log('[Clubr Cloud] ✅ Listing synced to RTDB:', listing.id);
     } catch(e) {}
   }
+  return { success: true };
 }
 
 async function clubrPublishDemand(demand) {
+  if (!demand || !demand.id) return { success: false, error: 'Invalid demand object' };
+  const safeDoc = sanitizeForFirestore(demand);
+
   if (firebaseDb) {
     try {
-      await firebaseDb.collection('demands').doc(demand.id).set(demand);
+      await firebaseDb.collection('demands').doc(demand.id).set(safeDoc);
+      console.log('[Clubr Cloud] ✅ Demand published to Firestore:', demand.id);
     } catch(e) {
-      console.warn('[Firestore Demand Publish]', e.message);
+      console.warn('[Firestore Demand Publish Warning]', e.message);
     }
   }
   if (firebaseRtdb) {
     try {
-      firebaseRtdb.ref('demands/' + demand.id).set(demand);
+      await firebaseRtdb.ref('demands/' + demand.id).set(safeDoc);
+      console.log('[Clubr Cloud] ✅ Demand synced to RTDB:', demand.id);
     } catch(e) {}
   }
+  return { success: true };
 }
 
 async function clubrPublishKycRequest(req) {
+  if (!req || !req.id) return;
+  const safeDoc = sanitizeForFirestore(req);
   if (firebaseDb) {
     try {
-      await firebaseDb.collection('kyc_requests').doc(req.id).set(req);
+      await firebaseDb.collection('kyc_requests').doc(req.id).set(safeDoc);
     } catch(e) {
       console.warn('[Firestore KYC Publish]', e.message);
     }
   }
   if (firebaseRtdb) {
     try {
-      firebaseRtdb.ref('kyc_requests/' + req.id).set(req);
+      await firebaseRtdb.ref('kyc_requests/' + req.id).set(safeDoc);
     } catch(e) {}
   }
 }
 
 async function clubrPublishFraudReport(report) {
+  if (!report || !report.id) return;
+  const safeDoc = sanitizeForFirestore(report);
   if (firebaseDb) {
     try {
-      await firebaseDb.collection('fraud_reports').doc(report.id).set(report);
+      await firebaseDb.collection('fraud_reports').doc(report.id).set(safeDoc);
     } catch(e) {
       console.warn('[Firestore Fraud Report Publish]', e.message);
     }
@@ -380,37 +407,71 @@ async function clubrPublishFraudReport(report) {
 // LIVE CLOUD FETCH & QUERY METHODS
 // ========================================================
 async function clubrFetchLiveListings() {
-  if (!firebaseDb) return null;
+  if (!firebaseDb && !firebaseRtdb) return null;
   try {
-    const snapshot = await firebaseDb.collection('listings').get();
-    if (!snapshot.empty) {
-      const items = [];
-      snapshot.forEach(doc => {
-        items.push({ ...doc.data(), id: doc.id });
-      });
-      return items;
+    if (firebaseDb) {
+      const snapshot = await firebaseDb.collection('listings').get();
+      if (!snapshot.empty) {
+        const items = [];
+        snapshot.forEach(doc => {
+          items.push({ ...doc.data(), id: doc.id });
+        });
+        return items;
+      }
+    }
+    // RTDB fallback if Firestore was empty or pending
+    if (firebaseRtdb) {
+      const rtdbSnap = await firebaseRtdb.ref('listings').once('value');
+      const val = rtdbSnap.val();
+      if (val) {
+        return Object.keys(val).map(k => ({ ...val[k], id: k }));
+      }
     }
     return [];
   } catch(e) {
     console.warn('[Firestore Fetch Listings]', e.message);
+    if (firebaseRtdb) {
+      try {
+        const rtdbSnap = await firebaseRtdb.ref('listings').once('value');
+        const val = rtdbSnap.val();
+        if (val) return Object.keys(val).map(k => ({ ...val[k], id: k }));
+      } catch(err2) {}
+    }
     return null;
   }
 }
 
 async function clubrFetchLiveDemands() {
-  if (!firebaseDb) return null;
+  if (!firebaseDb && !firebaseRtdb) return null;
   try {
-    const snapshot = await firebaseDb.collection('demands').get();
-    if (!snapshot.empty) {
-      const items = [];
-      snapshot.forEach(doc => {
-        items.push({ ...doc.data(), id: doc.id });
-      });
-      return items;
+    if (firebaseDb) {
+      const snapshot = await firebaseDb.collection('demands').get();
+      if (!snapshot.empty) {
+        const items = [];
+        snapshot.forEach(doc => {
+          items.push({ ...doc.data(), id: doc.id });
+        });
+        return items;
+      }
+    }
+    // RTDB fallback if Firestore was empty or pending
+    if (firebaseRtdb) {
+      const rtdbSnap = await firebaseRtdb.ref('demands').once('value');
+      const val = rtdbSnap.val();
+      if (val) {
+        return Object.keys(val).map(k => ({ ...val[k], id: k }));
+      }
     }
     return [];
   } catch(e) {
     console.warn('[Firestore Fetch Demands]', e.message);
+    if (firebaseRtdb) {
+      try {
+        const rtdbSnap = await firebaseRtdb.ref('demands').once('value');
+        const val = rtdbSnap.val();
+        if (val) return Object.keys(val).map(k => ({ ...val[k], id: k }));
+      } catch(err2) {}
+    }
     return null;
   }
 }

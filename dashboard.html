@@ -1957,7 +1957,15 @@
       if (typeof clubrFetchLiveListings === 'function') {
         clubrFetchLiveListings().then(cloudL => {
           if (cloudL && Array.isArray(cloudL)) {
-            allListings = cloudL;
+            const cloudMap = new Map();
+            cloudL.forEach(c => {
+              if (c && c.id) cloudMap.set(c.id, c);
+            });
+            const localOnly = allListings.filter(l => l && l.id && !cloudMap.has(l.id));
+            if (localOnly.length > 0 && typeof clubrPublishListing === 'function') {
+              localOnly.forEach(l => clubrPublishListing(l).catch(() => {}));
+            }
+            allListings = [...localOnly, ...cloudL];
             localStorage.setItem('findly_listings', JSON.stringify(allListings));
             updateDashboardCounts();
             if (activeTabId === 'overview') renderOverviewTab();
@@ -1969,7 +1977,15 @@
       if (typeof clubrFetchLiveDemands === 'function') {
         clubrFetchLiveDemands().then(cloudW => {
           if (cloudW && Array.isArray(cloudW)) {
-            allWants = cloudW;
+            const cloudMap = new Map();
+            cloudW.forEach(w => {
+              if (w && w.id) cloudMap.set(w.id, w);
+            });
+            const localOnlyW = allWants.filter(w => w && w.id && !cloudMap.has(w.id));
+            if (localOnlyW.length > 0 && typeof clubrPublishDemand === 'function') {
+              localOnlyW.forEach(w => clubrPublishDemand(w).catch(() => {}));
+            }
+            allWants = [...localOnlyW, ...cloudW];
             localStorage.setItem('findly_wants', JSON.stringify(allWants));
             updateDashboardCounts();
             if (activeTabId === 'demands') renderMyDemands();

@@ -102,12 +102,26 @@
   <!-- Main Content Container -->
   <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
 
+    <!-- Mode Switcher: Sell an Item vs Post What You Need (Buyer Demand) -->
+    <div class="flex items-center justify-center">
+      <div class="inline-flex bg-slate-200/90 p-1.5 rounded-2xl border border-slate-300/60 max-w-sm w-full shadow-inner">
+        <button type="button" id="tabModeSell" onclick="switchSellMode('sell')" class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm">
+          <span>🛍️</span>
+          <span>Sell an Item</span>
+        </button>
+        <button type="button" id="tabModeDemand" onclick="switchSellMode('demand')" class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900">
+          <span>📢</span>
+          <span>Post Demand</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Page Title & Value Proposition -->
     <div class="bg-gradient-to-br from-white via-slate-50 to-lime-50/40 border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs">
-      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight">
+      <h1 id="pageMainTitle" class="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight">
         Post an Item for Sale
       </h1>
-      <p class="text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+      <p id="pageMainSubtitle" class="text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
         Zero commission. Real buyers in your city will see your item first, verified with direct in-app chat.
       </p>
     </div>
@@ -157,8 +171,8 @@
       </div>
     </div>
 
-    <!-- Selling Form -->
-    <form id="fullSellForm" onsubmit="event.preventDefault(); submitFullPageListing();" class="space-y-6">
+    <!-- Selling / Demand Form -->
+    <form id="fullSellForm" onsubmit="event.preventDefault(); handleFullFormSubmit();" class="space-y-6">
 
       <!-- SECTION 1: CATEGORY -->
       <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
@@ -249,12 +263,23 @@
               <span id="priceFieldHint" class="text-[11px] text-slate-400 mt-1 block">Fair prices receive 3x more responses.</span>
             </div>
 
-            <div>
+            <div id="conditionFieldContainer">
               <label id="conditionFieldLabel" class="block text-xs font-bold text-slate-700 mb-1.5">Item Condition *</label>
               <select id="itemCondition" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-medium transition">
                 <option value="Like New">✨ Like New (Scratchless / Rarely Used)</option>
                 <option value="Good" selected>👍 Good (Well-maintained with normal usage)</option>
                 <option value="Fair">👌 Fair (Fully functional with visible wear)</option>
+              </select>
+            </div>
+
+            <div id="demandUrgencyContainer" class="hidden">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">How soon do you need it? *</label>
+              <select id="demandUrgencySelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold transition">
+                <option value="⚡ Within 24 hours (Urgent)">⚡ Immediately / Within 24 Hours</option>
+                <option value="📅 Within 3 days">📅 Within 3 Days</option>
+                <option value="🗓️ Within 7 days" selected>🗓️ Within 7 Days (Standard)</option>
+                <option value="📆 Within 15 days">📆 Within 15 Days</option>
+                <option value="⏳ Any time / Just looking">⏳ Any time / Just looking</option>
               </select>
             </div>
           </div>
@@ -376,7 +401,7 @@
       </div>
 
       <!-- SECTION 5: TRUST CHECKPOINTS -->
-      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+      <div id="sectionTrustCheckpoints" class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <div>
             <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">5. Trust & Verification Checkpoints</h2>
@@ -393,8 +418,8 @@
       <!-- SECTION 6: DESCRIPTION -->
       <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
         <div class="border-b border-slate-100 pb-3">
-          <h2 class="text-base sm:text-lg font-black text-slate-900 font-display">6. Detailed Description</h2>
-          <p class="text-xs text-slate-500">Describe usage, battery health, purchase date, warranty or any minor flaws</p>
+          <h2 id="descFieldLabel" class="text-base sm:text-lg font-black text-slate-900 font-display">6. Detailed Description</h2>
+          <p id="descFieldHint" class="text-xs text-slate-500">Describe usage, battery health, purchase date, warranty or any minor flaws</p>
         </div>
 
         <div>
@@ -509,6 +534,7 @@
     let currentUser = null;
     let uploadedPhotos = []; // Array of up to 10 base64 strings
     let activeCat = 'Mobiles';
+    let activeMode = 'sell'; // 'sell' or 'demand'
 
     document.addEventListener('DOMContentLoaded', () => {
       initCurrentUser();
@@ -516,6 +542,12 @@
       initLocationDropdowns();
       renderCheckpoints('Mobiles');
       setupDragAndDrop();
+
+      // Check if URL specifies demand mode
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('type') === 'demand' || urlParams.get('mode') === 'demand') {
+        switchSellMode('demand');
+      }
     });
 
     function initCurrentUser() {
@@ -1057,6 +1089,149 @@
           </div>
         `);
       }
+    }
+
+    // Mode Switcher: Sell vs Demand
+    function switchSellMode(mode) {
+      activeMode = mode;
+      const btnSell = document.getElementById('tabModeSell');
+      const btnDemand = document.getElementById('tabModeDemand');
+      const mainTitle = document.getElementById('pageMainTitle');
+      const mainSubtitle = document.getElementById('pageMainSubtitle');
+      const titleLabel = document.getElementById('titleFieldLabel');
+      const titleHint = document.getElementById('titleFieldHint');
+      const itemTitleInput = document.getElementById('itemTitle');
+      const priceLabel = document.getElementById('priceFieldLabel');
+      const priceHint = document.getElementById('priceFieldHint');
+      const itemPriceInput = document.getElementById('itemPrice');
+      const conditionContainer = document.getElementById('conditionFieldContainer');
+      const urgencyContainer = document.getElementById('demandUrgencyContainer');
+      const sectionTrust = document.getElementById('sectionTrustCheckpoints');
+      const descLabel = document.getElementById('descFieldLabel');
+      const descHint = document.getElementById('descFieldHint');
+      const itemDescInput = document.getElementById('itemDesc');
+      const btnPublish = document.getElementById('btnPublishListing');
+
+      if (mode === 'demand') {
+        if (btnDemand) btnDemand.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm';
+        if (btnSell) btnSell.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900';
+
+        if (mainTitle) mainTitle.textContent = 'Post What You Need';
+        if (mainSubtitle) mainSubtitle.textContent = 'Post your buyer requirement in your city. Verified local sellers & dealers will see this and chat with their best offers!';
+
+        if (titleLabel) titleLabel.textContent = 'What item do you want to buy / need? *';
+        if (titleHint) titleHint.textContent = 'e.g. Second-hand Activa 6G / iPhone 13 128GB / 2BHK Flat for Rent';
+        if (itemTitleInput) itemTitleInput.placeholder = 'e.g. Second-hand Activa 6G / iPhone 13 / Laptop';
+
+        if (priceLabel) priceLabel.textContent = 'Your Expected Budget (₹) *';
+        if (priceHint) priceHint.textContent = 'Realistic budgets receive faster offers from verified sellers.';
+        if (itemPriceInput) itemPriceInput.placeholder = '25000';
+
+        if (conditionContainer) conditionContainer.classList.add('hidden');
+        if (urgencyContainer) urgencyContainer.classList.remove('hidden');
+        if (sectionTrust) sectionTrust.classList.add('hidden');
+
+        if (descLabel) descLabel.textContent = 'Specific Requirements / Notes';
+        if (descHint) descHint.textContent = 'Mention any specific brand, color, condition, or warranty preference';
+        if (itemDescInput) itemDescInput.placeholder = 'e.g. Looking for black color, must have original bill and charger. Immediate cash deal.';
+
+        if (btnPublish) btnPublish.innerHTML = 'Broadcast Requirement Live 📢';
+      } else {
+        if (btnSell) btnSell.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm';
+        if (btnDemand) btnDemand.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900';
+
+        if (mainTitle) mainTitle.textContent = 'Post an Item for Sale';
+        if (mainSubtitle) mainSubtitle.textContent = 'Zero commission. Real buyers in your city will see your item first, verified with direct in-app chat.';
+
+        selectPageCategory(activeCat || 'Mobiles');
+
+        if (conditionContainer) conditionContainer.classList.remove('hidden');
+        if (urgencyContainer) urgencyContainer.classList.add('hidden');
+        if (sectionTrust) sectionTrust.classList.remove('hidden');
+
+        if (descLabel) descLabel.textContent = '6. Detailed Description';
+        if (descHint) descHint.textContent = 'Describe usage, battery health, purchase date, warranty or any minor flaws';
+        if (itemDescInput) itemDescInput.placeholder = "Mention RAM/Storage, how long you've used it, included accessories, reason for selling...";
+
+        if (btnPublish) btnPublish.innerHTML = 'Publish Listing Live 🚀';
+      }
+    }
+
+    // Unified Form Submit Router
+    async function handleFullFormSubmit() {
+      if (activeMode === 'demand') {
+        await submitFullPageDemand();
+      } else {
+        await submitFullPageListing();
+      }
+    }
+
+    // Submit Demand / Want Requirement
+    async function submitFullPageDemand() {
+      if (!currentUser) {
+        const proceed = confirm('Please Sign In with your Google account to broadcast your requirement.\n\nClick OK to connect with Google right now.');
+        if (proceed) {
+          await handleSellGoogleSignIn();
+          if (!currentUser) return;
+        } else {
+          return;
+        }
+      }
+
+      const item = document.getElementById('itemTitle').value.trim();
+      const budget = document.getElementById('itemPrice').value.trim();
+      const cat = activeCat || 'Mobiles';
+      const urgency = (document.getElementById('demandUrgencySelect') && document.getElementById('demandUrgencySelect').value) ? document.getElementById('demandUrgencySelect').value : '🗓️ Within 7 days';
+      const state = document.getElementById('listingStateSelect').value;
+      const city = document.getElementById('listingCityInput').value.trim() || 'Pune';
+      const locality = document.getElementById('listingLocality').value.trim() || 'Local';
+      const desc = document.getElementById('itemDesc').value.trim();
+
+      if (!item || !budget) {
+        alert('Please enter what item you want and your expected budget.');
+        return;
+      }
+
+      const btn = document.getElementById('btnPublishListing');
+      const origText = btn.innerHTML;
+      btn.innerHTML = 'Broadcasting Live... ⏳';
+      btn.disabled = true;
+
+      const newDemand = {
+        id: 'w_' + Date.now(),
+        buyer: currentUser.name,
+        buyerId: currentUser.id,
+        item,
+        budget: budget.startsWith('₹') ? budget : `₹ ${Number(budget).toLocaleString('en-IN')}`,
+        cat,
+        urgency,
+        city,
+        locality,
+        state,
+        desc,
+        photos: uploadedPhotos,
+        time: 'Just now'
+      };
+
+      // 1. Save to LocalStorage
+      let localWants = [];
+      try {
+        const w = localStorage.getItem('findly_wants');
+        if (w) localWants = JSON.parse(w);
+      } catch(e) {}
+      localWants.unshift(newDemand);
+      localStorage.setItem('findly_wants', JSON.stringify(localWants));
+      localStorage.setItem('findly_current_city', city);
+
+      // 2. Sync to Cloud Firestore
+      if (typeof clubrPublishDemand === 'function') {
+        clubrPublishDemand(newDemand);
+      }
+
+      toast('📢 Requirement broadcasted live across your city!');
+      setTimeout(() => {
+        window.location.href = './#demands';
+      }, 900);
     }
 
     // Submit Listing

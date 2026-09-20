@@ -1812,28 +1812,15 @@
     }
 
     function submitSellItem() {
-      window.location.href = 'sell.html';
+      window.location.href = 'sell';
     }
 
     function openDemandModal() {
-      const targetCity = (currentUser && currentUser.city) ? currentUser.city : 'Pune';
-      const targetState = getStateForCity(targetCity);
-
-      const stateSel = document.getElementById('demandStateSelect');
-      if (stateSel) {
-        stateSel.innerHTML = Object.keys(INDIA_STATE_DIRECTORY).map(st => `<option value="${st}"${st === targetState ? ' selected' : ''}>${st}</option>`).join('');
-        populateDemandCities(targetState);
-        const citySel = document.getElementById('demandCitySelect');
-        if (citySel) {
-          citySel.value = targetCity;
-          toggleDemandCustomCity();
-        }
-      }
-
-      document.getElementById('modalDemand').classList.remove('hidden');
+      window.location.href = 'sell?type=demand';
     }
     function closeDemandModal() {
-      document.getElementById('modalDemand').classList.add('hidden');
+      const m = document.getElementById('modalDemand');
+      if (m) m.classList.add('hidden');
     }
 
     function submitDemandItem() {

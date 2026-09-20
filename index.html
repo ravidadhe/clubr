@@ -4900,11 +4900,11 @@ function handlePhotoUpload(input) {
 // FORM SUBMISSION WITH MANDATORY AUTH GATEKEEPER
 function openModal(type) {
   if (type === 'sell') {
-    window.location.href = 'sell.html';
+    window.location.href = 'sell';
     return;
   }
-  if (!currentUser) {
-    openAuthModal('Please sign in or register to post a buyer requirement!');
+  if (type === 'want') {
+    window.location.href = 'sell?type=demand';
     return;
   }
   if (currentUser.isBlocked) {

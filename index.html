@@ -4995,9 +4995,21 @@ function openInAppChat(itemId) {
   if (item && currentUser) {
     const isOwner = isListingOwnedByUser(item, currentUser);
     if (isOwner) {
-      alert('ℹ️ This is your own listing.\n\nYou cannot chat with yourself.\nOpening your Seller Dashboard to manage this listing...');
-      window.location.href = `dashboard.html?tab=listings&edit=${item.id}`;
-      return;
+      const msgs = chatThreads[itemId] || [];
+      const hasOtherParty = msgs.some(m => {
+        if (!m) return false;
+        const isMe = (m.senderId && currentUser.id && String(m.senderId) === String(currentUser.id)) ||
+                     (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
+                     (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                     (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                     (m.sender === 'You');
+        return !isMe;
+      });
+
+      if (!hasOtherParty) {
+        alert('ℹ️ This is your own listing.\n\nInterested buyers will chat with you here once they send a message on your item.');
+        return;
+      }
     }
   }
 
@@ -5006,9 +5018,21 @@ function openInAppChat(itemId) {
     const w = wants.find(x => x.id === itemId);
     if (w) {
       if (currentUser && isDemandOwnedByUser(w, currentUser)) {
-        alert('ℹ️ This is your own broadcasted requirement.\n\nOpening your Dashboard to manage your demands...');
-        window.location.href = 'dashboard.html?tab=demands';
-        return;
+        const msgs = chatThreads[itemId] || [];
+        const hasOtherParty = msgs.some(m => {
+          if (!m) return false;
+          const isMe = (m.senderId && currentUser.id && String(m.senderId) === String(currentUser.id)) ||
+                       (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
+                       (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                       (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                       (m.sender === 'You');
+          return !isMe;
+        });
+
+        if (!hasOtherParty) {
+          alert('ℹ️ This is your own requirement.\n\nSellers who have this item will message you here directly.');
+          return;
+        }
       }
       item = {
         id: w.id,
@@ -5065,9 +5089,17 @@ function openInAppChat(itemId) {
     targetReceiverCity = item.city || 'India';
   } else {
     const msgs = chatThreads[item.id] || [];
-    const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
+    const otherMsg = msgs.slice().reverse().find(m => {
+      if (!m) return false;
+      const isMe = (m.senderId && currentUser.id && String(m.senderId) === String(currentUser.id)) ||
+                   (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
+                   (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                   (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                   (m.sender === 'You');
+      return !isMe;
+    });
     if (otherMsg) {
-      targetReceiverId = otherMsg.senderId;
+      targetReceiverId = otherMsg.senderId || '';
       targetReceiverName = otherMsg.senderName || otherMsg.sender || 'Interested Buyer';
       targetReceiverCity = otherMsg.senderCity || (registeredUsers.find(u => u.id === otherMsg.senderId)?.city) || item.city || 'India';
     } else {
@@ -5672,41 +5704,60 @@ function addNotification(notifData) {
 
 function syncNotificationsFromChats() {
   if (!currentUser || !chatThreads) return;
-  const list = getUserNotifications();
-  let addedAny = false;
+  let list = getUserNotifications();
+  let changed = false;
 
+  // 1. Purge any accidental self-sent notifications
+  const initialLen = list.length;
+  list = list.filter(n => {
+    if (!n) return false;
+    if (n.type === 'clubr') return true;
+    if (currentUser.name && n.senderName && n.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) return false;
+    if (currentUser.id && n.senderId && String(n.senderId) === String(currentUser.id)) return false;
+    return true;
+  });
+  if (list.length !== initialLen) changed = true;
+
+  // 2. Scan chats for latest message sent by OTHER party
   Object.keys(chatThreads).forEach(itemId => {
     const msgs = chatThreads[itemId];
     if (!Array.isArray(msgs) || msgs.length === 0) return;
-    const lastMsg = msgs[msgs.length - 1];
-    if (!lastMsg) return;
 
-    const isMine = lastMsg.senderId && currentUser.id && String(lastMsg.senderId) === String(currentUser.id);
-    if (!isMine) {
-      const notifId = 'notif_chat_' + (lastMsg.id || (itemId + '_' + lastMsg.timestamp));
+    const otherMsg = msgs.slice().reverse().find(m => {
+      if (!m) return false;
+      const isMe = (m.senderId && currentUser.id && String(m.senderId) === String(currentUser.id)) ||
+                   (m.senderEmail && currentUser.email && String(m.senderEmail).toLowerCase() === String(currentUser.email).toLowerCase()) ||
+                   (m.sender && currentUser.name && m.sender.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                   (m.senderName && currentUser.name && m.senderName.trim().toLowerCase() === currentUser.name.trim().toLowerCase()) ||
+                   (m.sender === 'You');
+      return !isMe;
+    });
+
+    if (otherMsg) {
+      const notifId = 'notif_chat_' + (otherMsg.id || (itemId + '_' + otherMsg.timestamp));
       if (!list.some(n => n.id === notifId)) {
-        const isOffer = lastMsg.type === 'offer' || (lastMsg.text && (lastMsg.text.toLowerCase().includes('offer') || lastMsg.text.toLowerCase().includes('offered')));
+        const isOffer = otherMsg.type === 'offer' || (otherMsg.text && (otherMsg.text.toLowerCase().includes('offer') || otherMsg.text.toLowerCase().includes('offered')));
         const item = listings.find(x => x.id === itemId) || wants.find(x => x.id === itemId) || { title: 'Direct Deal' };
         list.unshift({
           id: notifId,
           type: isOffer ? 'offer' : 'message',
           title: isOffer ? `Offer on ${item.title || item.item || 'Item'}` : (item.title || item.item || 'Item Message'),
-          senderName: lastMsg.senderName || lastMsg.sender || 'Member',
-          senderCity: lastMsg.senderCity || 'India',
-          body: lastMsg.text || 'Sent you a message',
+          senderName: otherMsg.senderName || otherMsg.sender || 'Interested Buyer',
+          senderCity: otherMsg.senderCity || 'India',
+          body: otherMsg.text || 'Sent you a message',
           itemId: itemId,
           itemTitle: item.title || item.item || 'Marketplace Item',
-          time: lastMsg.time || 'Recent',
-          timestamp: lastMsg.timestamp || Date.now(),
+          time: otherMsg.time || 'Recent',
+          timestamp: otherMsg.timestamp || Date.now(),
           read: false,
           actionType: 'chat'
         });
-        addedAny = true;
+        changed = true;
       }
     }
   });
 
-  if (addedAny) {
+  if (changed) {
     if (list.length > 80) list.length = 80;
     saveUserNotifications(list);
   }

@@ -165,8 +165,8 @@
         <div style="font-size:48px; margin-bottom:12px;">🔒</div>
         <h2 style="font-size:22px; font-weight:900; color:#0f172a; margin-bottom:8px;">Login Required</h2>
         <p style="font-size:14px; color:#64748b; margin-bottom:24px; line-height:1.5;">
-          Sell karne ke liye pehle apne Google account se sign in karein.<br>
-          <span style="font-size:12px;">Zero commission · Verified buyers only</span>
+          Sign in with Google or continue as a guest to publish your item.<br>
+          <span style="font-size:12px;">Zero commission · Direct peer-to-peer deals</span>
         </p>
         <button onclick="handleSellGoogleSignIn()" id="btnGateGoogle" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; background:#0f172a; color:#fff; border:none; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:800; cursor:pointer; margin-bottom:12px;">
           <svg width="20" height="20" viewBox="0 0 48 48">
@@ -181,7 +181,7 @@
           ⚡ Continue as Guest Seller (Direct Post)
         </button>
         <a href="./" style="display:block; text-align:center; font-size:13px; font-weight:700; color:#64748b; text-decoration:none; padding:10px;">
-          ← Wapas Marketplace Pe Jaao
+          ← Back to Marketplace
         </a>
       </div>
     </div>
@@ -637,7 +637,7 @@
             document.getElementById('sellAuthGate').style.display = 'none';
             document.getElementById('fullSellForm').style.display = '';
             initCurrentUser();
-            toast(`✅ Signed in as ${currentUser.name}! Ab listing post karo.`);
+            toast(`✅ Signed in as ${currentUser.name}! Ready to publish your listing.`);
           } else {
             alert((res && res.error) ? res.error : 'Google Sign-In was cancelled. Please try again.');
           }
@@ -671,7 +671,7 @@
       document.getElementById('headerUserPill').style.display = 'flex';
       document.getElementById('headerUserName').textContent = 'Seller';
       document.getElementById('guestAuthNotice').classList.add('hidden');
-      toast('✅ Form unlocked! Ab apni product details fill karein.');
+      toast('✅ Form unlocked! Please enter your product details.');
     }
 
     // Category Handling

@@ -4144,7 +4144,7 @@ function renderListingCard(container, item) {
 
   const statusPillHtml = isSold
     ? `<span class="bhav-pill" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">🏷️ Sold Out</span>`
-    : `<span class="bhav-pill">🟢 Sahi Bhav</span>`;
+    : `<span class="bhav-pill">🟢 Fair Price</span>`;
 
   const card = `
     <article class="item" onclick="openItemDetail('${item.id}')">
@@ -4438,7 +4438,7 @@ function openSellerWhatsApp(id) {
   const item = listings.find(x => x.id === id);
   if (!item) return;
   if (item.isSold) {
-    toast('⚠️ Yeh item already sell ho chuka hai.');
+    toast('⚠️ This item is already marked as sold.');
     return;
   }
   const cleanPhone = (item.phone || '').replace(/\D/g, '');
@@ -4449,10 +4449,11 @@ function openSellerWhatsApp(id) {
 
   if (cleanPhone && cleanPhone.length >= 10) {
     const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-    const msg = `Namaste ${item.seller || 'ji'}, maine Clubr par aapka listing dekha:\n\n📦 *${title}*\n💰 Price: ₹${price}\n📍 City: ${city}\n\nKya yeh abhi available hai?\nLink: ${shareUrl}`;
+    const greeting = item.seller ? `Hello ${item.seller},` : 'Hello,';
+    const msg = `${greeting} I saw your listing on Clubr:\n\n📦 *${title}*\n💰 Price: ₹${price}\n📍 City: ${city}\n\nIs this item still available?\nLink: ${shareUrl}`;
     window.open(`https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodeURIComponent(msg)}`, '_blank');
   } else {
-    toast('ℹ️ Seller ne phone number share nahi kiya. Opening In-App Chat!');
+    toast('ℹ️ Seller has not provided a direct phone number. Opening In-App Chat!');
     closeDetailModal();
     openInAppChat(id);
   }

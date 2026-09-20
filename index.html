@@ -4154,8 +4154,8 @@ function renderListingCard(container, item) {
         <span>🏷️</span> Sold
        </button>`
     : (isMine
-        ? `<button class="btn-sm-chat" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; cursor:default;" onclick="toast('ℹ️ This is your listing. View buyer messages in your Dashboard!'); event.stopPropagation();">
-            <span>👤</span> Your Item
+        ? `<button class="btn-sm-chat" style="background:#ecfdf5; color:#065f46; border:1px solid #6ee7b7; cursor:pointer;" onclick="window.location.href='dashboard.html?tab=listings&edit=${item.id}'; event.stopPropagation();" title="Edit your listing">
+            <span>✏️</span> Edit
            </button>`
         : `<button class="btn-sm-chat" onclick="openInAppChat('${item.id}')">
             <span>💬</span> Chat
@@ -4673,10 +4673,15 @@ function openItemDetail(id) {
       ` : (isMine ? `
         <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:14px; padding:14px 18px; text-align:center;">
           <span style="color:#15803d; font-weight:800; font-size:14px; display:block;">👤 You are the seller of this listing</span>
-          <p style="color:#166534; font-size:12px; margin-top:4px;">Manage this listing, view analytics, or reply to buyer messages in your Member Dashboard.</p>
-          <button type="button" onclick="closeDetailModal(); window.location.href='dashboard.html'" style="margin-top:10px; background:#15803d; color:#fff; font-size:12px; font-weight:800; padding:8px 18px; border-radius:10px; border:none; cursor:pointer;">
-            Open Seller Dashboard →
-          </button>
+          <p style="color:#166534; font-size:12px; margin-top:4px;">Manage this listing, view analytics, or edit item price & details.</p>
+          <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
+            <button type="button" onclick="closeDetailModal(); window.location.href='dashboard.html?tab=listings&edit=${item.id}'" style="background:#0f172a; color:#fff; font-size:12px; font-weight:800; padding:9px 18px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow:0 4px 12px rgba(0,0,0,0.15)">
+              ✏️ Edit Listing
+            </button>
+            <button type="button" onclick="closeDetailModal(); window.location.href='dashboard.html'" style="background:#15803d; color:#fff; font-size:12px; font-weight:800; padding:9px 18px; border-radius:12px; border:none; cursor:pointer;">
+              Seller Dashboard →
+            </button>
+          </div>
         </div>
       ` : `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">

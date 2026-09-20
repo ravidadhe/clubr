@@ -733,6 +733,86 @@
   </div>
 
   <!-- ======================================================== -->
+  <!-- MODAL: EDIT LISTING DIRECTLY IN DASHBOARD               -->
+  <!-- ======================================================== -->
+  <div id="modalEditListing" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border border-slate-200 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl relative my-8">
+      <button onclick="closeEditListingModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
+      <div>
+        <h3 class="text-xl font-black text-slate-900 font-display">✏️ Edit Listing</h3>
+        <p class="text-xs text-slate-500">Update your price, title, location or item details live</p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); submitEditListing();" class="space-y-4">
+        <input type="hidden" id="editListingId">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Item Title *</label>
+          <input id="editListingTitle" required placeholder="e.g. iPhone 13 128GB Midnight Blue" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Selling Price (₹) *</label>
+            <input id="editListingPrice" type="number" required placeholder="e.g. 28000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-mono font-bold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Category *</label>
+            <select id="editListingCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
+              <option value="Mobiles">📱 Mobiles & Tablets</option>
+              <option value="Properties">🏠 Properties / Rent</option>
+              <option value="Jobs">💼 Jobs & Hiring</option>
+              <option value="Bikes">🏍️ Bikes & Scooters</option>
+              <option value="Cars">🚗 Cars & Autos</option>
+              <option value="Electronics">💻 Laptops & Tech</option>
+              <option value="Services">🛠️ Services</option>
+              <option value="Furniture">🛋️ Furniture & Living</option>
+              <option value="Appliances">📺 TV & Home Appliances</option>
+              <option value="Fashion">👗 Fashion & Lifestyle</option>
+              <option value="Pets">🐕 Pets & Care</option>
+              <option value="Others">📦 Other Categories</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">City *</label>
+            <input id="editListingCity" required placeholder="e.g. Pune, Mumbai, Yavatmal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400 font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Locality / Area</label>
+            <input id="editListingLocality" placeholder="e.g. FC Road, Andheri West" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Description</label>
+          <textarea id="editListingDesc" rows="3" placeholder="Condition, details, reason for selling..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-400"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Item Photo</label>
+          <div class="border border-dashed border-slate-200 hover:border-lime-500 rounded-xl p-3 text-center cursor-pointer bg-slate-50/60 transition" onclick="document.getElementById('editListingPhotoInput').click()">
+            <input type="file" id="editListingPhotoInput" accept="image/*" class="hidden" onchange="handleEditPhotoSelected(this)">
+            <span id="editPhotoPrompt" class="text-xs text-slate-500">📷 Tap to change photo</span>
+            <img id="editPhotoPreview" class="hidden max-h-32 mx-auto rounded-lg mt-2 object-contain border border-lime-400">
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+          <button type="button" onclick="closeEditListingModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" id="btnSaveEditListing" class="flex-1 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-xs py-3 rounded-xl transition shadow-sm shadow-lime-400/20">
+            Save Changes 💾
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
   <!-- MODAL: BROADCAST BUYER DEMAND DIRECTLY IN DASHBOARD      -->
   <!-- ======================================================== -->
   <div id="modalDemand" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -1003,6 +1083,18 @@
 
       // Background cloud synchronization
       syncCloudData();
+
+      // Check URL parameters for direct edit or tab switch
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        const editParam = urlParams.get('edit');
+        if (tabParam) switchTab(tabParam);
+        if (editParam) {
+          switchTab('listings');
+          setTimeout(() => openEditListingModal(editParam), 250);
+        }
+      } catch(e) {}
     }
 
     // Populate user profile info in headers and cards
@@ -1172,6 +1264,9 @@
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="openEditListingModal('${item.id}')" title="Edit Listing" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-lime-100 hover:bg-lime-200 text-lime-900 border border-lime-300 transition shadow-2xs">
+                ✏️ Edit
+              </button>
               <button onclick="toggleItemSold('${item.id}')" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition shadow-2xs">
                 ${item.isSold ? 'Re-List' : 'Mark Sold'}
               </button>
@@ -1274,9 +1369,14 @@
             </div>
 
             <div class="p-4 pt-0 border-t border-slate-100 mt-2 flex items-center justify-between gap-2">
-              <button onclick="toggleItemSold('${item.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-                ${item.isSold ? 'Re-List Active' : 'Mark as Sold'}
-              </button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="openEditListingModal('${item.id}')" title="Edit Listing" class="text-xs font-black px-3 py-1.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 transition flex items-center gap-1 shadow-2xs">
+                  ✏️ Edit
+                </button>
+                <button onclick="toggleItemSold('${item.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                  ${item.isSold ? 'Re-List' : 'Mark Sold'}
+                </button>
+              </div>
 
               <div class="flex items-center gap-1.5">
                 <a href="index.html" target="_blank" title="View on Feed" class="text-xs font-bold px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
@@ -1831,6 +1931,145 @@
 
       alert('Your account, listings, and messages have been permanently deleted.');
       window.location.href = 'index.html';
+    }
+
+    // ========================================================
+    // EDIT LISTING MODAL
+    // ========================================================
+    let editListingNewPhoto = null;
+
+    function openEditListingModal(id) {
+      const item = allListings.find(x => x.id === id);
+      if (!item) {
+        toast('⚠️ Listing not found');
+        return;
+      }
+
+      editListingNewPhoto = null;
+      document.getElementById('editListingId').value = item.id;
+      document.getElementById('editListingTitle').value = item.title || '';
+      document.getElementById('editListingPrice').value = item.price || '';
+      document.getElementById('editListingCategory').value = item.cat || 'Others';
+      document.getElementById('editListingCity').value = item.city || '';
+      document.getElementById('editListingLocality').value = item.locality || '';
+      document.getElementById('editListingDesc').value = item.desc || '';
+
+      const preview = document.getElementById('editPhotoPreview');
+      const prompt = document.getElementById('editPhotoPrompt');
+      const currentPhoto = item.photo || (item.photos && item.photos[0]);
+      if (currentPhoto) {
+        preview.src = currentPhoto;
+        preview.classList.remove('hidden');
+        prompt.textContent = '📷 Tap to replace current photo';
+      } else {
+        preview.classList.add('hidden');
+        preview.src = '';
+        prompt.textContent = '📷 Tap to upload photo';
+      }
+
+      document.getElementById('modalEditListing').classList.remove('hidden');
+    }
+
+    function closeEditListingModal() {
+      document.getElementById('modalEditListing').classList.add('hidden');
+    }
+
+    function handleEditPhotoSelected(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800;
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          editListingNewPhoto = canvas.toDataURL('image/jpeg', 0.65);
+          const preview = document.getElementById('editPhotoPreview');
+          preview.src = editListingNewPhoto;
+          preview.classList.remove('hidden');
+          document.getElementById('editPhotoPrompt').textContent = '✅ Photo updated! Tap to change.';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function submitEditListing() {
+      const id = document.getElementById('editListingId').value;
+      const item = allListings.find(x => x.id === id);
+      if (!item) return;
+
+      const title = document.getElementById('editListingTitle').value.trim();
+      const price = Number(document.getElementById('editListingPrice').value);
+      const cat = document.getElementById('editListingCategory').value;
+      const city = document.getElementById('editListingCity').value.trim();
+      const locality = document.getElementById('editListingLocality').value.trim();
+      const desc = document.getElementById('editListingDesc').value.trim();
+
+      if (!title || !price || price <= 0 || !city) {
+        alert('Please provide valid Title, Price, and City.');
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveEditListing');
+      btn.disabled = true;
+      btn.textContent = 'Saving... ⏳';
+
+      item.title = title;
+      item.price = price;
+      item.cat = cat;
+      item.city = city;
+      item.locality = locality;
+      item.desc = desc;
+
+      const updates = {
+        title,
+        price,
+        cat,
+        city,
+        locality,
+        desc
+      };
+
+      if (editListingNewPhoto) {
+        item.photo = editListingNewPhoto;
+        item.photos = [editListingNewPhoto, ...(item.photos || []).slice(1)];
+        updates.photo = item.photo;
+        updates.photos = item.photos;
+      }
+
+      // 1. Save to local storage
+      localStorage.setItem('findly_listings', JSON.stringify(allListings));
+
+      // 2. Sync to Firebase RTDB
+      if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+        try {
+          await firebaseRtdb.ref('listings/' + id).update(updates);
+        } catch(e) {
+          console.warn('[RTDB Edit Listing]', e);
+        }
+      }
+
+      // 3. Sync to Firestore (non-blocking)
+      if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+        firebaseDb.collection('listings').doc(id).update(updates).catch(()=>{});
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Save Changes 💾';
+      closeEditListingModal();
+      updateDashboardCounts();
+      renderOverviewTab();
+      renderMyListings();
+      toast('✅ Listing updated successfully!');
     }
 
     // ========================================================

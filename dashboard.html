@@ -1084,6 +1084,32 @@
       // Background cloud synchronization
       syncCloudData();
 
+      // Start Real-Time Inbox Notification Listener for Dashboard
+      if (currentUser && currentUser.id && typeof clubrListenUserInbox === 'function') {
+        if (window.dashboardInboxUnsub) {
+          window.dashboardInboxUnsub();
+          window.dashboardInboxUnsub = null;
+        }
+        window.dashboardInboxUnsub = clubrListenUserInbox(currentUser.id, (incomingMsg) => {
+          if (!incomingMsg || !incomingMsg.itemId) return;
+          if (!allChats[incomingMsg.itemId]) {
+            allChats[incomingMsg.itemId] = [];
+          }
+          if (!allChats[incomingMsg.itemId].some(m => m.id === incomingMsg.id)) {
+            allChats[incomingMsg.itemId].push(incomingMsg);
+            localStorage.setItem('findly_chats', JSON.stringify(allChats));
+            updateDashboardCounts();
+            renderChatThreads();
+          }
+          if (currentActiveChatKey === incomingMsg.itemId) {
+            renderChatMessagesStream();
+          } else {
+            if (typeof clubrPlayNotificationChime === 'function') clubrPlayNotificationChime();
+            toast(`💬 New message from ${incomingMsg.senderName || 'Buyer'} on ${incomingMsg.itemTitle || 'Listing'}: "${incomingMsg.text}"`);
+          }
+        });
+      }
+
       // Check URL parameters for direct edit or tab switch
       try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -1577,6 +1603,21 @@
         thumb.textContent = item.emoji || '📦';
       }
 
+      // Real-time listener for this active thread in Firebase RTDB
+      if (window.dashboardActiveChatUnsub) {
+        window.dashboardActiveChatUnsub();
+        window.dashboardActiveChatUnsub = null;
+      }
+      if (typeof clubrListenThreadMessages === 'function') {
+        window.dashboardActiveChatUnsub = clubrListenThreadMessages(threadKey, (msgs) => {
+          if (msgs && Array.isArray(msgs)) {
+            allChats[threadKey] = msgs;
+            localStorage.setItem('findly_chats', JSON.stringify(allChats));
+            renderChatMessagesStream();
+          }
+        });
+      }
+
       // Render Messages
       renderChatMessagesStream();
 
@@ -1604,7 +1645,11 @@
       }
 
       msgs.forEach(m => {
-        const isMine = (m.sender === (currentUser ? currentUser.name : 'You') || m.sender === 'You');
+        const isMine = !!(currentUser && (
+          (m.senderId && String(m.senderId) === String(currentUser.id)) ||
+          (m.sender && m.sender === currentUser.name) ||
+          (m.sender === 'You')
+        ));
 
         if (m.type === 'offer') {
           stream.insertAdjacentHTML('beforeend', `
@@ -1640,16 +1685,46 @@
         allChats[currentActiveChatKey] = [];
       }
 
+      const item = allListings.find(x => x.id === currentActiveChatKey) || allWants.find(x => x.id === currentActiveChatKey) || {};
+      let receiverId = '';
+      let receiverName = '';
+      if (item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
+        receiverId = item.sellerId;
+        receiverName = item.seller || 'Seller';
+      } else if (item.buyerId && String(item.buyerId) !== String(currentUser.id)) {
+        receiverId = item.buyerId;
+        receiverName = item.buyer || 'Buyer';
+      } else {
+        const msgs = allChats[currentActiveChatKey] || [];
+        const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
+        if (otherMsg) {
+          receiverId = otherMsg.senderId;
+          receiverName = otherMsg.senderName || otherMsg.sender || 'Member';
+        }
+      }
+
       const newMsg = {
+        id: 'msg_' + Date.now(),
+        itemId: currentActiveChatKey,
+        itemTitle: item.title || item.item || 'Marketplace Item',
+        itemEmoji: item.photo ? '' : (item.emoji || '💬'),
         sender: currentUser.name,
+        senderName: currentUser.name,
+        senderId: currentUser.id,
+        senderEmail: currentUser.email || '',
+        receiverId: receiverId,
+        receiverName: receiverName,
         text: text,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: Date.now()
       };
 
       allChats[currentActiveChatKey].push(newMsg);
       localStorage.setItem('findly_chats', JSON.stringify(allChats));
 
-      if (firebaseRtdb) {
+      if (typeof clubrSendChatMessage === 'function') {
+        clubrSendChatMessage(newMsg).catch(() => {});
+      } else if (firebaseRtdb) {
         firebaseRtdb.ref(`chats/${currentActiveChatKey}`).push(newMsg).catch(()=>{});
       }
 
@@ -2266,6 +2341,21 @@
             localStorage.setItem('findly_wants', JSON.stringify(allWants));
             updateDashboardCounts();
             if (activeTabId === 'demands') renderMyDemands();
+          }
+        });
+      }
+
+      // 3. Sync all user chat threads from cloud
+      if (currentUser && currentUser.id && typeof clubrSyncUserChatsFromCloud === 'function') {
+        clubrSyncUserChatsFromCloud(currentUser.id, allListings).then(cloudChats => {
+          if (cloudChats && typeof cloudChats === 'object' && Object.keys(cloudChats).length > 0) {
+            allChats = { ...allChats, ...cloudChats };
+            localStorage.setItem('findly_chats', JSON.stringify(allChats));
+            updateDashboardCounts();
+            if (activeTabId === 'messages') renderChatThreads();
+            if (currentActiveChatKey && allChats[currentActiveChatKey]) {
+              renderChatMessagesStream();
+            }
           }
         });
       }

@@ -1539,6 +1539,11 @@ h1 {
   display: block;
 }
 
+@keyframes slideInNotif {
+  from { opacity: 0; transform: translateY(-16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Empty State */
 .empty-state {
   grid-column: 1 / -1;
@@ -2792,6 +2797,9 @@ h1 {
 <!-- Toast -->
 <div id="toast" class="toast"></div>
 
+<!-- Live Interactive Incoming Chat Notifications Container -->
+<div id="clubrLiveNotificationContainer" style="position:fixed; top:24px; right:20px; z-index:9999999; display:flex; flex-direction:column; gap:12px; max-width:390px; width:calc(100% - 40px); pointer-events:none;"></div>
+
 <!-- ======================================================== -->
 <!-- APPLICATION LOGIC & DATA SYSTEM                          -->
 <!-- ======================================================== -->
@@ -3062,7 +3070,7 @@ function initData() {
           localStorage.removeItem('clubr_current_user');
           currentUser = null;
         } else {
-          const matched = registeredUsers.find(x => x.phone === parsed.phone || x.id === parsed.id);
+          const matched = registeredUsers.find(x => (parsed.id && x.id === parsed.id) || (parsed.email && x.email && x.email.toLowerCase() === parsed.email.toLowerCase()) || (parsed.phone && parsed.phone.trim() && x.phone === parsed.phone));
           if (matched) {
             currentUser = matched;
           } else {
@@ -3167,6 +3175,9 @@ function initData() {
   selectSellCategory('Mobiles');
   if (typeof clubrInitLivePresence === 'function') {
     clubrInitLivePresence('marketplace');
+  }
+  if (currentUser && currentUser.id) {
+    initGlobalChatInboxListener();
   }
 
   // Handle URL deep linking (e.g. ?action=sell or ?action=want)
@@ -3277,6 +3288,91 @@ function isDemandOwnedByUser(demand, user) {
   return false;
 }
 
+// REAL-TIME IN-APP CHAT NOTIFICATIONS (LIVE INBOX STREAM)
+function showIncomingChatNotification(msg) {
+  const container = document.getElementById('clubrLiveNotificationContainer');
+  if (!container || !msg) return;
+
+  // Play gentle alert chime
+  if (typeof clubrPlayNotificationChime === 'function') {
+    clubrPlayNotificationChime();
+  }
+
+  const notifId = 'notif_' + Date.now();
+  const notifHtml = `
+    <div id="${notifId}" style="pointer-events:auto; background:#0f172a; color:#ffffff; border:1px solid #334155; border-radius:18px; padding:16px; box-shadow:0 20px 35px rgba(0,0,0,0.4); display:flex; flex-direction:column; gap:10px; animation:slideInNotif 0.35s cubic-bezier(0.16, 1, 0.3, 1); transition:all 0.3s ease;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
+          <span style="font-size:20px; background:#1e293b; padding:6px; border-radius:10px; flex-shrink:0;">💬</span>
+          <div style="min-width:0;">
+            <b style="font-size:13px; color:#f8fafc; display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${escapeHtml(msg.senderName || 'Buyer')}</b>
+            <span style="font-size:11px; color:#94a3b8; display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">on ${escapeHtml(msg.itemTitle || 'Your Listing')}</span>
+          </div>
+        </div>
+        <button type="button" onclick="dismissChatNotif('${notifId}')" style="background:transparent; border:none; color:#94a3b8; font-size:16px; cursor:pointer; padding:4px 8px;">✕</button>
+      </div>
+      <p style="font-size:13px; color:#e2e8f0; margin:0; line-height:1.45; background:#1e293b; padding:10px 12px; border-radius:12px; word-break:break-word;">
+        ${escapeHtml(msg.text)}
+      </p>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" onclick="dismissChatNotif('${notifId}'); openInAppChat('${msg.itemId}')" style="background:#bef264; color:#0f172a; font-weight:800; font-size:12px; padding:8px 16px; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(190,242,100,0.3)">
+          💬 Open Chat & Reply →
+        </button>
+      </div>
+    </div>
+  `;
+
+  container.insertAdjacentHTML('beforeend', notifHtml);
+
+  // Auto-dismiss after 9 seconds
+  setTimeout(() => {
+    dismissChatNotif(notifId);
+  }, 9000);
+}
+
+function dismissChatNotif(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-12px) scale(0.95)';
+    setTimeout(() => { try { el.remove(); } catch(e){} }, 300);
+  }
+}
+
+function initGlobalChatInboxListener() {
+  if (!currentUser || !currentUser.id) return;
+  if (window.globalInboxListenerUnsub) {
+    window.globalInboxListenerUnsub();
+    window.globalInboxListenerUnsub = null;
+  }
+  if (typeof clubrListenUserInbox === 'function') {
+    window.globalInboxListenerUnsub = clubrListenUserInbox(currentUser.id, (incomingMsg) => {
+      if (!incomingMsg || !incomingMsg.itemId) return;
+
+      // 1. Sync message into local chatThreads
+      if (!chatThreads[incomingMsg.itemId]) {
+        chatThreads[incomingMsg.itemId] = [];
+      }
+      if (!chatThreads[incomingMsg.itemId].some(m => m.id === incomingMsg.id)) {
+        chatThreads[incomingMsg.itemId].push(incomingMsg);
+        saveData();
+        updateCounts();
+      }
+
+      // 2. If chat modal is currently open for this specific item, the thread listener renders it
+      const modal = document.getElementById('chatModal');
+      const isChatModalOpen = modal && modal.classList.contains('show');
+      if (isChatModalOpen && activeChatContext && activeChatContext.itemId === incomingMsg.itemId) {
+        renderChatMessages();
+        return;
+      }
+
+      // 3. Otherwise, show real-time interactive Notification Banner!
+      showIncomingChatNotification(incomingMsg);
+    });
+  }
+}
+
 function updateUserUI() {
   const avatarEl = document.getElementById('userBtnAvatar');
   const labelEl = document.getElementById('userBtnLabel');
@@ -3346,6 +3442,7 @@ async function triggerGoogleSignIn() {
       updateUserUI();
       closeAuthModal();
       renderFeed();
+      initGlobalChatInboxListener();
       toast(`🎉 Welcome ${currentUser.name}! You are signed in.`);
     } else {
       showAuthError((res && res.error) ? res.error : 'Google Sign-In was cancelled or could not be completed.');
@@ -3360,6 +3457,10 @@ async function triggerGoogleSignIn() {
 }
 
 async function logoutUser() {
+  if (window.globalInboxListenerUnsub) {
+    window.globalInboxListenerUnsub();
+    window.globalInboxListenerUnsub = null;
+  }
   if (typeof clubrSignOut === 'function') {
     await clubrSignOut();
   }
@@ -3761,8 +3862,7 @@ function submitKycDocument() {
   currentUser.kycDocPhoto = uploadedKycPhotoBase64;
   saveData();
 
-  // Sync with registeredUsers
-  const uIdx = registeredUsers.findIndex(x => x.phone === currentUser.phone || x.id === currentUser.id);
+  const uIdx = registeredUsers.findIndex(x => (currentUser.id && x.id === currentUser.id) || (currentUser.email && x.email && x.email.toLowerCase() === currentUser.email.toLowerCase()) || (currentUser.phone && currentUser.phone.trim() && x.phone === currentUser.phone));
   if (uIdx !== -1) {
     registeredUsers[uIdx].kycStatus = 'pending';
     registeredUsers[uIdx].kycDocType = docType;
@@ -4760,7 +4860,8 @@ function openInAppChat(itemId) {
   if (item && currentUser) {
     const isOwner = isListingOwnedByUser(item, currentUser);
     if (isOwner) {
-      toast('ℹ️ This is your own listing. You cannot chat with yourself.');
+      alert('ℹ️ This is your own listing.\n\nYou cannot chat with yourself.\nOpening your Seller Dashboard to manage this listing...');
+      window.location.href = `dashboard.html?tab=listings&edit=${item.id}`;
       return;
     }
   }
@@ -4770,7 +4871,8 @@ function openInAppChat(itemId) {
     const w = wants.find(x => x.id === itemId);
     if (w) {
       if (currentUser && isDemandOwnedByUser(w, currentUser)) {
-        toast('ℹ️ This is your own requirement. You cannot chat with yourself.');
+        alert('ℹ️ This is your own broadcasted requirement.\n\nOpening your Dashboard to manage your demands...');
+        window.location.href = 'dashboard.html?tab=demands';
         return;
       }
       item = {
@@ -4778,6 +4880,7 @@ function openInAppChat(itemId) {
         title: `Demand: ${w.item}`,
         price: w.budget,
         seller: w.buyer || 'Buyer',
+        sellerId: w.buyerId || '',
         isKycVerified: false,
         emoji: '📢'
       };
@@ -4805,9 +4908,25 @@ function openInAppChat(itemId) {
       title: fallbackTitle,
       price: 'Direct Deal',
       seller: 'Clubr Member',
+      sellerId: '',
       isKycVerified: false,
       emoji: '📦'
     };
+  }
+
+  // Resolve Recipient (Seller if we are buyer, or Buyer if we are seller)
+  let targetReceiverId = '';
+  let targetReceiverName = '';
+  if (item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
+    targetReceiverId = item.sellerId;
+    targetReceiverName = item.seller || 'Seller';
+  } else {
+    const msgs = chatThreads[item.id] || [];
+    const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
+    if (otherMsg) {
+      targetReceiverId = otherMsg.senderId;
+      targetReceiverName = otherMsg.senderName || otherMsg.sender || 'Member';
+    }
   }
 
   activeChatContext = {
@@ -4815,6 +4934,8 @@ function openInAppChat(itemId) {
     itemTitle: item.title || 'Marketplace Item',
     itemPrice: item.price || 'Direct Deal',
     sellerName: item.seller || 'Seller',
+    receiverId: targetReceiverId,
+    receiverName: targetReceiverName,
     isVerified: !!item.isKycVerified,
     itemEmoji: item.emoji || '📦'
   };
@@ -4839,6 +4960,21 @@ function openInAppChat(itemId) {
   if (!chatThreads[item.id]) {
     chatThreads[item.id] = [];
     saveData();
+  }
+
+  // Subscribe to live messages for this thread in Firebase RTDB
+  if (window.activeChatListenerUnsub) {
+    window.activeChatListenerUnsub();
+    window.activeChatListenerUnsub = null;
+  }
+  if (typeof clubrListenThreadMessages === 'function') {
+    window.activeChatListenerUnsub = clubrListenThreadMessages(item.id, (cloudMsgs) => {
+      if (cloudMsgs && Array.isArray(cloudMsgs)) {
+        chatThreads[item.id] = cloudMsgs;
+        saveData();
+        renderChatMessages();
+      }
+    });
   }
 
   renderChatMessages();
@@ -4932,11 +5068,15 @@ function renderChatMessages() {
       return;
     }
 
-    const isBuyer = (m.sender === 'buyer');
+    const isMine = !!(currentUser && (
+      (m.senderId && String(m.senderId) === String(currentUser.id)) ||
+      (m.sender && m.sender === currentUser.name) ||
+      (m.sender === 'You')
+    ));
     const bubble = `
-      <div class="chat-msg ${isBuyer ? 'buyer' : 'seller'}">
+      <div class="chat-msg ${isMine ? 'buyer' : 'seller'}">
         <div>${escapeHtml(m.text)}</div>
-        <div class="msg-time">${m.time}</div>
+        <div class="msg-time">${escapeHtml(m.time || '')}</div>
       </div>`;
     stream.insertAdjacentHTML('beforeend', bubble);
 
@@ -4991,14 +5131,29 @@ function respondToOffer(offerId, newStatus) {
       ? `🎉 Deal Accepted! I have agreed to your offer of ₹${Number(offer.amount).toLocaleString('en-IN')}. Where and when can we meet in person?`
       : `I cannot accept ₹${Number(offer.amount).toLocaleString('en-IN')}. Can you adjust your offer slightly?`;
     
-    chatThreads[activeChatContext.itemId].push({
+    const replyMsg = {
       id: 'msg_' + Date.now(),
-      sender: 'seller',
+      itemId: activeChatContext.itemId,
+      itemTitle: activeChatContext.itemTitle || 'Marketplace Item',
+      sender: currentUser ? currentUser.name : 'Seller',
+      senderName: currentUser ? currentUser.name : 'Seller',
+      senderId: currentUser ? currentUser.id : 'usr_seller',
+      senderEmail: currentUser ? (currentUser.email || '') : '',
+      receiverId: activeChatContext.receiverId || '',
+      receiverName: activeChatContext.receiverName || '',
       text: responseText,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    });
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: Date.now()
+    };
+
+    chatThreads[activeChatContext.itemId].push(replyMsg);
     saveData();
     renderChatMessages();
+
+    if (typeof clubrSendChatMessage === 'function') {
+      clubrSendChatMessage(replyMsg).catch(() => {});
+    }
+
     toast(newStatus === 'accepted' ? '🎉 Offer accepted!' : 'Offer declined.');
   }
 }
@@ -5017,10 +5172,19 @@ function sendChatMessage(presetText) {
 
   const newMsg = {
     id: 'msg_' + Date.now(),
+    itemId: activeChatContext.itemId,
+    itemTitle: activeChatContext.itemTitle || 'Marketplace Item',
+    itemEmoji: activeChatContext.itemEmoji || '📦',
+    itemPrice: activeChatContext.itemPrice || '',
     sender: currentUser ? currentUser.name : 'Buyer',
+    senderName: currentUser ? currentUser.name : 'Buyer',
     senderId: currentUser ? currentUser.id : 'usr_buyer',
+    senderEmail: currentUser ? (currentUser.email || '') : '',
+    receiverId: activeChatContext.receiverId || '',
+    receiverName: activeChatContext.receiverName || '',
     text: text,
-    time: timeStr
+    time: timeStr,
+    timestamp: Date.now()
   };
 
   chatThreads[activeChatContext.itemId].push(newMsg);
@@ -5029,7 +5193,9 @@ function sendChatMessage(presetText) {
   saveData();
   renderChatMessages();
 
-  if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+  if (typeof clubrSendChatMessage === 'function') {
+    clubrSendChatMessage(newMsg).catch(err => console.warn('[RTDB send warning]', err));
+  } else if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
     firebaseRtdb.ref(`chats/${activeChatContext.itemId}`).push(newMsg).catch(()=>{});
   }
 
@@ -5226,6 +5392,10 @@ function connectOnWhatsApp(itemId) {
 }
 
 function closeChatModal() {
+  if (window.activeChatListenerUnsub) {
+    window.activeChatListenerUnsub();
+    window.activeChatListenerUnsub = null;
+  }
   document.getElementById('chatModal').classList.remove('show');
   activeChatContext = null;
 }

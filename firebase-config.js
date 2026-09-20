@@ -821,3 +821,190 @@ window.clubrRecordPayment = async function(paymentData) {
     console.warn('[Clubr Payment Record]', e.message);
   }
 };
+
+// ========================================================
+// REAL-TIME IN-APP CHAT & NOTIFICATION ENGINE
+// Powered by Google Firebase RTDB
+// ========================================================
+
+/**
+ * Send a message across Firebase RTDB with instant dual-inbox delivery
+ */
+async function clubrSendChatMessage(messageData) {
+  if (!firebaseRtdb) return null;
+  const msgId = messageData.id || ('msg_' + Date.now());
+  const now = Date.now();
+  const fullMsg = {
+    ...messageData,
+    id: msgId,
+    timestamp: messageData.timestamp || now
+  };
+
+  const updates = {};
+  // 1. Thread messages under /chats/{itemId}/{msgId}
+  updates[`chats/${messageData.itemId}/${msgId}`] = fullMsg;
+
+  // 2. Real-time receiver inbox notification under /user_inbox/{receiverId}/{msgId}
+  if (messageData.receiverId && messageData.receiverId !== messageData.senderId) {
+    updates[`user_inbox/${messageData.receiverId}/${msgId}`] = fullMsg;
+  }
+
+  // 3. User threads summary for both participants
+  const threadSummary = {
+    itemId: messageData.itemId,
+    itemTitle: messageData.itemTitle || 'Item',
+    itemEmoji: messageData.itemEmoji || '📦',
+    lastMessage: messageData.text,
+    lastSenderName: messageData.senderName,
+    lastSenderId: messageData.senderId,
+    timestamp: now,
+    time: messageData.time
+  };
+
+  if (messageData.senderId) {
+    updates[`user_threads/${messageData.senderId}/${messageData.itemId}`] = {
+      ...threadSummary,
+      otherPartyId: messageData.receiverId || '',
+      otherPartyName: messageData.receiverName || 'User'
+    };
+  }
+  if (messageData.receiverId && messageData.receiverId !== messageData.senderId) {
+    updates[`user_threads/${messageData.receiverId}/${messageData.itemId}`] = {
+      ...threadSummary,
+      otherPartyId: messageData.senderId || '',
+      otherPartyName: messageData.senderName || 'User',
+      unread: true
+    };
+  }
+
+  try {
+    await firebaseRtdb.ref().update(updates);
+    return fullMsg;
+  } catch(err) {
+    console.warn('[Clubr RTDB Chat Send Error]', err.message);
+    try {
+      await firebaseRtdb.ref(`chats/${messageData.itemId}/${msgId}`).set(fullMsg);
+      if (messageData.receiverId) {
+        firebaseRtdb.ref(`user_inbox/${messageData.receiverId}/${msgId}`).set(fullMsg).catch(()=>{});
+      }
+      return fullMsg;
+    } catch(e) {
+      return null;
+    }
+  }
+}
+
+/**
+ * Listen for live messages in a specific item chat thread
+ */
+function clubrListenThreadMessages(itemId, callback) {
+  if (!firebaseRtdb || !itemId || typeof callback !== 'function') return () => {};
+  const ref = firebaseRtdb.ref(`chats/${itemId}`);
+  const handler = (snapshot) => {
+    const val = snapshot.val();
+    if (val && typeof val === 'object') {
+      const msgs = Object.values(val);
+      msgs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+      callback(msgs);
+    } else {
+      callback([]);
+    }
+  };
+  ref.on('value', handler);
+  return () => {
+    try { ref.off('value', handler); } catch(e) {}
+  };
+}
+
+/**
+ * Listen for real-time incoming messages for the active user (Global Inbox)
+ */
+function clubrListenUserInbox(userId, callback) {
+  if (!firebaseRtdb || !userId || typeof callback !== 'function') return () => {};
+  const ref = firebaseRtdb.ref(`user_inbox/${userId}`);
+  const startTime = Date.now() - 5000;
+  const query = ref.orderByChild('timestamp').startAt(startTime);
+  const handler = (snapshot) => {
+    const msg = snapshot.val();
+    if (msg && msg.senderId !== userId) {
+      callback(msg);
+    }
+  };
+  query.on('child_added', handler);
+  return () => {
+    try { query.off('child_added', handler); } catch(e) {}
+  };
+}
+
+/**
+ * Fetch all chat threads for a user from cloud (for dashboard restoration)
+ */
+async function clubrSyncUserChatsFromCloud(userId, userListings = []) {
+  if (!firebaseRtdb || !userId) return {};
+  const restoredChats = {};
+  
+  // 1. Check user_threads
+  try {
+    const snap = await firebaseRtdb.ref(`user_threads/${userId}`).once('value');
+    const threads = snap.val();
+    if (threads && typeof threads === 'object') {
+      for (const itemId of Object.keys(threads)) {
+        try {
+          const chatSnap = await firebaseRtdb.ref(`chats/${itemId}`).once('value');
+          const msgsVal = chatSnap.val();
+          if (msgsVal && typeof msgsVal === 'object') {
+            const list = Object.values(msgsVal);
+            list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            restoredChats[itemId] = list;
+          }
+        } catch(e) {}
+      }
+    }
+  } catch(e) {}
+
+  // 2. Also check all listings owned by this user
+  if (Array.isArray(userListings) && userListings.length > 0) {
+    for (const item of userListings) {
+      if (item && item.id && !restoredChats[item.id]) {
+        try {
+          const chatSnap = await firebaseRtdb.ref(`chats/${item.id}`).once('value');
+          const msgsVal = chatSnap.val();
+          if (msgsVal && typeof msgsVal === 'object') {
+            const list = Object.values(msgsVal);
+            list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            if (list.length > 0) {
+              restoredChats[item.id] = list;
+            }
+          }
+        } catch(e) {}
+      }
+    }
+  }
+
+  return restoredChats;
+}
+
+/**
+ * Programmatic pleasant audio chime for incoming messages
+ */
+function clubrPlayNotificationChime() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    // Friendly two-tone chime (880Hz -> 1320Hz)
+    const now = ctx.currentTime;
+    osc.frequency.setValueAtTime(880, now);
+    osc.frequency.exponentialRampToValueAtTime(1320, now + 0.12);
+    gain.gain.setValueAtTime(0.18, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc.start(now);
+    osc.stop(now + 0.36);
+  } catch(e) {}
+}

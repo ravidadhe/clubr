@@ -443,6 +443,20 @@
         <div>
           <textarea id="itemDesc" rows="4" placeholder="Mention RAM/Storage, how long you've used it, included accessories, reason for selling..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-900 outline-none focus:bg-white focus:border-slate-400 leading-relaxed transition"></textarea>
         </div>
+
+        <div class="pt-3 border-t border-slate-100">
+          <label class="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>💬</span> WhatsApp Number for Instant Direct Deals (Optional)
+            </span>
+            <span class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-bold">Fast Deals</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-3 text-slate-400 font-bold text-xs">+91</span>
+            <input type="tel" id="sellerPhoneInput" maxlength="10" placeholder="10-digit mobile number (e.g. 9876543210)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-sm text-slate-900 outline-none focus:bg-white focus:border-emerald-500 font-mono transition">
+          </div>
+          <p class="text-[11px] text-slate-500 mt-1">If provided, interested buyers can send you a pre-filled deal inquiry directly on WhatsApp!</p>
+        </div>
       </div>
 
       <!-- SUBMIT CTA -->
@@ -592,6 +606,13 @@
         document.getElementById('headerUserName').textContent = currentUser.name.split(' ')[0];
         document.getElementById('guestAuthNotice').classList.add('hidden');
         document.getElementById('sellAuthGate').style.display = 'none';
+
+        if (currentUser.phone) {
+          const phoneInp = document.getElementById('sellerPhoneInput');
+          if (phoneInp && !phoneInp.value) {
+            phoneInp.value = currentUser.phone.replace(/^\+91/, '').trim();
+          }
+        }
       } else {
         // NOT logged in — hide pill, show gate
         document.getElementById('headerUserPill').style.display = 'none';
@@ -1013,7 +1034,7 @@
       filesToProcess.forEach(file => {
         if (!file.type.startsWith('image/')) return;
 
-        compressImageFile(file, 1280, 0.8, (base64) => {
+        compressImageFile(file, 1000, 0.72, (base64) => {
           uploadedPhotos.push(base64);
           processedCount++;
           if (processedCount === filesToProcess.length) {
@@ -1331,6 +1352,15 @@
         btn.disabled = true;
       }
 
+      const phoneInput = document.getElementById('sellerPhoneInput');
+      let rawPhone = phoneInput ? phoneInput.value.replace(/\D/g, '').trim() : '';
+      let sellerPhone = '';
+      if (rawPhone.length === 10) {
+        sellerPhone = '+91' + rawPhone;
+      } else if (!rawPhone && currentUser && currentUser.phone) {
+        sellerPhone = currentUser.phone;
+      }
+
       const newListing = {
         id: 'l_' + Date.now(),
         title,
@@ -1343,6 +1373,8 @@
         condition,
         seller: currentUser.name,
         sellerId: currentUser.id,
+        phone: sellerPhone,
+        isSold: false,
         isKycVerified: (currentUser.kycStatus === 'verified'),
         desc,
         badges,

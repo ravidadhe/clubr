@@ -922,22 +922,25 @@ function clubrListenThreadMessages(itemId, callback) {
 function clubrListenUserInbox(userId, callback) {
   if (!firebaseRtdb || !userId || typeof callback !== 'function') return () => {};
   const ref = firebaseRtdb.ref(`user_inbox/${userId}`);
-  const startTime = Date.now() - 5000;
-  const query = ref.orderByChild('timestamp').startAt(startTime);
   const handler = (snapshot) => {
     const msg = snapshot.val();
     if (msg && msg.senderId !== userId) {
       callback(msg);
     }
   };
-  query.on('child_added', handler);
+  ref.on('child_added', handler);
   return () => {
-    try { query.off('child_added', handler); } catch(e) {}
+    try { ref.off('child_added', handler); } catch(e) {}
   };
 }
 
+function clubrClearUserInboxMessage(userId, msgId) {
+  if (!firebaseRtdb || !userId || !msgId) return;
+  firebaseRtdb.ref(`user_inbox/${userId}/${msgId}`).remove().catch(()=>{});
+}
+
 /**
- * Fetch all chat threads for a user from cloud (for dashboard restoration)
+ * Fetch all chat threads for a user from cloud (for mobile/dashboard restoration)
  */
 async function clubrSyncUserChatsFromCloud(userId, userListings = []) {
   if (!firebaseRtdb || !userId) return {};
@@ -980,6 +983,23 @@ async function clubrSyncUserChatsFromCloud(userId, userListings = []) {
       }
     }
   }
+
+  // 3. Also check user_inbox directly to capture any pending messages
+  try {
+    const inboxSnap = await firebaseRtdb.ref(`user_inbox/${userId}`).once('value');
+    const inboxVal = inboxSnap.val();
+    if (inboxVal && typeof inboxVal === 'object') {
+      for (const m of Object.values(inboxVal)) {
+        if (m && m.itemId) {
+          if (!restoredChats[m.itemId]) restoredChats[m.itemId] = [];
+          if (!restoredChats[m.itemId].some(x => x.id === m.id)) {
+            restoredChats[m.itemId].push(m);
+            restoredChats[m.itemId].sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+          }
+        }
+      }
+    }
+  } catch(e) {}
 
   return restoredChats;
 }

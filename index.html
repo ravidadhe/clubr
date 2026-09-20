@@ -1662,8 +1662,9 @@ h1 {
   .item-price { font-size: 16px; }
   .fab { display: none; }
 
-  /* Mobile Header Fix — hide redundant icons (in bottom nav), keep Sign In visible */
-  .circle-btn { display: none; }        /* chat + wishlist in bottom nav */
+  /* Mobile Header: keep Notification Bell visible so mobile users immediately see incoming alerts */
+  .circle-btn { display: none; }        /* wishlist in bottom nav */
+  #navNotifBtn { display: flex !important; width: 36px; height: 36px; }
   .loc-btn { padding: 7px 10px; font-size: 12px; } /* make location smaller */
   .nav-sell-btn { display: none; }      /* Sell button is in bottom nav center */
 
@@ -1693,6 +1694,24 @@ h1 {
   }
   .bottom-item.active { color: var(--ink); }
   .bottom-item b { font-size: 19px; line-height: 1; }
+  .bottom-item .badge-count {
+    position: absolute;
+    top: 2px;
+    right: 50%;
+    transform: translateX(12px);
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 900;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+  }
   .bottom-sell-btn {
     background: var(--ink);
     color: var(--lime);
@@ -3293,6 +3312,21 @@ function initData() {
   }
   if (currentUser && currentUser.id) {
     initGlobalChatInboxListener();
+    if (typeof clubrSyncUserChatsFromCloud === 'function') {
+      clubrSyncUserChatsFromCloud(currentUser.id, listings).then(cloudChats => {
+        if (cloudChats && typeof cloudChats === 'object' && Object.keys(cloudChats).length > 0) {
+          Object.keys(cloudChats).forEach(itemId => {
+            const list = cloudChats[itemId];
+            if (Array.isArray(list) && list.length > 0) {
+              chatThreads[itemId] = list;
+            }
+          });
+          saveData();
+          syncNotificationsFromChats();
+          updateCounts();
+        }
+      }).catch(err => console.warn('[Cloud chat sync error]', err));
+    }
   }
 
   // Handle URL deep linking (e.g. ?action=sell or ?action=want)
@@ -3502,8 +3536,11 @@ function initGlobalChatInboxListener() {
         return;
       }
 
-      // 4. Otherwise, show real-time interactive Notification Banner!
-      showIncomingChatNotification(incomingMsg);
+      // 4. Show live interactive pop-up banner if message arrived recently (within last 60s)
+      const isFresh = (Date.now() - (incomingMsg.timestamp || 0)) < 60000;
+      if (isFresh) {
+        showIncomingChatNotification(incomingMsg);
+      }
     });
   }
 }
@@ -3578,6 +3615,21 @@ async function triggerGoogleSignIn() {
       closeAuthModal();
       renderFeed();
       initGlobalChatInboxListener();
+      if (typeof clubrSyncUserChatsFromCloud === 'function') {
+        clubrSyncUserChatsFromCloud(currentUser.id, listings).then(cloudChats => {
+          if (cloudChats && typeof cloudChats === 'object' && Object.keys(cloudChats).length > 0) {
+            Object.keys(cloudChats).forEach(itemId => {
+              const list = cloudChats[itemId];
+              if (Array.isArray(list) && list.length > 0) {
+                chatThreads[itemId] = list;
+              }
+            });
+            saveData();
+            syncNotificationsFromChats();
+            updateCounts();
+          }
+        }).catch(() => {});
+      }
       toast(`🎉 Welcome ${currentUser.name}! You are signed in.`);
     } else {
       showAuthError((res && res.error) ? res.error : 'Google Sign-In was cancelled or could not be completed.');

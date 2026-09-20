@@ -3,6 +3,9 @@
 // All 28 States & 8 Union Territories with exhaustive cities & towns
 // ========================================================
 
+(function(window) {
+'use strict';
+
 var INDIA_STATE_DIRECTORY = {
   "Maharashtra": [
     "Mumbai", "Pune", "Nagpur", "Nashik", "Chhatrapati Sambhaji Nagar (Aurangabad)", "Thane", 
@@ -414,3 +417,6 @@ if (typeof module !== 'undefined' && module.exports) {
     detectCurrentLocationGps
   };
 }
+
+})(typeof window !== 'undefined' ? window : globalThis);
+

@@ -3044,7 +3044,8 @@ function handleUserBtnClick() {
   if (currentUser) {
     window.location.href = 'dashboard.html';
   } else {
-    openAuthModal('Sign in to access your personal dashboard, listings & chats');
+    // Not logged in – show sign‑in modal
+    openAuthModal();
   }
 }
 
@@ -3551,6 +3552,7 @@ function closeMyDemand(id) {
 // State-Wise Directory Renderer
 function renderCityDirectory(filterText = '') {
   const container = document.getElementById('cityDirectoryGrid');
+  if (!container) return;
   container.innerHTML = '';
   const q = filterText.toLowerCase().trim();
 

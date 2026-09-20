@@ -3245,6 +3245,38 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function isListingOwnedByUser(item, user) {
+  if (!item || !user) return false;
+  // 1. Strict match by Firebase UID
+  if (item.sellerId && user.id && String(item.sellerId) === String(user.id)) return true;
+  // 2. Strict match by Verified Email
+  if (item.sellerEmail && user.email && item.sellerEmail.trim().toLowerCase() === user.email.trim().toLowerCase()) return true;
+  // 3. Strict match by 10-digit Phone
+  const itemPhone = item.phone || item.sellerPhone;
+  if (itemPhone && user.phone) {
+    const p1 = String(itemPhone).replace(/\D/g, '').slice(-10);
+    const p2 = String(user.phone).replace(/\D/g, '').slice(-10);
+    if (p1.length === 10 && p1 === p2) return true;
+  }
+  return false;
+}
+
+function isDemandOwnedByUser(demand, user) {
+  if (!demand || !user) return false;
+  // 1. Strict match by Firebase UID
+  if (demand.buyerId && user.id && String(demand.buyerId) === String(user.id)) return true;
+  // 2. Strict match by Verified Email
+  if (demand.buyerEmail && user.email && demand.buyerEmail.trim().toLowerCase() === user.email.trim().toLowerCase()) return true;
+  // 3. Strict match by 10-digit Phone
+  const demandPhone = demand.phone || demand.buyerPhone;
+  if (demandPhone && user.phone) {
+    const p1 = String(demandPhone).replace(/\D/g, '').slice(-10);
+    const p2 = String(user.phone).replace(/\D/g, '').slice(-10);
+    if (p1.length === 10 && p1 === p2) return true;
+  }
+  return false;
+}
+
 function updateUserUI() {
   const avatarEl = document.getElementById('userBtnAvatar');
   const labelEl = document.getElementById('userBtnLabel');
@@ -3313,6 +3345,7 @@ async function triggerGoogleSignIn() {
       saveData();
       updateUserUI();
       closeAuthModal();
+      renderFeed();
       toast(`🎉 Welcome ${currentUser.name}! You are signed in.`);
     } else {
       showAuthError((res && res.error) ? res.error : 'Google Sign-In was cancelled or could not be completed.');
@@ -3355,8 +3388,8 @@ async function deleteUserAccount() {
   const targetName = currentUser.name;
 
   // 1. Remove user listings
-  listings = listings.filter(x => x.sellerId !== targetId && x.seller !== targetName);
-  wants = wants.filter(x => x.buyerId !== targetId && x.buyer !== targetName);
+  listings = listings.filter(x => !isListingOwnedByUser(x, currentUser));
+  wants = wants.filter(x => !isDemandOwnedByUser(x, currentUser));
 
   // 2. Remove user from registeredUsers
   registeredUsers = registeredUsers.filter(x => x.id !== targetId && (!targetEmail || x.email !== targetEmail) && (!targetPhone || x.phone !== targetPhone));
@@ -3423,8 +3456,8 @@ function openProfileModal() {
     badgeEl.style.color = '#64748b';
   }
 
-  const myL = listings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
-  const myW = wants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
+  const myL = listings.filter(x => isListingOwnedByUser(x, currentUser));
+  const myW = wants.filter(x => isDemandOwnedByUser(x, currentUser));
   document.getElementById('userMyListingsCount').textContent = myL.length;
   document.getElementById('userMyDemandsCount').textContent = myW.length;
 
@@ -3451,7 +3484,7 @@ function switchProfileTab(tab) {
   content.innerHTML = '';
 
   if (tab === 'listings') {
-    const myL = listings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
+    const myL = listings.filter(x => isListingOwnedByUser(x, currentUser));
     if (myL.length === 0) {
       content.innerHTML = `
         <div style="text-align:center; padding:32px 16px; color:var(--muted); background:#faf7f2; border:1.5px dashed var(--line); border-radius:16px;">
@@ -3482,7 +3515,7 @@ function switchProfileTab(tab) {
       });
     }
   } else if (tab === 'demands') {
-    const myW = wants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
+    const myW = wants.filter(x => isDemandOwnedByUser(x, currentUser));
     if (myW.length === 0) {
       content.innerHTML = `
         <div style="text-align:center; padding:32px 16px; color:var(--muted); background:#faf7f2; border:1.5px dashed var(--line); border-radius:16px;">
@@ -4143,11 +4176,7 @@ function renderListingCard(container, item) {
 
   const visualHtml = `<div class="visual" style="position:relative;">${visualInner}${soldOverlay}</div>`;
 
-  const isMine = !!(currentUser && (
-    (item.sellerId && item.sellerId === currentUser.id) ||
-    (item.sellerPhone && currentUser.phone && item.sellerPhone === currentUser.phone) ||
-    (item.seller && currentUser.name && item.seller.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
-  ));
+  const isMine = isListingOwnedByUser(item, currentUser);
 
   const chatButtonHtml = isSold
     ? `<button class="btn-sm-chat" disabled style="opacity:0.55; cursor:not-allowed; background:#94a3b8; color:#fff;" title="Item is already sold">
@@ -4509,11 +4538,7 @@ function openItemDetail(id) {
   if (!item) return;
 
   const isSold = !!item.isSold;
-  const isMine = !!(currentUser && (
-    (item.sellerId && item.sellerId === currentUser.id) ||
-    (item.sellerPhone && currentUser.phone && item.sellerPhone === currentUser.phone) ||
-    (item.seller && currentUser.name && item.seller.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
-  ));
+  const isMine = isListingOwnedByUser(item, currentUser);
 
   // Increment views counter
   item.views = (item.views || 0) + 1;
@@ -4733,9 +4758,7 @@ function openInAppChat(itemId) {
   let isDemand = false;
 
   if (item && currentUser) {
-    const isOwner = (item.sellerId && item.sellerId === currentUser.id) ||
-                    (item.sellerPhone && currentUser.phone && item.sellerPhone === currentUser.phone) ||
-                    (item.seller && currentUser.name && item.seller.trim().toLowerCase() === currentUser.name.trim().toLowerCase());
+    const isOwner = isListingOwnedByUser(item, currentUser);
     if (isOwner) {
       toast('ℹ️ This is your own listing. You cannot chat with yourself.');
       return;
@@ -4746,6 +4769,10 @@ function openInAppChat(itemId) {
   if (!item) {
     const w = wants.find(x => x.id === itemId);
     if (w) {
+      if (currentUser && isDemandOwnedByUser(w, currentUser)) {
+        toast('ℹ️ This is your own requirement. You cannot chat with yourself.');
+        return;
+      }
       item = {
         id: w.id,
         title: `Demand: ${w.item}`,
@@ -5371,6 +5398,8 @@ function submitListing() {
     condition,
     seller: (currentUser && currentUser.name) ? currentUser.name : 'Clubr Member',
     sellerId: (currentUser && currentUser.id) ? currentUser.id : ('usr_' + Date.now()),
+    sellerEmail: (currentUser && currentUser.email) ? currentUser.email : '',
+    sellerPhone: (currentUser && currentUser.phone) ? currentUser.phone : '',
     phone: (currentUser && currentUser.phone) ? currentUser.phone : '',
     isSold: false,
     isKycVerified: !!(currentUser && currentUser.kycStatus === 'verified'),
@@ -5416,6 +5445,8 @@ async function submitWant() {
     id: 'w_' + Date.now(),
     buyer: (currentUser && currentUser.name) ? currentUser.name : 'Buyer',
     buyerId: (currentUser && currentUser.id) ? currentUser.id : ('usr_' + Date.now()),
+    buyerEmail: (currentUser && currentUser.email) ? currentUser.email : '',
+    phone: (currentUser && currentUser.phone) ? currentUser.phone : '',
     item,
     budget,
     cat,

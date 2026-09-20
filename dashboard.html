@@ -1163,10 +1163,36 @@
       }
     }
 
+    function isListingOwnedByUser(item, user) {
+      if (!item || !user) return false;
+      if (item.sellerId && user.id && String(item.sellerId) === String(user.id)) return true;
+      if (item.sellerEmail && user.email && item.sellerEmail.trim().toLowerCase() === user.email.trim().toLowerCase()) return true;
+      const itemPhone = item.phone || item.sellerPhone;
+      if (itemPhone && user.phone) {
+        const p1 = String(itemPhone).replace(/\D/g, '').slice(-10);
+        const p2 = String(user.phone).replace(/\D/g, '').slice(-10);
+        if (p1.length === 10 && p1 === p2) return true;
+      }
+      return false;
+    }
+
+    function isDemandOwnedByUser(demand, user) {
+      if (!demand || !user) return false;
+      if (demand.buyerId && user.id && String(demand.buyerId) === String(user.id)) return true;
+      if (demand.buyerEmail && user.email && demand.buyerEmail.trim().toLowerCase() === user.email.trim().toLowerCase()) return true;
+      const demandPhone = demand.phone || demand.buyerPhone;
+      if (demandPhone && user.phone) {
+        const p1 = String(demandPhone).replace(/\D/g, '').slice(-10);
+        const p2 = String(user.phone).replace(/\D/g, '').slice(-10);
+        if (p1.length === 10 && p1 === p2) return true;
+      }
+      return false;
+    }
+
     function updateDashboardCounts() {
       if (!currentUser) return;
-      const myL = allListings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
-      const myW = allWants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
+      const myL = allListings.filter(x => isListingOwnedByUser(x, currentUser));
+      const myW = allWants.filter(x => isDemandOwnedByUser(x, currentUser));
       const myChatsCount = Object.keys(allChats).length;
 
       document.getElementById('statListingsCount').textContent = myL.length;
@@ -1224,7 +1250,7 @@
       if (!container || !currentUser) return;
       container.innerHTML = '';
 
-      const myL = allListings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
+      const myL = allListings.filter(x => isListingOwnedByUser(x, currentUser));
 
       if (myL.length === 0) {
         container.innerHTML = `
@@ -1301,7 +1327,7 @@
       if (!grid || !currentUser) return;
       grid.innerHTML = '';
 
-      let myL = allListings.filter(x => x.sellerId === currentUser.id || x.seller === currentUser.name || x.seller === 'You');
+      let myL = allListings.filter(x => isListingOwnedByUser(x, currentUser));
 
       if (activeListingFilter === 'active') {
         myL = myL.filter(x => !x.isSold);
@@ -1645,7 +1671,7 @@
       if (!grid || !currentUser) return;
       grid.innerHTML = '';
 
-      const myW = allWants.filter(x => x.buyerId === currentUser.id || x.buyer === currentUser.name || x.buyer === 'You');
+      const myW = allWants.filter(x => isDemandOwnedByUser(x, currentUser));
 
       if (myW.length === 0) {
         grid.innerHTML = `
@@ -1901,11 +1927,11 @@
       const targetName = currentUser.name;
 
       // 1. Remove user listings locally
-      allListings = allListings.filter(x => x.sellerId !== targetId && x.seller !== targetName);
+      allListings = allListings.filter(x => !isListingOwnedByUser(x, currentUser));
       localStorage.setItem('findly_listings', JSON.stringify(allListings));
 
       // 2. Remove user demands locally
-      allWants = allWants.filter(x => x.buyerId !== targetId && x.buyer !== targetName);
+      allWants = allWants.filter(x => !isDemandOwnedByUser(x, currentUser));
       localStorage.setItem('findly_wants', JSON.stringify(allWants));
 
       // 3. Remove user from registeredUsers

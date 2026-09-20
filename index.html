@@ -3016,8 +3016,10 @@ function initData() {
     const APP_VER = 'clubr_v5_live_data_dynamic_specs';
     localStorage.setItem('clubr_app_version', APP_VER);
 
+    const BLOCKED_DUMMY_IDS = new Set(['lst_1789893248696', 'lst_hunter350_mum', 'lst_sonyxm5_blr']);
     const savedL = localStorage.getItem('findly_listings');
-    listings = savedL ? JSON.parse(savedL) : [];
+    listings = savedL ? JSON.parse(savedL).filter(l => l && l.id && !BLOCKED_DUMMY_IDS.has(l.id)) : [];
+    localStorage.setItem('findly_listings', JSON.stringify(listings));
 
     const savedW = localStorage.getItem('findly_wants');
     wants = savedW ? JSON.parse(savedW) : [];
@@ -3076,20 +3078,23 @@ function initData() {
     if (typeof clubrFetchLiveListings === 'function') {
       clubrFetchLiveListings().then(cloudListings => {
         if (cloudListings && Array.isArray(cloudListings)) {
+          const cleanCloud = cloudListings.filter(c => c && c.id && !BLOCKED_DUMMY_IDS.has(c.id));
           const cloudMap = new Map();
-          cloudListings.forEach(c => {
+          cleanCloud.forEach(c => {
             if (c && c.id) cloudMap.set(c.id, c);
           });
           // Local listings that have not synced to cloud yet
-          const localOnly = listings.filter(l => l && l.id && !cloudMap.has(l.id));
+          const localOnly = listings.filter(l => l && l.id && !cloudMap.has(l.id) && !BLOCKED_DUMMY_IDS.has(l.id));
 
           // If local items exist that are missing from cloud, push them in background
           if (localOnly.length > 0 && typeof clubrPublishListing === 'function') {
-            localOnly.forEach(l => clubrPublishListing(l).catch(() => {}));
+            localOnly.forEach(l => {
+              if (!BLOCKED_DUMMY_IDS.has(l.id)) clubrPublishListing(l).catch(() => {});
+            });
           }
 
           // Combine so user's newly posted items are NEVER wiped out
-          listings = [...localOnly, ...cloudListings];
+          listings = [...localOnly, ...cleanCloud];
           localStorage.setItem('findly_listings', JSON.stringify(listings));
           updateCounts();
           renderFeed();

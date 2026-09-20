@@ -324,11 +324,32 @@ function sanitizeForFirestore(obj) {
   }
 }
 
+// Purge any residual test / dummy listings from previous sessions
+const CLUBR_BLOCKED_DUMMY_IDS = new Set([
+  'lst_1789893248696',
+  'lst_hunter350_mum',
+  'lst_sonyxm5_blr'
+]);
+
+(function purgeClubrDummyData() {
+  try {
+    const raw = localStorage.getItem('findly_listings');
+    if (raw) {
+      const list = JSON.parse(raw);
+      const filtered = list.filter(item => item && item.id && !CLUBR_BLOCKED_DUMMY_IDS.has(item.id));
+      localStorage.setItem('findly_listings', JSON.stringify(filtered));
+    }
+  } catch(e) {}
+})();
+
 // ========================================================
 // CLOUD PUBLISH METHODS (RTDB Primary - Instant 50ms)
 // ========================================================
 async function clubrPublishListing(listing) {
   if (!listing || !listing.id) return { success: false, error: 'Invalid listing object' };
+  if (CLUBR_BLOCKED_DUMMY_IDS.has(listing.id)) {
+    return { success: false, error: 'Blocked test listing' };
+  }
   const safeDoc = sanitizeForFirestore(listing);
 
   // 1. RTDB (Instant primary cloud storage)
@@ -402,7 +423,9 @@ async function clubrFetchLiveListings() {
       const rtdbSnap = await firebaseRtdb.ref('listings').once('value');
       const val = rtdbSnap.val();
       if (val && typeof val === 'object') {
-        const items = Object.keys(val).map(k => ({ ...val[k], id: k }));
+        const items = Object.keys(val)
+          .filter(k => !CLUBR_BLOCKED_DUMMY_IDS.has(k))
+          .map(k => ({ ...val[k], id: k }));
         // Newest listings first
         return items.reverse();
       }
@@ -417,7 +440,11 @@ async function clubrFetchLiveListings() {
       const snapshot = await firebaseDb.collection('listings').get();
       if (!snapshot.empty) {
         const items = [];
-        snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
+        snapshot.forEach(doc => {
+          if (!CLUBR_BLOCKED_DUMMY_IDS.has(doc.id)) {
+            items.push({ ...doc.data(), id: doc.id });
+          }
+        });
         return items.reverse();
       }
     } catch(e) {}

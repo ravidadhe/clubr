@@ -957,9 +957,11 @@
       }
 
       // 2. Load Listings, Demands, Chats
+      const BLOCKED_DUMMY_IDS = new Set(['lst_1789893248696', 'lst_hunter350_mum', 'lst_sonyxm5_blr']);
       try {
         const l = localStorage.getItem('findly_listings');
-        allListings = l ? JSON.parse(l) : [];
+        allListings = l ? JSON.parse(l).filter(item => item && item.id && !BLOCKED_DUMMY_IDS.has(item.id)) : [];
+        localStorage.setItem('findly_listings', JSON.stringify(allListings));
       } catch(e) { allListings = []; }
 
       try {
@@ -1957,15 +1959,18 @@
       if (typeof clubrFetchLiveListings === 'function') {
         clubrFetchLiveListings().then(cloudL => {
           if (cloudL && Array.isArray(cloudL)) {
+            const cleanCloud = cloudL.filter(c => c && c.id && !BLOCKED_DUMMY_IDS.has(c.id));
             const cloudMap = new Map();
-            cloudL.forEach(c => {
+            cleanCloud.forEach(c => {
               if (c && c.id) cloudMap.set(c.id, c);
             });
-            const localOnly = allListings.filter(l => l && l.id && !cloudMap.has(l.id));
+            const localOnly = allListings.filter(l => l && l.id && !cloudMap.has(l.id) && !BLOCKED_DUMMY_IDS.has(l.id));
             if (localOnly.length > 0 && typeof clubrPublishListing === 'function') {
-              localOnly.forEach(l => clubrPublishListing(l).catch(() => {}));
+              localOnly.forEach(l => {
+                if (!BLOCKED_DUMMY_IDS.has(l.id)) clubrPublishListing(l).catch(() => {});
+              });
             }
-            allListings = [...localOnly, ...cloudL];
+            allListings = [...localOnly, ...cleanCloud];
             localStorage.setItem('findly_listings', JSON.stringify(allListings));
             updateDashboardCounts();
             if (activeTabId === 'overview') renderOverviewTab();

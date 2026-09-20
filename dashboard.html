@@ -1556,6 +1556,28 @@
         const lastMsg = msgs[msgs.length - 1] || { text: 'Direct chat', time: '' };
         const item = allListings.find(x => x.id === k) || allWants.find(x => x.id === k) || { title: 'Direct Deal', emoji: '📦' };
 
+        // Find other party full name & city
+        let otherName = '';
+        let otherCity = '';
+        const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
+        if (otherMsg) {
+          otherName = otherMsg.senderName || otherMsg.sender || '';
+          otherCity = otherMsg.senderCity || '';
+        }
+        if (!otherName) {
+          if (item.seller && String(item.sellerId) !== String(currentUser.id)) {
+            otherName = item.seller;
+            otherCity = item.city || '';
+          } else if (item.buyer && String(item.buyerId) !== String(currentUser.id)) {
+            otherName = item.buyer;
+            otherCity = item.city || '';
+          } else {
+            otherName = 'Clubr Member';
+            otherCity = item.city || 'India';
+          }
+        }
+        if (!otherCity && item.city) otherCity = item.city;
+
         const isSelected = (currentActiveChatKey === k);
 
         container.insertAdjacentHTML('beforeend', `
@@ -1565,8 +1587,10 @@
                 ${item.photo ? `<img src="${item.photo}" class="w-full h-full object-cover">` : (item.emoji || '💬')}
               </div>
               <div class="overflow-hidden">
-                <b class="text-xs font-bold text-slate-900 block truncate">${escapeHtml(item.title || item.item || 'Item')}</b>
-                <span class="text-[11px] text-slate-500 block truncate mt-0.5">${escapeHtml(lastMsg.text)}</span>
+                <b class="text-xs font-bold text-slate-900 block truncate">
+                  ${escapeHtml(otherName)} ${otherCity ? `<span class="text-slate-500 font-medium">· 📍 ${escapeHtml(otherCity)}</span>` : ''}
+                </b>
+                <span class="text-[11px] text-slate-500 block truncate mt-0.5">${escapeHtml(item.title || item.item || 'Deal')}: ${escapeHtml(lastMsg.text)}</span>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0" onclick="event.stopPropagation()">
@@ -1590,11 +1614,19 @@
 
       const item = allListings.find(x => x.id === threadKey) || allWants.find(x => x.id === threadKey) || { title: 'Marketplace Deal', price: 0, emoji: '📦' };
 
+      const msgs = allChats[threadKey] || [];
+      const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
+      let otherName = otherMsg ? (otherMsg.senderName || otherMsg.sender) : (item.seller && String(item.sellerId) !== String(currentUser.id) ? item.seller : (item.buyer || 'Buyer'));
+      let otherCity = otherMsg ? (otherMsg.senderCity || item.city || '') : (item.city || 'India');
+
       document.getElementById('chatEmptyPlaceholder').classList.add('hidden');
       document.getElementById('chatActiveBox').classList.remove('hidden');
 
-      // Head
-      document.getElementById('chatActiveItemTitle').textContent = item.title || item.item || 'Marketplace Item';
+      // Head: Show Item Title, Price, Other Party Full Name and City!
+      document.getElementById('chatActiveItemTitle').innerHTML = `
+        <span class="font-extrabold text-slate-950">${escapeHtml(item.title || item.item || 'Marketplace Item')}</span>
+        <span class="block text-xs text-emerald-800 font-bold mt-0.5">👤 ${escapeHtml(otherName)} <span class="text-slate-500 font-semibold">(📍 ${escapeHtml(otherCity)})</span></span>
+      `;
       document.getElementById('chatActiveItemPrice').textContent = item.price ? `₹${Number(item.price).toLocaleString('en-IN')}` : (item.budget || 'Open for Negotiation');
       const thumb = document.getElementById('chatActiveItemThumb');
       if (item.photo) {
@@ -1651,6 +1683,9 @@
           (m.sender === 'You')
         ));
 
+        const senderDisplayName = isMine ? 'You' : (m.senderName || m.sender || 'Member');
+        const senderDisplayCity = isMine ? (currentUser.city || '') : (m.senderCity || '');
+
         if (m.type === 'offer') {
           stream.insertAdjacentHTML('beforeend', `
             <div class="flex justify-center my-2">
@@ -1665,6 +1700,10 @@
           stream.insertAdjacentHTML('beforeend', `
             <div class="flex ${isMine ? 'justify-end' : 'justify-start'}">
               <div class="max-w-[78%] px-4 py-2.5 text-xs shadow-xs ${isMine ? 'chat-bubble-mine' : 'chat-bubble-theirs'}">
+                <div class="text-[10px] font-extrabold mb-1 opacity-80 flex items-center gap-1.5">
+                  <span>${escapeHtml(senderDisplayName)}</span>
+                  ${senderDisplayCity ? `<span class="font-semibold opacity-75">📍 ${escapeHtml(senderDisplayCity)}</span>` : ''}
+                </div>
                 <p class="leading-relaxed break-words">${escapeHtml(m.text)}</p>
                 <span class="text-[9px] opacity-70 block text-right mt-1 font-mono">${escapeHtml(m.time || '')}</span>
               </div>
@@ -1688,18 +1727,22 @@
       const item = allListings.find(x => x.id === currentActiveChatKey) || allWants.find(x => x.id === currentActiveChatKey) || {};
       let receiverId = '';
       let receiverName = '';
+      let receiverCity = '';
       if (item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
         receiverId = item.sellerId;
         receiverName = item.seller || 'Seller';
+        receiverCity = item.city || '';
       } else if (item.buyerId && String(item.buyerId) !== String(currentUser.id)) {
         receiverId = item.buyerId;
         receiverName = item.buyer || 'Buyer';
+        receiverCity = item.city || '';
       } else {
         const msgs = allChats[currentActiveChatKey] || [];
         const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
         if (otherMsg) {
           receiverId = otherMsg.senderId;
           receiverName = otherMsg.senderName || otherMsg.sender || 'Member';
+          receiverCity = otherMsg.senderCity || item.city || '';
         }
       }
 
@@ -1710,10 +1753,12 @@
         itemEmoji: item.photo ? '' : (item.emoji || '💬'),
         sender: currentUser.name,
         senderName: currentUser.name,
+        senderCity: currentUser.city || 'India',
         senderId: currentUser.id,
         senderEmail: currentUser.email || '',
         receiverId: receiverId,
         receiverName: receiverName,
+        receiverCity: receiverCity,
         text: text,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()

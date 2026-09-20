@@ -4914,18 +4914,30 @@ function openInAppChat(itemId) {
     };
   }
 
-  // Resolve Recipient (Seller if we are buyer, or Buyer if we are seller)
+  // Resolve Recipient full name & city (Seller if we are buyer, or Buyer if we are seller)
   let targetReceiverId = '';
   let targetReceiverName = '';
+  let targetReceiverCity = '';
+
   if (item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
     targetReceiverId = item.sellerId;
     targetReceiverName = item.seller || 'Seller';
+    const regU = registeredUsers.find(u => u.id === item.sellerId);
+    targetReceiverCity = (regU && regU.city) ? regU.city : (item.city || 'India');
+  } else if (isDemand && item.sellerId && String(item.sellerId) !== String(currentUser.id)) {
+    targetReceiverId = item.sellerId;
+    targetReceiverName = item.seller || 'Buyer';
+    targetReceiverCity = item.city || 'India';
   } else {
     const msgs = chatThreads[item.id] || [];
     const otherMsg = msgs.slice().reverse().find(m => m.senderId && String(m.senderId) !== String(currentUser.id));
     if (otherMsg) {
       targetReceiverId = otherMsg.senderId;
-      targetReceiverName = otherMsg.senderName || otherMsg.sender || 'Member';
+      targetReceiverName = otherMsg.senderName || otherMsg.sender || 'Interested Buyer';
+      targetReceiverCity = otherMsg.senderCity || (registeredUsers.find(u => u.id === otherMsg.senderId)?.city) || item.city || 'India';
+    } else {
+      targetReceiverName = 'Clubr Member';
+      targetReceiverCity = item.city || 'India';
     }
   }
 
@@ -4933,21 +4945,24 @@ function openInAppChat(itemId) {
     itemId: item.id,
     itemTitle: item.title || 'Marketplace Item',
     itemPrice: item.price || 'Direct Deal',
-    sellerName: item.seller || 'Seller',
+    sellerName: targetReceiverName,
+    otherPartyName: targetReceiverName,
+    otherPartyCity: targetReceiverCity,
     receiverId: targetReceiverId,
     receiverName: targetReceiverName,
+    receiverCity: targetReceiverCity,
     isVerified: !!item.isKycVerified,
     itemEmoji: item.emoji || '📦'
   };
 
-  document.getElementById('chatSellerName').textContent = activeChatContext.sellerName;
-  document.getElementById('chatSellerAvatar').textContent = (activeChatContext.sellerName || 'S').charAt(0).toUpperCase();
+  document.getElementById('chatSellerName').textContent = activeChatContext.otherPartyName;
+  document.getElementById('chatSellerAvatar').textContent = (activeChatContext.otherPartyName || 'U').charAt(0).toUpperCase();
   document.getElementById('chatItemTitle').textContent = activeChatContext.itemTitle;
   document.getElementById('chatItemPrice').textContent = (typeof activeChatContext.itemPrice === 'number' && activeChatContext.itemPrice > 0) 
     ? `₹${activeChatContext.itemPrice.toLocaleString('en-IN')}` 
     : String(activeChatContext.itemPrice);
   document.getElementById('chatItemEmoji').textContent = activeChatContext.itemEmoji;
-  document.getElementById('chatSellerVerifiedPill').textContent = activeChatContext.isVerified ? '🛡️ Verified User' : '🟢 Active on Clubr';
+  document.getElementById('chatSellerVerifiedPill').innerHTML = `📍 <b>${escapeHtml(activeChatContext.otherPartyCity)}</b> · ${activeChatContext.isVerified ? '🛡️ Verified User' : '🟢 Active on Clubr'}`;
 
   const numPrice = Number(item.price) || 0;
   const discount5 = Math.round(numPrice * 0.95);
@@ -5073,10 +5088,22 @@ function renderChatMessages() {
       (m.sender && m.sender === currentUser.name) ||
       (m.sender === 'You')
     ));
+
+    const senderDisplayName = isMine
+      ? 'You'
+      : (m.senderName || m.sender || (activeChatContext ? activeChatContext.otherPartyName : 'User'));
+    const senderDisplayCity = isMine
+      ? ((currentUser && currentUser.city) ? currentUser.city : '')
+      : (m.senderCity || (activeChatContext ? activeChatContext.otherPartyCity : ''));
+
     const bubble = `
       <div class="chat-msg ${isMine ? 'buyer' : 'seller'}">
-        <div>${escapeHtml(m.text)}</div>
-        <div class="msg-time">${escapeHtml(m.time || '')}</div>
+        <div style="font-size:11px; font-weight:800; margin-bottom:4px; opacity:0.88; display:flex; align-items:center; gap:5px;">
+          <span>${escapeHtml(senderDisplayName)}</span>
+          ${senderDisplayCity ? `<span style="font-size:10px; font-weight:600; opacity:0.75;">(📍 ${escapeHtml(senderDisplayCity)})</span>` : ''}
+        </div>
+        <div style="font-size:13px; line-height:1.45;">${escapeHtml(m.text)}</div>
+        <div class="msg-time" style="font-size:10px; opacity:0.7; margin-top:4px;">${escapeHtml(m.time || '')}</div>
       </div>`;
     stream.insertAdjacentHTML('beforeend', bubble);
 
@@ -5137,10 +5164,12 @@ function respondToOffer(offerId, newStatus) {
       itemTitle: activeChatContext.itemTitle || 'Marketplace Item',
       sender: currentUser ? currentUser.name : 'Seller',
       senderName: currentUser ? currentUser.name : 'Seller',
+      senderCity: (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'India'),
       senderId: currentUser ? currentUser.id : 'usr_seller',
       senderEmail: currentUser ? (currentUser.email || '') : '',
       receiverId: activeChatContext.receiverId || '',
       receiverName: activeChatContext.receiverName || '',
+      receiverCity: activeChatContext.receiverCity || '',
       text: responseText,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       timestamp: Date.now()
@@ -5169,6 +5198,7 @@ function sendChatMessage(presetText) {
 
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const userCity = (currentUser && currentUser.city) ? currentUser.city : (currentCity !== 'All India' ? currentCity : 'India');
 
   const newMsg = {
     id: 'msg_' + Date.now(),
@@ -5178,10 +5208,12 @@ function sendChatMessage(presetText) {
     itemPrice: activeChatContext.itemPrice || '',
     sender: currentUser ? currentUser.name : 'Buyer',
     senderName: currentUser ? currentUser.name : 'Buyer',
+    senderCity: userCity,
     senderId: currentUser ? currentUser.id : 'usr_buyer',
     senderEmail: currentUser ? (currentUser.email || '') : '',
     receiverId: activeChatContext.receiverId || '',
     receiverName: activeChatContext.receiverName || '',
+    receiverCity: activeChatContext.receiverCity || '',
     text: text,
     time: timeStr,
     timestamp: Date.now()

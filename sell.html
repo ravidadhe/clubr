@@ -143,9 +143,7 @@
           <div class="text-[11px] text-emerald-800" id="sellPromoDesc">Post as many items as you want. Zero platform charges, zero middleman cut.</div>
         </div>
       </div>
-      <span class="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-200/80 text-emerald-900 shrink-0" id="sellPromoBadge">
-        FREE TIER
-      </span>
+      <span class="hidden" id="sellPromoBadge"></span>
     </div>
     <div id="guestAuthNotice" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
       <div class="space-y-0.5">
@@ -1439,8 +1437,8 @@
           desc.textContent = 'Post as many items as you want. Zero platform charges, zero middleman cut.';
         }
         if (badge) {
-          badge.className = 'px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-200/80 text-emerald-900 shrink-0';
-          badge.textContent = 'FREE TIER';
+          badge.classList.add('hidden');
+          badge.textContent = '';
         }
         if (btnPublish && activeMode === 'sell') {
           btnPublish.className = 'w-full sm:w-auto bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-sm px-8 py-3.5 rounded-2xl transition shadow-md shadow-lime-400/25 shrink-0';
@@ -1459,6 +1457,7 @@
           desc.textContent = `Reach 10,000+ local buyers in your city. Direct chat negotiations with 0% sales commission!`;
         }
         if (badge) {
+          badge.classList.remove('hidden');
           badge.className = 'px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 shrink-0';
           badge.textContent = `₹${siteListingPrice} / 30 DAYS`;
         }

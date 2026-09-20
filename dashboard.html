@@ -1252,6 +1252,15 @@
                 </div>
                 <h4 class="font-bold text-sm text-slate-900 line-clamp-1 group-hover:text-emerald-700 transition">${escapeHtml(item.title)}</h4>
                 <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${escapeHtml(item.desc || 'No description provided')}</p>
+
+                <!-- Metrics Bar: Views, Saves, and Share -->
+                <div class="flex items-center justify-between text-[11px] font-bold text-slate-500 bg-slate-50 border border-slate-200/80 px-2.5 py-1.5 rounded-xl mt-2">
+                  <span class="flex items-center gap-1">👁️ ${item.views || 0} Views</span>
+                  <span class="flex items-center gap-1">❤️ ${item.likes || 0} Saves</span>
+                  <button type="button" onclick="shareDashboardItem('${item.id}', event)" class="text-emerald-700 hover:text-emerald-800 flex items-center gap-1 font-extrabold cursor-pointer" title="Share your listing">
+                    📤 Share
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1272,6 +1281,34 @@
           </div>
         `);
       });
+    }
+
+    function shareDashboardItem(id, event) {
+      if (event) event.stopPropagation();
+      const item = allListings.find(x => x.id === id);
+      if (!item) return;
+
+      const title = item.title || 'Item';
+      const price = Number(item.price || 0).toLocaleString('en-IN');
+      const city = item.city || 'India';
+      const shareUrl = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}/?item=${id}`;
+      const shareText = `Check out my listing "${title}" for ₹${price} in ${city} on Clubr! Zero commission & direct chat:`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: `${title} - Clubr`,
+          text: shareText,
+          url: shareUrl
+        }).catch(() => {});
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+          toast('🔗 Link copied to clipboard! Share it with buyers on WhatsApp.');
+        }).catch(() => {
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+        });
+      } else {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+      }
     }
 
     function toggleItemSold(id) {

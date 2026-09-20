@@ -3149,6 +3149,10 @@ function initData() {
     } else if (action === 'dashboard') {
       handleUserBtnClick();
     }
+    const itemIdParam = urlParams.get('item');
+    if (itemIdParam) {
+      setTimeout(() => openItemDetail(itemIdParam), 400);
+    }
   } catch(e) {}
 }
 
@@ -4089,12 +4093,14 @@ function filterCategory(cat, el) {
 // Render Listings Feed with Prioritized City-First Display & KYC Badges
 function renderListingCard(container, item) {
   const isSaved = savedItemIds.has(item.id);
+  const likesCount = item.likes || (isSaved ? 1 : 0);
+  const viewsCount = item.views || 0;
   const photoCount = (item.photos && item.photos.length > 1)
     ? `<span class="photo-count-pill">📷 ${item.photos.length}</span>`
     : '';
   const visualHtml = item.photo
-    ? `<div class="visual"><img src="${item.photo}" alt="${escapeHtml(item.title)}"><div class="visual-pills">${renderPills(item)}</div>${photoCount}<button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`
-    : `<div class="visual">${item.emoji || '📦'}<div class="visual-pills">${renderPills(item)}</div>${photoCount}<button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)">${isSaved ? '❤️':'♡'}</button></div>`;
+    ? `<div class="visual"><img src="${item.photo}" alt="${escapeHtml(item.title)}"><div class="visual-pills">${renderPills(item)}</div>${photoCount}<button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)" title="Save to Wishlist">${isSaved ? '❤️':'♡'}<span style="font-size:10px; font-weight:800; margin-left:2px">${likesCount > 0 ? likesCount : ''}</span></button></div>`
+    : `<div class="visual">${item.emoji || '📦'}<div class="visual-pills">${renderPills(item)}</div>${photoCount}<button class="fav-btn ${isSaved ? 'active':''}" onclick="toggleSave('${item.id}', event)" title="Save to Wishlist">${isSaved ? '❤️':'♡'}<span style="font-size:10px; font-weight:800; margin-left:2px">${likesCount > 0 ? likesCount : ''}</span></button></div>`;
 
   const card = `
     <article class="item" onclick="openItemDetail('${item.id}')">
@@ -4108,11 +4114,16 @@ function renderListingCard(container, item) {
           </div>
           <div class="item-meta">
             <span>📍 ${escapeHtml(item.locality || 'Local')}, ${escapeHtml(item.city || 'India')}</span>
-            ${item.isKycVerified ? '<span style="color:#10b981; font-weight:800">🛡️ Verified</span>' : '<span style="color:#94a3b8">Basic</span>'}
+            <span style="display:inline-flex; align-items:center; gap:3px; color:var(--muted); font-size:11px; font-weight:700">
+              👁️ ${viewsCount}
+            </span>
           </div>
         </div>
         <div class="item-actions" onclick="event.stopPropagation()">
           <button class="btn-sm-view" onclick="openItemDetail('${item.id}')">Details</button>
+          <button class="btn-sm-share" onclick="shareListing('${item.id}', event)" title="Share listing with friends" style="padding:6px 9px; border-radius:10px; font-size:11px; font-weight:800; background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; cursor:pointer; display:inline-flex; align-items:center; gap:3px">
+            <span>📤</span> Share
+          </button>
           <button class="btn-sm-chat" onclick="openInAppChat('${item.id}')">
             <span>💬</span> Chat
           </button>
@@ -4323,18 +4334,61 @@ document.getElementById('search').addEventListener('keydown', e => {
   if (e.key === 'Enter') runSearch();
 });
 
-// Toggle Save
+// Toggle Save / Like
 function toggleSave(id, e) {
   if (e) e.stopPropagation();
+  const item = listings.find(x => x.id === id);
   if (savedItemIds.has(id)) {
     savedItemIds.delete(id);
-    toast('Removed from saved');
+    if (item) item.likes = Math.max(0, (item.likes || 1) - 1);
+    toast('Removed from saved wishlist');
   } else {
     savedItemIds.add(id);
+    if (item) item.likes = (item.likes || 0) + 1;
     toast('Added to saved wishlist ❤️');
   }
   saveData();
   renderFeed();
+}
+
+// Share Listing (Web Share API + WhatsApp + Clipboard)
+function shareListing(id, e) {
+  if (e) e.stopPropagation();
+  const item = listings.find(x => x.id === id);
+  if (!item) return;
+
+  const title = item.title || 'Item';
+  const price = Number(item.price || 0).toLocaleString('en-IN');
+  const city = item.city || 'India';
+  const shareUrl = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}/?item=${id}`;
+  const shareText = `Check out "${title}" for ₹${price} in ${city} on Clubr! Zero commission & direct chat:`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: `${title} - Clubr`,
+      text: shareText,
+      url: shareUrl
+    }).catch(() => {});
+  } else if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+      toast('🔗 Link copied to clipboard! Ready to share.');
+    }).catch(() => {
+      shareOnWhatsApp(id);
+    });
+  } else {
+    shareOnWhatsApp(id);
+  }
+}
+
+function shareOnWhatsApp(id) {
+  const item = listings.find(x => x.id === id);
+  if (!item) return;
+  const title = item.title || 'Item';
+  const price = Number(item.price || 0).toLocaleString('en-IN');
+  const city = item.city || 'India';
+  const shareUrl = `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}/?item=${id}`;
+  const shareText = `Check out "${title}" for ₹${price} in ${city} on Clubr! Direct in-app chat: ${shareUrl}`;
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
 }
 
 // Detail View
@@ -4365,6 +4419,10 @@ function setDetailActivePhoto(idx) {
 function openItemDetail(id) {
   const item = listings.find(x => x.id === id);
   if (!item) return;
+
+  // Increment views counter
+  item.views = (item.views || 0) + 1;
+  saveData();
 
   const content = document.getElementById('detailContent');
   const specs = CATEGORY_SPECS[item.cat] || CATEGORY_SPECS['Others'];
@@ -4443,6 +4501,24 @@ function openItemDetail(id) {
         <div class="detail-price">₹${Number(item.price).toLocaleString('en-IN')}</div>
       </div>
       ${item.isKycVerified ? '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#dcfce7; color:#15803d">🛡️ Verified User</span>' : '<span class="bhav-pill" style="font-size:12px; padding:6px 12px; background:#f1f5f9; color:#64748b">Community Member</span>'}
+    </div>
+
+    <!-- Social Stats & Quick Actions Bar (Views, Likes, Share) -->
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background:#f8fafc; border:1.5px solid #e2e8f0; padding:10px 14px; border-radius:14px; margin:12px 0;">
+      <div style="display:flex; align-items:center; gap:12px; font-size:12px; font-weight:700; color:#475569;">
+        <span style="display:flex; align-items:center; gap:4px">👁️ <b>${item.views || 1}</b> Views</span>
+        <button onclick="toggleSave('${item.id}'); openItemDetail('${item.id}')" style="display:flex; align-items:center; gap:4px; background:none; border:none; color:${savedItemIds.has(item.id)?'#ef4444':'#64748b'}; font-weight:800; cursor:pointer; font-size:12px;">
+          ${savedItemIds.has(item.id) ? '❤️ Saved' : '🤍 Save'} (${item.likes || (savedItemIds.has(item.id) ? 1 : 0)})
+        </button>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button onclick="shareListing('${item.id}', event)" style="background:#0f172a; color:#fff; border:none; padding:7px 12px; border-radius:10px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:4px;">
+          📤 Share
+        </button>
+        <button onclick="shareOnWhatsApp('${item.id}')" style="background:#22c55e; color:#fff; border:none; padding:7px 12px; border-radius:10px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:4px;">
+          📲 WhatsApp
+        </button>
+      </div>
     </div>
 
     <!-- Dynamic Category Checkpoints -->

@@ -183,6 +183,9 @@
           </svg>
           Continue with Google
         </button>
+        <button type="button" onclick="continueAsGuestSeller()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; background:#f8fafc; color:#0f172a; border:1.5px solid #cbd5e1; border-radius:14px; padding:12px 16px; font-size:13px; font-weight:800; cursor:pointer; margin-bottom:12px;">
+          ⚡ Continue as Guest Seller (Direct Post)
+        </button>
         <a href="./" style="display:block; text-align:center; font-size:13px; font-weight:700; color:#64748b; text-decoration:none; padding:10px;">
           ← Wapas Marketplace Pe Jaao
         </a>
@@ -652,6 +655,29 @@
       } finally {
         if (activeBtn) { activeBtn.innerHTML = orig; activeBtn.disabled = false; }
       }
+    }
+
+    function continueAsGuestSeller() {
+      const guestUser = {
+        id: 'usr_' + Date.now(),
+        name: 'Clubr Seller',
+        email: '',
+        phone: '',
+        city: localStorage.getItem('findly_current_city') || 'Pune',
+        kycStatus: 'none',
+        registeredAt: new Date().toLocaleDateString('en-IN')
+      };
+      currentUser = guestUser;
+      localStorage.setItem('clubr_current_user', JSON.stringify(guestUser));
+      if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+        firebaseRtdb.ref('users/' + guestUser.id).set(guestUser).catch(() => {});
+      }
+      document.getElementById('sellAuthGate').style.display = 'none';
+      document.getElementById('fullSellForm').style.display = '';
+      document.getElementById('headerUserPill').style.display = 'flex';
+      document.getElementById('headerUserName').textContent = 'Seller';
+      document.getElementById('guestAuthNotice').classList.add('hidden');
+      toast('✅ Form unlocked! Ab apni product details fill karein.');
     }
 
     // Category Handling
@@ -1213,13 +1239,20 @@
 
     // Submit Demand / Want Requirement
     async function submitFullPageDemand() {
+      const city = document.getElementById('listingCityInput').value.trim() || 'Pune';
       if (!currentUser) {
-        const proceed = confirm('Please Sign In with your Google account to broadcast your requirement.\n\nClick OK to connect with Google right now.');
-        if (proceed) {
-          await handleSellGoogleSignIn();
-          if (!currentUser) return;
-        } else {
-          return;
+        currentUser = {
+          id: 'usr_' + Date.now(),
+          name: 'Buyer',
+          email: '',
+          phone: '',
+          city: city,
+          kycStatus: 'none',
+          registeredAt: new Date().toLocaleDateString('en-IN')
+        };
+        localStorage.setItem('clubr_current_user', JSON.stringify(currentUser));
+        if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+          firebaseRtdb.ref('users/' + currentUser.id).set(currentUser).catch(() => {});
         }
       }
 
@@ -1228,7 +1261,6 @@
       const cat = activeCat || 'Mobiles';
       const urgency = (document.getElementById('demandUrgencySelect') && document.getElementById('demandUrgencySelect').value) ? document.getElementById('demandUrgencySelect').value : '🗓️ Within 7 days';
       const state = document.getElementById('listingStateSelect').value;
-      const city = document.getElementById('listingCityInput').value.trim() || 'Pune';
       const locality = document.getElementById('listingLocality').value.trim() || 'Local';
       const desc = document.getElementById('itemDesc').value.trim();
 
@@ -1288,22 +1320,6 @@
 
     // Submit Listing
     async function submitFullPageListing() {
-      // 1. Mandatory auth check
-      if (!currentUser) {
-        const proceed = confirm('Please Sign In with your Google account to publish your item.\n\nClick OK to connect with Google right now.');
-        if (proceed) {
-          await handleSellGoogleSignIn();
-          if (!currentUser) return;
-        } else {
-          return;
-        }
-      }
-
-      if (currentUser.isBlocked) {
-        alert('⛔ Account Suspended\n\nYour account has been suspended by Clubr Administration.\nYou cannot post items.\n\nFor questions, contact: rd.chatbox@gmail.com');
-        return;
-      }
-
       // 2. Validate Fields
       const title = document.getElementById('itemTitle').value.trim();
       const price = Number(document.getElementById('itemPrice').value);
@@ -1323,6 +1339,37 @@
 
       if (!title || !price || price <= 0) {
         alert('Please enter a valid product title and selling price.');
+        return;
+      }
+
+      const phoneInput = document.getElementById('sellerPhoneInput');
+      let rawPhone = phoneInput ? phoneInput.value.replace(/\D/g, '').trim() : '';
+      let sellerPhone = '';
+      if (rawPhone.length === 10) {
+        sellerPhone = '+91' + rawPhone;
+      } else if (!rawPhone && currentUser && currentUser.phone) {
+        sellerPhone = currentUser.phone;
+      }
+
+      // Auto guest seller session if not already logged in
+      if (!currentUser) {
+        currentUser = {
+          id: 'usr_' + Date.now(),
+          name: 'Clubr Seller',
+          email: '',
+          phone: sellerPhone,
+          city: city,
+          kycStatus: 'none',
+          registeredAt: new Date().toLocaleDateString('en-IN')
+        };
+        localStorage.setItem('clubr_current_user', JSON.stringify(currentUser));
+        if (typeof firebaseRtdb !== 'undefined' && firebaseRtdb) {
+          firebaseRtdb.ref('users/' + currentUser.id).set(currentUser).catch(() => {});
+        }
+      }
+
+      if (currentUser.isBlocked) {
+        alert('⛔ Account Suspended\n\nYour account has been suspended by Clubr Administration.\nYou cannot post items.\n\nFor questions, contact: rd.chatbox@gmail.com');
         return;
       }
 

@@ -42,19 +42,17 @@ try {
 async function formatClubrUserData(user) {
   let existingUser = null;
 
-  // Try fetching from Cloud Firestore first
-  if (firebaseDb) {
+  // Try fetching from Cloud RTDB first
+  if (firebaseRtdb) {
     try {
-      const doc = await firebaseDb.collection('users').doc(user.uid).get();
-      if (doc.exists) {
-        existingUser = doc.data();
+      const snap = await firebaseRtdb.ref('users/' + user.uid).once('value');
+      if (snap.exists()) {
+        existingUser = snap.val();
       }
-    } catch(e) {
-      console.warn('[Firestore Read]', e.message);
-    }
+    } catch(e) {}
   }
 
-  // If not found in Firestore, check local store
+  // If not found in RTDB, check local store
   if (!existingUser) {
     try {
       const localUsers = JSON.parse(localStorage.getItem('clubr_registered_users') || '[]');
@@ -80,11 +78,9 @@ async function formatClubrUserData(user) {
     registeredAt: (existingUser && existingUser.registeredAt) ? existingUser.registeredAt : new Date().toLocaleDateString('en-IN')
   };
 
-  // Sync to Cloud Firestore in background
-  if (firebaseDb) {
-    firebaseDb.collection('users').doc(user.uid).set(userData, { merge: true }).catch(err => {
-      console.warn('[Firestore Sync]', err.message);
-    });
+  // Sync to Cloud RTDB (instant)
+  if (firebaseRtdb) {
+    firebaseRtdb.ref('users/' + user.uid).set(userData).catch(() => {});
   }
 
   // Sync to local registered users list
@@ -300,12 +296,13 @@ async function clubrSignOut() {
 // USER PROFILE UPDATE
 // ========================================================
 async function clubrUpdateUserProfile(userId, updates) {
-  if (firebaseDb) {
+  if (firebaseRtdb) {
     try {
-      await firebaseDb.collection('users').doc(userId).set(updates, { merge: true });
-    } catch(e) {
-      console.warn('[Firestore User Update Notice]', e.message);
-    }
+      await firebaseRtdb.ref('users/' + userId).update(updates);
+    } catch(e) {}
+  }
+  if (firebaseDb) {
+    firebaseDb.collection('users').doc(userId).set(updates, { merge: true }).catch(() => {});
   }
 
   try {
@@ -318,7 +315,7 @@ async function clubrUpdateUserProfile(userId, updates) {
   } catch(e) {}
 }
 
-// Helper to sanitize objects for Firestore (removes undefined fields which cause Firestore to reject)
+// Helper to sanitize objects for cloud database
 function sanitizeForFirestore(obj) {
   try {
     return JSON.parse(JSON.stringify(obj, (k, v) => v === undefined ? null : v));
@@ -328,28 +325,27 @@ function sanitizeForFirestore(obj) {
 }
 
 // ========================================================
-// CLOUD PUBLISH METHODS
+// CLOUD PUBLISH METHODS (RTDB Primary - Instant 50ms)
 // ========================================================
 async function clubrPublishListing(listing) {
   if (!listing || !listing.id) return { success: false, error: 'Invalid listing object' };
   const safeDoc = sanitizeForFirestore(listing);
-  let savedFirestore = false;
 
-  if (firebaseDb) {
-    try {
-      await firebaseDb.collection('listings').doc(listing.id).set(safeDoc);
-      savedFirestore = true;
-      console.log('[Clubr Cloud] ✅ Listing published to Firestore:', listing.id);
-    } catch(e) {
-      console.warn('[Firestore Listing Publish Warning]', e.message);
-    }
-  }
+  // 1. RTDB (Instant primary cloud storage)
   if (firebaseRtdb) {
     try {
       await firebaseRtdb.ref('listings/' + listing.id).set(safeDoc);
-      console.log('[Clubr Cloud] ✅ Listing synced to RTDB:', listing.id);
-    } catch(e) {}
+      console.log('[Clubr Cloud] ✅ Listing saved live to RTDB:', listing.id);
+    } catch(e) {
+      console.warn('[RTDB Listing Publish]', e.message);
+    }
   }
+
+  // 2. Background Firestore mirror (non-blocking)
+  if (firebaseDb) {
+    firebaseDb.collection('listings').doc(listing.id).set(safeDoc).catch(() => {});
+  }
+
   return { success: true };
 }
 
@@ -357,209 +353,182 @@ async function clubrPublishDemand(demand) {
   if (!demand || !demand.id) return { success: false, error: 'Invalid demand object' };
   const safeDoc = sanitizeForFirestore(demand);
 
-  if (firebaseDb) {
-    try {
-      await firebaseDb.collection('demands').doc(demand.id).set(safeDoc);
-      console.log('[Clubr Cloud] ✅ Demand published to Firestore:', demand.id);
-    } catch(e) {
-      console.warn('[Firestore Demand Publish Warning]', e.message);
-    }
-  }
   if (firebaseRtdb) {
     try {
       await firebaseRtdb.ref('demands/' + demand.id).set(safeDoc);
-      console.log('[Clubr Cloud] ✅ Demand synced to RTDB:', demand.id);
+      console.log('[Clubr Cloud] ✅ Demand saved live to RTDB:', demand.id);
     } catch(e) {}
   }
+
+  if (firebaseDb) {
+    firebaseDb.collection('demands').doc(demand.id).set(safeDoc).catch(() => {});
+  }
+
   return { success: true };
 }
 
 async function clubrPublishKycRequest(req) {
   if (!req || !req.id) return;
   const safeDoc = sanitizeForFirestore(req);
-  if (firebaseDb) {
-    try {
-      await firebaseDb.collection('kyc_requests').doc(req.id).set(safeDoc);
-    } catch(e) {
-      console.warn('[Firestore KYC Publish]', e.message);
-    }
-  }
   if (firebaseRtdb) {
     try {
       await firebaseRtdb.ref('kyc_requests/' + req.id).set(safeDoc);
     } catch(e) {}
+  }
+  if (firebaseDb) {
+    firebaseDb.collection('kyc_requests').doc(req.id).set(safeDoc).catch(() => {});
   }
 }
 
 async function clubrPublishFraudReport(report) {
   if (!report || !report.id) return;
   const safeDoc = sanitizeForFirestore(report);
-  if (firebaseDb) {
+  if (firebaseRtdb) {
     try {
-      await firebaseDb.collection('fraud_reports').doc(report.id).set(safeDoc);
-    } catch(e) {
-      console.warn('[Firestore Fraud Report Publish]', e.message);
-    }
+      await firebaseRtdb.ref('fraud_reports/' + report.id).set(safeDoc);
+    } catch(e) {}
+  }
+  if (firebaseDb) {
+    firebaseDb.collection('fraud_reports').doc(report.id).set(safeDoc).catch(() => {});
   }
 }
 
 // ========================================================
-// LIVE CLOUD FETCH & QUERY METHODS
+// LIVE CLOUD FETCH & QUERY METHODS (RTDB Primary)
 // ========================================================
 async function clubrFetchLiveListings() {
-  if (!firebaseDb && !firebaseRtdb) return null;
-  try {
-    if (firebaseDb) {
+  if (firebaseRtdb) {
+    try {
+      const rtdbSnap = await firebaseRtdb.ref('listings').once('value');
+      const val = rtdbSnap.val();
+      if (val && typeof val === 'object') {
+        const items = Object.keys(val).map(k => ({ ...val[k], id: k }));
+        // Newest listings first
+        return items.reverse();
+      }
+      return [];
+    } catch(err) {
+      console.warn('[RTDB Fetch Listings]', err.message);
+    }
+  }
+
+  if (firebaseDb) {
+    try {
       const snapshot = await firebaseDb.collection('listings').get();
       if (!snapshot.empty) {
         const items = [];
-        snapshot.forEach(doc => {
-          items.push({ ...doc.data(), id: doc.id });
-        });
-        return items;
+        snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
+        return items.reverse();
       }
-    }
-    // RTDB fallback if Firestore was empty or pending
-    if (firebaseRtdb) {
-      const rtdbSnap = await firebaseRtdb.ref('listings').once('value');
-      const val = rtdbSnap.val();
-      if (val) {
-        return Object.keys(val).map(k => ({ ...val[k], id: k }));
-      }
-    }
-    return [];
-  } catch(e) {
-    console.warn('[Firestore Fetch Listings]', e.message);
-    if (firebaseRtdb) {
-      try {
-        const rtdbSnap = await firebaseRtdb.ref('listings').once('value');
-        const val = rtdbSnap.val();
-        if (val) return Object.keys(val).map(k => ({ ...val[k], id: k }));
-      } catch(err2) {}
-    }
-    return null;
+    } catch(e) {}
   }
+
+  return [];
 }
 
 async function clubrFetchLiveDemands() {
-  if (!firebaseDb && !firebaseRtdb) return null;
-  try {
-    if (firebaseDb) {
+  if (firebaseRtdb) {
+    try {
+      const rtdbSnap = await firebaseRtdb.ref('demands').once('value');
+      const val = rtdbSnap.val();
+      if (val && typeof val === 'object') {
+        const items = Object.keys(val).map(k => ({ ...val[k], id: k }));
+        return items.reverse();
+      }
+      return [];
+    } catch(err) {}
+  }
+
+  if (firebaseDb) {
+    try {
       const snapshot = await firebaseDb.collection('demands').get();
       if (!snapshot.empty) {
         const items = [];
-        snapshot.forEach(doc => {
-          items.push({ ...doc.data(), id: doc.id });
-        });
-        return items;
+        snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
+        return items.reverse();
       }
-    }
-    // RTDB fallback if Firestore was empty or pending
-    if (firebaseRtdb) {
-      const rtdbSnap = await firebaseRtdb.ref('demands').once('value');
-      const val = rtdbSnap.val();
-      if (val) {
-        return Object.keys(val).map(k => ({ ...val[k], id: k }));
-      }
-    }
-    return [];
-  } catch(e) {
-    console.warn('[Firestore Fetch Demands]', e.message);
-    if (firebaseRtdb) {
-      try {
-        const rtdbSnap = await firebaseRtdb.ref('demands').once('value');
-        const val = rtdbSnap.val();
-        if (val) return Object.keys(val).map(k => ({ ...val[k], id: k }));
-      } catch(err2) {}
-    }
-    return null;
+    } catch(e) {}
   }
+
+  return [];
 }
 
 async function clubrFetchLiveUsers() {
-  if (!firebaseDb) return null;
-  try {
-    const snapshot = await firebaseDb.collection('users').get();
-    if (!snapshot.empty) {
-      const users = [];
-      snapshot.forEach(doc => {
-        users.push({ ...doc.data(), id: doc.id });
-      });
-      return users;
-    }
-    return [];
-  } catch(e) {
-    console.warn('[Firestore Fetch Users]', e.message);
-    return null;
+  if (firebaseRtdb) {
+    try {
+      const rtdbSnap = await firebaseRtdb.ref('users').once('value');
+      const val = rtdbSnap.val();
+      if (val && typeof val === 'object') {
+        return Object.keys(val).map(k => ({ ...val[k], id: k }));
+      }
+      return [];
+    } catch(err) {}
   }
+
+  if (firebaseDb) {
+    try {
+      const snapshot = await firebaseDb.collection('users').get();
+      if (!snapshot.empty) {
+        const users = [];
+        snapshot.forEach(doc => users.push({ ...doc.data(), id: doc.id }));
+        return users;
+      }
+    } catch(e) {}
+  }
+
+  return [];
 }
 
 async function clubrFetchLiveKycRequests() {
-  if (!firebaseDb) return null;
-  try {
-    const snapshot = await firebaseDb.collection('kyc_requests').get();
-    if (!snapshot.empty) {
-      const reqs = [];
-      snapshot.forEach(doc => {
-        reqs.push({ ...doc.data(), id: doc.id });
-      });
-      return reqs;
-    }
-    return [];
-  } catch(e) {
-    console.warn('[Firestore Fetch KYC]', e.message);
-    return null;
+  if (firebaseRtdb) {
+    try {
+      const snapshot = await firebaseRtdb.ref('kyc_requests').once('value');
+      const val = snapshot.val();
+      if (val && typeof val === 'object') {
+        return Object.keys(val).map(k => ({ ...val[k], id: k }));
+      }
+      return [];
+    } catch(e) {}
   }
+  return [];
 }
 
 async function clubrFetchLiveFraudReports() {
-  if (!firebaseDb) return null;
-  try {
-    const snapshot = await firebaseDb.collection('fraud_reports').get();
-    if (!snapshot.empty) {
-      const reports = [];
-      snapshot.forEach(doc => {
-        reports.push({ ...doc.data(), id: doc.id });
-      });
-      return reports;
-    }
-    return [];
-  } catch(e) {
-    console.warn('[Firestore Fetch Fraud Reports]', e.message);
-    return null;
+  if (firebaseRtdb) {
+    try {
+      const snapshot = await firebaseRtdb.ref('fraud_reports').once('value');
+      const val = snapshot.val();
+      if (val && typeof val === 'object') {
+        return Object.keys(val).map(k => ({ ...val[k], id: k }));
+      }
+      return [];
+    } catch(e) {}
   }
+  return [];
 }
 
 // ========================================================
 // LIVE CLOUD DELETE / MODERATION METHODS
 // ========================================================
 async function clubrDeleteLiveListing(listingId) {
-  if (firebaseDb) {
-    try {
-      await firebaseDb.collection('listings').doc(listingId).delete();
-    } catch(e) {
-      console.warn('[Firestore Delete Listing]', e.message);
-    }
-  }
   if (firebaseRtdb) {
     try {
-      firebaseRtdb.ref('listings/' + listingId).remove();
+      await firebaseRtdb.ref('listings/' + listingId).remove();
     } catch(e) {}
+  }
+  if (firebaseDb) {
+    firebaseDb.collection('listings').doc(listingId).delete().catch(() => {});
   }
 }
 
 async function clubrDeleteLiveDemand(demandId) {
-  if (firebaseDb) {
-    try {
-      await firebaseDb.collection('demands').doc(demandId).delete();
-    } catch(e) {
-      console.warn('[Firestore Delete Demand]', e.message);
-    }
-  }
   if (firebaseRtdb) {
     try {
-      firebaseRtdb.ref('demands/' + demandId).remove();
+      await firebaseRtdb.ref('demands/' + demandId).remove();
     } catch(e) {}
+  }
+  if (firebaseDb) {
+    firebaseDb.collection('demands').doc(demandId).delete().catch(() => {});
   }
 }
 

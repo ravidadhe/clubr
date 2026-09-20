@@ -5325,8 +5325,19 @@ function renderChatMessages() {
     ));
 
     // Determine if sender is Seller or Buyer
+    const textLower = (m.text || '').toLowerCase().trim();
+    const isBuyerText = textLower.includes('best final price') || 
+                        textLower.includes('is this still available') || 
+                        textLower.includes('is this available') || 
+                        textLower.includes('can we meet today') || 
+                        textLower.includes('where can we meet') || 
+                        textLower.includes('original bill hai') ||
+                        m.type === 'offer';
+
     let isSeller = false;
-    if (m.senderRole) {
+    if (isBuyerText) {
+      isSeller = false;
+    } else if (m.senderRole) {
       isSeller = (m.senderRole === 'seller');
     } else if (item.buyerId || item.buyer) {
       const isDemandBuyer = (item.buyerId && m.senderId && String(m.senderId) === String(item.buyerId)) ||
@@ -5345,8 +5356,9 @@ function renderChatMessages() {
     const senderRawName = isMine ? 'You' : (m.senderName || m.sender || (isSeller ? 'Seller' : 'Buyer'));
     const senderDisplayCity = isMine ? ((currentUser && currentUser.city) ? currentUser.city : '') : (m.senderCity || (activeChatContext ? activeChatContext.otherPartyCity : ''));
 
+    // Seller on RIGHT (mine), Buyer on LEFT (theirs)
     const roleClass = isSeller ? 'seller' : 'buyer';
-    const positionClass = isMine ? 'mine' : 'theirs';
+    const positionClass = isSeller ? 'mine' : 'theirs';
     const pillBg = isSeller ? 'background:#a7f3d0; color:#064e3b;' : 'background:#dbeafe; color:#1e40af;';
     const timeColor = isSeller ? 'color:#a7f3d0;' : 'color:#64748b;';
     const textStyle = isSeller ? 'color:#ffffff;' : 'color:#0f172a;';

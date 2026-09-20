@@ -468,16 +468,16 @@
                 </div>
               </div>
 
-              <!-- Quick Suggestion Chips -->
+              <!-- Quick Seller Reply Chips -->
               <div class="px-4 py-2 border-b border-slate-200 bg-slate-50/50 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 text-[11px]">
-                <button onclick="sendQuickChatMessage('Is this still available for immediate pickup?')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
-                  Is this still available?
+                <button onclick="sendQuickChatMessage('✅ Yes, this item is available for immediate pickup.')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
+                  ✅ Yes, available
                 </button>
-                <button onclick="sendQuickChatMessage('What is your best final price?')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
-                  Best final price?
+                <button onclick="sendQuickChatMessage('🤝 The price is fair and slightly negotiable in person.')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
+                  🤝 Price negotiable
                 </button>
-                <button onclick="sendQuickChatMessage('Can we meet today in person to verify?')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
-                  Can we meet today?
+                <button onclick="sendQuickChatMessage('📍 When would you like to visit and inspect the item?')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-lg transition whitespace-nowrap shadow-2xs">
+                  📍 When can you visit?
                 </button>
               </div>
 
@@ -1774,8 +1774,19 @@
         ));
 
         // Determine if sender is Seller or Buyer
+        const textLower = (m.text || '').toLowerCase().trim();
+        const isBuyerText = textLower.includes('best final price') || 
+                            textLower.includes('is this still available') || 
+                            textLower.includes('is this available') || 
+                            textLower.includes('can we meet today') || 
+                            textLower.includes('where can we meet') || 
+                            textLower.includes('original bill hai') ||
+                            m.type === 'offer';
+
         let isSeller = false;
-        if (m.senderRole) {
+        if (isBuyerText) {
+          isSeller = false;
+        } else if (m.senderRole) {
           isSeller = (m.senderRole === 'seller');
         } else if (item.buyerId || item.buyer) {
           const isDemandBuyer = (item.buyerId && m.senderId && String(m.senderId) === String(item.buyerId)) ||
@@ -1805,10 +1816,10 @@
             </div>
           `);
         } else {
-          // Seller is emerald green, Buyer is crisp white/slate
+          // Seller is emerald green on RIGHT, Buyer is crisp white on LEFT
           const bubbleClass = isSeller ? 'chat-bubble-seller' : 'chat-bubble-buyer';
-          const alignClass = isMine ? 'justify-end' : 'justify-start';
-          const cornerClass = isMine ? 'rounded-2xl rounded-br-xs' : 'rounded-2xl rounded-bl-xs';
+          const alignClass = isSeller ? 'justify-end' : 'justify-start';
+          const cornerClass = isSeller ? 'rounded-2xl rounded-br-xs' : 'rounded-2xl rounded-bl-xs';
           const pillBg = isSeller ? 'bg-emerald-300 text-emerald-950' : 'bg-blue-100 text-blue-900';
           const timeColor = isSeller ? 'text-emerald-200' : 'text-slate-400';
 

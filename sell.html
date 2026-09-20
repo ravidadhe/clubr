@@ -68,12 +68,6 @@
     }
   </style>
 
-  <!-- Google Firebase SDK (Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
   <script src="india-cities.js"></script>
 </head>
 <body class="bg-[#f8f6f0] text-slate-900 min-h-screen font-sans antialiased flex flex-col selection:bg-lime-400 selection:text-slate-950">
@@ -617,11 +611,11 @@
           }
         }
       } else {
-        // NOT logged in — hide pill, show gate
+        // NOT logged in — keep form open for immediate use
         document.getElementById('headerUserPill').style.display = 'none';
         document.getElementById('guestAuthNotice').classList.remove('hidden');
-        document.getElementById('sellAuthGate').style.display = 'flex';
-        document.getElementById('fullSellForm').style.display = 'none';
+        document.getElementById('sellAuthGate').style.display = 'none';
+        document.getElementById('fullSellForm').style.display = '';
       }
     }
 
@@ -1404,15 +1398,6 @@
       } else {
         btn.innerHTML = 'Publishing Live... ⏳';
         btn.disabled = true;
-      }
-
-      const phoneInput = document.getElementById('sellerPhoneInput');
-      let rawPhone = phoneInput ? phoneInput.value.replace(/\D/g, '').trim() : '';
-      let sellerPhone = '';
-      if (rawPhone.length === 10) {
-        sellerPhone = '+91' + rawPhone;
-      } else if (!rawPhone && currentUser && currentUser.phone) {
-        sellerPhone = currentUser.phone;
       }
 
       // Safe photo payload: cap to 6 photos max to stay well within Firestore doc limits

@@ -3498,6 +3498,7 @@ function initGlobalChatInboxListener() {
     window.globalInboxListenerUnsub = null;
   }
   if (typeof clubrListenUserInbox === 'function') {
+    const indexInitTime = Date.now();
     window.globalInboxListenerUnsub = clubrListenUserInbox(currentUser.id, (incomingMsg) => {
       if (!incomingMsg || !incomingMsg.itemId) return;
 
@@ -3551,7 +3552,8 @@ function initGlobalChatInboxListener() {
       }
 
       // 3. Show live interactive pop-up banner ONCE only if fresh and unread
-      const isFresh = (Date.now() - (incomingMsg.timestamp || 0)) < 30000;
+      const msgTs = Number(incomingMsg.timestamp) || 0;
+      const isFresh = (msgTs > (indexInitTime - 5000)) && ((Date.now() - msgTs) < 30000);
       if (!isAlreadyRead && isFresh && !shownNotificationBannerIds.has(incomingMsg.id)) {
         shownNotificationBannerIds.add(incomingMsg.id);
         showIncomingChatNotification(incomingMsg);

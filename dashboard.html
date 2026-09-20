@@ -1090,8 +1090,19 @@
           window.dashboardInboxUnsub();
           window.dashboardInboxUnsub = null;
         }
+        const dashboardInitTime = Date.now();
+        const shownDashboardToastIds = new Set();
+
         window.dashboardInboxUnsub = clubrListenUserInbox(currentUser.id, (incomingMsg) => {
           if (!incomingMsg || !incomingMsg.itemId) return;
+
+          // Check if message was already marked read
+          const readKey = 'clubr_read_msg_ids_' + currentUser.id;
+          let readMsgIds = [];
+          try { readMsgIds = JSON.parse(localStorage.getItem(readKey) || '[]'); } catch(e){}
+          const isAlreadyRead = readMsgIds.includes(incomingMsg.id);
+
+          // 1. Sync into local chat threads
           if (!allChats[incomingMsg.itemId]) {
             allChats[incomingMsg.itemId] = [];
           }
@@ -1101,11 +1112,23 @@
             updateDashboardCounts();
             renderChatThreads();
           }
+
+          // 2. If user is currently looking at this active conversation
           if (currentActiveChatKey === incomingMsg.itemId) {
             renderChatMessagesStream();
+            if (typeof clubrClearUserInboxForItem === 'function') {
+              clubrClearUserInboxForItem(currentUser.id, incomingMsg.itemId);
+            }
           } else {
-            if (typeof clubrPlayNotificationChime === 'function') clubrPlayNotificationChime();
-            toast(`💬 New message from ${incomingMsg.senderName || 'Buyer'} on ${incomingMsg.itemTitle || 'Listing'}: "${incomingMsg.text}"`);
+            // ONLY toast for FRESH, live incoming messages that arrived WHILE user is on dashboard
+            const msgTimestamp = Number(incomingMsg.timestamp) || 0;
+            const isLiveFresh = (msgTimestamp > (dashboardInitTime - 5000)) && ((Date.now() - msgTimestamp) < 30000);
+
+            if (isLiveFresh && !isAlreadyRead && !shownDashboardToastIds.has(incomingMsg.id)) {
+              shownDashboardToastIds.add(incomingMsg.id);
+              if (typeof clubrPlayNotificationChime === 'function') clubrPlayNotificationChime();
+              toast(`💬 New message from ${incomingMsg.senderName || 'Buyer'} on ${incomingMsg.itemTitle || 'Listing'}: "${incomingMsg.text}"`);
+            }
           }
         });
       }
@@ -1611,6 +1634,22 @@
     function openActiveChat(threadKey) {
       currentActiveChatKey = threadKey;
       renderChatThreads();
+
+      // Clear RTDB inbox and mark read for this item thread
+      if (currentUser && currentUser.id) {
+        if (typeof clubrClearUserInboxForItem === 'function') {
+          clubrClearUserInboxForItem(currentUser.id, threadKey);
+        }
+        try {
+          const readKey = 'clubr_read_msg_ids_' + currentUser.id;
+          let readMsgIds = JSON.parse(localStorage.getItem(readKey) || '[]');
+          const threadMsgs = allChats[threadKey] || [];
+          threadMsgs.forEach(m => {
+            if (m && m.id && !readMsgIds.includes(m.id)) readMsgIds.push(m.id);
+          });
+          localStorage.setItem(readKey, JSON.stringify(readMsgIds));
+        } catch(e) {}
+      }
 
       const item = allListings.find(x => x.id === threadKey) || allWants.find(x => x.id === threadKey) || { title: 'Marketplace Deal', price: 0, emoji: '📦' };
 
@@ -2417,6 +2456,13 @@
 
     function toast(msg) {
       const box = document.getElementById('toastBox');
+      if (!box) return;
+
+      // Keep maximum 2 toasts visible to prevent cluttering the screen
+      while (box.children.length >= 2) {
+        box.removeChild(box.firstChild);
+      }
+
       const div = document.createElement('div');
       div.className = 'toast-msg';
       div.textContent = msg;
@@ -2425,7 +2471,7 @@
         div.style.opacity = '0';
         div.style.transition = 'opacity 0.3s';
         setTimeout(() => div.remove(), 300);
-      }, 3000);
+      }, 3500);
     }
   </script>
 </body>

@@ -1,6 +1,74 @@
 [
   {
-    "id": "autopilot-1795656593942-155",
+    "id": "autopilot-1795693864452-605",
+    "category": "political",
+    "categoryLabel": "🏛️ Politics & Desh",
+    "spiciness": "⚡ Ground Reality",
+    "title": "अनंत सिंह की बेटी की वरमाला: देखें वीडियो",
+    "preview": "अनंत सिंह की बेटी की वरमाला: देखें वीडियो — सियासी हलचल और सोशल मीडिया पर इस मुद्दे की गरमा-गरम चर्चा, जानिए क्या है असली जमीनी हकीकत।",
+    "fact": "सोशल मीडिया पर दावे किए जा रहे हैं कि इस बयान और फैसले से सत्ता के समीकरण और आम नीतियां पूरी तरह बदल जाएंगी।",
+    "detail": "आधिकारिक जानकारी और ग्राउंड रिपोर्ट के अनुसार यह सामान्य प्रशासनिक व राजनीतिक प्रक्रिया का हिस्सा है। सोशल मीडिया पर सनसनी फैलाने की कोशिश की जा रही है।",
+    "take": "नेताओं के बयानों और चुनावी शोरगुल से ज्यादा सरकारी गाइडलाइंस और आधिकारिक गजट पर भरोसा करना ही समझदारी है।",
+    "afwah": "65%",
+    "reality": "35%",
+    "poll": {
+      "question": "क्या आपको लगता है कि राजनीतिक मुद्दों को सोशल मीडिया पर जरूरत से ज्यादा तूल दिया जाता है?",
+      "opt1": "हां, सिर्फ माहौल बनाया जाता है",
+      "opt2": "नहीं, चर्चा जरूरी है",
+      "v1": 82,
+      "v2": 18
+    },
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQelZvUGtEYkhXaXliRFF6N19QaXFlazd1bGRxS1BuU2FCNW1vZmNkSzNDRnFJaFM4bDNsZ095endsUjcwdk5xVFZYLW9UbkFTNG16TDdvbFpsQ2NTVjZ2X2V3SGVfSnRpVXBlZGNQd3BFQ3paNUh5T19lSnA4T2VkYWdxcUNHb2xwa3dkaGFlalNoQ2tLbjNxY3lQcUQ5clBmMFdhUFhNa21NSDdZSmI4clY4N093cXRZaXc?oc=5",
+    "image": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1575320181282-9afab399332c?w=800&auto=format&fit=crop&q=80",
+    "aspect": "aspect-[4/3]",
+    "reactions": {
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
+    },
+    "publishedDate": "2026-11-26",
+    "publishedAt": 1795693856533,
+    "isAutopilot": true,
+    "originalSource": "CLUBR Verified"
+  },
+  {
+    "id": "autopilot-1795693873039-770",
+    "category": "political",
+    "categoryLabel": "🏛️ Politics & Desh",
+    "spiciness": "⚡ Ground Reality",
+    "title": "Political Buzz: पाकिस्तान का नक्शा बदलने की तैयारी में आसिम मुनीर, 15 नए प्रांत...",
+    "preview": "पाकिस्तान का नक्शा बदलने की तैयारी में आसिम मुनीर, 15 नए प्रांत बनाने के विचारों पर छिड़ी सियासी जंग — सियासी हलचल और सोशल मीडिया पर इस मुद्दे की गरमा-गरम चर्चा, जानिए क्या है असली जमीनी हकीकत।",
+    "fact": "सोशल मीडिया पर दावे किए जा रहे हैं कि इस बयान और फैसले से सत्ता के समीकरण और आम नीतियां पूरी तरह बदल जाएंगी।",
+    "detail": "आधिकारिक जानकारी और ग्राउंड रिपोर्ट के अनुसार यह सामान्य प्रशासनिक व राजनीतिक प्रक्रिया का हिस्सा है। सोशल मीडिया पर सनसनी फैलाने की कोशिश की जा रही है।",
+    "take": "नेताओं के बयानों और चुनावी शोरगुल से ज्यादा सरकारी गाइडलाइंस और आधिकारिक गजट पर भरोसा करना ही समझदारी है।",
+    "afwah": "65%",
+    "reality": "35%",
+    "poll": {
+      "question": "क्या आपको लगता है कि राजनीतिक मुद्दों को सोशल मीडिया पर जरूरत से ज्यादा तूल दिया जाता है?",
+      "opt1": "हां, सिर्फ माहौल बनाया जाता है",
+      "opt2": "नहीं, चर्चा जरूरी है",
+      "v1": 82,
+      "v2": 18
+    },
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiswFBVV95cUxObmFOV3lnV211dFpnaTVuc0hCT2J3MzllZkgwbHZMVXI3a1VBXy1GU2c1Wnlwb1NJdkNnQjFRd0wyMTljVFlKR0lMc2Z0MVZlLS1mUl9PbzZIRVNUNHR3eVA3X1FGb3JxcEx0TGszTlRYWE5DWS1aZzlRc1ZkMXNqdTNpMU1hSlpkZ3VNdXNjRjNvcFcyOHZqeWMtVEdzRGxEOXZVV3p5UHVrVklkMHRVX1BXOA?oc=5",
+    "image": "https://images.unsplash.com/photo-1575320181282-9afab399332c?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop&q=80",
+    "aspect": "aspect-[4/3]",
+    "reactions": {
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
+    },
+    "publishedDate": "2026-11-26",
+    "publishedAt": 1795693857201,
+    "isAutopilot": true,
+    "originalSource": "CLUBR Verified"
+  },
+  {
+    "id": "autopilot-1795693881280-635",
     "category": "political",
     "categoryLabel": "🏛️ Politics & Desh",
     "spiciness": "⚡ Ground Reality",
@@ -19,8 +87,8 @@
       "v2": 18
     },
     "sourceUrl": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1vWVNUQmtrblNINkt6RWtmT0J0RHl3ZzFNQjIxN3pOLTVnVFQ4NTBuV1R4MkI1RDZUc1FGVXNBaDE5b0hYaXA3ZlBsR2VDbWlNNl9oZUhHSVkzN3pj0gFiQVVfeXFMUENJY1RGRW9HM2g5S3FsNGdZRVlrejhlMkRsa1o1a3NtLXR1N19QWXFvWTNtdV9EczR5SlJFWFYwc2xVWFhac2Z3c1ZNN2hGTHpCTzBTdkV1YUhlMWtuQnhWamc?oc=5",
-    "image": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1575320181282-9afab399332c?w=800&auto=format&fit=crop&q=80",
+    "image": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
       "laugh": 0,
@@ -29,12 +97,12 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656586023,
+    "publishedAt": 1795693857523,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656602565-25",
+    "id": "autopilot-1795693889522-778",
     "category": "political",
     "categoryLabel": "🏛️ Politics & Desh",
     "spiciness": "⚡ Ground Reality",
@@ -53,8 +121,8 @@
       "v2": 18
     },
     "sourceUrl": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxPVW1FQU1VR3ZNUXg1QkFNTEZmdlJaSXFjbEI1ZFJzVER5cE5DVE9tNUhqYVlONThBUVI0VGdJOEU1YjlERVo1UXB6V1MxMFNra2pkd1FtTHh2aHBkeWwxQ2ZQVFg3RHFPVV9JU0FGQjR6SDVNNlo2Z1Via3RyRmgzOGpMdWZVcWxZSURRNm5UVEtrV0s2dldZOTZOWm5tTjJkU2FnQkd6Yy1ydTBZYnFycS1XNFl5dGxmcW9Dd2p6NVp1cUwxUGxUa2t6dUF0MEhhSThibmQzYzJSSy1sZGFtWEtBa2RQSDBkSlNKcGpUQmXSAfYBQVVfeXFMTzJEblVOQ1laVFdadGpZYjhzenhHWGxIX2hxM1lkTkJuT25XbXZlTkw1S08tNGVCZTNxMm9rQ1RDWEpKNGo1MnBFLU52NGFuRDZDNk4xanF1aGtUektOSENoRkYtYjhXY2FzMW9Ea2VJOV8tRjFUNGEyUzQwVXNpbGVRT2ZZZC1ZZXJUTW9YOVBHaHNUbjBNeWdVTWE5SEwzY2NUTHNBWkFOY3owUlBpV19ienBnWFd4WUNXTF9Vbkk0QnlsZnlua0ZwaUFPTVBBWW9LLWg4alRfZlJSQ0VadlRkSEZKa2FibzNFclVWdnA4X2I3WVh3?oc=5",
-    "image": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&auto=format&fit=crop&q=80",
+    "image": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
       "laugh": 0,
@@ -63,12 +131,12 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656586727,
+    "publishedAt": 1795693857846,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656610825-777",
+    "id": "autopilot-1795693897763-526",
     "category": "political",
     "categoryLabel": "🏛️ Politics & Desh",
     "spiciness": "⚡ Ground Reality",
@@ -87,74 +155,6 @@
       "v2": 18
     },
     "sourceUrl": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPSnlJa1NtU0xwUDFvbFdxb3JmZl9vckNPTTJvUkRWeHlhT1dxdlNuSjZCaEhMR1lMd2N4OUdoYXFWZDdYWWJRRGxhazdFeEcxd0Q2UWNIbjh2UnhIbnJaTWtZYngyQmRUcVFtNklVZWpOeF94MzBueXprbnR5UlAtWDQxbXJOdzRWcld5RFFlb0NuOGlQU0c5enZ5NmhWTnowX1YwRGFEMEtER3pvVXNDbkxGSXk4aGVkWlBEUTg0TnhKeFJFUHhiUUZR?oc=5",
-    "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 0,
-      "skull": 0,
-      "fire": 0,
-      "clown": 0
-    },
-    "publishedDate": "2026-11-26",
-    "publishedAt": 1795656587068,
-    "isAutopilot": true,
-    "originalSource": "CLUBR Verified"
-  },
-  {
-    "id": "autopilot-1795656619085-826",
-    "category": "political",
-    "categoryLabel": "🏛️ Politics & Desh",
-    "spiciness": "⚡ Ground Reality",
-    "title": "'मुंगेरीलाल के सपने' डिकोड करने का 'टास्क': गाय, तेंदुआ और सांड वाला 'एडमिनिस्ट्रेशन'; चायवाला...",
-    "preview": "'मुंगेरीलाल के सपने' डिकोड करने का 'टास्क': गाय, तेंदुआ और सांड वाला 'एडमिनिस्ट्रेशन'; चायवाला 'सरपंच पति' — सियासी हलचल और सोशल मीडिया पर इस मुद्दे की गरमा-गरम चर्चा, जानिए क्या है असली जमीनी हकीकत।",
-    "fact": "सोशल मीडिया पर दावे किए जा रहे हैं कि इस बयान और फैसले से सत्ता के समीकरण और आम नीतियां पूरी तरह बदल जाएंगी।",
-    "detail": "आधिकारिक जानकारी और ग्राउंड रिपोर्ट के अनुसार यह सामान्य प्रशासनिक व राजनीतिक प्रक्रिया का हिस्सा है। सोशल मीडिया पर सनसनी फैलाने की कोशिश की जा रही है।",
-    "take": "नेताओं के बयानों और चुनावी शोरगुल से ज्यादा सरकारी गाइडलाइंस और आधिकारिक गजट पर भरोसा करना ही समझदारी है।",
-    "afwah": "65%",
-    "reality": "35%",
-    "poll": {
-      "question": "क्या आपको लगता है कि राजनीतिक मुद्दों को सोशल मीडिया पर जरूरत से ज्यादा तूल दिया जाता है?",
-      "opt1": "हां, सिर्फ माहौल बनाया जाता है",
-      "opt2": "नहीं, चर्चा जरूरी है",
-      "v1": 82,
-      "v2": 18
-    },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxPTVhvaVVXZ0VJTk9jMDhLQ20xTXFfNnZGaEFjTHo3TC1PSXJFSUdRekFTOFRqT2RQZ1N1bmI0TXpJNGFhWC1ZeXlGc0VrYkhoZ1ZyRlByVUd1ajdVTVhWeTJkS0U0YmVSWUd4ckJjcFpVMFhSTnM1Yjd1RWhiTmhTQzc5allGT21sdENGTkEwMk9lZ3JUVGl1SWE2eWhRSWg4YldIdldNTnNNeXhQTDFvaW12MU1hYTJlV1ZGSkMwWm8tMjdCZDZYSEdZNTR3cFpmWTA40gHYAUFVX3lxTE1vRGNqb0RLQjEtYkNTeU9tQkE0VEFiWlhYaEJpZm1xc0pYOHUwWUpzcEhEZU1XMWF6OFBESG03bkVWRnZKVExyUWVpV29jWVpuQXF6WEFPcHRaay1hU0dhNkJwY29iUEo3Nm9Ic3VGcUFVcFMwRjgxTG5SUUhsdEdBTWNUdDhwWjdKT0lIVlBJd3NBZXZlV0RuRlFZNGJ3Z2FRMHFNcU45WEx4RU1haWJTQXhNZHdidlJsOXJqQTl6aHE2Z0lVa084Q3FUOHRVOVBFMTZXV2pVVw?oc=5",
-    "image": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 0,
-      "skull": 0,
-      "fire": 0,
-      "clown": 0
-    },
-    "publishedDate": "2026-11-26",
-    "publishedAt": 1795656587409,
-    "isAutopilot": true,
-    "originalSource": "CLUBR Verified"
-  },
-  {
-    "id": "autopilot-1795656627344-747",
-    "category": "political",
-    "categoryLabel": "🏛️ Politics & Desh",
-    "spiciness": "⚡ Ground Reality",
-    "title": "Political Buzz: ललन सिंह पहुंचे अनंत सिंह के घर, BJP सांसद, बृजभूषण शरण, साधु...",
-    "preview": "ललन सिंह पहुंचे अनंत सिंह के घर, BJP सांसद, बृजभूषण शरण, साधु यादव भी शादी में शामिल — सियासी हलचल और सोशल मीडिया पर इस मुद्दे की गरमा-गरम चर्चा, जानिए क्या है असली जमीनी हकीकत।",
-    "fact": "सोशल मीडिया पर दावे किए जा रहे हैं कि इस बयान और फैसले से सत्ता के समीकरण और आम नीतियां पूरी तरह बदल जाएंगी।",
-    "detail": "आधिकारिक जानकारी और ग्राउंड रिपोर्ट के अनुसार यह सामान्य प्रशासनिक व राजनीतिक प्रक्रिया का हिस्सा है। सोशल मीडिया पर सनसनी फैलाने की कोशिश की जा रही है।",
-    "take": "नेताओं के बयानों और चुनावी शोरगुल से ज्यादा सरकारी गाइडलाइंस और आधिकारिक गजट पर भरोसा करना ही समझदारी है।",
-    "afwah": "65%",
-    "reality": "35%",
-    "poll": {
-      "question": "क्या आपको लगता है कि राजनीतिक मुद्दों को सोशल मीडिया पर जरूरत से ज्यादा तूल दिया जाता है?",
-      "opt1": "हां, सिर्फ माहौल बनाया जाता है",
-      "opt2": "नहीं, चर्चा जरूरी है",
-      "v1": 82,
-      "v2": 18
-    },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNTzZXenFTV0ppVEFELUpVNnE1QzBJd0ZxM09JZkZjd3BSZWYzLUlJNHZQMHhBYUN3RDR2OGNRTGFTbVBTRkJiRmwyQ3pnalRFaExtdXZkVDJMc1VId0gycWZQMTRXTWJlOGgtcHdvMXFwUVVBRGVYNnZJeHVUdzdDN0NWcHYzZC1jQmlHNWpjNGVfZ3d2RG1LT3N6Y3VyYmNpVjJncUthSXRCcDBYdE9lSzJOYjczZ0xpQXltbHNiZGhpOW5QZkE?oc=5",
     "image": "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -165,17 +165,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656587749,
+    "publishedAt": 1795693858168,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656635864-322",
+    "id": "autopilot-1795693906328-827",
     "category": "business",
     "categoryLabel": "💸 Business & Paisa",
     "spiciness": "⚡ Ground Reality",
-    "title": "Gold Silver Price: सोने-चांदी के भाव में आई भारी गिरावट, जानें 25 नवंबर को...",
-    "preview": "Gold Silver Price: सोने-चांदी के भाव में आई भारी गिरावट, जानें 25 नवंबर को दिल्ली-मुंबई समेत बड़े शहरों के भाव — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
+    "title": "Tata Sons Row: चंद्रा की नियुक्ति को चुनौती",
+    "preview": "Tata Sons Row: चंद्रा की नियुक्ति को चुनौती... ₹65 करोड़ हर्जाना, अब बॉम्बे हाई कोर्ट जाएगा टाटा ट्रस्ट! — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
     "fact": "इंटरनेट और WhatsApp ग्रुप्स में पैनिक फैलाया जा रहा है कि मार्केट क्रैश हो जाएगा और भारी आर्थिक नुकसान तय है।",
     "detail": "मार्केट एक्सपर्ट्स के मुताबिक यह ग्लोबल फैक्टर्स और प्रॉफिट बुकिंग का सामान्य चक्र है, घबराने की कोई आवश्यकता नहीं है।",
     "take": "मार्केट के हर उतार-चढ़ाव में घबराकर पैसे निकालने के बजाय संयम और रिसर्च के साथ सही जगह टिके रहना फायदेमंद है।",
@@ -188,9 +188,9 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQcGhSenVZMGZDTnR0QUtlRWFaYzdXUTR3QmV0SzhQbWRiN3U5NGZJR2VyY1pSSGlWZVh2VUNoU2h3N3U5U3BDX1lubDN3b2tNakltb0F3cksyYVNrX19menYxV1NBSWg0MHJZbFY3WVZPT3dfcVJEV3hjSXF6b1pCVExKeWtacDh4QVRDVUpZbHVRaGlSUGlnU3NSai1oMVBUeUU1NklEOXVzUnFCVjBLbDhR?oc=5",
-    "image": "https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNOHJVcW9DU3N2VThhbFhEZWpKQi1Yb1E4SWctQkFpZVdRUjNnRlBhXzhEQ1hCMDJvdURpdFRoRGFSa0diS2FheVFxclRIanlxeml1bms3Q2VXZ2FmaGVlZzRneUtIdFhRaC04dzNlQm1aNHFFdzc1aXNwajB4ejM1ZWdNOS1MZmxJUG5iWmlkWWNwZ3VnZVZqaXhGZ0JCbi14Yk40bHV1NmFqVDdQMjBUdjJXVlhlLWN2bjVjeW8tOE9QV08zU3NfR3F0M0FYdmU1UHQ2ZmFEMUtzd1Q0aTVZYWRHVUZrSE1Cb1JqM3U0eXhESTNJbnA1M9IB_gFBVV95cUxNcUFtNzd0S2JpRWIwNkFrWUNKOWRXX25RcjNkczVwcUFmZEZXUTlYbHpVMzREekZKbldqYkpyREloSHQ0LUlFdUZKdFBuZHVjWEQ1ODdCX0dKUktNLTBwNXVrVlZzVTVvYTFWRkg0OXhTdTBYdktsalJDc1pjUVdkWHRTWEcxNDB3Snl1WGx5WWpfakg5Ukk4X2lkY0ZqSWp3UmZUVDRJUS1rMTdPT2FuYjBfTmFyTjZOcldSM0tGdjR6X0ZQLXZySTZjb3JEa2FHc3VRM2VmWFpIU2p4TXBNNmgzamZiMEFZMGZlSEFGRlJXU2tGejFEVG1vclpjdw?oc=5",
+    "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
       "laugh": 0,
@@ -199,114 +199,12 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656588350,
+    "publishedAt": 1795693858814,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656644123-238",
-    "category": "business",
-    "categoryLabel": "💸 Business & Paisa",
-    "spiciness": "⚡ Ground Reality",
-    "title": "Jensen Huang Networth: NVIDIA में वापसी होते ही जेनसन हुआंग पर पैसों की बारिश,...",
-    "preview": "Jensen Huang Networth: NVIDIA में वापसी होते ही जेनसन हुआंग पर पैसों की बारिश, 1 दिन में ₹300000Cr छापे — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
-    "fact": "इंटरनेट और WhatsApp ग्रुप्स में पैनिक फैलाया जा रहा है कि मार्केट क्रैश हो जाएगा और भारी आर्थिक नुकसान तय है।",
-    "detail": "मार्केट एक्सपर्ट्स के मुताबिक यह ग्लोबल फैक्टर्स और प्रॉफिट बुकिंग का सामान्य चक्र है, घबराने की कोई आवश्यकता नहीं है।",
-    "take": "मार्केट के हर उतार-चढ़ाव में घबराकर पैसे निकालने के बजाय संयम और रिसर्च के साथ सही जगह टिके रहना फायदेमंद है।",
-    "afwah": "65%",
-    "reality": "35%",
-    "poll": {
-      "question": "क्या मार्केट के उतार-चढ़ाव में रिटेल इन्वेस्टर्स को पैनिक करने के बजाय होल्ड करना चाहिए?",
-      "opt1": "हां, पैनिक में लॉस होता है",
-      "opt2": "नहीं, तुरंत निकलना चाहिए",
-      "v1": 82,
-      "v2": 18
-    },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxPckFfSVJLSEpaOF9ldEd5U1BHVHNrc0RSbXhGR2hoYW1kVkpYVkthTzEwcXVaclFLYTJ2bmhUVFZLWHBValNIZVROZ2dnbE1XY0ZGc24telN3RWlNZ1hxVUJkN2YyQTRxX09fam9CS05IdFJsVFRzNFhFMjZDN1B0azgxYnlQeWc1WmNROHZvMEpDcklXcnNOOE1OM3dhZXF3M0lnYUcwX3F5T0lUV3N4ejY5ME9vdVdXN0xGQ1NRYlY3NmcybTlBcUVvNzJYa05VVTF1NGRINzFvQlg3WVpEbnFSV29EaDDSAewBQVVfeXFMTVY4WTZsc1k3c29QTFVuSjdUN0h5aXBhQXNjWE1MdGlsWldQdTFmbFZ3eTU1empKN1F2UWZYeFR6V3VQbmdjZnVrZ0trendmNU9Fb2hqdi1RQk9lLTFFQlBNczh6b2JHUTVqLWNSZVBrM0lmRXlNUFdiY3d4dTMyRF8zeXRBdDcyalhxS1BBMkQtemVRczkxWEJfbXVDSHItVS1KRDgtTDh5dU5VcmhVRXJfMTZ1WVVhM20wem5fakVfVzloeVVablR3WnFKTTIxeG9aZ0huSlJkWE84aVF3RmZHVGU1MWpzQUdwUkI?oc=5",
-    "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 0,
-      "skull": 0,
-      "fire": 0,
-      "clown": 0
-    },
-    "publishedDate": "2026-11-26",
-    "publishedAt": 1795656588690,
-    "isAutopilot": true,
-    "originalSource": "CLUBR Verified"
-  },
-  {
-    "id": "autopilot-1795656652381-97",
-    "category": "business",
-    "categoryLabel": "💸 Business & Paisa",
-    "spiciness": "⚡ Ground Reality",
-    "title": "सेंसेक्स 1502 अंक और निफ्टी 470 अंक उछला: सस्ते तेल, रिकॉर्ड विदेशी निवेश का...",
-    "preview": "सेंसेक्स 1502 अंक और निफ्टी 470 अंक उछला: सस्ते तेल, रिकॉर्ड विदेशी निवेश का असर; बाजार सालभर की गिरावट की ... — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
-    "fact": "इंटरनेट और WhatsApp ग्रुप्स में पैनिक फैलाया जा रहा है कि मार्केट क्रैश हो जाएगा और भारी आर्थिक नुकसान तय है।",
-    "detail": "मार्केट एक्सपर्ट्स के मुताबिक यह ग्लोबल फैक्टर्स और प्रॉफिट बुकिंग का सामान्य चक्र है, घबराने की कोई आवश्यकता नहीं है।",
-    "take": "मार्केट के हर उतार-चढ़ाव में घबराकर पैसे निकालने के बजाय संयम और रिसर्च के साथ सही जगह टिके रहना फायदेमंद है।",
-    "afwah": "65%",
-    "reality": "35%",
-    "poll": {
-      "question": "क्या मार्केट के उतार-चढ़ाव में रिटेल इन्वेस्टर्स को पैनिक करने के बजाय होल्ड करना चाहिए?",
-      "opt1": "हां, पैनिक में लॉस होता है",
-      "opt2": "नहीं, तुरंत निकलना चाहिए",
-      "v1": 82,
-      "v2": 18
-    },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNU3F0RjlFaVR3TTZWejROTTU3RnZLVVFUdUppd3hfdU5wWWQ1M0RlS08xa2w5THV5Tm00WWFEVnRXX1pyS1pVMXM1T2xTcjZ6azRlNy1TNmlWU2doT2R1bzBPRGhkSkV5RWxzQ3FFRTN0OGU5aVpZTGNaVGJGUzBoMVNqeFhkNHFIVVZaNHVYLWFpZVA2Q0htOEZnMkxyWTZrUkwxNGE3VE5LNHVYWEl4eUV3eXZ6a2xxak9NZFpPNNIBxAFBVV95cUxQRG9VNUJFTzBtYS1naTE5S2hlcTRlMUpFTkRVNnVLLWxDM05HNUVLb3I0ZjVpMWdJVy1JYVp1TzZuc1VBOHBzNHpUbEVOeXFSQ0JMdVdabDh3Mm1OUDY2TlRLbGVRS0hMOHZyT0QwY3VXbllEWFMzX3BEVktjT3FJYXN2UmpoZXZaRzF3OW1HWlVoTkxNTFVfOGcyeTMwNlVUdXUtQzVkektPRmJMR3E2dDQwMmIwekIyMWZIYWUzQnY2TVB6?oc=5",
-    "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 0,
-      "skull": 0,
-      "fire": 0,
-      "clown": 0
-    },
-    "publishedDate": "2026-11-26",
-    "publishedAt": 1795656589029,
-    "isAutopilot": true,
-    "originalSource": "CLUBR Verified"
-  },
-  {
-    "id": "autopilot-1795656660640-235",
-    "category": "business",
-    "categoryLabel": "💸 Business & Paisa",
-    "spiciness": "⚡ Ground Reality",
-    "title": "Market & Money: गैस सिलिंडर बुकिंग के 1 दिसंबर से बदल जाएंगे नियम, सब्सिडी...",
-    "preview": "गैस सिलिंडर बुकिंग के 1 दिसंबर से बदल जाएंगे नियम, सब्सिडी और कनेक्शन के लिए अलग रूल — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
-    "fact": "इंटरनेट और WhatsApp ग्रुप्स में पैनिक फैलाया जा रहा है कि मार्केट क्रैश हो जाएगा और भारी आर्थिक नुकसान तय है।",
-    "detail": "मार्केट एक्सपर्ट्स के मुताबिक यह ग्लोबल फैक्टर्स और प्रॉफिट बुकिंग का सामान्य चक्र है, घबराने की कोई आवश्यकता नहीं है।",
-    "take": "मार्केट के हर उतार-चढ़ाव में घबराकर पैसे निकालने के बजाय संयम और रिसर्च के साथ सही जगह टिके रहना फायदेमंद है।",
-    "afwah": "65%",
-    "reality": "35%",
-    "poll": {
-      "question": "क्या मार्केट के उतार-चढ़ाव में रिटेल इन्वेस्टर्स को पैनिक करने के बजाय होल्ड करना चाहिए?",
-      "opt1": "हां, पैनिक में लॉस होता है",
-      "opt2": "नहीं, तुरंत निकलना चाहिए",
-      "v1": 82,
-      "v2": 18
-    },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOZ240TWo1RXZiOXk2ZFNna2h1ZHJKUDRKdUdKcll6WjdqUzVDcG1KNjVPOVUzVGVQdkdVVG5qRGY4bDcxejZxV09NbVNUYzFsZ1VUZlFBUlVONlliWmNIVFMxaFpHVXptdXgwRnc1S1gtUkYwc3g1VXdYa0lrY2ZWRXplWDg0RkRhMHV0a2xmQThGWldmZDFhOXFTdFRMR2x5V1E2Q2hPU2s3aWdobVktLUdjLU5sZ2tkeG1LZw?oc=5",
-    "image": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
-    "aspect": "aspect-[4/3]",
-    "reactions": {
-      "laugh": 0,
-      "skull": 0,
-      "fire": 0,
-      "clown": 0
-    },
-    "publishedDate": "2026-11-26",
-    "publishedAt": 1795656589369,
-    "isAutopilot": true,
-    "originalSource": "CLUBR Verified"
-  },
-  {
-    "id": "autopilot-1795656669021-948",
+    "id": "autopilot-1795693914569-839",
     "category": "business",
     "categoryLabel": "💸 Business & Paisa",
     "spiciness": "⚡ Ground Reality",
@@ -325,6 +223,108 @@
       "v2": 18
     },
     "sourceUrl": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxNUUlvWmM2dUdlSVIyUGFWWXJONUx3S1UyMy1VOEtmMDJsZlBtODNpUUxMSUYwcWZTZ1ZyVkx1MDZvM0xYN2VVSzFLTEJQNUxkSnNsM01LenRLNXJHU3NpdjJjRk9vWFc2Tl9hNHJCS25CbE5idTlPQ3JmRXhqb3lrQUNVUC1hSW41TmVsa21XMU5wSFc4QldrV1hTa1dnS1c5Qk5reFJ0Q3RwSi1kbDdybnhJRDVFdTBTLXpEM08wN09CVHROVGZwbkxneWE5UTAzSGRVd19aMWxQNl9DVWZtMjhKQ2nSAeoBQVVfeXFMUFlsaWlLbVM0LVhOdzJDMDhYWkNkRE1KNUZNZGVPS1hUX1RMeE85SzlScWtzbmowMDlaWFh0QU1iWUlGZWg0YUFQZ2tub0FSU3VhSktVQnRZUlUyc05EZjhMQ3h3cTN1aTBZQU1LcW00WXZTc0NFdTluTjlPd01Ic0t0ZDVHSmtab2tkOVdNTnRROWZ2MEtUWGlZQlpIZ0lsaTZtTXhNN2s1MURUUEU3dWVMZlZDd1JKSlg4NFpMQmFzNE52X1NwRmw1TW5KanMxZ2FISVFJUC1IX0tVc1htOVhoSl9pbzRWWUdB?oc=5",
+    "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&auto=format&fit=crop&q=80",
+    "aspect": "aspect-[4/3]",
+    "reactions": {
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
+    },
+    "publishedDate": "2026-11-26",
+    "publishedAt": 1795693859136,
+    "isAutopilot": true,
+    "originalSource": "CLUBR Verified"
+  },
+  {
+    "id": "autopilot-1795693922811-772",
+    "category": "business",
+    "categoryLabel": "💸 Business & Paisa",
+    "spiciness": "⚡ Ground Reality",
+    "title": "सेंसेक्स 1502 अंक और निफ्टी 470 अंक उछला: सस्ते तेल, रिकॉर्ड विदेशी निवेश का...",
+    "preview": "सेंसेक्स 1502 अंक और निफ्टी 470 अंक उछला: सस्ते तेल, रिकॉर्ड विदेशी निवेश का असर; बाजार सालभर की गिरावट की ... — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
+    "fact": "इंटरनेट और WhatsApp ग्रुप्स में पैनिक फैलाया जा रहा है कि मार्केट क्रैश हो जाएगा और भारी आर्थिक नुकसान तय है।",
+    "detail": "मार्केट एक्सपर्ट्स के मुताबिक यह ग्लोबल फैक्टर्स और प्रॉफिट बुकिंग का सामान्य चक्र है, घबराने की कोई आवश्यकता नहीं है।",
+    "take": "मार्केट के हर उतार-चढ़ाव में घबराकर पैसे निकालने के बजाय संयम और रिसर्च के साथ सही जगह टिके रहना फायदेमंद है।",
+    "afwah": "65%",
+    "reality": "35%",
+    "poll": {
+      "question": "क्या मार्केट के उतार-चढ़ाव में रिटेल इन्वेस्टर्स को पैनिक करने के बजाय होल्ड करना चाहिए?",
+      "opt1": "हां, पैनिक में लॉस होता है",
+      "opt2": "नहीं, तुरंत निकलना चाहिए",
+      "v1": 82,
+      "v2": 18
+    },
+    "sourceUrl": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNU3F0RjlFaVR3TTZWejROTTU3RnZLVVFUdUppd3hfdU5wWWQ1M0RlS08xa2w5THV5Tm00WWFEVnRXX1pyS1pVMXM1T2xTcjZ6azRlNy1TNmlWU2doT2R1bzBPRGhkSkV5RWxzQ3FFRTN0OGU5aVpZTGNaVGJGUzBoMVNqeFhkNHFIVVZaNHVYLWFpZVA2Q0htOEZnMkxyWTZrUkwxNGE3VE5LNHVYWEl4eUV3eXZ6a2xxak9NZFpPNNIBxAFBVV95cUxQRG9VNUJFTzBtYS1naTE5S2hlcTRlMUpFTkRVNnVLLWxDM05HNUVLb3I0ZjVpMWdJVy1JYVp1TzZuc1VBOHBzNHpUbEVOeXFSQ0JMdVdabDh3Mm1OUDY2TlRLbGVRS0hMOHZyT0QwY3VXbllEWFMzX3BEVktjT3FJYXN2UmpoZXZaRzF3OW1HWlVoTkxNTFVfOGcyeTMwNlVUdXUtQzVkektPRmJMR3E2dDQwMmIwekIyMWZIYWUzQnY2TVB6?oc=5",
+    "image": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
+    "aspect": "aspect-[4/3]",
+    "reactions": {
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
+    },
+    "publishedDate": "2026-11-26",
+    "publishedAt": 1795693859459,
+    "isAutopilot": true,
+    "originalSource": "CLUBR Verified"
+  },
+  {
+    "id": "autopilot-1795693931052-228",
+    "category": "business",
+    "categoryLabel": "💸 Business & Paisa",
+    "spiciness": "⚡ Ground Reality",
+    "title": "Market & Money: आज फिर सस्ता हुआ सोना और चांदी, 1",
+    "preview": "आज फिर सस्ता हुआ सोना और चांदी, 1.44 लाख रुपये के नीचे आया सिल्वर का भाव, चेक करें गोल्ड के ताजा रेट — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
+    "fact": "इंटरनेट और WhatsApp ग्रुप्स में पैनिक फैलाया जा रहा है कि मार्केट क्रैश हो जाएगा और भारी आर्थिक नुकसान तय है।",
+    "detail": "मार्केट एक्सपर्ट्स के मुताबिक यह ग्लोबल फैक्टर्स और प्रॉफिट बुकिंग का सामान्य चक्र है, घबराने की कोई आवश्यकता नहीं है।",
+    "take": "मार्केट के हर उतार-चढ़ाव में घबराकर पैसे निकालने के बजाय संयम और रिसर्च के साथ सही जगह टिके रहना फायदेमंद है।",
+    "afwah": "65%",
+    "reality": "35%",
+    "poll": {
+      "question": "क्या मार्केट के उतार-चढ़ाव में रिटेल इन्वेस्टर्स को पैनिक करने के बजाय होल्ड करना चाहिए?",
+      "opt1": "हां, पैनिक में लॉस होता है",
+      "opt2": "नहीं, तुरंत निकलना चाहिए",
+      "v1": 82,
+      "v2": 18
+    },
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxNT0tSekZVQlo4QjBaVDBRTXFzWU41M1ZHOUJaNkZMWHlVVF9wdkF1Q3QyZWFFR3FOSWVYbzVLY2JhVDBQLTk1aEhoY1RtUjM2VTZHd0xiemY0T1NKVl92b2c3djVUNlVuV21Ta1JBaWpSQjlPZGxBeFpIaER6Qld5MTAybnBvRGo2ekZSUXNGUEY4S0JlOFdNYzJkVnQ2VXhwd0NUN1hDbDFOQ1p6NThlbE02Z2dmenM3RXJ3RGZhNnQ4MDlxbUEzdEN5MEpRcGNTMXVqVVFNMS1udWxhYXBVa0xnaXpJMnhiaWFyVDE0dHNRU3pmS204Wi1mbmhwSkRQdXdNR1hjMHc?oc=5",
+    "image": "https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80",
+    "aspect": "aspect-[4/3]",
+    "reactions": {
+      "laugh": 0,
+      "skull": 0,
+      "fire": 0,
+      "clown": 0
+    },
+    "publishedDate": "2026-11-26",
+    "publishedAt": 1795693859781,
+    "isAutopilot": true,
+    "originalSource": "CLUBR Verified"
+  },
+  {
+    "id": "autopilot-1795693939294-417",
+    "category": "business",
+    "categoryLabel": "💸 Business & Paisa",
+    "spiciness": "⚡ Ground Reality",
+    "title": "Market & Money: भारत में खाने की थाली क्यों होती जा रही है महंगी?",
+    "preview": "भारत में खाने की थाली क्यों होती जा रही है महंगी? — शेयर बाजार और निवेशकों के बीच भारी हलचल, जानिए आम लोगों की बचत और बजट पर इसका क्या असर होगा।",
+    "fact": "इंटरनेट और WhatsApp ग्रुप्स में पैनिक फैलाया जा रहा है कि मार्केट क्रैश हो जाएगा और भारी आर्थिक नुकसान तय है।",
+    "detail": "मार्केट एक्सपर्ट्स के मुताबिक यह ग्लोबल फैक्टर्स और प्रॉफिट बुकिंग का सामान्य चक्र है, घबराने की कोई आवश्यकता नहीं है।",
+    "take": "मार्केट के हर उतार-चढ़ाव में घबराकर पैसे निकालने के बजाय संयम और रिसर्च के साथ सही जगह टिके रहना फायदेमंद है।",
+    "afwah": "65%",
+    "reality": "35%",
+    "poll": {
+      "question": "क्या मार्केट के उतार-चढ़ाव में रिटेल इन्वेस्टर्स को पैनिक करने के बजाय होल्ड करना चाहिए?",
+      "opt1": "हां, पैनिक में लॉस होता है",
+      "opt2": "नहीं, तुरंत निकलना चाहिए",
+      "v1": 82,
+      "v2": 18
+    },
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFAwUVhJbEFXQ29CUVVxeVlIS3cxNmtIakFfd2haYXp2V0ZfTnlNWW9MdEo3NU1rWERwcFplOHBVZU5GTENSYV94Mk5OdkhyT2NkREUtQVJKVFpnV2hw0gFiQVVfeXFMT0diX1B6YUw0NEI4cFJ1R1JyTVZ3VFpkdnlEUW1VLXdVWjgzcHJ4OWxvSWxOZk16U1Q5eGpVZ19zaS1Rd1p0d0ZYTGZCbXJ3eEphOGdCaDJWcFVkLXZDOEw2SWc?oc=5",
     "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -335,17 +335,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656589831,
+    "publishedAt": 1795693860104,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656677687-60",
+    "id": "autopilot-1795693948245-779",
     "category": "tech",
     "categoryLabel": "⚡ Tech & Trends",
     "spiciness": "⚡ Ground Reality",
-    "title": "Tech & Trends: GTA VI की पहले 3 दिनों में 45.5 मिलियन यूनिट बिक्री - Investing.com भारत",
-    "preview": "GTA VI की पहले 3 दिनों में 45.5 मिलियन यूनिट बिक्री - Investing.com भारत — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
+    "title": "Tech & Trends: WhatsApp में आया कमाल का फीचर, फोन बंद होने पर भी...",
+    "preview": "WhatsApp में आया कमाल का फीचर, फोन बंद होने पर भी पहुंचेगा मैसेज, जानिए कैसे — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
     "fact": "सोशल मीडिया पर दावा किया जा रहा है कि यह नई तकनीक आते ही पुराने सभी स्मार्टफोन्स और डिवाइसेस को बेकार कर देगी।",
     "detail": "हकीकत यह है कि यह नया फीचर केवल आधुनिक स्मार्ट डिवाइसेस को अपग्रेड करता है, पुराने सिस्टम पहले की तरह पूरी तरह एक्टिव रहेंगे।",
     "take": "हर नई टेक हाइप के पीछे अंधी दौड़ लगाने से बेहतर है कि जरूरत के हिसाब से ही समझदारी से अपग्रेड चुनें।",
@@ -358,9 +358,9 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5rTjdRZ1JIc1BJcUg5eWszdk5WQWNKWVhENlVTNFJPWXR5OV9JLWk2RzZ3YVR3ZUFlUWxJc3l6OWVEM19oaWdOYlltZGNlTmlvaWh0ZFo5NHFFMmc2WE9JQXN3Rk1zRi1Oa29FMzk3SQ?oc=5",
-    "image": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop&q=80",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQMnFibmNLcUthYUt3ajctZzd4SFp5aGpsaUc1OHpLS3gxSmFmWGhGVjV1dnc0dE54RmdQUzNRMHFja1l4TE1NcVVRdEtCZ3g2SER4WWdPVm56bkp2bkFJSHQwOElUbmlrZ0JFYkd1RWNqRzV6d3ozc0hpWXhFYXFVOTVOVEdCSGdpcU5HQi1FWkhtdXZuVXc3WmU3MEhWWUE5dEVNTHR2Wm5mRURWYkRPdEFDbkM4SzVQckV4S0JKaw?oc=5",
+    "image": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
       "laugh": 0,
@@ -369,17 +369,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656590578,
+    "publishedAt": 1795693861136,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656685945-745",
+    "id": "autopilot-1795693956486-453",
     "category": "tech",
     "categoryLabel": "⚡ Tech & Trends",
     "spiciness": "⚡ Ground Reality",
-    "title": "Tech & Trends: WhatsApp में आया यूजर्स का इंतजार खत्म करने वाला फीचर, अब...",
-    "preview": "WhatsApp में आया यूजर्स का इंतजार खत्म करने वाला फीचर, अब तय समय पर अपने आप भेज सकेंगे मैसेज — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
+    "title": "Tech & Trends: HMD ने 9999 रुपये में लॉन्च किया iPhone 17 जैसा दिखने...",
+    "preview": "HMD ने 9999 रुपये में लॉन्च किया iPhone 17 जैसा दिखने वाला फोन, मिलेंगे दमदार फीचर्स — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
     "fact": "सोशल मीडिया पर दावा किया जा रहा है कि यह नई तकनीक आते ही पुराने सभी स्मार्टफोन्स और डिवाइसेस को बेकार कर देगी।",
     "detail": "हकीकत यह है कि यह नया फीचर केवल आधुनिक स्मार्ट डिवाइसेस को अपग्रेड करता है, पुराने सिस्टम पहले की तरह पूरी तरह एक्टिव रहेंगे।",
     "take": "हर नई टेक हाइप के पीछे अंधी दौड़ लगाने से बेहतर है कि जरूरत के हिसाब से ही समझदारी से अपग्रेड चुनें।",
@@ -392,7 +392,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPV1loWUVoN0dScnlkN0Q3RUl2OU5mOXh4Q0FZLU9yYU9RWVgtR09vdnRkRDRiNWkzTGhrNkVQeFZkS1VPVE13Q0V0MWEwWXZJcFpJZm1KRVo5c2V5Mk8ybW5SNllIaml1bERwd3Z0Z3llLV9VNWRSVkJJVEJmMFF4N3FKRTl4QmVhZlBXbkd4Ylk0c05fbVo1MlI4THFLX1lvVjRtQU1RWUlhSExUMTlkRVdVNW5Yd9IBwwFBVV95cUxNY3BMUkdNTU9NSzVheUhBcEl0dmQ4REVrVzl4TFFnV2NOR0ktci1aeWJXT3FhOU8wcEt0VjBkRVM5dlc0MXdrLWdHcHpnUXB0eE9VX3ZROS1Pd1hxV0pmTzd4X0NmNDZDdG45WnR5R0hMOFRlalM1aVVwWC12Um5Tc3RDV1NNSVlkRkllbzBaZFNZY2x3b2ppcndIV1RLSGdXYkJjWm4wZXJoeVMzVHJFZTA1VktLTkJNVHlDY0wyak9DR3c?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQRmlMNVBZdndaWS0xOWxyX19Zb3R0YVBpNEFISlcxYktMSGVDMnNMUEg3NDd3TkpRaWxUdk9rZ3Rjc3YtWTJvckdKM21wSjU1NTBoYXBFTHl2RkJXcFJZY0xWZGthWTI0eXpyNTJ1ZEVMWW9jZUxYNUM2bXBBLTdSZkF5R2xHd2VoZFJRUGdoWUFHLVN3WTJDSGtsVEJTQU1uT3ZRMklTeGt5VGViUDljbl92ZmgydnowcVHSAb8BQVVfeXFMTjB5NnZWXzZkTW5qdWRsYUxiMS1ZNUJSU0dpQlRTZFJXNjdqb1NLM1JWczFpN3N4YU9mWmhRdDE1VlJZc3VqVDY4eDVNUW9Ca3R2NXlCLWpRZ244aEZHSERrSEhORXl0ZEkxSjZ4M3NtdjZDa09FeFZhMU50SjhReHZXS1ZUOXVxdTd1OWo0dmZ5YS1HSVcxZVNLanZnLXNzNzctLTh4ZXBxQkNTQnEwR0U1ZG1KaVF3WnV4aGZFWmc?oc=5",
     "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -403,17 +403,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656590917,
+    "publishedAt": 1795693861458,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656694203-910",
+    "id": "autopilot-1795693964727-760",
     "category": "tech",
     "categoryLabel": "⚡ Tech & Trends",
     "spiciness": "⚡ Ground Reality",
-    "title": "Tech & Trends: HMD Rise भारत में जल्द होगा लॉन्च, कंपनी ने किया कंफर्म,...",
-    "preview": "HMD Rise भारत में जल्द होगा लॉन्च, कंपनी ने किया कंफर्म, मिलेंगे तगड़े फीचर्स — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
+    "title": "Tech & Trends: Vivo X500, X500 Pro, X500 Pro Max भारत में लॉन्च, मिलेगा...",
+    "preview": "Vivo X500, X500 Pro, X500 Pro Max भारत में लॉन्च, मिलेगा DSLR जैसा कैमरा सेटअप — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
     "fact": "सोशल मीडिया पर दावा किया जा रहा है कि यह नई तकनीक आते ही पुराने सभी स्मार्टफोन्स और डिवाइसेस को बेकार कर देगी।",
     "detail": "हकीकत यह है कि यह नया फीचर केवल आधुनिक स्मार्ट डिवाइसेस को अपग्रेड करता है, पुराने सिस्टम पहले की तरह पूरी तरह एक्टिव रहेंगे।",
     "take": "हर नई टेक हाइप के पीछे अंधी दौड़ लगाने से बेहतर है कि जरूरत के हिसाब से ही समझदारी से अपग्रेड चुनें।",
@@ -426,7 +426,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOY2pXWU1iWXBvOVVEMDZoVVFsbVBkNmJUTGdMbFhNbW5tVjdxMFJHR1lEcmJtd083bnlnd3NhRHhRX05VS3ZtYUdrOGViUF80SVhzaUQzWEtzQ0FJVXlhNXAyVU1sb1hXNUowLUJvc0FfcTZ2TGFraDN1bVBQblV2YnM1R0JlZzhkUWJJd19MS3pYMkJ5Sm5CQXkxZE9rZjdYTU5GZjZLTEk?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOUE1QSmhsZEtuTUpvaVNKbUpvZGF3bHg1SmR3bndqNFlnWll0d1NJc2lHX3NkX3BZSmJBSXJNdW9xczdYR2U1U05tVWFBTTh2LVNkRVNvS0UyZHZOaXdVQ3NhcEdFdEl3RHNqay1LUEJqNE9aSk9KTnFnRG9pYVVoaWJHX25xNk4zSTRoOHNCWHJoVjY0YWFtaXNtTVowbDVORDB1cmJxTWoxMjdocDRKZDRqUEFyZUh2QlgzLUtpZk5kekVWd0ZFNnVpLXXSAdIBQVVfeXFMT3czeEVNUVN4QkhXanZSV056TmxoZVI3MFhEMUYzdVlVeUNvUW1WWTB0NTJSVDg3MHBodzN4SVBoa09SbGNwaEpuWGRfT2xLQUhyU3I4YUh5YVFETUgySWJxZU90VU84emRVa0ZmVjFkRmZNa0JLT1NMLWFCemozREc3cXF2V0tSWExSel9aVnc3dTVyQi1zSUlLWF9MU1BYRGVNUy1FaG10emV1NnluaHlBSE1sb0F2cklfN0ZocmtvQURBQzl4TUJqamZjMFJ5OWln?oc=5",
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -437,17 +437,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656591256,
+    "publishedAt": 1795693861780,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656702462-961",
+    "id": "autopilot-1795693972970-407",
     "category": "tech",
     "categoryLabel": "⚡ Tech & Trends",
     "spiciness": "⚡ Ground Reality",
-    "title": "Tech & Trends: Motorola Edge 70 Neo और OnePlus Nord CE6 की टक्कर, कौन पड़ेगा भारी?",
-    "preview": "Motorola Edge 70 Neo और OnePlus Nord CE6 की टक्कर, कौन पड़ेगा भारी? — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
+    "title": "Tech & Trends: Hisense ने भारत में लॉन्च किया OLED Smart TV, मिलेगी 65 इंच की बड़ी स्क्रीन",
+    "preview": "Hisense ने भारत में लॉन्च किया OLED Smart TV, मिलेगी 65 इंच की बड़ी स्क्रीन — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
     "fact": "सोशल मीडिया पर दावा किया जा रहा है कि यह नई तकनीक आते ही पुराने सभी स्मार्टफोन्स और डिवाइसेस को बेकार कर देगी।",
     "detail": "हकीकत यह है कि यह नया फीचर केवल आधुनिक स्मार्ट डिवाइसेस को अपग्रेड करता है, पुराने सिस्टम पहले की तरह पूरी तरह एक्टिव रहेंगे।",
     "take": "हर नई टेक हाइप के पीछे अंधी दौड़ लगाने से बेहतर है कि जरूरत के हिसाब से ही समझदारी से अपग्रेड चुनें।",
@@ -460,7 +460,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQUHZrbTJkZjNLaEk0VnZFUUhWWkJZTld6WUJrVVVJMWlqZlVySk5IU1VKM2Q4RFRPS3hzR3BLcmUzNE1ka1NfeWhXNWszNEZ6LTd6YkR6YUJRRXZTUVhyQ1JnWndRZXRVZ2UtT3ZTeEZGbXZoRGR3Tl9LRV81UGVVOGM2cWF4S1FrVjBYU1prMFFrbExxalRfR3daQ19uaml4R2lBNEhPMkVjRGFaYURrYUZDa2NaNUJRZ0dsS195WGVsNFFidHBrVlNCX0RsaFJyQjV4YzIxUdIB3AFBVV95cUxPTm0yMVBiajNSUG1TUDdvVnpVcU5acFpCRVdDWl9iMkxmS1UteUloeHRZSVdIUlh3NW9tLU4zUy1vaG5tRzgwWWJ1QVk3Vm8zWllKMFJ0OXRNOTNta2ZCZTM3N3AwREVSRFhrekdqMVdZOHd6bzVxVWZpT1lCOUFXTm85UE9hZk9DdTBianJfeEtBay1JNGo5c2JDc0V4eWRQWG5wTGpMSkd0dHB5djQzVG9OWGN0ZlduS3RXcldFQTVZUVh6QUx4elN4VXZJelFqUlA2dHNXa3hCS2Iy?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQWEJJVERiSXVtelpaaEVaTWNYU1dPY2NsNVF2a3pENzdoV0F4YkYwZjlSczlLWTduSkpRT0pFbWxFYjRaNTBKSWctU2R2aDE1V3RNSkIzUnJTUlYtU2dnV3NwZnN2aW9OVUxvMHBOeURNWGhHeUhqd0VkVnhNeXJhc0xHa3hBb1BIdDlZa3VNTGlxVE9KcjkySEF3QlZZckI4Z2JGSEI4bUUzOWk0dDBJNFdwSG4ybTdIZEJ2R2lRcTJpNUIyNjd2TW930gHPAUFVX3lxTE9zbGpqSUN5STBabGxOTi1LN2Rza2h5M0VQOG5ZQi1BQTB1MlNSSmpyeWN1Z3hRNGIxcWtLOHY3azAzVjRDRllVaWE5b2V6aDFMSUl3am1sVUF3N2RxMEJONVREYmd2M0N0ZGd5TncwZkZCUFJrblRRU0FKNEpjdHF1TFRfTVlBYVIxX20tV0daUGlhblhodjJrMUpBb0ozTTd1Qk01a1U0ZEF2LTlJeTlYYW0wVFpldUU3M3FqV3JNU1pmOW1XSUNYLU5FUEZpWQ?oc=5",
     "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -471,17 +471,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656591596,
+    "publishedAt": 1795693862104,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656710721-406",
+    "id": "autopilot-1795693981211-241",
     "category": "tech",
     "categoryLabel": "⚡ Tech & Trends",
     "spiciness": "⚡ Ground Reality",
-    "title": "Tech & Trends: BGMI Air Open Beta शुरू, अब 1GB में खेल सकेंगे BGMI,...",
-    "preview": "BGMI Air Open Beta शुरू, अब 1GB में खेल सकेंगे BGMI, Android यूजर्स ऐसे करें डाउनलोड, जानें इंडिया लॉन्च डेट — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
+    "title": "Tech & Trends: Amazon पर ₹100 से भी सस्ते मिल रहे हैं ये 7...",
+    "preview": "Amazon पर ₹100 से भी सस्ते मिल रहे हैं ये 7 गैजेट्स, देखकर कहेंगे पहले क्यों नहीं खरीदे! — नए गैजेट्स और AI इनोवेशन का बड़ा अपडेट, जानिए यह आपकी डिजिटल लाइफ को कैसे बेहतर बनाएगा।",
     "fact": "सोशल मीडिया पर दावा किया जा रहा है कि यह नई तकनीक आते ही पुराने सभी स्मार्टफोन्स और डिवाइसेस को बेकार कर देगी।",
     "detail": "हकीकत यह है कि यह नया फीचर केवल आधुनिक स्मार्ट डिवाइसेस को अपग्रेड करता है, पुराने सिस्टम पहले की तरह पूरी तरह एक्टिव रहेंगे।",
     "take": "हर नई टेक हाइप के पीछे अंधी दौड़ लगाने से बेहतर है कि जरूरत के हिसाब से ही समझदारी से अपग्रेड चुनें।",
@@ -494,9 +494,9 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNbkh2NTF6ZVRwXy1hbzJmQklEV3dCbVNJQ0F6elJPdXY1UkwzcTZoM2VKY1VCeEZ2SGRFdG1rMnBtZ1QxcUNOUGMxd3JrVlNLRlFNZ2R6Qm5SYTBtM3dmRmxNdkdDUmF4V1pnNFYxakR4bmVzcnRGNXJIUlN4bTlETjhQLXFnamF2dGpYQUNLVDl6Z21oZ3gxS1hvM2lGZWM1dEoyUzQ5S2tmUzQyS2ZLSnBFbk5jaWVvMkVZ0gHIAUFVX3lxTFBQSHg1ZDdiSXpiMFUxcHAxYzRyWW1HWGVLSFdzZ1pBbHQtRkJUOXltanViSzZ0b1c3a0hSZ3AyMlkwYnk4VVo5RWVjcjlXZVlkUVpwTkhjbFlibmdDaDZIR3RONjhCWHpSVkJNRVZ5a05HbXJOWWUxRHJ3V0lYWUotdVNrQmJRc1hUSUtxTWtaeWMyalZjZ3FEalJoY211aXh4dlJHb29NY1BkWmNWSXpxM2dabE1xemJ0NVJxeGxyYjBMdTAzOHpI?oc=5",
-    "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMisAFBVV95cUxONTdyUmhFcXBRTjRvUjJKeWliWVlzVWpQczNfcjBaS0RtVVp5dnRWRmowdzE3VDFUUEtPbjktVWdCT3ExT0NYV3RJZnVGY2VJdnhHdXgzMzNqWlU2Rm5vTHhYcTNDLXJPb1Nha1VtOVJRV29HZVR5WGFhWjcwYmVXcEFncURkTUVPa3Z1Uzd2LTRnT0FJdG1hRGhoTTdtYU5kX1lteXg3WVBiWEFWTGl2TdIBtgFBVV95cUxQUEE0cF9sSks3d2JOSk5ja1VkbnVjM19WMFVaTGxWLWNxdF80U1ltcTljNmtOVUlHLXd3VFk3TlNPdjUtb1hKWjJqYThETHlvVllEMnBfNktBWU1tWFJmeHJ1RVMtY3ZIUU5jalpnZGdTdDJta0l5TmtQY2dzTU1OanpUSTd0ZERwelpyT2xNMGNqRkcwMlRSZnRwY01sQ25zRFdXal9DZ1BubmtQcEs5a1Z2ZGRWZw?oc=5",
+    "image": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
       "laugh": 0,
@@ -505,17 +505,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656591936,
+    "publishedAt": 1795693862426,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656719371-159",
+    "id": "autopilot-1795693990013-33",
     "category": "sports",
     "categoryLabel": "🏏 Sports & Cricket",
     "spiciness": "⚡ Ground Reality",
-    "title": "Sports Mania: वैभव सूर्यवंशी की आतिशी बल्लेबाज़ी पर क्या बोले पाकिस्तान के पूर्व क्रिकेटर",
-    "preview": "वैभव सूर्यवंशी की आतिशी बल्लेबाज़ी पर क्या बोले पाकिस्तान के पूर्व क्रिकेटर — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
+    "title": "IND-A vs SL-A Semifinal: फाइनल के टिकट के लिए आज श्रीलंका-A से भिड़ेगी टीम...",
+    "preview": "IND-A vs SL-A Semifinal: फाइनल के टिकट के लिए आज श्रीलंका-A से भिड़ेगी टीम इंडिया, वैभव सूर्यवंशी पर रहेगी नजर — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
     "fact": "इंटरनेट पर तरह-तरह की अफवाहें उड़ रही हैं कि ड्रेसिंग रूम में विवाद है या टीम सिलेक्शन में पक्षपात हुआ है।",
     "detail": "आधिकारिक सूत्रों और टीम मैनेजमेंट के अनुसार सभी खिलाड़ी पूरी तरह मैच-रेडी और यूनाइटेड हैं, बाकी सारी बातें सिर्फ वायरल गॉसिप हैं।",
     "take": "हार-जीत खेल का हिस्सा है। सोशल मीडिया की गैर-जिम्मेदार ट्रोलिंग से बचकर खेल भावना का सम्मान करें।",
@@ -528,9 +528,9 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE8tQzMydGgtZGZidC01d0FjOFFXT1dubmF2d3NfVFQxeDEzZnU0ZFNzYTZsaDFYUnhHSXBEY0V3RlVWZTZYZllEODB1SlVhNzFLc19WYW1yWmNXZFN30gFiQVVfeXFMTmhQVUY3SXJQZ0VjM2NLeU1BTnRJQVQ2T1p6elVzWWZPbG43VlFRX0VXM2Q2YlAzUS1oclFycHlhdER5dFRPYUZSSW5lOWt6VHBFbXJ3UEw5dkFFSzRIQTc1MEE?oc=5",
-    "image": "https://images.unsplash.com/photo-1593341646782-e0b495cff86d?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&auto=format&fit=crop&q=80",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPM0cxcVR3MHZiakoyOUxGdnZ2M0kzRy1WYmx3RVFwLTlwMFMxb0hnUHZKQnRCdVYyUTFVMWFmRFB2a0NScG1kVVg1dDVHUGlMS3F3QzZJcG95WkwwRGVPS3U5eVc1Qm93UGVEVGpyRXI2SkFfOTM4MlV0QnBKS0ZaOXJNdjNydHZIYnRINjQweE9LWkUxWUpXQ3pGT0xnbENGSFAzdTRWQkxaMlJ3R0xZaEVXVWpQekJzY3B4VzRoekXSAc4BQVVfeXFMTlNuNEtMRndHS2Q3dG1IOUJydTFTYTVzdmU4QU1uZ21aSHV5dmhFQ0Z4ZVIzdzI2dHRkNTVfcFNzVTFkS25ENy1WbHdBNy00aVEwTTFRcGVmYVRISWRWYmpSV1hxR1F3VXpGOXdWYlk1dm1FbjFmSG5QcGVrXzFjcGU1Slk4d0lIVklBSmxjMndnRVpfMUtIZXJvT1Rnb0xEYlZyM2ZtSk03V2lPTWpyMHljWThOSUJvaEJfZWJoUkdwOFVFTHUxUklUVjFlMWc?oc=5",
+    "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1544698310-74ea9d1c8258?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
       "laugh": 0,
@@ -539,17 +539,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656592667,
+    "publishedAt": 1795693863309,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656727629-807",
+    "id": "autopilot-1795693998256-313",
     "category": "sports",
     "categoryLabel": "🏏 Sports & Cricket",
     "spiciness": "⚡ Ground Reality",
-    "title": "Sports Mania: क्रिकेट का सबसे अनोखा कैच! पाकिस्तान में बल्लेबाज ने मारा छक्का, स्टेडियम...",
-    "preview": "क्रिकेट का सबसे अनोखा कैच! पाकिस्तान में बल्लेबाज ने मारा छक्का, स्टेडियम के बाहर बाइक सवार ने लपका, VIDEO — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
+    "title": "IND vs NZ: कूकाबुरा से खौफ छोड़ो, हिम्मत दिखाओ... मोर्कल ने भारतीय गेंदबाजों को ललकारा",
+    "preview": "IND vs NZ: कूकाबुरा से खौफ छोड़ो, हिम्मत दिखाओ... मोर्कल ने भारतीय गेंदबाजों को ललकारा — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
     "fact": "इंटरनेट पर तरह-तरह की अफवाहें उड़ रही हैं कि ड्रेसिंग रूम में विवाद है या टीम सिलेक्शन में पक्षपात हुआ है।",
     "detail": "आधिकारिक सूत्रों और टीम मैनेजमेंट के अनुसार सभी खिलाड़ी पूरी तरह मैच-रेडी और यूनाइटेड हैं, बाकी सारी बातें सिर्फ वायरल गॉसिप हैं।",
     "take": "हार-जीत खेल का हिस्सा है। सोशल मीडिया की गैर-जिम्मेदार ट्रोलिंग से बचकर खेल भावना का सम्मान करें।",
@@ -562,7 +562,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNZURaNjBsT05YM3VVdEZ6OXhhRDAwWWNITzcybHlNRi1mRUtXTVd1Y0x2WXFkZ2NGR0FLSDR3S0JQU3hvY1JNZ1UyZlVFbGptTDRwcUNIVUNEODdOMHBPZXRzSFY4aEwxVXE4ZlRsRjNYZXNSQmY5S09RaE5zNEVWaU9zMkkyQ3I0a2w5b1NtTDZVYWF4azZBRnhXYVZqc2l0czBQcnlKWk5iRl9IMzcwSXhBLVFZSUlwSDhPRmZMVHFaRjV6RmRsQnNuY1hidzMtamNkUFRaSHFROExHeEF6alg2NNIB6AFBVV95cUxNcmxSVC1UbHY1VDBPU2VtUWJ3NlRjc1BvUVRpV2ZfSktKM1FlS2F6M2luaVZpU0tHaWU2UHpKLWlGc1Z0QUtKdjNlTVBqTE5udDhCay1wSjcyUUhaZ0hUMzVZSTFuX0JoQWhSMXpSdzRqZzJBWXVPV3RHRTd0ZWhoUEpqVTBCQlNsWTZ6cUlWajNlNlgwaXRxNFdDczNRQ0VjVlVoZHhFS3BSVEdnUWFHZDhoQS1GM2hjWUFiNHFpcklfR01tSUwwSndRNmRxZGRqSFBPbXpTTmZnVkVnWXQwSWtEX2l5NnhH?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxNZ2E2amFlUTlDQ1BhWUdFeE5NbVFJSmE5am9uTkRfYUl3TURYRGxQM194NUNzSENCUTRxSXJPa0NpYkVhbVl3di15NGxZU1FmYjJVVTA4OEhGQ0paTXVTZWhKcVBVM0hGbzFZbXhuQ091aF9QdEhEb1ZVX1NDc215d1FKMDQ3QzRSdU1KOHBlMnloQVpkRDVqSXBuak1KWk5zdHBDMTJLYXZoNkg2U1BTbG92QVBrWUhGTl84X0FaYU1JLS1aRWhDd2VEWmtlUUhpN2xQcDkxMFBXQWR5X180dmd2QWFBZ9IB6wFBVV95cUxQZW1uRlBrTlFXY0RIZ1hNXzlSUWMzZ1IwS2lERDNoWlQzTkNLUU1vNUNYb3EzS3pQckRucHY3aGZxQzg5eVBKN2ROUXFlWVoyR1VjTUFBS0JkbVIwVkJfUllGdktLTlhsZzI5akoxUnJpQjhXcGxsNmZEWFIyaGhvMTZZQzVPTjhjMzRyS0JZSWQzcXRGOENuNXVhc1JmRnVFRmxVTXFHb204c1JVb0pBTlpmR3U0aDhaeGV3MmktQUR2TnlIdU0tNWlNTW5sZW1IOWJHby1qVmpWWXRySkpRMVRSdnBJOWRRUW1N?oc=5",
     "image": "https://images.unsplash.com/photo-1544698310-74ea9d1c8258?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -573,17 +573,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656593006,
+    "publishedAt": 1795693863633,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656735888-314",
+    "id": "autopilot-1795694006498-193",
     "category": "sports",
     "categoryLabel": "🏏 Sports & Cricket",
     "spiciness": "⚡ Ground Reality",
-    "title": "Sports Mania: मोहम्मद सिराज क्यों हुए बाहर? बीसीसीआई ने दी सफाई; गंभीर- गिल के...",
-    "preview": "मोहम्मद सिराज क्यों हुए बाहर? बीसीसीआई ने दी सफाई; गंभीर- गिल के फैसले पर भी दिया जवाब — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
+    "title": "Sports Mania: वैभव सूर्यवंशी ने रिकॉर्डतोड़ पारी के बाद किया खुलासा, युवराज सिंह से...",
+    "preview": "वैभव सूर्यवंशी ने रिकॉर्डतोड़ पारी के बाद किया खुलासा, युवराज सिंह से हुई थी आधा घंटा बात — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
     "fact": "इंटरनेट पर तरह-तरह की अफवाहें उड़ रही हैं कि ड्रेसिंग रूम में विवाद है या टीम सिलेक्शन में पक्षपात हुआ है।",
     "detail": "आधिकारिक सूत्रों और टीम मैनेजमेंट के अनुसार सभी खिलाड़ी पूरी तरह मैच-रेडी और यूनाइटेड हैं, बाकी सारी बातें सिर्फ वायरल गॉसिप हैं।",
     "take": "हार-जीत खेल का हिस्सा है। सोशल मीडिया की गैर-जिम्मेदार ट्रोलिंग से बचकर खेल भावना का सम्मान करें।",
@@ -596,7 +596,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPVmlFd2dCUFhWU0J5OGN1N015ZVdKMXc0aEM0eXBIVkgxZ0JRM2FldF82VHZfdW1QYTRiQjZIOG1jRWNQTWl1NUpqZGtzU1gyUm5oc2RnVUE2cDFoVloyN19WdWFpNEhjeEFEbGkzSWQydmt0QW03ZVpsNlhLbGFlUktBN0N4X0dlazdCSldBandQMEIzUENLT0o4a29ZWDh0RmhzU3dvazd4c0FWQWk4YnJLcXp1R2pfTWhr?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxPaVFGaDN4a1ZiU00zbGVMZnI2Tk5Jc0VYd3AxZkFoSU1zUW5NUlFKaTZwX3lhOTduaC1aSmNsRHZVTlRQX3poZ2dTTldhRlc0ZkNoaTZJM3h4MjVzMDRTclJ3LTZELXMyYkFtQUJNeWRJblRWbXl1X1BPcHJjQW16T3pwdGRYZWdCcGRLdGRzTUc4TXpHSkgxbEJrbFA0bmhNU0IwcENUanVudk12UXU1Wkxzd1NaakRiNFJLckVaaTNkTWZKOTNtTHVFNkthY05IMjY1TWtLbTZfcGpLRkR6VE50Qmtyak9UZW90RXgxM05VMFVwNlI0?oc=5",
     "image": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1593341646782-e0b495cff86d?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -607,17 +607,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656593346,
+    "publishedAt": 1795693863956,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656744148-968",
+    "id": "autopilot-1795694014740-100",
     "category": "sports",
     "categoryLabel": "🏏 Sports & Cricket",
     "spiciness": "⚡ Ground Reality",
-    "title": "Sports Mania: मुंबई इंडियंस ने कप्तानी की तस्वीर की साफ, IPL 2027 में इस...",
-    "preview": "मुंबई इंडियंस ने कप्तानी की तस्वीर की साफ, IPL 2027 में इस दिग्गज को मिलेगी कमान! — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
+    "title": "Sports Mania: IPL Auction से पहल भारतीय क्रिकेटर ने लिया संन्यास, जनवरी में खेला...",
+    "preview": "IPL Auction से पहल भारतीय क्रिकेटर ने लिया संन्यास, जनवरी में खेला था आखिरी मैच — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
     "fact": "इंटरनेट पर तरह-तरह की अफवाहें उड़ रही हैं कि ड्रेसिंग रूम में विवाद है या टीम सिलेक्शन में पक्षपात हुआ है।",
     "detail": "आधिकारिक सूत्रों और टीम मैनेजमेंट के अनुसार सभी खिलाड़ी पूरी तरह मैच-रेडी और यूनाइटेड हैं, बाकी सारी बातें सिर्फ वायरल गॉसिप हैं।",
     "take": "हार-जीत खेल का हिस्सा है। सोशल मीडिया की गैर-जिम्मेदार ट्रोलिंग से बचकर खेल भावना का सम्मान करें।",
@@ -630,9 +630,9 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQcGI1dEZWemVYMWx0Y05CRllfTElTTGNlSnd0bGV5VWlRMlR3a1V4b0twZWtzNjhIU21oUW1nYUwxVzBNRlhoQXdWR2hPSW9hY2xKTDUySjdRVkI2UGxDNFdHcXRjTHo3RTA0cFdqRlhkVmd2YUJ0THhiVXBjc2pvTzY1NzB4ZS1EMjR2anNLQk02Mk9TZUM1QmRfZU9XTkg5WjBjX25GWkJURnhZVmx3Y0RHOWFpMzc3Zm1z0gHAAUFVX3lxTE10NS1UOERMZjNXelprNlBnLXpqSXZHWURYNmFZSlJaR2xtMzllbDgtWVUxS3ZQQWk3WUVWS3dQOTdVdGxDSHVyczYyeHkxcmthZkN6Q1pPQ3phcWYwZGVsM0tJVXpaT3dkRW9TQ2ZLc2VxSVZnYU83LW5BUjE0SmtQaFJDVTFRVWJHZ2o1WlFGN2YwRkppa081T3I3ODVFcFFWVjhUdkNScGNPVDN1TzMyQ3ByWjFFYlV6ckdCb2JvOQ?oc=5",
-    "image": "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&auto=format&fit=crop&q=80",
-    "imageFallback": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&auto=format&fit=crop&q=80",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQeEswdUJyT3ZwNWNReDZ6Mi1OLTJjTWFNYWg2S0RWNGY2aU9lQ0FYT2tyZF9EaEJpSjBqbDUwMnZ4T2JHNjVBdm9aWGNibGRiSlhxeHg1endxRWxidW5vZERwaGQ5ODA2VU1mSThlSkJkTG9mbVlfT2JHVk5fajZ5Tk9nbC1XTDJZU0FfSEZWRGxQZzNoQlNLXzF2cXoyWlpoUnFaUkFNZXBvNUV4bjhUNVhfVjdCNDI0cGtTN1M4U2hwcGYtc29Dc2FDc0xicVJPQVE?oc=5",
+    "image": "https://images.unsplash.com/photo-1593341646782-e0b495cff86d?w=800&auto=format&fit=crop&q=80",
+    "imageFallback": "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
     "reactions": {
       "laugh": 0,
@@ -641,17 +641,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656593687,
+    "publishedAt": 1795693864279,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656752408-301",
+    "id": "autopilot-1795694022983-398",
     "category": "sports",
     "categoryLabel": "🏏 Sports & Cricket",
     "spiciness": "⚡ Ground Reality",
-    "title": "Sports Mania: स्टोक्स होंगे IPL नीलामी में शामिल",
-    "preview": "स्टोक्स होंगे IPL नीलामी में शामिल — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
+    "title": "Sports Mania: सूर्यकुमार यादव एक, शिवम दुबे गोल्डन डक, जगदीश सुचित ने एक ही...",
+    "preview": "सूर्यकुमार यादव एक, शिवम दुबे गोल्डन डक, जगदीश सुचित ने एक ही ओवर में मचाया तहलका — मैदान से लेकर फैंस तक जबर्दस्त जोश, जानिए मैच, खिलाड़ियों और रिकॉर्ड्स की असली इनसाइड स्टोरी।",
     "fact": "इंटरनेट पर तरह-तरह की अफवाहें उड़ रही हैं कि ड्रेसिंग रूम में विवाद है या टीम सिलेक्शन में पक्षपात हुआ है।",
     "detail": "आधिकारिक सूत्रों और टीम मैनेजमेंट के अनुसार सभी खिलाड़ी पूरी तरह मैच-रेडी और यूनाइटेड हैं, बाकी सारी बातें सिर्फ वायरल गॉसिप हैं।",
     "take": "हार-जीत खेल का हिस्सा है। सोशल मीडिया की गैर-जिम्मेदार ट्रोलिंग से बचकर खेल भावना का सम्मान करें।",
@@ -664,7 +664,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOWXQ5NUFaM3RtWVdfWUZmWG9CMmQzUnlsYmZ5SURGTGU2WE1oV0ZmVzd4SmFtWjR0bVpfMzJmcnl6ZXY5Q2lWRG9sb09ZQ2FYTHZfWmZNeEdNM3RWOG9TMjNYSkJNcnFrTF8yQnhwYTFZYXl6SnJOLWlKemM3VFV4UDBOanFxQkdWYktNLVQ1cXRUZWpiWUFiQnVTVkJ2Q0Z4ejcyR3RR?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxPcDlEM2lWSl9LNE8tcloySGw5NS1ZV2pGb1h0d2hncTFiQ2ppeDZaZkxfODcweXFrSVlkLU1FSGp3MXNxS3I2YWFxMDV0X2g4THJ0YUprNEdVdGFfXzRpZGlPbWhuRDNfbWtsV0NvUlFadGF2VGN4VHdnTzR2bEFaNkk0Ni1PajVYUUNZLUhSaTBMLUVVMkNHLXFwYndyX3htYWIxUTBJalcta3pIaTJaR0Y4YjRXME5aT2NtdXhKeHJhZEdDSjZ0MDlhNHgwcUdiZXZkenhGRUgwQWtNeUVOU3JsSQ?oc=5",
     "image": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -675,17 +675,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656594028,
+    "publishedAt": 1795693864603,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656761219-562",
+    "id": "autopilot-1795694031702-483",
     "category": "entertainment",
     "categoryLabel": "🎬 Entertainment & Cinema",
     "spiciness": "⚡ Ground Reality",
-    "title": "Cinema & Celeb: 1700 करोड़ पार 'रामायण', गुरु पूरब पर गुरुद्वारे पहुंचे रणबीर कपूर,...",
-    "preview": "1700 करोड़ पार 'रामायण', गुरु पूरब पर गुरुद्वारे पहुंचे रणबीर कपूर, टेका माथा — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
+    "title": "Ramayana Team Meets Amit Shah: 2000 करोड़ की ओर 'रामायण' की रफ्तार, अमित शाह...",
+    "preview": "Ramayana Team Meets Amit Shah: 2000 करोड़ की ओर 'रामायण' की रफ्तार, अमित शाह से मिले रणबीर कपूर, पिंक साड़ी में स्टनिंग लगीं साई पल्लवी — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
     "fact": "सोशल मीडिया पर वीडियो क्लिप्स काट-छांट कर शेयर की जा रही हैं ताकि विवाद खड़ा करके जबरन क्लिक्स और व्यूज बटोरे जा सकें।",
     "detail": "जांच में सामने आया कि यह नई फिल्म/शो के प्रमोशन की सोची-समझी PR स्ट्रैटेजी और वायरल मार्केटिंग कैम्पेन का हिस्सा है।",
     "take": "OTT और बॉलीवुड के हर ड्रामे को सच न मानें, 90% विवाद केवल फ्री पब्लिसिटी और TRP के लिए प्लान किए जाते हैं।",
@@ -698,7 +698,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMijAJBVV95cUxPZnV1TGJpOWgxbkQwMVZCTG9BM2w2bmdIVktiMktBa1BYVVlrUkVPOU5wcDBnRl83bVh0V0RuODU2NXFqRnhDUlAzN25DMndXMVU2T3pwbHVtSUZBWVJyRTd5S1FWSmhLTmJNaE5yYVZ4bWZBc09CNDlkQnhxUnRVXzR0cHFBTlZrRjEwaVJyUFp1Wlh4TS1nb0RlYjFGUElPcW5pSEhNcmlrLXRBQ0VTMDI2TWxteDJaLUg0bmd6VjBBOF9ua1N0dlM4bHlJNEhYaXd5cjZUcENmcTZYZGJYdUUyT0hLZnJURGtQUmhkS0xjMVlId1Nrd3pWOFdHMktVM0hVT1pIZjVHNWlZ0gGSAkFVX3lxTFBFWUNxMzQ3eUgyUG9UWVRpNFh0UDhtdFpFQ1RmM1ZOLVA1SDRac2dSMXYtSUY2UlBhRkVkTzJYOUtXYlJraENPODh5V1R0NnlOS0hrZkNUMm1mSFo3MTEwQkNwNE1ubUFJaUpiWFI2aXVuT3JDbC1RUDFWTXhyN28yaXktVi1xTzZIeF81UWpHcUFZel9xZkJuaEZoR21CeTZDVEp1LV9YdzBzTkhpcGdCVG1ucGdTSzdadHQwRWo5VW1wUXVKS1luWjBNZUFjNWMwUVl5dmdoZHZQbDRZQkxTLUg3SExzUXBKbU40WDZMRTZ0VXZOa2VYYjFIRmdjek9ubVNFQTR2eTZJQVgzQk5yNFE?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMijwJBVV95cUxOUHljM0pWV2lmS3hFZGR2dV9Ka1k5LWhHbEJUSm5VYmkwRW1EOGpUakFBaU93VUZFZmJaeUJFVEFHcy1yb0EyN3dVSkJEaGFNMWo5MzdxTjRMY09lbkVUOHh4eXN1SXJabnJlUG9VRUh0eTlXb1owbXlWTkk1NlBQd2V3SlpxOHdBalFHU0lCdWIzOUZvanRmRm5YLW41VEVBc01SUFBWN0J3ZzJXTGNBY2R5SzJDd2RQcEY1MmlkT3lISExGcm11cFI0WE9MdzRGSzMtRGpETU80bnA2M3BlTHk0YUk0X1plWmdmSlZzUXVPT3BoZlpVTTZnVnhFUUlSRGl6UDZDVnZlMkxlamdJ0gGUAkFVX3lxTE1NaUM0cDAwX3lPZTBQZVUwa3BiNFBxV19lQlNEM1JNTmN0a3c0X1FLdGh5NjhVbHBNNzJSRVpJRVJFSWNBR0RhV1U4SVktc09tSUQ1T000R1lsM3lOVTdtaU9qSWZIWmM1bmZ3bnIzX0tuUEFwY25PeUk0MVAta3IwTGlKTmVYU2ctc01RUjBNN0VKN3NoZy1FSzRBc1NwMTkybHFRZG1GVk5YcTN3NmdfUThZT3NzMWNUTF80X2dINXkyX0JkUzcyTXpGdE8yQlU3dURhUlJaNVRzaDdnU25hT004YlZkLXplUld4bkFMdU11MEk3UXYzc3hFd1h3elJzZXhDS25JMDZ1aTJqU0lXVndRZQ?oc=5",
     "image": "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -709,12 +709,12 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656594920,
+    "publishedAt": 1795693865403,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656769477-898",
+    "id": "autopilot-1795694039943-335",
     "category": "entertainment",
     "categoryLabel": "🎬 Entertainment & Cinema",
     "spiciness": "⚡ Ground Reality",
@@ -743,17 +743,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656595259,
+    "publishedAt": 1795693865725,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656777735-498",
+    "id": "autopilot-1795694048183-836",
     "category": "entertainment",
     "categoryLabel": "🎬 Entertainment & Cinema",
     "spiciness": "⚡ Ground Reality",
-    "title": "'पद्मावत' में रणवीर सिंह को पड़े थे 24 थप्पड़: रजा मुराद बोले- गाल सूज...",
-    "preview": "'पद्मावत' में रणवीर सिंह को पड़े थे 24 थप्पड़: रजा मुराद बोले- गाल सूज गया था, डटे रहे एक्टर; भंसाली चाहते ... — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
+    "title": "Aishwarya-Abhishek Bachchan: बेटी आराध्या संग मायके में ऐश्वर्या, मनाया भाभी का बर्थडे, कहां गायब...",
+    "preview": "Aishwarya-Abhishek Bachchan: बेटी आराध्या संग मायके में ऐश्वर्या, मनाया भाभी का बर्थडे, कहां गायब रहे अभिषेक बच्चन? बहन श्वेता ने खोल दी पोल — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
     "fact": "सोशल मीडिया पर वीडियो क्लिप्स काट-छांट कर शेयर की जा रही हैं ताकि विवाद खड़ा करके जबरन क्लिक्स और व्यूज बटोरे जा सकें।",
     "detail": "जांच में सामने आया कि यह नई फिल्म/शो के प्रमोशन की सोची-समझी PR स्ट्रैटेजी और वायरल मार्केटिंग कैम्पेन का हिस्सा है।",
     "take": "OTT और बॉलीवुड के हर ड्रामे को सच न मानें, 90% विवाद केवल फ्री पब्लिसिटी और TRP के लिए प्लान किए जाते हैं।",
@@ -766,7 +766,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNaFZCLW5NRF9uM1p0MUxoZ0lPODdrdXloTGJ1RGVhaTQxWmhyS2ZrY0VkN3R0SVRkZjBhNmViY3Mwc21NRlBhZmU4YTFTc29pRktBbXdGeUt5bEJ5bGZVVEIyTGNRYnVEY1c1dFlXTnNPbTNVbVhPajJmTndIcjVkRUlXSHIxbnJpZ2c4VFFTaG5US0ZiQW10SzZnZVVBZTU5R3ZzODhWWC1QWllGNnVSZ0JLWkdDZzg0TFdjSEh3OXk3NXNhbjczN3Fn0gHPAUFVX3lxTE9qZFN2S1RzYVd1SmI4TFVVUHFnR1h6Rk5oNkJJdWVxOWJzUWZXQTZfV2FLLTBhNmR5aEc1Yi1lZ2VyY1d1Y0RDd21MOVIxSTFrUHUwN2dmNllQOEZfQjNtWTZTbm5YYU10b0k2cFkwTlhJNkpMV0kyd3czTWtrejg4aFhseHBsNnlHVjlJMXl3S29jSklwaUsxMXhESmtYUUNvWWdEdXRTVmVmdE9LTnNNTFZhSkdkeGY3TkVmYml3MGhHaFVIRUdFTVh5Qy1DSQ?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiswJBVV95cUxQR1ZTY1RxVC02SzFzc2R5ZmJSRzBSRF9nM01EdVpOODBXRlhDSU9OMG9Kdlc4SDI1SXA0ZmhJMUFTM3lES29VMktYOXJaQlFZZkM3dGFESmlYeWFZYndJV2ozR1c2d1dyQXc1NEFCaXNadlZVWFRBYjhVMTdZcHN0MEdqczZ4Qy11WnYtSWV0MjRnaXN4VTVDa2NJWmNjUDhtYlpmNWttZDBQWkoxamhiVzNVZndFYnV6ZUU1S05LbS1sdE8wVEZZVklRMlRhbHMzdUhsSnFWS1ZXVmRVQ25GSGkwWWVHazlQcVllTm5ndl9SaFVVZXdEZmxfTWRpUnNVS2p4YWR5TjVzcFBjaVRYakdTaXl2SFplZ0E2bWZEMDVZOGlSNE9rTUlQYzJ0ZjlYcXRn0gG4AkFVX3lxTE93b1hvTEZuYXhZdXV4QXZvVzRHa0RIR2I4cHRreW5zQU5YZFdjdXRXRmZWMF9XOFVldlVjb1VWbENULVNvd3V1YjNFVm9sa3c0V0pmblVaNDA4LTctYVRYMUVMWmg1N0trVVBOdUZYclNFc2VqeHNVcHVDeHF0SFlNWkpHZ1Z3RjRPVzFtXzkxWENpZ1BDem5ROHYzV21GWlZXYjI5c3lEZmh6Wl9lOU40RUVSVU9JcXc4cFNOWnFpTG1ZdFZLcjlxMy1Gbm40VUVsYWdlRGZIRm1lS2RUVlI4QjhfZ0hYV2FtdmI0TGktaV9Tazl0WDRyVm1ralVTRUdhMTNTRS1RSzJxSHdqY21DeXJSRTNMbWVEcHRmMC1HXzFOWWo0ZU5QcEFnMjlDaVNTLVJUMmJ3Mw?oc=5",
     "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -777,17 +777,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656595598,
+    "publishedAt": 1795693866046,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656785993-172",
+    "id": "autopilot-1795694056424-410",
     "category": "entertainment",
     "categoryLabel": "🎬 Entertainment & Cinema",
     "spiciness": "⚡ Ground Reality",
-    "title": "Cinema & Celeb: SonyLiv ही नहीं, इस OTT पर भी रिलीज हो रही है...",
-    "preview": "SonyLiv ही नहीं, इस OTT पर भी रिलीज हो रही है Hanuman Ansh, 29 नवंबर से पांच भाषाओं में होगी स्ट्रीम — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
+    "title": "Cinema & Celeb: Ramayana के 'लक्ष्मण' रवि दुबे की गोद में बैठी पत्नी, पार्टी...",
+    "preview": "Ramayana के 'लक्ष्मण' रवि दुबे की गोद में बैठी पत्नी, पार्टी में इंटीमेट हुआ कपल, बांहों में लेकर किया Kiss — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
     "fact": "सोशल मीडिया पर वीडियो क्लिप्स काट-छांट कर शेयर की जा रही हैं ताकि विवाद खड़ा करके जबरन क्लिक्स और व्यूज बटोरे जा सकें।",
     "detail": "जांच में सामने आया कि यह नई फिल्म/शो के प्रमोशन की सोची-समझी PR स्ट्रैटेजी और वायरल मार्केटिंग कैम्पेन का हिस्सा है।",
     "take": "OTT और बॉलीवुड के हर ड्रामे को सच न मानें, 90% विवाद केवल फ्री पब्लिसिटी और TRP के लिए प्लान किए जाते हैं।",
@@ -800,7 +800,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMigwJBVV95cUxOUF80NXZSeWZDVkhJWjZqNDdmS0cyVm9mbG9SUF9YdUMyc0JNZGRDZF9vZ1VDRFdjOE1feUxmb2FQQ2FsR2c0bDdoODZWQWdDZEJZWHdVNGdmaU9KbTNGaG1wbTZ4LVEycWJabTdlNDZDYVZGb2Nob3V4cE5faUZXZ1VUZmlKV3Y0YUNremJrR2ZpYXUzb0VuNEJlOUg1bzNFMDZnV3FzZTU3SDZxczI3X3ZiN3Q0T1BQWXk5ak5JLXVHX2l2RHUyMEpNVkN4UnE5NlFqZi1KTDJ5QUJGRk84cXdfMXp1aE9FMzFGcE8zZ1hGR1JKWnF1dTFqZGJpRTNienI4?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMimgJBVV95cUxNVkV1ZnFBMGh5Qy1PeXFpQ1RFWk0wc0lXaVBJbUttVzFySTRmSmJYU0RoR3FkN2hZdlBYN0c1YmxhdUkta0toUC1WUkRLVlBoTlBTZ3JlYUg1aFRKYXJzTFRJTDZhOWFwUXNXb1l6bm8zY1M0U0hOTGJIZ3prRmlkZVN1OEZIdnBzNmEwa0IxbHJySzY0aExheWZiSnpidDhpN3ktVHk0enZDeFhuTmFybmNUb1h1ZWxRRnY4VW84SE02WjZkOWtqTjhCVVRGbXhTaWZEWmVadzFqX2lCWV9ZN1RROVB6WmVObWpMNEJjdmpSUUQzdFhybFgza0hoa0xXdGRWaXoxOGNqVGFtRlNPc0hEUXY5dVhpSFHSAZ8CQVVfeXFMUEU5NjdGS0hLeVVDcWN6MlpjN3BOSjlvREVpQWV6QTZMWEwtUGtRZFVJUmN4ZlBQcTFQeWJRZ3lVN0RlMF9Fc0xjd1FCSEJKZGtEQ2JidEdqZTBobUFqdzlneURNSnFDd2NSd25QeF9feWczVVRKOVNwdl9uRHdWTzVXVWVVZmU4eDNUVWRUSGhSb0U2M0xoVHp2VE5SeHN2QXBRMGkxNnRLMEJyZnlzV0NaRHgxaGI0TDhjNlYwcmZMMnlZVDJCUU1qSDRDZ0RRLVk4TURBekE4dmQ4eEVHMVFmdEV1UEM3aUp0Um5wdkk5WnJxS283ZndwZU96MmV1ZmNFT01oY2l3OXA3Yzl3Y2lkV3lybzFLNTJlQ1AwZXM?oc=5",
     "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -811,17 +811,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656595937,
+    "publishedAt": 1795693866368,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656794251-955",
+    "id": "autopilot-1795694064665-587",
     "category": "entertainment",
     "categoryLabel": "🎬 Entertainment & Cinema",
     "spiciness": "⚡ Ground Reality",
-    "title": "O Saathi Re trailer: तलाक, बचा हुआ प्यार और लव ट्रायंगल, 'ओ साथी रे'...",
-    "preview": "O Saathi Re trailer: तलाक, बचा हुआ प्यार और लव ट्रायंगल, 'ओ साथी रे' का ट्रेलर आउट, रिलीज डेट भी आई सामने — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
+    "title": "Kangana Ranaut Look: दोस्त की शादी में कंगना रनौत का टशन, दूल्हा-दुल्हन पर बरसाए...",
+    "preview": "Kangana Ranaut Look: दोस्त की शादी में कंगना रनौत का टशन, दूल्हा-दुल्हन पर बरसाए फूल-चूमा माथा, लहंगे में लगीं 'क्वीन' — एंटरटेनमेंट और सोशल मीडिया का नया वायरल ट्रेंड, जानिए पर्दे के पीछे की पूरी इनसाइड स्टोरी।",
     "fact": "सोशल मीडिया पर वीडियो क्लिप्स काट-छांट कर शेयर की जा रही हैं ताकि विवाद खड़ा करके जबरन क्लिक्स और व्यूज बटोरे जा सकें।",
     "detail": "जांच में सामने आया कि यह नई फिल्म/शो के प्रमोशन की सोची-समझी PR स्ट्रैटेजी और वायरल मार्केटिंग कैम्पेन का हिस्सा है।",
     "take": "OTT और बॉलीवुड के हर ड्रामे को सच न मानें, 90% विवाद केवल फ्री पब्लिसिटी और TRP के लिए प्लान किए जाते हैं।",
@@ -834,7 +834,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiogJBVV95cUxPbU1uNHkyblRCQWFMa1pzemtQYk13RC05VUp2MFZKejhqWFJkMlZqQUh5X21NTlVISC1WWWpRVjBaM2hubDdReHB3Tzl1SGZuc2ZVYVk1eTczR3IzSHd5ZTRva29CX1dzazdFYmdBbWNCZWx3YUZLZHZhS3RvcVZoX3hjLUZxc0g0dGtsZ1FFOWdHWGd4dlFxTlJueDA5OHJOajFuMENIU0hxRVFSbnFIWk1TdjIzTkJxYWZmNlFfbC02dmxiRWRYRXhQck1VLTM4NWVLRG1JdGs0V3FUQkhudnhEOVREX1BDNUhjMFNub3RyYzFTZkFhVnNqUkI0MnRjZUg3dnhQNm9KZ3AzN2FxVDA0bUJMQ3l0bldVeGVNZFFFUdIBpwJBVV95cUxOcVI3bFZuS3RvLUFYVnMtVVpTNzkzQjdZVGJNbWE1cWRHb3BJQ3dzWW0waFZNVUFvdE9YcVNMMVhJNFFQb1hzTThfbkY1cll2WTBBdGxycFJtNW5WV0xtSkc3LWxNQThNYmctT0g1Rmx1V1dBcDJXZTBiREtxVWhxUW4ycFZ0dGdXUE1FY2FXc3hwV20zNlhrMGdfSkxzMFBIQ0FHa0pIcTE0bXd5bHhKTzFrMnVQQUlMelM5WVdzNlFiYjFjbW1FM0FoclBaaHF5UzJTY0ticFJVY3lSeUZUX3VfX1lpcUFQclpsMkh5WmN6SlRRSWpqQXU1M3hxTFlxYk9UWlhPQXVEeXNxV3U1cWdINGFSd0hZRFNjVW1TeTUwY0NjWWdj?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMi_wFBVV95cUxOX0gtWjFHcVlOWTBud21PZHljNHY0U29pZy0weThicEZpaG5jY0dvdWZGQk9TeHFVRUVfWGc5c25OQW5Pck8zd0VDc3JXRTBqUmc5SUNVNzNYRlgzWWNTUXBSTXBlQTNiSkFwNGIzeFVJZTNQT3Z4MjRpMkp2Z0FobkJHSW9vLTRCaFJnbnJBaVBVSEpUMkxVLXlKRjVtWWE5dTUxcHotX0dZNzd4R1RLVnE0Y3M0Q2x3MlRJY0lYU0pNSnFNczlpaThhQmNxVzhISktLUGlEZE91V045NHdHZmRJbXhnVlZsSU85a25nS25hVEh2YmVPRTc2eGdWbUnSAYQCQVVfeXFMTi1Va2NtMlMwYjRhS2FTeFF3NjNaT2xWUzhVai1yZkpYZEJUdmozaDlMQ0NmRTl5YnhXbFhrSjdrUS0xY0hYdXVfaFlOaG5rTUdQUXFXT1FRcDFWRFBDR2J4Nkd1elFwLURscC1uTUFxQ0RxLTFHaVRoeER0RzQtV3I1UGNuWTBNOGdfMzBGeGx0YkV2SUhEQUJ6N1VpMWl6Y08yei1ZUHlTVHdfR0l4ZWFQcm1xNHlwTHRWc3lCQjVOc1NENnBNbDdLZnc2Q0RXcDhsd1pCRWczTzNvS2I1UElLS1VydjNKY1hUbFhjN2V5cHNSS0ZObFpnUXItN1FUR2tpODc?oc=5",
     "image": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -845,17 +845,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656596276,
+    "publishedAt": 1795693866690,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656802736-335",
+    "id": "autopilot-1795694072953-156",
     "category": "regional",
     "categoryLabel": "📍 Regional & Local",
     "spiciness": "⚡ Ground Reality",
-    "title": "Ground Reality: अनंत सिंह की बेटी की शादी में निकला सांप, लड़के ने चकरी बनाकर बाहर फेंका",
-    "preview": "अनंत सिंह की बेटी की शादी में निकला सांप, लड़के ने चकरी बनाकर बाहर फेंका — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
+    "title": "Samajwadi Party Manifesto LIVE: सपा के घोषणा पत्र में GEN-Z के लिए बड़े ऐलान,...",
+    "preview": "Samajwadi Party Manifesto LIVE: सपा के घोषणा पत्र में GEN-Z के लिए बड़े ऐलान, अखिलेश बोले- 5 साल में 25 लाख नौ — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
     "fact": "लोकल WhatsApp ग्रुप्स में फॉरवर्ड फैल रहा है कि जरूरी सेवाएं बंद हो जाएंगी या आम लोगों पर भारी जुर्माना लगाया जाएगा।",
     "detail": "स्थानीय प्रशासन और पुलिस ने पुष्टि की है कि स्थिति पूरी तरह सामान्य है और नागरिक किसी भी भ्रामक अफवाह पर ध्यान न दें।",
     "take": "किसी भी लोकल फॉरवर्ड पर तुरंत यकीन करने से पहले म्युनिसिपल या पुलिस के आधिकारिक हैंडल की पुष्टि जरूर करें।",
@@ -868,7 +868,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPdi01Z3pfVERPaFZmblBKVjNuSjZCeXFLa3hPeXl1dHAwYkY0bTZrcFRDTjFKOVBTc0hPTUEtV1B2SmtwOXl0ZjcwbW9ZWWNnVzZkSFhBZk82N1gtUzVwdU05M0l6X3JzbkVlWnNOemFVbHZlM09GNlN2Y21HSWRtM2VKbW5xZGpVUGNucWNhcHFWalFLR1M2MjVmbnl3dl9hRnQwM3R5S2xwNkVTM2VfRlFSVkZmWU5BS1hYbHNxQW_SAcYBQVVfeXFMUEhZODU3a0pNM2J6NEJPUWYyLXN4a0VQUmVQanJKXzdFNjZWeEpPTmJVWmdtNW1uVDdSTko4bXduRnU2b2drT014TnhncVlZTjJOQjlFdDlldkxOSEx0QjU4T3M1MnlSaHl4Qmw0eHFGR0xiaFFFdVF1VjlFV3hqX0lSTHpoTjU2cXV0cHhtQkhnTzlNX19jOENPQ1liVDNZVlhiSHVUZXhyTmdXMzNsVE9DX0Z2VllBUEM2MDJDQWZBX2pWNEF3?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMihAJBVV95cUxOU29NSXYyYjQ3ekMtek12RnJtZVBhRTVJMzNNaWwwdWRqeTZRUHM1X2RrSXVXM1NEUkpHQVFDbzVKQlRuT3pSMU5wVElfenlTOFJLNFRuS3E3dXo2TFN0NS1tODIyNGZXYkVCcXlKQzRFYkZLREo4T3hBSHlJZV9pVmREQTZZQXgxbjh1Q2lpSmFJT29WNGlZbWdTRmNEdXAwekwwVHVWVHg5MVFwZzBwZWI0bVZWVjRac3dEWDliTU5CZWtXTDZPaEpFdFVfbHhTalItZEo5UVNTVUZ2RVRtQ0p6ZFd5b2k0a3MyQWNWdmR6SjJIOGduUjVYTnpFMHFaeVk0NtIBigJBVV95cUxNLU5Ob25pNXNoam4tb3pNaGdoWmlPYUxKeVVURVdFMnY0TGdRcUdZcFBsdUcySnFpdjcwazN6UGdiX2JHZzM3SGhHYl92UV9vWlBiUkpQbk50MFUxYVMtU1ZwcG1aQXRIS1FiejlIcUVRMmVBTmpCb2FTNTRnUVRDejV4by1PcWRDWE0wWFVVcHVTVlNoTVMxaXJVTW9NWnFpWGp0a05ia01sOWJRRkZkdDNkVkNhN1lLM3pOMGM1a2JiQ2ptc3E5Uk9rOWZlcnJNSGpnUUpvTlJ0cllXa1lSLU5NMUUtNkVxb1RfM0FRWmhJNnNpZ1h1WG1qLXVqckhfcklrVlR5OGxCUQ?oc=5",
     "image": "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -879,17 +879,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656596842,
+    "publishedAt": 1795693867059,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656810994-351",
+    "id": "autopilot-1795694081194-520",
     "category": "regional",
     "categoryLabel": "📍 Regional & Local",
     "spiciness": "⚡ Ground Reality",
-    "title": "Ground Reality: लगा देंगे 25 प्रतिशत टैरिफ, ट्रेड डील के लिए फिर डराने चले...",
-    "preview": "लगा देंगे 25 प्रतिशत टैरिफ, ट्रेड डील के लिए फिर डराने चले थे ट्रंप, भारत ने दिया जवाब, जानें क्या कहा — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
+    "title": "Ground Reality: सीजेपी नेता सौरव दास को दिल्ली एयरपोर्ट पर क्यों रोका गया? केंद्र...",
+    "preview": "सीजेपी नेता सौरव दास को दिल्ली एयरपोर्ट पर क्यों रोका गया? केंद्र सरकार ने हाई कोर्ट में दी जानकारी — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
     "fact": "लोकल WhatsApp ग्रुप्स में फॉरवर्ड फैल रहा है कि जरूरी सेवाएं बंद हो जाएंगी या आम लोगों पर भारी जुर्माना लगाया जाएगा।",
     "detail": "स्थानीय प्रशासन और पुलिस ने पुष्टि की है कि स्थिति पूरी तरह सामान्य है और नागरिक किसी भी भ्रामक अफवाह पर ध्यान न दें।",
     "take": "किसी भी लोकल फॉरवर्ड पर तुरंत यकीन करने से पहले म्युनिसिपल या पुलिस के आधिकारिक हैंडल की पुष्टि जरूर करें।",
@@ -902,7 +902,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQS0JwUkVOZnA2amVnaTk1cTJJSVEtX1hnZ0pPYWpFaUp0cFhUMXFrd0RvNXRqRE1yRjg4eWdmNGlWTU9BbHFiakVwa0MwMkI2SVNrMldRRkU1S1p6TE5LZ0FERzBuMmVmb2QwSXJ1eXk1bEVvVzRPNFlQdmNNLVhjZkNGdFdEcjREaERlMEs3UC03WWFZa1VFMC1GQ21aYzN0U0JHZVNvYnE4T0dCbGd5X1k5djMzbGVYcUNCaENzZHFhVkl2XzhSTmN2ajZlS2haenBJbXRUVFlXbkhXcnZSNTZycmVVVDhnWTdHRA?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNMHNscE9PZHdlMHVEX3lKQXhtNEd3b242bnNNSFBUc3lJdml5STkybDd3Mm02R0FCcTRZRG40dFBxZkdkTnRaYkZOVE5oS2xtazFDMUZDMUtidlgwdGhqbkx0S3p5cUEtQm9YdUJKa21TaTZPY1B1MGdvaXdudW9kc1ZFNEFkVEd3VE9XUzNwZDcxQ3Vvdl9neHJvdjhhNzdEOUpWWVRKTXFmV2JONzl3RTViNmRXVnlLYjdlaHljNmtHMG1aakpIajZsUFIzdw?oc=5",
     "image": "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -913,17 +913,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656597181,
+    "publishedAt": 1795693867381,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656819254-461",
+    "id": "autopilot-1795694089435-425",
     "category": "regional",
     "categoryLabel": "📍 Regional & Local",
     "spiciness": "⚡ Ground Reality",
-    "title": "Ground Reality: सहारनपुर में अखिलेश यादव ने कर दिया बड़ा खेल! इमरान मसूद नाराज,...",
-    "preview": "सहारनपुर में अखिलेश यादव ने कर दिया बड़ा खेल! इमरान मसूद नाराज, कांग्रेस की बढ़ी टेंशन — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
+    "title": "Ground Reality: आज़म ख़ान ने ओवैसी की यूपी में रैलियों पर उठाए सवाल, अखिलेश...",
+    "preview": "आज़म ख़ान ने ओवैसी की यूपी में रैलियों पर उठाए सवाल, अखिलेश यादव और राहुल गांधी पर क्या बोले?-इंटरव्यू — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
     "fact": "लोकल WhatsApp ग्रुप्स में फॉरवर्ड फैल रहा है कि जरूरी सेवाएं बंद हो जाएंगी या आम लोगों पर भारी जुर्माना लगाया जाएगा।",
     "detail": "स्थानीय प्रशासन और पुलिस ने पुष्टि की है कि स्थिति पूरी तरह सामान्य है और नागरिक किसी भी भ्रामक अफवाह पर ध्यान न दें।",
     "take": "किसी भी लोकल फॉरवर्ड पर तुरंत यकीन करने से पहले म्युनिसिपल या पुलिस के आधिकारिक हैंडल की पुष्टि जरूर करें।",
@@ -936,7 +936,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMihwJBVV95cUxPdlVvOUtXLXVuUGJUZE1pSWxSZlB2RXNFcTRLbTRVNWVVY2M3RlUxVGFiVUVNdDh6ZDRQbGsxNHY0MVlTSFRaZm9Hei1xX0NNMk10Tm1fZjdHcVV0WUF2aWF2MzF0R1hoaWpfdHVDcXhxaFlTcEpDMnZWM3JERnpHcDg5YVN4OVc0SkJsc3FZajZzcXBramM4R3l4aW9xdEgta2VmUFhLc1dWalFCVTMzYTRnVU1UNVRsR2ZUU1RWRVlQNUw0bDM5bHQ3QUpMd1lfZWFocVQtY2xXbWExTHpYNTJPREdBTVd1REJFWVE1SjBkU282LWlQaXhKdm9NQVIyMFZnRmFpYw?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBqTFNmbl9ndkdPaXdoS3NaakVodUMxTnpXekw0RS1Ub1lkSHI0NFRmVnpxd1Zvem9jT1UtV0Nzcm5mX18zTmpleVBYYm8wMmlEOGl0U2gzR3BURHJt0gFiQVVfeXFMTUFMSVB5MWk4dUlXUE5NVmtaS09vWDBiUTNxNVhfQkYwTVdiRHoxQjdVb3ZwdVBWb0ZvbkVSQ2dWbUZ1cXR2OU1ULXgyR0c2YTRJczViVUc4WmN4YWdzcUJYV2c?oc=5",
     "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -947,17 +947,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656597522,
+    "publishedAt": 1795693867703,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656827513-900",
+    "id": "autopilot-1795694097677-874",
     "category": "regional",
     "categoryLabel": "📍 Regional & Local",
     "spiciness": "⚡ Ground Reality",
-    "title": "Ground Reality: शेख़ हसीना को सौंपने के बांग्लादेश के अनुरोध पर भारत ने दिया ये जवाब",
-    "preview": "शेख़ हसीना को सौंपने के बांग्लादेश के अनुरोध पर भारत ने दिया ये जवाब — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
+    "title": "Ground Reality: आनंद मोहन की समय से पहले रिहाई पर सुप्रीम कोर्ट का बड़ा...",
+    "preview": "आनंद मोहन की समय से पहले रिहाई पर सुप्रीम कोर्ट का बड़ा फैसला, आदेश किया रद्द — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
     "fact": "लोकल WhatsApp ग्रुप्स में फॉरवर्ड फैल रहा है कि जरूरी सेवाएं बंद हो जाएंगी या आम लोगों पर भारी जुर्माना लगाया जाएगा।",
     "detail": "स्थानीय प्रशासन और पुलिस ने पुष्टि की है कि स्थिति पूरी तरह सामान्य है और नागरिक किसी भी भ्रामक अफवाह पर ध्यान न दें।",
     "take": "किसी भी लोकल फॉरवर्ड पर तुरंत यकीन करने से पहले म्युनिसिपल या पुलिस के आधिकारिक हैंडल की पुष्टि जरूर करें।",
@@ -970,7 +970,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5VZEJFcGtISlViTlh1OHdraHpOTHM0dUVqMlVXa1VKNm05cEk4TURkbi02b1dKcUkzcEhMUlBaMjBTWlQzSHk0aDAzS3dCUmphbFAzSlVGQV80UnRW0gFiQVVfeXFMUHhfLXRpeDNVQzJ2U1dkalN0RUJzeWNYZlZMR0o0cjRUNF9xY2FrQnY2WmxiZW92Uk5tWTNhNnIteEhDYnF0WEluTi1GX1RyYWRWbmRWZ21nd19wN2MxU2RPVkE?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNdDRPUGFYS3JIc09aZ05PUmRLZF9DaGJWRFE5MUh6TzZTakkyTGlWb2dkeWo0Ym94cmMwRS05TlNhcHVyMHh0aFFxODNqZTdwOHBkVkNUeVYtTVdwUmhHZTJEZ2lYWWFGbEpQd1dWYVlTWnJTWFVNbEhvT29HVVFmOHBOdlVSWlZKWS1ESXdJN3JfZm0zY2NjaEgtM3VXT01KYkV2aTRoQXR4ZEY2VEFsNndubGI?oc=5",
     "image": "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -981,17 +981,17 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656597862,
+    "publishedAt": 1795693868026,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   },
   {
-    "id": "autopilot-1795656835771-852",
+    "id": "autopilot-1795694105919-621",
     "category": "regional",
     "categoryLabel": "📍 Regional & Local",
     "spiciness": "⚡ Ground Reality",
-    "title": "मॉर्निंग न्यूज ब्रीफ: पंजाब में 6 साल बाद भाजपा-अकाली एकसाथ; UP में सपा-कांग्रेस में...",
-    "preview": "मॉर्निंग न्यूज ब्रीफ: पंजाब में 6 साल बाद भाजपा-अकाली एकसाथ; UP में सपा-कांग्रेस में नहीं बनी बात; सूर्यवंश... — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
+    "title": "Ground Reality: IRCTC घोटाले में लालू, राबड़ी और तेजस्वी को झटका, ट्रायल कोर्ट के...",
+    "preview": "IRCTC घोटाले में लालू, राबड़ी और तेजस्वी को झटका, ट्रायल कोर्ट के आदेश के खिलाफ दिल्ली HC से याचिका खारिज — आम नागरिकों और शहर से जुड़ी ताज़ा ग्राउंड रिपोर्ट, जानिए प्रशासन के फैसले का आप पर क्या असर पड़ेगा।",
     "fact": "लोकल WhatsApp ग्रुप्स में फॉरवर्ड फैल रहा है कि जरूरी सेवाएं बंद हो जाएंगी या आम लोगों पर भारी जुर्माना लगाया जाएगा।",
     "detail": "स्थानीय प्रशासन और पुलिस ने पुष्टि की है कि स्थिति पूरी तरह सामान्य है और नागरिक किसी भी भ्रामक अफवाह पर ध्यान न दें।",
     "take": "किसी भी लोकल फॉरवर्ड पर तुरंत यकीन करने से पहले म्युनिसिपल या पुलिस के आधिकारिक हैंडल की पुष्टि जरूर करें।",
@@ -1004,7 +1004,7 @@
       "v1": 82,
       "v2": 18
     },
-    "sourceUrl": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxOOTJ4Sk5HR0NrZ0dlTWZnOG9NbGQteXhEa1BoUkx2eTVTUDhRV25vdS10VVJQcUh4Z0M4OU9WZmdyVTN1LXgyamc2cWRhalpOLVlrZTR5bWlOZXlqYkJ1bUFQM1hPRnBLRWZTdlNlQUtTR3N1d1FURDJiQXlDd2NIdTk4cFJlX0w3ZFZhX0lJdWluVktKV1p2VDhMdUtBUjdsNVlacDBkXzhzQ2VoMTBNTjlPQkp4VzNsRkdjMW1ZSUJuMjB3WlREbVJ1anZQWEtKU0RtSHdnNFJEUkRvcHlHMjd2V0NCeFR6S1HSAe8BQVVfeXFMTmZVYzczTElSajgyYU5IRTI4VFI2bDlJTUVncm1MSjJmZk55WW1RTm5Yc0I0OEJIYmtDdFZtbkRPWmZablhGa3N2ZGlqQXlCclN0ak43WnRieWhGeUNNdjg2RXBjNWhPam5qQTJ2NmZsU0RUMFc3SnVhejcxSVlzczR2cHhSTUt6eU9pemR5a1NrS29VS0JlZmhVaWVPeGNDaDFpNE0wMjl2T25mOXJoZU9CLWpxZ3hfaXZPVHZ1TUdSYW9hV3ZXSkg3cW1MNzZlS2pWN2o3OUZoUFNmVUE0dWo4SDVNay10elBBNFF0T3M?oc=5",
+    "sourceUrl": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPdlNqQWpMZEoycnNQd2tLUHk1NXUxTUo4S1gwUnFTZEY1ejU4NGYyRmRGUUFNZjhmZHNySVlWejRNNWhqdkFRUGMwTEo5R2FGc2RMSUZGcWFzSzE5RWsyS1pTYTBnY083bnhMV3hqUnlaczdGS1hiM0EtZGNKamxHcGk5Z2R3dWx6MDVacG5FSkl2clc0SkktOXBZWHZtYl8tQVpHX0NVMjZwWkFZbVI4?oc=5",
     "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&auto=format&fit=crop&q=80",
     "imageFallback": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&auto=format&fit=crop&q=80",
     "aspect": "aspect-[4/3]",
@@ -1015,7 +1015,7 @@
       "clown": 0
     },
     "publishedDate": "2026-11-26",
-    "publishedAt": 1795656598201,
+    "publishedAt": 1795693868349,
     "isAutopilot": true,
     "originalSource": "CLUBR Verified"
   }
